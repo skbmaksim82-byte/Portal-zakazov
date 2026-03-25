@@ -2347,8 +2347,10 @@ function closeAll(){closeCart();closeUploadModal();closeItemDetail();}
 
 // ═══ CART ═══
 function chQ(code,d){
-  var pfx=code.startsWith('L:')?'lqty-':'qty-';
-  var key=code.startsWith('L:')?code.slice(2):code;
+  var pfx, key;
+  if(code.startsWith('TV:')){ pfx='tvqty-'; key=code.slice(3); }
+  else if(code.startsWith('L:')){ pfx='lqty-'; key=code.slice(2); }
+  else { pfx='qty-'; key=code; }
   var inp=document.getElementById(pfx+key);
   if(!inp)return;
   var v=Math.max(1,parseInt(inp.value||1)+d);inp.value=v;
@@ -2389,6 +2391,8 @@ function clearCart(){
   renderCatalog();
   renderLightCatalog();
   if(typeof renderKitsTable==='function') renderKitsTable();
+  // Перерисовать TV-раздел для сброса кнопок
+  if(typeof applyTvFilters==='function') applyTvFilters();
   showToast('🗑 Корзина очищена','ok');
 }
 
