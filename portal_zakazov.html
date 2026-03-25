@@ -531,7 +531,10 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 
 
 <!-- ═══ ITEM DETAIL MODAL (для основного каталога, светового, Кари Кидс) ═══ -->
-<div class="upload-modal" id="itemDetailModal" style="max-width:700px;width:92vw;padding:0;overflow:hidden;border-radius:16px;">
+<div class="upload-modal" id="itemDetailModal" style="max-width:1100px;width:96vw;padding:0;overflow:hidden;border-radius:16px;display:flex;flex-direction:row;align-items:stretch;">
+
+  <!-- Левая часть: сама карточка товара -->
+  <div id="idm-main" style="min-width:0;flex:1;display:flex;flex-direction:column;">
   <div id="idm-header" style="background:linear-gradient(135deg,#2a4a7f,#4a7fc1);padding:20px 24px;display:flex;align-items:center;gap:12px;">
     <span id="idm-icon" style="font-size:22px">📦</span>
     <div style="flex:1;min-width:0;">
@@ -583,6 +586,11 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
         <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#7a9bc0;margin-bottom:6px;">РАЗДЕЛ</div>
         <div id="idm-cat" style="font-size:13px;font-weight:700;"></div>
       </div>
+      <!-- ══ ИСПОЛЬЗУЕТСЯ В КОМПЛЕКТАХ ══ -->
+      <div id="idm-kits-wrap" style="display:none;">
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#7a9bc0;margin-bottom:8px;">Используется в оборудовании</div>
+        <div id="idm-kits-tags" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+      </div>
       <!-- Количество и кнопка -->
       <div style="margin-top:auto;padding-top:16px;border-top:1px solid var(--border);display:flex;align-items:center;gap:12px;">
         <div class="qty-wrap">
@@ -596,6 +604,42 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
       </div>
     </div>
   </div>
+  </div><!-- /idm-main -->
+
+  <!-- Правая часть: панель комплекта (появляется при клике на тег) -->
+  <div id="idm-kit-panel" style="display:none;width:380px;flex-shrink:0;border-left:2px solid #ddd4ff;background:#faf8ff;flex-direction:column;overflow:hidden;">
+    <div id="idm-kp-header" style="background:linear-gradient(135deg,#2d1b69,#6b48c8);padding:14px 18px;display:flex;align-items:center;gap:10px;">
+      <span style="font-size:18px">📦</span>
+      <div style="flex:1;min-width:0;">
+        <div id="idm-kp-name" style="font-size:14px;font-weight:900;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
+        <div id="idm-kp-desc" style="font-size:11px;color:#c4b0ff;margin-top:2px;"></div>
+      </div>
+      <button onclick="idmCloseKitPanel()" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:26px;height:26px;border-radius:50%;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:900;flex-shrink:0;">✕</button>
+    </div>
+    <div style="flex:1;overflow-y:auto;">
+      <table style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr style="background:#f0ecff;position:sticky;top:0;z-index:1;">
+            <th style="padding:8px 10px;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:#7c5cbf;border-bottom:2px solid #ddd4ff;text-align:center;width:28px;">№</th>
+            <th style="padding:8px 10px;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:#7c5cbf;border-bottom:2px solid #ddd4ff;text-align:left;">Код</th>
+            <th style="padding:8px 10px;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:#7c5cbf;border-bottom:2px solid #ddd4ff;text-align:left;">Наименование</th>
+            <th style="padding:8px 10px;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:#7c5cbf;border-bottom:2px solid #ddd4ff;text-align:center;">Кол-во</th>
+          </tr>
+        </thead>
+        <tbody id="idm-kp-tbody"></tbody>
+      </table>
+    </div>
+    <div style="padding:12px 18px;background:#faf8ff;border-top:1px solid #ede8ff;display:flex;align-items:center;gap:10px;">
+      <span style="font-size:12px;font-weight:700;color:#7c5cbf;">Комплектов:</span>
+      <div style="display:flex;align-items:center;">
+        <button onclick="document.getElementById('idm-kp-qty').value=Math.max(1,(parseInt(document.getElementById('idm-kp-qty').value)||1)-1)" style="width:28px;height:28px;background:linear-gradient(135deg,#8060e0,#6b48c8);border:none;color:#fff;border-radius:7px 0 0 7px;font-size:15px;cursor:pointer;">−</button>
+        <input id="idm-kp-qty" type="number" value="1" min="1" max="99" style="width:42px;height:28px;border:1px solid #c4b0ff;border-left:none;border-right:none;text-align:center;font-family:monospace;font-size:13px;font-weight:700;outline:none;">
+        <button onclick="document.getElementById('idm-kp-qty').value=Math.min(99,(parseInt(document.getElementById('idm-kp-qty').value)||1)+1)" style="width:28px;height:28px;background:linear-gradient(135deg,#8060e0,#6b48c8);border:none;color:#fff;border-radius:0 7px 7px 0;font-size:15px;cursor:pointer;">+</button>
+      </div>
+      <button onclick="idmKpAddToCart()" style="margin-left:auto;background:linear-gradient(135deg,#8060e0,#6b48c8);color:#fff;border:none;border-radius:9px;padding:8px 16px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 3px 10px rgba(107,72,200,.3);">🛒 В корзину</button>
+    </div>
+  </div>
+
 </div>
 
 <!-- Kits Upload Modal -->
@@ -1261,6 +1305,12 @@ function openItemDetail(item, cartKeyPrefix) {
     btn.style.background = hdrColor;
   }
 
+  // Сбрасываем панель комплекта при открытии новой карточки
+  idmCloseKitPanel();
+
+  // Комплекты, в которых используется эта позиция
+  idmFillKitsTags(item.code);
+
   // Фото — галерея
   var allUrls = getAllImgUrls(item);
   idmGalleryInit(allUrls, item.name);
@@ -1359,8 +1409,122 @@ function idmGalleryStep(delta){
 function closeItemDetail(){
   document.getElementById('itemDetailModal').classList.remove('show');
   document.getElementById('overlay').classList.remove('show');
+  idmCloseKitPanel();
   currentItemDetail = null;
   currentItemDetailKey = null;
+}
+
+// ═══ ПАНЕЛЬ КОМПЛЕКТА внутри карточки товара ═══
+var idmCurrentKitId = null;
+
+function idmFillKitsTags(code){
+  var wrap = document.getElementById('idm-kits-wrap');
+  var tags = document.getElementById('idm-kits-tags');
+  tags.innerHTML = '';
+  // Ищем все комплекты, содержащие этот код
+  var found = allKits.filter(function(kit){
+    return kit.items.some(function(it){ return it.code === code; });
+  });
+  if(!found.length){ wrap.style.display = 'none'; return; }
+  wrap.style.display = '';
+  found.forEach(function(kit){
+    var tag = document.createElement('button');
+    tag.textContent = kit.id;
+    tag.title = kit.name;
+    tag.dataset.kitId = kit.id;
+    tag.style.cssText = 'background:linear-gradient(135deg,#ede8ff,#e4ddff);color:#6b48c8;border:1.5px solid #c4b0ff;'
+      + 'border-radius:20px;padding:4px 13px;font-size:12px;font-weight:800;cursor:pointer;'
+      + 'font-family:"Nunito",sans-serif;transition:all .15s;white-space:nowrap;';
+    tag.onmouseover = function(){ this.style.background='linear-gradient(135deg,#6b48c8,#8060e0)'; this.style.color='#fff'; this.style.borderColor='#6b48c8'; };
+    tag.onmouseout  = function(){
+      var isActive = idmCurrentKitId === this.dataset.kitId;
+      this.style.background = isActive ? 'linear-gradient(135deg,#6b48c8,#8060e0)' : 'linear-gradient(135deg,#ede8ff,#e4ddff)';
+      this.style.color = isActive ? '#fff' : '#6b48c8';
+      this.style.borderColor = isActive ? '#6b48c8' : '#c4b0ff';
+    };
+    tag.onclick = function(e){
+      e.stopPropagation();
+      idmOpenKitPanel(kit.id);
+    };
+    tags.appendChild(tag);
+  });
+}
+
+function idmOpenKitPanel(kitId){
+  var kit = allKits.find(function(k){ return k.id === kitId; });
+  if(!kit) return;
+
+  // Если уже открыт этот — закрываем
+  if(idmCurrentKitId === kitId){ idmCloseKitPanel(); return; }
+  idmCurrentKitId = kitId;
+
+  // Подсвечиваем активный тег
+  document.querySelectorAll('#idm-kits-tags button').forEach(function(b){
+    var isActive = b.dataset.kitId === kitId;
+    b.style.background = isActive ? 'linear-gradient(135deg,#6b48c8,#8060e0)' : 'linear-gradient(135deg,#ede8ff,#e4ddff)';
+    b.style.color = isActive ? '#fff' : '#6b48c8';
+    b.style.borderColor = isActive ? '#6b48c8' : '#c4b0ff';
+  });
+
+  // Заголовок
+  document.getElementById('idm-kp-name').textContent = kit.id + ' — ' + kit.name;
+  document.getElementById('idm-kp-desc').textContent = kit.desc || '';
+  document.getElementById('idm-kp-qty').value = 1;
+
+  // Таблица позиций
+  var tbody = document.getElementById('idm-kp-tbody');
+  tbody.innerHTML = '';
+  kit.items.forEach(function(it, i){
+    var tr = document.createElement('tr');
+    tr.style.borderBottom = '1px solid #ede8ff';
+    tr.style.background = i % 2 === 0 ? '#fff' : '#faf8ff';
+    var numTd  = document.createElement('td'); numTd.textContent = i+1;
+    numTd.style.cssText = 'text-align:center;color:#9b78e8;font-weight:700;font-size:11px;padding:7px 6px;width:28px;';
+    var codeTd = document.createElement('td'); codeTd.textContent = it.code;
+    codeTd.style.cssText = 'font-family:monospace;font-size:11px;color:#7c5cbf;white-space:nowrap;padding:7px 8px;';
+    var nameTd = document.createElement('td'); nameTd.textContent = it.name;
+    nameTd.style.cssText = 'font-size:12px;font-weight:500;padding:7px 8px;color:var(--text);';
+    // Подсвечиваем текущую позицию
+    if(currentItemDetail && it.code === currentItemDetail.code){
+      tr.style.background = '#ede8ff';
+      codeTd.style.color = '#4a20a0';
+      codeTd.style.fontWeight = '800';
+    }
+    var qtyTd  = document.createElement('td'); qtyTd.textContent = it.qty + ' шт';
+    qtyTd.style.cssText = 'text-align:center;font-weight:800;color:#6b48c8;white-space:nowrap;font-size:12px;padding:7px 6px;';
+    tr.appendChild(numTd); tr.appendChild(codeTd); tr.appendChild(nameTd); tr.appendChild(qtyTd);
+    tbody.appendChild(tr);
+  });
+
+  // Показываем панель
+  var panel = document.getElementById('idm-kit-panel');
+  panel.style.display = 'flex';
+  // Расширяем модал до нужной ширины
+  document.getElementById('itemDetailModal').style.maxWidth = '1100px';
+}
+
+function idmCloseKitPanel(){
+  idmCurrentKitId = null;
+  document.getElementById('idm-kit-panel').style.display = 'none';
+  // Сбрасываем подсветку тегов
+  document.querySelectorAll('#idm-kits-tags button').forEach(function(b){
+    b.style.background = 'linear-gradient(135deg,#ede8ff,#e4ddff)';
+    b.style.color = '#6b48c8';
+    b.style.borderColor = '#c4b0ff';
+  });
+}
+
+function idmKpAddToCart(){
+  if(!idmCurrentKitId) return;
+  var kit = allKits.find(function(k){ return k.id === idmCurrentKitId; });
+  if(!kit) return;
+  var mult = parseInt(document.getElementById('idm-kp-qty').value) || 1;
+  kit.items.forEach(function(it){
+    cart['KIT_'+kit.id+'_'+it.code] = {code:it.code, name:it.name, qty:it.qty*mult, baseQty:it.qty, kitId:kit.id, kitName:kit.name, kitMult:mult};
+  });
+  cart['KIT_'+kit.id] = {_kitGroup:true, kitId:kit.id, kitName:kit.name};
+  updCart(); renderKitsTable();
+  showToast('✅ ' + kit.name + ' ×' + mult + ' → корзина', 'ok');
 }
 
 function idmChangeQty(delta){
