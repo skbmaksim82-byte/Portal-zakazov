@@ -2194,6 +2194,8 @@ function loadComplectPhotos(){
       return count;
     });
 }
+
+function loadGitHubXlsx(){
   return fetch(GITHUB_XLSX)
     .then(function(r){
       if(!r.ok) throw new Error('Не удалось скачать XLSX (HTTP ' + r.status + ')');
