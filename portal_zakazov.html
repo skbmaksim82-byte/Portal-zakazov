@@ -2170,9 +2170,9 @@ function loadGitHubPhotos(folder, targetMap, label){
 // Загружает фото комплектов: имя файла (без расширения) = название комплекта
 // Поддерживает кириллику и пробелы в именах
 function loadComplectPhotos(){
-  return fetch(GITHUB_API + 'Foto%20complect')
+  return fetch(GITHUB_API + 'Foto%20Complect')
     .then(function(r){
-      if(!r.ok) throw new Error('Не удалось загрузить Foto complect (HTTP ' + r.status + ')');
+      if(!r.ok) throw new Error('Не удалось загрузить Foto Complect (HTTP ' + r.status + ')');
       return r.json();
     })
     .then(function(files){
@@ -2183,11 +2183,11 @@ function loadComplectPhotos(){
         if(!/\.(png|jpg|jpeg|gif|webp|svg)$/i.test(f.name)) return;
         // Ключ = имя файла без расширения (название комплекта)
         var kitName = f.name.replace(/\.[^.]+$/, '');
-        // URL строим через download_url (GitHub сам кодирует кириллику)
-        var url = f.download_url || (GITHUB_RAW + 'Foto%20complect/' + encodeURIComponent(f.name));
-        // Сохраняем: и оригинальное имя, и trim, и нижний регистр — для надёжного поиска
-        COMPLECT_PHOTOS[kitName]              = url;
-        COMPLECT_PHOTOS[kitName.trim()]       = url;
+        // URL берём из download_url — GitHub сам кодирует кириллику
+        var url = f.download_url || (GITHUB_RAW + 'Foto%20Complect/' + encodeURIComponent(f.name));
+        // Сохраняем по оригинальному имени, trim и нижнему регистру
+        COMPLECT_PHOTOS[kitName]               = url;
+        COMPLECT_PHOTOS[kitName.trim()]        = url;
         COMPLECT_PHOTOS[kitName.toLowerCase()] = url;
         count++;
       });
