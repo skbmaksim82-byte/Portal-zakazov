@@ -616,6 +616,10 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
       </div>
       <button onclick="idmCloseKitPanel()" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:26px;height:26px;border-radius:50%;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:900;flex-shrink:0;">✕</button>
     </div>
+    <!-- Фото комплекта -->
+    <div id="idm-kp-photo-wrap" style="display:none;background:#f0ecff;border-bottom:1px solid #ddd4ff;padding:10px 14px;align-items:center;justify-content:center;gap:12px;">
+      <img id="idm-kp-photo" src="" alt="" style="max-height:140px;max-width:100%;object-fit:contain;border-radius:8px;cursor:zoom-in;box-shadow:0 2px 10px rgba(107,72,200,.15);" title="Нажмите для увеличения">
+    </div>
     <div style="flex:1;overflow-y:auto;">
       <table style="width:100%;border-collapse:collapse;">
         <thead>
@@ -1263,7 +1267,7 @@ var IDM_HEADER_ICONS = {
   'Неизвестное оборудование':'❓','light':'💡','karikids':'👧'
 };
 
-function openItemDetail(item, cartKeyPrefix) {
+function openItemDetail(item, cartKeyPrefix, keepKitPanel) {
   currentItemDetail = item;
   var prefix = cartKeyPrefix || ''; // '' для основного каталога, 'L:' для светового
   currentItemDetailKey = prefix ? prefix + item.code : item.code;
@@ -1310,8 +1314,8 @@ function openItemDetail(item, cartKeyPrefix) {
     btn.style.background = hdrColor;
   }
 
-  // Сбрасываем панель комплекта при открытии новой карточки
-  idmCloseKitPanel();
+  // Сбрасываем панель комплекта только если открываем карточку из каталога (не из панели комплекта)
+  if(!keepKitPanel) idmCloseKitPanel();
 
   // Комплекты, в которых используется эта позиция
   idmFillKitsTags(item.code);
@@ -1476,27 +1480,61 @@ function idmOpenKitPanel(kitId){
   document.getElementById('idm-kp-desc').textContent = kit.desc || '';
   document.getElementById('idm-kp-qty').value = 1;
 
+  // Фото комплекта
+  var photoWrap = document.getElementById('idm-kp-photo-wrap');
+  var photoImg  = document.getElementById('idm-kp-photo');
+  var kitImgUrl = getKitImgUrl(kit);
+  if(kitImgUrl){
+    photoImg.src = kitImgUrl;
+    photoImg.style.display = 'block';
+    photoWrap.style.display = 'flex';
+    photoImg.onerror = function(){ photoWrap.style.display = 'none'; };
+    photoImg.onclick = function(){ openLightbox(kitImgUrl, kit.name); };
+  } else {
+    photoWrap.style.display = 'none';
+    photoImg.src = '';
+  }
+
   // Таблица позиций
   var tbody = document.getElementById('idm-kp-tbody');
   tbody.innerHTML = '';
   kit.items.forEach(function(it, i){
     var tr = document.createElement('tr');
     tr.style.borderBottom = '1px solid #ede8ff';
-    tr.style.background = i % 2 === 0 ? '#fff' : '#faf8ff';
+    tr.style.cursor = 'pointer';
+    tr.title = 'Открыть карточку: ' + it.name;
+    var isCurrent = currentItemDetail && it.code === currentItemDetail.code;
+    var bgNormal = i % 2 === 0 ? '#fff' : '#faf8ff';
+    tr.style.background = isCurrent ? '#ede8ff' : bgNormal;
+    tr.onmouseover = function(){ if(!isCurrent) this.style.background = '#f0ebff'; };
+    tr.onmouseout  = function(){ this.style.background = isCurrent ? '#ede8ff' : bgNormal; };
+
     var numTd  = document.createElement('td'); numTd.textContent = i+1;
     numTd.style.cssText = 'text-align:center;color:#9b78e8;font-weight:700;font-size:11px;padding:7px 6px;width:28px;';
     var codeTd = document.createElement('td'); codeTd.textContent = it.code;
-    codeTd.style.cssText = 'font-family:monospace;font-size:11px;color:#7c5cbf;white-space:nowrap;padding:7px 8px;';
+    codeTd.style.cssText = 'font-family:monospace;font-size:11px;color:' + (isCurrent ? '#4a20a0' : '#7c5cbf') + ';white-space:nowrap;padding:7px 8px;font-weight:' + (isCurrent ? '800' : '500') + ';';
     var nameTd = document.createElement('td'); nameTd.textContent = it.name;
     nameTd.style.cssText = 'font-size:12px;font-weight:500;padding:7px 8px;color:var(--text);';
-    // Подсвечиваем текущую позицию
-    if(currentItemDetail && it.code === currentItemDetail.code){
-      tr.style.background = '#ede8ff';
-      codeTd.style.color = '#4a20a0';
-      codeTd.style.fontWeight = '800';
-    }
     var qtyTd  = document.createElement('td'); qtyTd.textContent = it.qty + ' шт';
     qtyTd.style.cssText = 'text-align:center;font-weight:800;color:#6b48c8;white-space:nowrap;font-size:12px;padding:7px 6px;';
+
+    // Клик → открываем карточку позиции (ищем во всех разделах каталога)
+    (function(itemCode, itemName){
+      tr.onclick = function(){
+        var inLight = lightAll.find(function(x){ return x.code === itemCode; });
+        var inTv    = tvAll.find(function(x){ return x.code === itemCode; });
+        var inMain  = allItems.find(function(x){ return x.code === itemCode; });
+        var found   = inMain || inLight || inTv;
+        var prefix  = inLight ? 'L:' : '';
+        if(found){
+          openItemDetail(found, prefix, true);
+        } else {
+          // Позиция не загружена в каталог — показываем минимальную карточку
+          openItemDetail({code: itemCode, name: itemName, short: '', cat: ''}, '', true);
+        }
+      };
+    })(it.code, it.name);
+
     tr.appendChild(numTd); tr.appendChild(codeTd); tr.appendChild(nameTd); tr.appendChild(qtyTd);
     tbody.appendChild(tr);
   });
@@ -1511,6 +1549,8 @@ function idmOpenKitPanel(kitId){
 function idmCloseKitPanel(){
   idmCurrentKitId = null;
   document.getElementById('idm-kit-panel').style.display = 'none';
+  document.getElementById('idm-kp-photo-wrap').style.display = 'none';
+  document.getElementById('idm-kp-photo').src = '';
   // Сбрасываем подсветку тегов
   document.querySelectorAll('#idm-kits-tags button').forEach(function(b){
     b.style.background = 'linear-gradient(135deg,#ede8ff,#e4ddff)';
