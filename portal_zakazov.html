@@ -836,10 +836,15 @@ function getImgUrl(item) {
   return all.length ? all[0] : null;
 }
 
+var COMPLECT_PHOTOS = {}; // название комплекта → URL (Foto complect)
+
 // Получить URL картинки для комплекта (схемы сборки)
 function getKitImgUrl(kit) {
   if (kit.image && kit.image.indexOf('http') === 0) return kit.image;
   if (kit.image && kit.image.indexOf('data:') === 0) return kit.image; // base64 fallback
+  // GitHub: Foto complect — файл называется по имени комплекта
+  if (kit.name && COMPLECT_PHOTOS[kit.name]) return COMPLECT_PHOTOS[kit.name];
+  if (kit.id   && COMPLECT_PHOTOS[kit.id])   return COMPLECT_PHOTOS[kit.id];
   if (GDRIVE_BASE_URL && kit.id) {
     return GDRIVE_BASE_URL + encodeURIComponent(kit.id) + '.' + GDRIVE_EXT;
   }
@@ -2035,17 +2040,19 @@ function updateFromGitHub(){
   icon.innerHTML = "<span class='spin'>⏳</span>";
   showToast('☁️ Подключаемся к GitHub…', 'info');
 
-  var p1 = loadGitHubPhotos('Foto%20Svet',     SVET_PHOTOS,   'Foto Svet');
-  var p2 = loadGitHubPhotos('Foto%20slabotoch', SLAB_PHOTOS,   'Foto slabotoch');
+  var p1 = loadGitHubPhotos('Foto%20Svet',     SVET_PHOTOS,     'Foto Svet');
+  var p2 = loadGitHubPhotos('Foto%20slabotoch', SLAB_PHOTOS,     'Foto slabotoch');
   var p3 = loadGitHubXlsx();
-  var p4 = loadGitHubPhotos('Foto%20Oborud',   OBORUD_PHOTOS, 'Foto Oborud');
+  var p4 = loadGitHubPhotos('Foto%20Oborud',   OBORUD_PHOTOS,   'Foto Oborud');
+  var p5 = loadComplectPhotos();
 
-  Promise.all([p1, p2, p3, p4])
+  Promise.all([p1, p2, p3, p4, p5])
     .then(function(results){
-      var svetCnt   = results[0];
-      var slabCnt   = results[1];
-      var xlsxInfo  = results[2];
-      var oborudCnt = results[3];
+      var svetCnt      = results[0];
+      var slabCnt      = results[1];
+      var xlsxInfo     = results[2];
+      var oborudCnt    = results[3];
+      var complectCnt  = results[4];
 
       // Применяем фото к световому
       lightAll.forEach(function(it){
@@ -2062,8 +2069,15 @@ function updateFromGitHub(){
         var url = photoByCode(it.code, OBORUD_PHOTOS);
         if(url) it.photo = url;
       });
+      // Применяем фото к комплектам по имени
+      allKits.forEach(function(kit){
+        var url = COMPLECT_PHOTOS[kit.name] || COMPLECT_PHOTOS[kit.id] || null;
+        if(url) kit.image = url;
+      });
+      // Перерисовываем комплекты если открыты
+      if(currentTab === 'kits') renderKitsTable();
 
-      // Перерисовываем открытые панели
+      // Перерисовываем открытые панели каталога
       if(currentTab === 'light'){ lightFiltered=[]; lightRendered=0; document.getElementById('lightBody').innerHTML=''; applyLightFilters(); }
       if(currentTab === 'tv'){ tvFiltered=[]; tvRendered=0; document.getElementById('tvBody').innerHTML=''; applyTvFilters(); }
       if(currentTab === 'catalog' || currentTab === 'karikids'){ renderedCount=0; document.getElementById('tableBody').innerHTML=''; renderNextPage(); }
@@ -2071,6 +2085,7 @@ function updateFromGitHub(){
       var msg = '✅ Обновлено с GitHub!\n'
         + '📊 ' + xlsxInfo + '\n'
         + '🏪 Оборудование: ' + oborudCnt + ' фото\n'
+        + '📦 Комплекты: ' + complectCnt + ' фото\n'
         + '💡 Световое: ' + svetCnt + ' фото\n'
         + '📺 Слаботочное: ' + slabCnt + ' фото';
       showGitHubToast(msg);
@@ -2152,7 +2167,33 @@ function loadGitHubPhotos(folder, targetMap, label){
     });
 }
 
-function loadGitHubXlsx(){
+// Загружает фото комплектов: имя файла (без расширения) = название комплекта
+// Поддерживает кириллику и пробелы в именах
+function loadComplectPhotos(){
+  return fetch(GITHUB_API + 'Foto%20complect')
+    .then(function(r){
+      if(!r.ok) throw new Error('Не удалось загрузить Foto complect (HTTP ' + r.status + ')');
+      return r.json();
+    })
+    .then(function(files){
+      // Очищаем кэш
+      Object.keys(COMPLECT_PHOTOS).forEach(function(k){ delete COMPLECT_PHOTOS[k]; });
+      var count = 0;
+      files.forEach(function(f){
+        if(!/\.(png|jpg|jpeg|gif|webp|svg)$/i.test(f.name)) return;
+        // Ключ = имя файла без расширения (название комплекта)
+        var kitName = f.name.replace(/\.[^.]+$/, '');
+        // URL строим через download_url (GitHub сам кодирует кириллику)
+        var url = f.download_url || (GITHUB_RAW + 'Foto%20complect/' + encodeURIComponent(f.name));
+        // Сохраняем: и оригинальное имя, и trim, и нижний регистр — для надёжного поиска
+        COMPLECT_PHOTOS[kitName]              = url;
+        COMPLECT_PHOTOS[kitName.trim()]       = url;
+        COMPLECT_PHOTOS[kitName.toLowerCase()] = url;
+        count++;
+      });
+      return count;
+    });
+}
   return fetch(GITHUB_XLSX)
     .then(function(r){
       if(!r.ok) throw new Error('Не удалось скачать XLSX (HTTP ' + r.status + ')');
@@ -2570,6 +2611,11 @@ function parseKitsRows(rows){
   KITS_PRELOAD.forEach(function(k){ imgMap[k.id] = k.image || null; });
   allKits = Object.values(map).map(function(k){
     if(imgMap[k.id] !== undefined) k.image = imgMap[k.id];
+    // Применяем фото из GitHub-кэша Foto complect (если уже загружены)
+    if(!k.image){
+      var cu = COMPLECT_PHOTOS[k.name] || COMPLECT_PHOTOS[k.name && k.name.toLowerCase()] || COMPLECT_PHOTOS[k.id] || null;
+      if(cu) k.image = cu;
+    }
     return k;
   });
   document.getElementById('cnt-kits').textContent = allKits.length;
