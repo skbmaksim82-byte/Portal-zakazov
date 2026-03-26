@@ -609,7 +609,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 
 
 <!-- ═══ ITEM DETAIL MODAL (для основного каталога, светового, Кари Кидс) ═══ -->
-<div class="upload-modal" id="itemDetailModal" style="max-width:1100px;width:96vw;padding:0;overflow:hidden;border-radius:16px;display:flex;flex-direction:row;align-items:stretch;z-index:350;">
+<div class="upload-modal" id="itemDetailModal" style="max-width:560px;width:92vw;padding:0;overflow:hidden;border-radius:16px;display:flex;flex-direction:row;align-items:stretch;z-index:350;">
 
   <!-- Левая часть: сама карточка товара -->
   <div id="idm-main" style="min-width:0;flex:1;display:flex;flex-direction:column;">
@@ -692,7 +692,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
           <span style="color:#fff;font-size:12px;font-weight:700;">🔗 Совместимое оборудование</span>
           <button onclick="idmToggleCompat()" style="background:rgba(255,255,255,.2);border:none;color:#fff;width:22px;height:22px;border-radius:50%;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
         </div>
-        <div id="idm-compat-list" style="max-height:200px;overflow-y:auto;padding:8px;display:flex;flex-direction:column;gap:6px;"></div>
+        <div id="idm-compat-list" style="max-height:220px;overflow-y:auto;padding:8px 8px 14px;display:flex;flex-direction:column;gap:6px;"></div>
       </div>
     </div>
   </div>
@@ -1786,7 +1786,7 @@ function idmOpenKitPanel(kitId){
   var panel = document.getElementById('idm-kit-panel');
   panel.style.display = 'flex';
   // Расширяем модал до нужной ширины
-  document.getElementById('itemDetailModal').style.maxWidth = '1100px';
+  document.getElementById('itemDetailModal').style.maxWidth = '900px';
 }
 
 function idmCloseKitPanel(){
@@ -1794,6 +1794,7 @@ function idmCloseKitPanel(){
   document.getElementById('idm-kit-panel').style.display = 'none';
   document.getElementById('idm-kp-photo-wrap').style.display = 'none';
   document.getElementById('idm-kp-photo').src = '';
+  document.getElementById('itemDetailModal').style.maxWidth = '560px';
   // Сбрасываем подсветку тегов
   document.querySelectorAll('#idm-kits-tags button').forEach(function(b){
     b.style.background = 'linear-gradient(135deg,#ede8ff,#e4ddff)';
@@ -2225,19 +2226,22 @@ function parseRowsForCat(rows, fixedCat){
   }
   if(!rows[hi])return[];
   var h=rows[hi].map(function(c){return String(c||"").trim();});
-  var iCode=h.findIndex(function(c){return c.indexOf("Код")>=0;});
+  var iCode=h.findIndex(function(c){return c.indexOf("Код")>=0||c.indexOf("НМК")>=0||c.indexOf("Артикул")>=0;});
   var iName=h.findIndex(function(c){return c.indexOf("Наименование номенклатуры")>=0||(c.indexOf("Наименование")>=0&&c.indexOf("Краткое")<0);});
   var iShort=h.findIndex(function(c){return c.indexOf("Краткое")>=0;});
+  // Ищем также колонку «Описание» (если «Краткое» не найдено)
+  var iDesc=h.findIndex(function(c){return c==='Описание'||c.indexOf("Описание функционала")>=0;});
+  if(iShort<0 && iDesc>=0) iShort=iDesc;
   var iThumb=h.findIndex(function(c){return c.indexOf("Фото")>=0||c.indexOf("Photo")>=0;});
   var out=[];
   for(var i=hi+1;i<rows.length;i++){
     var r=rows[i];if(!r||!r.length)continue;
-    var name=String(r[iName]||"").trim();
+    var name=String(r[iName>=0?iName:1]||"").trim();
     if(!name||name==="undefined"||/не использ/i.test(name))continue;
     var item={
-      code:String(r[iCode]||"").trim(),
+      code:String(r[iCode>=0?iCode:0]||"").trim(),
       name:name,
-      short:String(r[iShort]||"").trim()
+      short:iShort>=0?String(r[iShort]||"").trim():""
     };
     if(iThumb>=0&&r[iThumb]){
       var photoVal=String(r[iThumb]).trim();
@@ -2256,7 +2260,6 @@ var GITHUB_XLSX = GITHUB_RAW + '%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA_%D0%BE%D0%B
 function updateFromGitHub(){
   var icon = document.getElementById('updateIcon');
   icon.innerHTML = "<span class='spin'>⏳</span>";
-  showToast('☁️ Подключаемся к GitHub…', 'info');
 
   var p1 = loadGitHubPhotos('Foto%20Svet',     SVET_PHOTOS,     'Foto Svet');
   var p2 = loadGitHubPhotos('Foto%20slabotoch', SLAB_PHOTOS,     'Foto slabotoch');
@@ -2499,7 +2502,7 @@ function showGitHubToast(msg){
   closeBtn.onclick = function(){ div.remove(); };
   div.appendChild(closeBtn);
   document.body.appendChild(div);
-  setTimeout(function(){ if(div.parentNode) div.remove(); }, 8000);
+  setTimeout(function(){ if(div.parentNode) div.remove(); }, 5000);
 }
 
 function openUploadModal(){document.getElementById("uploadModal").classList.add("show");document.getElementById("overlay").classList.add("show");}
