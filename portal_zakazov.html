@@ -3165,52 +3165,22 @@ function exportToExcel(section){
     +'<Override PartName="/xl/sharedStrings.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml"/>'
     +'</Types>';
 
-  // Build ZIP using JSZip (bundled inside SheetJS)
-  var zip = new (XLSX.utils.book_new().constructor===Object ? null : null);
-  // SheetJS exposes JSZip internally — use cfb write instead
-  // Simpler: use Blob approach with XLSX write
-  var wbOut = {SheetNames:[sheetName.substring(0,31)], Sheets:{}};
-  // Actually build the zip manually
-  // Use the fact that XLSX has a zip writer
-  try {
-    var JSZipConstructor = (typeof JSZip !== 'undefined') ? JSZip : null;
-    if(!JSZipConstructor && XLSX.CFB) {
-      // Fallback: write via XLSX with raw approach
-      throw new Error('use_fallback');
-    }
-    if(!JSZipConstructor) throw new Error('use_fallback');
-    var z = new JSZipConstructor();
-    z.file('[Content_Types].xml', ctXml);
-    z.file('_rels/.rels', rootRels);
-    z.file('xl/workbook.xml', wbXml);
-    z.file('xl/_rels/workbook.xml.rels', relsXml);
-    z.file('xl/worksheets/sheet1.xml', xml);
-    z.file('xl/styles.xml', stylesXml);
-    z.file('xl/sharedStrings.xml', sstXml);
-    z.generateAsync({type:'blob', mimeType:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'})
-      .then(function(blob){
-        var url = URL.createObjectURL(blob);
-        var a = document.createElement('a'); a.href=url; a.download=filename; a.click();
-        URL.revokeObjectURL(url);
-        showToast('📥 Выгружено '+data.length.toLocaleString('ru')+' позиций','ok');
-      });
-  } catch(e) {
-    // Fallback: собираем ZIP вручную через минимальный zip builder
-    var parts = [
-      {name:'[Content_Types].xml', data:ctXml},
-      {name:'_rels/.rels', data:rootRels},
-      {name:'xl/workbook.xml', data:wbXml},
-      {name:'xl/_rels/workbook.xml.rels', data:relsXml},
-      {name:'xl/worksheets/sheet1.xml', data:xml},
-      {name:'xl/styles.xml', data:stylesXml},
-      {name:'xl/sharedStrings.xml', data:sstXml}
-    ];
-    var blob = buildZipBlob(parts);
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a'); a.href=url; a.download=filename; a.click();
-    URL.revokeObjectURL(url);
-    showToast('📥 Выгружено '+data.length.toLocaleString('ru')+' позиций','ok');
-  }
+  // Собираем XLSX файл (ZIP с XML)
+  var parts = [
+    {name:'[Content_Types].xml', data:ctXml},
+    {name:'_rels/.rels', data:rootRels},
+    {name:'xl/workbook.xml', data:wbXml},
+    {name:'xl/_rels/workbook.xml.rels', data:relsXml},
+    {name:'xl/worksheets/sheet1.xml', data:xml},
+    {name:'xl/styles.xml', data:stylesXml},
+    {name:'xl/sharedStrings.xml', data:sstXml}
+  ];
+  var blob = buildZipBlob(parts);
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a'); a.href=url; a.download=filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('📥 Выгружено '+data.length.toLocaleString('ru')+' позиций','ok');
 }
 
 // Minimal ZIP builder (no compression, store only)
