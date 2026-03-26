@@ -1908,8 +1908,6 @@ function processFile(file){
         "Неизвестное оборудование":"Неизвестное оборудование",
         "Сводка":null,
         "Комплекты":"__kits__",
-        "ТВ":"__tv__",
-        "Фото ТВ":"__tv_photos__",
         "Слаботочное оборудование":"__slabot__"
       };
 
@@ -1932,25 +1930,12 @@ function processFile(file){
           parseKitsRows(kitsRows);
           return;
         }
-        // Лист «ТВ» — обрабатываем отдельно
-        if(catKey==="__tv__"){
-          var tvRows=XLSX.utils.sheet_to_json(wb.Sheets[sName],{header:1,defval:""});
-          parseTvRows(tvRows);
-          return;
-        }
         // Лист «Слаботочное оборудование»
         if(catKey==="__slabot__"){
           var slabotRows=XLSX.utils.sheet_to_json(wb.Sheets[sName],{header:1,defval:""});
           parseSlabotRows(slabotRows);
           return;
         }
-        // Лист «Фото ТВ» — таблица кодов и URL фото
-        if(catKey==="__tv_photos__"){
-          var photoRows=XLSX.utils.sheet_to_json(wb.Sheets[sName],{header:1,defval:""});
-          parseTvPhotos(photoRows);
-          return;
-        }
-
         var rows=XLSX.utils.sheet_to_json(wb.Sheets[sName],{header:1,defval:""});
         var parsed=parseRowsForCat(rows,catKey);
         if(!obj[catKey])obj[catKey]=[];
@@ -1993,64 +1978,6 @@ function processFile(file){
     finally{document.getElementById("updateIcon").textContent="🔄";}
   };
   reader.readAsArrayBuffer(file);
-}
-
-// Хранилище URL фото ТВ: код → URL
-var TV_PHOTOS = {};
-
-// Парсит лист «Фото ТВ»: Код | Наименование | URL
-function parseTvPhotos(rows){
-  var newPhotos = {};
-  for(var i = 0; i < rows.length; i++){
-    var r = rows[i];
-    var code = String(r[0]||'').trim();
-    var url  = String(r[2]||'').trim();
-    if(!code || code === 'Код товара') continue;
-    if(url && url.indexOf('http') === 0) newPhotos[code] = url;
-  }
-  TV_PHOTOS = newPhotos;
-  // Применяем к уже загруженным товарам ТВ
-  tvAll.forEach(function(it){
-    if(TV_PHOTOS[it.code]) it.photo = TV_PHOTOS[it.code];
-  });
-  // Перерисовываем если открыт раздел ТВ
-  if(currentTab === 'tv'){
-    tvFiltered = []; tvRendered = 0;
-    document.getElementById('tvBody').innerHTML = '';
-    applyTvFilters();
-  }
-  console.log('[ТВ Фото] загружено: ' + Object.keys(newPhotos).length + ' ссылок');
-}
-
-// Парсит лист ТВ
-function parseTvRows(rows){
-  // Заголовок: наименование | RUM | Фото
-  var start = (rows[0] && String(rows[0][0]).toLowerCase().indexOf('наимено') >= 0) ? 1 : 0;
-  var newItems = [];
-  for(var i = start; i < rows.length; i++){
-    var r = rows[i];
-    var name = String(r[0]||'').trim();
-    var code = String(r[1]||'').trim();
-    var photo = String(r[2]||'').trim();
-    // SheetJS возвращает пустую строку для пустых ячеек при defval:''
-    if(code === 'None' || code === 'undefined') code = '';
-    if(!name || name.toLowerCase() === 'наименование' || name === 'None') continue;
-    var item = {code: code, name: name};
-    // 1. URL из колонки «Фото» в листе ТВ
-    if(photo && photo.indexOf('http') === 0) item.photo = photo;
-    // 2. URL из листа «Фото ТВ» (если уже загружен)
-    if(!item.photo && TV_PHOTOS[code]) item.photo = TV_PHOTOS[code];
-    
-    newItems.push(item);
-  }
-  tvAll = newItems;
-  tvFiltered = [];
-  tvRendered = 0;
-  document.getElementById('tvBody').innerHTML = '';
-  var cnt = document.getElementById('cnt-tv');
-  if(cnt) cnt.textContent = tvAll.length.toLocaleString('ru');
-  document.getElementById('tvResultsInfo').textContent = tvAll.length.toLocaleString('ru') + ' позиций';
-  if(currentTab === 'tv') applyTvFilters();
 }
 
 // Парсит строки листа с фиксированной категорией (не использует catOf)
@@ -2270,8 +2197,6 @@ function loadGitHubXlsx(){
         'Неизвестное оборудование':'Неизвестное оборудование',
         'Сводка':null,
         'Комплекты':'__kits__',
-        'ТВ':'__tv__',
-        'Фото ТВ':'__tv_photos__',
         'Слаботочное оборудование':'__slabot__'
       };
       var obj = {}; CAT_ORDER.forEach(function(c){ obj[c]=[]; });
@@ -2285,9 +2210,7 @@ function loadGitHubXlsx(){
         }
         if(!catKey) return;
         if(catKey === '__kits__'){ parseKitsRows(XLSX.utils.sheet_to_json(wb.Sheets[sName],{header:1,defval:''})); return; }
-        if(catKey === '__tv__'){ parseTvRows(XLSX.utils.sheet_to_json(wb.Sheets[sName],{header:1,defval:''})); return; }
         if(catKey === '__slabot__'){ parseSlabotRows(XLSX.utils.sheet_to_json(wb.Sheets[sName],{header:1,defval:''})); return; }
-        if(catKey === '__tv_photos__'){ parseTvPhotos(XLSX.utils.sheet_to_json(wb.Sheets[sName],{header:1,defval:''})); return; }
         var rows = XLSX.utils.sheet_to_json(wb.Sheets[sName],{header:1,defval:''});
         var parsed = parseRowsForCat(rows, catKey);
         if(!obj[catKey]) obj[catKey] = [];
