@@ -408,7 +408,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <div class="table-wrap" id="tableWrap">
       <table>
         <thead><tr>
-          <th class="th-img">Фото</th><th class="th-code">Код</th><th>Наименование</th><th>Краткое описание</th>
+          <th class="th-img">Фото</th><th class="th-code">Код</th><th>Наименование</th><th style="text-align:center">Краткое описание</th>
           <th class="th-qty">Количество</th><th class="th-action">В корзину</th>
         </tr></thead>
         <tbody id="tableBody"></tbody>
@@ -459,7 +459,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
           <th style="width:60px"></th>
           <th class="th-code">Код</th>
           <th>Наименование комплекта</th>
-          <th>Описание</th>
+          <th style="text-align:center">Краткое описание</th>
           <th class="th-qty">Кол-во</th>
           <th class="th-action">В корзину</th>
         </tr></thead>
@@ -494,7 +494,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
               <th class="th-img">Фото</th>
               <th class="th-code">Код</th>
               <th>Наименование</th>
-              <th style="min-width:180px">Краткое описание</th>
+              <th style="min-width:180px;text-align:center">Краткое описание</th>
               <th class="th-qty">Кол-во</th>
               <th class="th-action">В корзину</th>
             </tr></thead>
@@ -2985,7 +2985,7 @@ function renderKitsTable(){
     var td2 = document.createElement('td'); td2.style.fontWeight='600';
     var sp2=document.createElement('span'); sp2.textContent=kit.name; sp2.style.cursor='pointer';
     sp2.onclick=(function(id){return function(){openKitDetail(id);};})(kit.id); td2.appendChild(sp2);
-    var td3 = document.createElement('td'); td3.style.cssText='color:var(--text2);font-size:12px';
+    var td3 = document.createElement('td'); td3.style.cssText='color:var(--text2);font-size:12px;text-align:center';
     td3.innerHTML = escHtml(kit.desc||'') + ' <span style="color:var(--text3);font-size:11px">('+kit.items.length+' поз.)</span>';
     var td4 = document.createElement('td'); td4.className='td-qty'; td4.appendChild(qw);
     var td5 = document.createElement('td'); td5.className='td-action'; td5.appendChild(btn);
