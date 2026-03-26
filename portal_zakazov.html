@@ -19,28 +19,83 @@
 body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh;overflow-x:hidden;}
 
 /* ── HEADER ── */
-.header{background:var(--surface2);border-bottom:1px solid var(--border);box-shadow:var(--shadow-sm);
-  padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:62px;
-  position:sticky;top:0;z-index:100;}
-.logo{display:flex;align-items:center;gap:12px;}
-.logo-icon{width:38px;height:38px;background:linear-gradient(135deg,#4a7fc1,#7458b8);
-  border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;box-shadow:var(--shadow-md);}
-.logo-text{font-size:16px;font-weight:800;letter-spacing:-.3px;}
-.logo-sub{font-size:11px;color:var(--text3);font-weight:500;}
-.header-right{display:flex;align-items:center;gap:10px;}
+.header{background:linear-gradient(135deg,#3d4260 0%,#4f5578 40%,#3e4d60 100%);border-bottom:none;
+  box-shadow:0 4px 20px rgba(0,0,0,.18);
+  padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:64px;
+  position:sticky;top:0;z-index:100;overflow:hidden;}
+.header::before{content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 600px 120px at 20% 50%,rgba(74,127,193,.12),transparent),
+             radial-gradient(ellipse 400px 100px at 80% 50%,rgba(116,88,184,.10),transparent);
+  pointer-events:none;}
+.header-particles{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+.header-particles span{position:absolute;border-radius:50%;opacity:0;
+  animation:hdrFloat linear infinite;}
+@keyframes hdrFloat{
+  0%{opacity:0;transform:translateY(0) scale(.5);}
+  15%{opacity:.5;}
+  85%{opacity:.3;}
+  100%{opacity:0;transform:translateY(-70px) scale(1.2);}
+}
+.logo{display:flex;align-items:center;gap:14px;position:relative;z-index:1;}
+.logo-icon{width:40px;height:40px;background:linear-gradient(135deg,#5a8fd1,#8468c8);
+  border-radius:11px;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 14px rgba(74,127,193,.35),0 4px 12px rgba(0,0,0,.2);
+  animation:logoGlow 3s ease-in-out infinite;position:relative;cursor:pointer;
+  transition:transform .2s;}
+.logo-icon:hover{transform:scale(1.08);}
+.logo-icon:active{transform:scale(.95);}
+@keyframes logoGlow{
+  0%,100%{box-shadow:0 0 14px rgba(74,127,193,.35),0 4px 12px rgba(0,0,0,.2);}
+  50%{box-shadow:0 0 22px rgba(116,88,184,.5),0 4px 14px rgba(0,0,0,.2);}
+}
+/* Box icon parts */
+.box-icon{position:relative;width:22px;height:20px;}
+.box-body{position:absolute;bottom:0;left:1px;width:20px;height:13px;
+  background:linear-gradient(180deg,#ffd080,#f0a030);border-radius:2px;
+  box-shadow:inset 0 -2px 0 rgba(0,0,0,.12);}
+.box-body::after{content:'';position:absolute;left:50%;top:0;bottom:0;width:3px;
+  margin-left:-1.5px;background:rgba(180,100,0,.25);border-radius:1px;}
+.box-lid{position:absolute;top:0;left:-1px;width:24px;height:7px;
+  background:linear-gradient(180deg,#ffe0a0,#f0b040);border-radius:2px 2px 0 0;
+  transform-origin:bottom center;transition:transform .35s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 -1px 3px rgba(0,0,0,.1);}
+.logo-icon:hover .box-lid{transform:rotate(-55deg) translateY(-2px);}
+.box-star{position:absolute;top:-2px;left:50%;margin-left:-4px;width:8px;height:8px;
+  opacity:0;transform:scale(0);transition:all .35s .1s cubic-bezier(.34,1.56,.64,1);}
+.logo-icon:hover .box-star{opacity:1;transform:scale(1) translateY(-5px);}
+.box-star::before,.box-star::after{content:'';position:absolute;background:#fff;}
+.box-star::before{width:2px;height:8px;left:3px;top:0;border-radius:1px;}
+.box-star::after{width:8px;height:2px;top:3px;left:0;border-radius:1px;}
+.logo-text{font-size:16px;font-weight:800;letter-spacing:-.3px;color:#fff;}
+.logo-sub{font-size:11px;color:rgba(255,255,255,.5);font-weight:500;}
+.header-right{display:flex;align-items:center;gap:10px;position:relative;z-index:1;}
+/* Authors modal */
+.authors-overlay{position:fixed;inset:0;background:rgba(30,32,40,.5);backdrop-filter:blur(4px);
+  z-index:600;display:none;align-items:center;justify-content:center;}
+.authors-overlay.show{display:flex;}
+.authors-modal{background:#fff;border-radius:16px;padding:32px 36px;max-width:400px;width:90%;
+  box-shadow:0 20px 60px rgba(0,0,0,.25);text-align:center;position:relative;
+  animation:authIn .3s ease;}
+@keyframes authIn{from{opacity:0;transform:scale(.9) translateY(10px);}to{opacity:1;transform:scale(1) translateY(0);}}
+.authors-modal h3{font-size:18px;font-weight:800;margin-bottom:6px;color:var(--text);}
+.authors-modal .auth-sub{font-size:12px;color:var(--text3);margin-bottom:20px;}
+.authors-list{list-style:none;padding:0;margin:0 0 20px;}
+.authors-list li{padding:10px 14px;border-radius:10px;background:var(--surface3);margin-bottom:6px;
+  font-size:14px;font-weight:600;color:var(--text2);display:flex;align-items:center;gap:10px;}
+.authors-list li span{font-size:18px;}
 
 /* ── TABS ── */
 
 /* buttons */
-.update-btn{background:linear-gradient(135deg,#3aacbe,var(--btn-update));color:#fff;border:none;
-  border-radius:9px;padding:8px 16px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;
-  cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 3px 12px rgba(42,138,154,.38);transition:all .2s;}
-.update-btn:hover{transform:translateY(-2px);box-shadow:0 5px 18px rgba(42,138,154,.5);}
-.cart-btn{background:linear-gradient(135deg,var(--btn-cart),#9070d8);color:#fff;border:none;
-  border-radius:9px;padding:8px 18px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;
-  cursor:pointer;display:flex;align-items:center;gap:7px;box-shadow:0 3px 12px rgba(116,88,184,.4);transition:all .2s;}
-.cart-btn:hover{transform:translateY(-2px);}
-.cart-count{background:rgba(255,255,255,.25);border-radius:20px;padding:1px 8px;font-size:12px;font-weight:800;}
+.update-btn{background:rgba(58,172,190,.2);backdrop-filter:blur(8px);color:#7ddfee;border:1px solid rgba(58,172,190,.3);
+  border-radius:10px;padding:8px 16px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;
+  cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 0 12px rgba(42,138,154,.15);transition:all .25s;}
+.update-btn:hover{transform:translateY(-2px);background:rgba(58,172,190,.35);box-shadow:0 0 20px rgba(42,138,154,.35);border-color:rgba(58,172,190,.6);}
+.cart-btn{background:rgba(116,88,184,.2);backdrop-filter:blur(8px);color:#c4b0ff;border:1px solid rgba(116,88,184,.3);
+  border-radius:10px;padding:8px 18px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;
+  cursor:pointer;display:flex;align-items:center;gap:7px;box-shadow:0 0 12px rgba(116,88,184,.15);transition:all .25s;}
+.cart-btn:hover{transform:translateY(-2px);background:rgba(116,88,184,.35);box-shadow:0 0 20px rgba(116,88,184,.35);border-color:rgba(116,88,184,.6);}
+.cart-count{background:rgba(255,255,255,.12);border-radius:20px;padding:1px 8px;font-size:12px;font-weight:800;}
 .spin{display:inline-block;animation:spin .8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 @keyframes slideUp{from{opacity:0;transform:translateX(-50%) translateY(20px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
@@ -279,8 +334,15 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 <input type="file" id="fileInput" accept=".xlsx,.xls">
 
 <div class="header">
+  <div class="header-particles" id="hdrParticles"></div>
   <div class="logo">
-    <div class="logo-icon">📦</div>
+    <div class="logo-icon" id="logoIcon" onclick="document.getElementById('authorsOverlay').classList.add('show')" title="О проекте">
+      <div class="box-icon">
+        <div class="box-lid"></div>
+        <div class="box-body"></div>
+        <div class="box-star"></div>
+      </div>
+    </div>
     <div>
       <div class="logo-text">Портал заказов — Склад</div>
       <div class="logo-sub" id="catalogInfo">Загрузка…</div>
@@ -289,6 +351,22 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
   <div class="header-right">
     <button class="update-btn" onclick="updateFromGitHub()"><span id="updateIcon">☁️</span> Обновить</button>
     <button class="cart-btn" onclick="toggleCart()">🛒 Корзина <span class="cart-count" id="cartCountBadge">0</span></button>
+  </div>
+</div>
+
+<!-- Authors modal -->
+<div class="authors-overlay" id="authorsOverlay" onclick="if(event.target===this)this.classList.remove('show')">
+  <div class="authors-modal">
+    <h3>📦 Портал заказов</h3>
+    <div class="auth-sub">Система управления складским оборудованием</div>
+    <ul class="authors-list" id="authorsList">
+      <li><span>👤</span> —</li>
+    </ul>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:16px;">Версия 3.0 · 2025</div>
+    <button onclick="document.getElementById('authorsOverlay').classList.remove('show')"
+      style="background:linear-gradient(135deg,#4a7fc1,#7458b8);color:#fff;border:none;border-radius:10px;
+      padding:10px 28px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;
+      box-shadow:0 4px 14px rgba(74,127,193,.3);transition:all .2s;">Закрыть</button>
   </div>
 </div>
 
@@ -316,18 +394,6 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <button class="cat-btn" onclick="selectCat('tv')" id="btn-tv" style="--cat-color:#0e7490">
       <span class="cat-icon">📺</span><span class="cat-label">Слаботочное оборудование</span><span class="cat-count" id="cnt-tv">0</span>
     </button>
-
-    <!-- ═══ PULSE WIDGET ═══ -->
-    <div style="margin-top:auto;padding:14px 14px 10px;border-top:1px solid var(--border);position:relative;overflow:hidden;" id="pulseWidget">
-      <canvas id="pulseCanvas" style="position:absolute;inset:0;pointer-events:none;opacity:.35;"></canvas>
-      <div style="font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:10px;display:flex;align-items:center;gap:6px;">
-        <span id="pulseOrb" style="width:7px;height:7px;border-radius:50%;background:#3aacbe;display:inline-block;"></span>
-        Пульс склада
-      </div>
-      <div id="pulseBars" style="display:flex;flex-direction:column;gap:6px;position:relative;z-index:1;"></div>
-      <div id="pulseTotal" style="margin-top:10px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:800;background:linear-gradient(135deg,#4a7fc1,#7458b8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.5px;">—</div>
-      <div style="text-align:center;font-size:9px;color:var(--text3);font-weight:600;">позиций в каталоге</div>
-    </div>
   </div>
 
   <!-- Main catalog table -->
@@ -603,16 +669,30 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
         <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#7a9bc0;margin-bottom:8px;">Используется в оборудовании</div>
         <div id="idm-kits-tags" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
       </div>
-      <!-- Количество и кнопка -->
-      <div style="margin-top:auto;padding-top:16px;border-top:1px solid var(--border);display:flex;align-items:center;gap:12px;">
-        <div class="qty-wrap">
-          <button class="qty-btn" onclick="idmChangeQty(-1)">−</button>
-          <input class="qty-input" type="number" min="1" id="idm-qty" value="1">
-          <button class="qty-btn" onclick="idmChangeQty(1)">+</button>
+      <!-- Количество и кнопки -->
+      <div style="margin-top:auto;padding-top:16px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div class="qty-wrap">
+            <button class="qty-btn" onclick="idmChangeQty(-1)">−</button>
+            <input class="qty-input" type="number" min="1" id="idm-qty" value="1">
+            <button class="qty-btn" onclick="idmChangeQty(1)">+</button>
+          </div>
+          <button id="idm-cart-btn" onclick="idmAddToCart()" style="flex:1;height:38px;background:linear-gradient(135deg,#2a4a7f,#4a7fc1);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;">
+            + В корзину
+          </button>
         </div>
-        <button id="idm-cart-btn" onclick="idmAddToCart()" style="flex:1;height:38px;background:linear-gradient(135deg,#2a4a7f,#4a7fc1);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;">
-          + В корзину
+        <!-- Кнопка совместимости -->
+        <button id="idm-compat-btn" onclick="idmToggleCompat()" style="display:none;width:100%;height:36px;background:linear-gradient(135deg,#1a6a3a,#2a9a5a);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;font-family:'Nunito',sans-serif;">
+          🔗 Совместимость <span id="idm-compat-cnt" style="background:rgba(255,255,255,.2);border-radius:10px;padding:1px 8px;font-size:11px;margin-left:4px;"></span>
         </button>
+      </div>
+      <!-- Панель совместимости (разворачивается по кнопке) -->
+      <div id="idm-compat-panel" style="display:none;margin-top:8px;border:1.5px solid #b0e0b0;border-radius:12px;background:#f6fbf6;overflow:hidden;">
+        <div style="background:linear-gradient(135deg,#1a6a3a,#2a9a5a);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;">
+          <span style="color:#fff;font-size:12px;font-weight:700;">🔗 Совместимое оборудование</span>
+          <button onclick="idmToggleCompat()" style="background:rgba(255,255,255,.2);border:none;color:#fff;width:22px;height:22px;border-radius:50%;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+        </div>
+        <div id="idm-compat-list" style="max-height:200px;overflow-y:auto;padding:8px;display:flex;flex-direction:column;gap:6px;"></div>
       </div>
     </div>
   </div>
@@ -741,6 +821,51 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 
 <script>
 // ═══ DATA ═══
+
+// ═══ СОВМЕСТИМОСТЬ DATA ═══
+var COMPAT_MAP = {}; // код → [{code, name, type, comment}]
+
+function parseCompatRows(rows){
+  if(!rows || !rows.length) return;
+  var newMap = {};
+  // Пропускаем заголовки (строки 0-4), данные с 5й
+  var start = 0;
+  for(var i=0; i<Math.min(6,rows.length); i++){
+    var c = String(rows[i]&&rows[i][0]||'').trim();
+    if(c.indexOf('RUM')===0||c.match(/^\d{5,}/)){start=i;break;}
+    if(c.indexOf('▼')>=0||c==='Код позиции A') continue;
+  }
+  if(start===0){
+    // Ищем первую строку данных
+    for(var i=0;i<rows.length;i++){
+      var c=String(rows[i]&&rows[i][0]||'').trim();
+      if(c&&c!=='Код позиции A'&&c.indexOf('▼')<0&&c.indexOf('ТАБЛИЦА')<0&&c.indexOf('Каждая')<0&&c.indexOf('Код из')<0) {start=i;break;}
+    }
+  }
+  function addLink(from,to,nameFrom,nameTo,linkType,comment){
+    if(!newMap[from]) newMap[from]=[];
+    // Не дублировать
+    var exists=newMap[from].some(function(e){return e.code===to;});
+    if(!exists) newMap[from].push({code:to,name:nameTo,type:linkType,comment:comment});
+  }
+  for(var i=start;i<rows.length;i++){
+    var r=rows[i]; if(!r) continue;
+    var codeA=String(r[0]||'').trim();
+    var nameA=String(r[1]||'').trim();
+    var codeB=String(r[2]||'').trim();
+    var nameB=String(r[3]||'').trim();
+    var linkType=String(r[4]||'подходит').trim().toLowerCase();
+    var comment=String(r[5]||'').trim();
+    if(!codeA||!codeB) continue;
+    if(codeA==='None'||codeB==='None') continue;
+    // Двусторонняя связь
+    addLink(codeA,codeB,nameA,nameB,linkType,comment);
+    addLink(codeB,codeA,nameB,nameA,linkType,comment);
+  }
+  COMPAT_MAP=newMap;
+  var pairs=0; Object.values(newMap).forEach(function(a){pairs+=a.length;});
+  console.log('[Совместимость] загружено: '+pairs+' связей для '+Object.keys(newMap).length+' позиций');
+}
 
 // ═══ СЛАБОТОЧНОЕ ОБОРУДОВАНИЕ DATA ═══
 var SLABOT_CATS = {}; // { категория: [items] }
@@ -1332,6 +1457,9 @@ function openItemDetail(item, cartKeyPrefix, keepKitPanel) {
   // Комплекты, в которых используется эта позиция
   idmFillKitsTags(item.code);
 
+  // Совместимость
+  idmFillCompat(item.code);
+
   // Фото — галерея
   var allUrls = getAllImgUrls(item);
   idmGalleryInit(allUrls, item.name);
@@ -1430,6 +1558,9 @@ function idmGalleryStep(delta){
 function closeItemDetail(){
   document.getElementById('itemDetailModal').classList.remove('show');
   idmCloseKitPanel();
+  // Сбросить панель совместимости
+  var cp = document.getElementById('idm-compat-panel');
+  if(cp) cp.style.display='none';
   currentItemDetail = null;
   currentItemDetailKey = null;
   // Если карточка комплекта всё ещё открыта — не закрываем overlay
@@ -1471,6 +1602,104 @@ function idmFillKitsTags(code){
     };
     tags.appendChild(tag);
   });
+}
+
+function idmFillCompat(code){
+  var btn = document.getElementById('idm-compat-btn');
+  var panel = document.getElementById('idm-compat-panel');
+  var list = document.getElementById('idm-compat-list');
+  panel.style.display='none';
+  list.innerHTML='';
+  var links = COMPAT_MAP[code];
+  if(!links || !links.length){ btn.style.display='none'; return; }
+  btn.style.display='';
+  document.getElementById('idm-compat-cnt').textContent=links.length;
+
+  links.forEach(function(link){
+    var row = document.createElement('div');
+    row.style.cssText='display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;'
+      +'background:#fff;border:1px solid #d0e8d0;transition:all .15s;';
+    row.onmouseenter=function(){this.style.borderColor='#80c080';this.style.boxShadow='0 2px 8px rgba(0,100,0,.08)';};
+    row.onmouseleave=function(){this.style.borderColor='#d0e8d0';this.style.boxShadow='none';};
+
+    // Иконка типа
+    var typeIcon = link.type==='заменяет'?'🔄':link.type==='требует'?'⚠️':'🔗';
+    var ico = document.createElement('span');
+    ico.textContent=typeIcon; ico.style.cssText='font-size:14px;flex-shrink:0;';
+
+    // Инфо (код + название), кликабельно
+    var info = document.createElement('div');
+    info.style.cssText='flex:1;min-width:0;cursor:pointer;';
+    info.title=link.comment||'Нажмите для просмотра';
+    var nameEl = document.createElement('div');
+    nameEl.textContent=link.name;
+    nameEl.style.cssText='font-size:12px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;';
+    var codeLine = document.createElement('div');
+    codeLine.style.cssText='display:flex;align-items:center;gap:6px;margin-top:2px;';
+    var codeEl = document.createElement('span');
+    codeEl.textContent=link.code;
+    codeEl.style.cssText='font-family:monospace;font-size:10px;color:#2a8a4a;font-weight:700;';
+    var typeTag = document.createElement('span');
+    typeTag.textContent=link.type||'подходит';
+    typeTag.style.cssText='font-size:9px;border-radius:10px;padding:1px 7px;font-weight:700;';
+    if(link.type==='требует'){typeTag.style.background='#fff0e0';typeTag.style.color='#b06000';}
+    else if(link.type==='заменяет'){typeTag.style.background='#e8e0ff';typeTag.style.color='#5030a0';}
+    else{typeTag.style.background='#d0f0d0';typeTag.style.color='#1a6a2a';}
+    codeLine.appendChild(codeEl); codeLine.appendChild(typeTag);
+    info.appendChild(nameEl); info.appendChild(codeLine);
+
+    // Клик по инфо — открыть карточку
+    (function(lnk){
+      info.onclick = function(){
+        var found = allItems.find(function(a){return a.code===lnk.code;});
+        if(!found) found = lightAll.find(function(a){return a.code===lnk.code;});
+        if(!found && typeof tvAll!=='undefined') found = tvAll.find(function(a){return a.code===lnk.code;});
+        if(!found) found = {code:lnk.code, name:lnk.name, short:'', cat:''};
+        openItemDetail(found, '', true);
+      };
+    })(link);
+
+    // Кол-во
+    var qtyInp = document.createElement('input');
+    qtyInp.type='number'; qtyInp.min='1'; qtyInp.value='1';
+    qtyInp.style.cssText='width:42px;height:28px;border:1px solid #c0d8c0;border-radius:6px;text-align:center;font-family:monospace;font-size:12px;font-weight:700;outline:none;flex-shrink:0;';
+    qtyInp.onclick=function(e){e.stopPropagation();};
+
+    // Кнопка в корзину
+    var inCart = !!cart[link.code];
+    var addBtn = document.createElement('button');
+    addBtn.textContent = inCart ? '✓' : '+';
+    addBtn.style.cssText='width:30px;height:30px;border:none;border-radius:8px;color:#fff;font-size:15px;font-weight:700;cursor:pointer;flex-shrink:0;transition:all .15s;display:flex;align-items:center;justify-content:center;';
+    addBtn.style.background = inCart ? 'linear-gradient(135deg,#3aaa6a,#2a8a4a)' : 'linear-gradient(135deg,#2a8a4a,#1a6a3a)';
+    (function(lnk, abtn, qinp){
+      abtn.onclick = function(e){
+        e.stopPropagation();
+        var key = lnk.code;
+        if(cart[key]){
+          delete cart[key];
+          abtn.textContent='+';
+          abtn.style.background='linear-gradient(135deg,#2a8a4a,#1a6a3a)';
+        } else {
+          var it = allItems.find(function(a){return a.code===lnk.code;});
+          if(!it) it = lightAll.find(function(a){return a.code===lnk.code;});
+          if(!it && typeof tvAll!=='undefined') it = tvAll.find(function(a){return a.code===lnk.code;});
+          var itemData = it ? {code:it.code,name:it.name,cat:it.cat||'',thumb:'',img:''} : {code:lnk.code,name:lnk.name,cat:'',thumb:'',img:''};
+          cart[key] = {item:itemData, qty:Math.max(1,parseInt(qinp.value)||1), code:lnk.code};
+          abtn.textContent='✓';
+          abtn.style.background='linear-gradient(135deg,#3aaa6a,#2a8a4a)';
+        }
+        updCart();
+      };
+    })(link, addBtn, qtyInp);
+
+    row.appendChild(ico); row.appendChild(info); row.appendChild(qtyInp); row.appendChild(addBtn);
+    list.appendChild(row);
+  });
+}
+
+function idmToggleCompat(){
+  var panel = document.getElementById('idm-compat-panel');
+  panel.style.display = panel.style.display==='none' ? '' : 'none';
 }
 
 function idmOpenKitPanel(kitId){
@@ -1908,6 +2137,8 @@ function processFile(file){
         "Неизвестное оборудование":"Неизвестное оборудование",
         "Сводка":null,
         "Комплекты":"__kits__",
+        "Таблица совместимости":"__compat__",
+        "Таблица совместимости ":"__compat__",
         "Слаботочное оборудование":"__slabot__"
       };
 
@@ -1928,6 +2159,12 @@ function processFile(file){
         if(catKey==="__kits__"){
           var kitsRows=XLSX.utils.sheet_to_json(wb.Sheets[sName],{header:1,defval:""});
           parseKitsRows(kitsRows);
+          return;
+        }
+        // Лист «Таблица совместимости»
+        if(catKey==="__compat__"){
+          var compatRows=XLSX.utils.sheet_to_json(wb.Sheets[sName],{header:1,defval:""});
+          parseCompatRows(compatRows);
           return;
         }
         // Лист «Слаботочное оборудование»
@@ -2071,7 +2308,6 @@ function updateFromGitHub(){
         + '📺 Слаботочное: ' + slabCnt + ' фото';
       showGitHubToast(msg);
       icon.textContent = '☁️';
-      if(typeof updatePulseWidget==='function') updatePulseWidget();
     })
     .catch(function(err){
       showToast('❌ Ошибка загрузки: ' + err.message, 'error');
@@ -2197,6 +2433,8 @@ function loadGitHubXlsx(){
         'Неизвестное оборудование':'Неизвестное оборудование',
         'Сводка':null,
         'Комплекты':'__kits__',
+        'Таблица совместимости':'__compat__',
+        'Таблица совместимости ':'__compat__',
         'Слаботочное оборудование':'__slabot__'
       };
       var obj = {}; CAT_ORDER.forEach(function(c){ obj[c]=[]; });
@@ -2210,6 +2448,7 @@ function loadGitHubXlsx(){
         }
         if(!catKey) return;
         if(catKey === '__kits__'){ parseKitsRows(XLSX.utils.sheet_to_json(wb.Sheets[sName],{header:1,defval:''})); return; }
+        if(catKey === '__compat__'){ parseCompatRows(XLSX.utils.sheet_to_json(wb.Sheets[sName],{header:1,defval:''})); return; }
         if(catKey === '__slabot__'){ parseSlabotRows(XLSX.utils.sheet_to_json(wb.Sheets[sName],{header:1,defval:''})); return; }
         var rows = XLSX.utils.sheet_to_json(wb.Sheets[sName],{header:1,defval:''});
         var parsed = parseRowsForCat(rows, catKey);
@@ -2803,161 +3042,28 @@ function renderKits(){}
 initShopSelect();
 applyLightFilters();
 
-// ═══ PULSE WIDGET — animated sidebar visualization ═══
+// ═══ HEADER PARTICLES ═══
 (function(){
-  var PULSE_CATS = [
-    {key:'Торговое оборудование', icon:'🛒', color:'#4a7fc1'},
-    {key:'Рекламные материалы',   icon:'🎨', color:'#e07a20'},
-    {key:'Строительные материалы', icon:'🔨', color:'#3a9068'},
-    {key:'Канцелярия',            icon:'📎', color:'#c05060'},
-    {key:'Ювелирное оборудование',icon:'💎', color:'#9070d8'},
-    {key:'Материалы для оборудования',icon:'⚙️', color:'#0e7490'},
-    {key:'light',  label:'Световое',     icon:'💡', color:'#daa520'},
-    {key:'kits',   label:'Комплекты',    icon:'📦', color:'#6b48c8'},
-    {key:'tv',     label:'Слаботочное',  icon:'📺', color:'#0ea5e9'}
-  ];
-
-  // Floating particles on canvas
-  var canvas = document.getElementById('pulseCanvas');
-  var ctx = canvas ? canvas.getContext('2d') : null;
-  var particles = [];
-  function initParticles(){
-    if(!canvas) return;
-    canvas.width = canvas.parentElement.offsetWidth;
-    canvas.height = canvas.parentElement.offsetHeight;
-    particles = [];
-    for(var i=0; i<18; i++){
-      particles.push({
-        x: Math.random()*canvas.width,
-        y: Math.random()*canvas.height,
-        r: 1.2 + Math.random()*2.2,
-        dx: (Math.random()-.5)*.4,
-        dy: -.15 - Math.random()*.3,
-        hue: [210,270,170,30,340][Math.floor(Math.random()*5)],
-        alpha: .15 + Math.random()*.35,
-        life: Math.random()*200
-      });
-    }
+  var container = document.getElementById('hdrParticles');
+  if(!container) return;
+  var colors = ['rgba(74,127,193,.5)','rgba(116,88,184,.5)','rgba(58,172,190,.4)','rgba(144,112,216,.35)','rgba(90,143,209,.4)'];
+  function spawnParticle(){
+    var s = document.createElement('span');
+    var size = 2 + Math.random()*4;
+    s.style.width = size+'px';
+    s.style.height = size+'px';
+    s.style.left = Math.random()*100+'%';
+    s.style.bottom = '-4px';
+    s.style.background = colors[Math.floor(Math.random()*colors.length)];
+    s.style.animationDuration = (3+Math.random()*4)+'s';
+    s.style.animationDelay = '0s';
+    container.appendChild(s);
+    setTimeout(function(){ s.remove(); }, 7000);
   }
-  function drawParticles(){
-    if(!ctx||!canvas.width) return;
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    particles.forEach(function(p){
-      p.x += p.dx; p.y += p.dy; p.life++;
-      if(p.y < -10 || p.x < -10 || p.x > canvas.width+10){
-        p.x = Math.random()*canvas.width; p.y = canvas.height+5;
-        p.life = 0; p.alpha = .15 + Math.random()*.35;
-      }
-      var fade = Math.min(1, p.life/30) * p.alpha;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-      ctx.fillStyle = 'hsla('+p.hue+',60%,65%,'+fade+')';
-      ctx.fill();
-    });
-    requestAnimationFrame(drawParticles);
-  }
-
-  // Orb pulse animation
-  var orb = document.getElementById('pulseOrb');
-  if(orb){
-    setInterval(function(){
-      orb.style.transition='all .4s';
-      orb.style.boxShadow='0 0 8px 3px rgba(58,172,190,.6)';
-      orb.style.transform='scale(1.3)';
-      setTimeout(function(){
-        orb.style.boxShadow='none';
-        orb.style.transform='scale(1)';
-      },400);
-    },2000);
-  }
-
-  // Animated counter
-  function animateNum(el, target){
-    var start = parseInt(el.textContent.replace(/\D/g,''))||0;
-    if(start===target){el.textContent=target.toLocaleString('ru');return;}
-    var dur=800, t0=null;
-    function step(ts){
-      if(!t0) t0=ts;
-      var p=Math.min((ts-t0)/dur,1);
-      var ease=1-Math.pow(1-p,3); // easeOutCubic
-      el.textContent=Math.round(start+(target-start)*ease).toLocaleString('ru');
-      if(p<1) requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
-  }
-
-  // Build / update bars
-  window.updatePulseWidget = function(){
-    var wrap = document.getElementById('pulseBars');
-    if(!wrap) return;
-    var data = [];
-    var grand = 0;
-    PULSE_CATS.forEach(function(c){
-      var cnt = 0;
-      if(c.key==='light') cnt = (typeof lightAll!=='undefined') ? lightAll.length : 0;
-      else if(c.key==='kits') cnt = (typeof allKits!=='undefined') ? allKits.length : 0;
-      else if(c.key==='tv') cnt = (typeof tvAll!=='undefined') ? tvAll.length : 0;
-      else {
-        allItems.forEach(function(it){ if(it.cat===c.key) cnt++; });
-      }
-      if(cnt>0) data.push({label:c.label||c.key, icon:c.icon, color:c.color, count:cnt});
-      grand += cnt;
-    });
-    var maxCnt = data.reduce(function(m,d){return Math.max(m,d.count);},1);
-
-    wrap.innerHTML='';
-    data.forEach(function(d, idx){
-      var row = document.createElement('div');
-      row.style.cssText='display:flex;align-items:center;gap:6px;font-size:11px;';
-
-      var icon = document.createElement('span');
-      icon.textContent=d.icon; icon.style.cssText='font-size:12px;width:16px;text-align:center;flex-shrink:0;';
-
-      var barOuter = document.createElement('div');
-      barOuter.style.cssText='flex:1;height:10px;background:var(--bg2);border-radius:6px;overflow:hidden;position:relative;';
-
-      var barInner = document.createElement('div');
-      var pct = Math.max(4, d.count/maxCnt*100);
-      barInner.style.cssText='height:100%;border-radius:6px;width:0%;transition:width 1s cubic-bezier(.23,1,.32,1);position:relative;overflow:hidden;';
-      barInner.style.background='linear-gradient(90deg,'+d.color+','+d.color+'cc)';
-
-      // shimmer overlay
-      var shimmer = document.createElement('div');
-      shimmer.style.cssText='position:absolute;top:0;left:-50%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);animation:pulseShimmer 2.5s ease-in-out infinite;animation-delay:'+idx*.2+'s;';
-      barInner.appendChild(shimmer);
-      barOuter.appendChild(barInner);
-
-      var num = document.createElement('span');
-      num.style.cssText='font-family:"JetBrains Mono",monospace;font-size:10px;font-weight:700;color:var(--text2);min-width:32px;text-align:right;';
-      num.textContent=d.count.toLocaleString('ru');
-
-      row.appendChild(icon); row.appendChild(barOuter); row.appendChild(num);
-      wrap.appendChild(row);
-
-      // Animate bar after DOM insert
-      setTimeout(function(){ barInner.style.width=pct+'%'; }, 50 + idx*80);
-    });
-
-    // Total
-    var totalEl = document.getElementById('pulseTotal');
-    if(totalEl) animateNum(totalEl, grand);
-  };
-
-  // Inject shimmer keyframes
-  var styleEl = document.createElement('style');
-  styleEl.textContent='@keyframes pulseShimmer{0%{left:-50%}50%{left:120%}100%{left:120%}}';
-  document.head.appendChild(styleEl);
-
-  initParticles();
-  drawParticles();
-  window.addEventListener('resize',initParticles);
-
-  // Hook into loadCatalog to refresh pulse
-  var _origLoadCatalog = loadCatalog;
-  loadCatalog = function(obj,label){
-    _origLoadCatalog(obj,label);
-    setTimeout(updatePulseWidget, 200);
-  };
+  // Initial burst
+  for(var i=0;i<8;i++) setTimeout(spawnParticle, i*200);
+  // Continuous
+  setInterval(spawnParticle, 600);
 })();
 
 // Автозагрузка каталога с GitHub при старте
