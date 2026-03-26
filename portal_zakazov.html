@@ -612,7 +612,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 
 
 <!-- ═══ ITEM DETAIL MODAL (для основного каталога, светового, Кари Кидс) ═══ -->
-<div class="upload-modal" id="itemDetailModal" style="max-width:560px;width:92vw;padding:0;overflow:hidden;border-radius:16px;display:flex;flex-direction:row;align-items:stretch;z-index:350;">
+<div class="upload-modal" id="itemDetailModal" style="max-width:560px;width:92vw;max-height:90vh;padding:0;overflow:hidden;border-radius:16px;display:flex;flex-direction:row;align-items:stretch;z-index:350;">
 
   <!-- Левая часть: сама карточка товара -->
   <div id="idm-main" style="min-width:0;flex:1;display:flex;flex-direction:column;">
@@ -624,9 +624,9 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     </div>
     <button onclick="closeItemDetail()" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:30px;height:30px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:900;flex-shrink:0;">✕</button>
   </div>
-  <div style="display:flex;gap:0;max-height:65vh;overflow:hidden;">
+  <div style="display:flex;gap:0;flex:1;overflow:hidden;">
     <!-- Left: фото -->
-    <div id="idm-img-wrap" style="width:260px;flex-shrink:0;background:#f0f4fa;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:16px 12px 10px;border-right:1px solid #c8d8f0;gap:8px;">
+    <div id="idm-img-wrap" style="width:260px;flex-shrink:0;background:#f0f4fa;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:16px 12px 10px;border-right:1px solid #c8d8f0;gap:8px;overflow-y:auto;">
       <!-- Главное фото -->
       <div style="flex:1;display:flex;align-items:center;justify-content:center;width:100%;">
         <img id="idm-img" src="" alt="" style="max-width:100%;max-height:290px;object-fit:contain;border-radius:10px;display:none;cursor:zoom-in;" title="Нажмите для увеличения">
