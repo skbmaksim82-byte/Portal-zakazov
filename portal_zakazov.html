@@ -612,7 +612,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 
 
 <!-- ═══ ITEM DETAIL MODAL (для основного каталога, светового, Кари Кидс) ═══ -->
-<div class="upload-modal" id="itemDetailModal" style="max-width:560px;width:92vw;max-height:90vh;padding:0;overflow:hidden;border-radius:16px;display:flex;flex-direction:row;align-items:stretch;z-index:350;">
+<div class="upload-modal" id="itemDetailModal" style="max-width:90vw;width:auto;min-width:420px;max-height:90vh;padding:0;overflow:hidden;border-radius:16px;display:flex;flex-direction:row;align-items:stretch;z-index:350;">
 
   <!-- Левая часть: сама карточка товара -->
   <div id="idm-main" style="min-width:0;flex:1;display:flex;flex-direction:column;">
@@ -650,7 +650,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
       </div>
     </div>
     <!-- Right: детали -->
-    <div style="flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:14px;">
+    <div style="flex:1;min-width:280px;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:14px;">
       <div>
         <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#7a9bc0;margin-bottom:6px;">КОД ТОВАРА</div>
         <div id="idm-code-big" style="font-family:monospace;font-size:15px;font-weight:700;color:var(--text);background:var(--bg);padding:8px 12px;border-radius:8px;border:1px solid var(--border);"></div>
@@ -1789,7 +1789,7 @@ function idmOpenKitPanel(kitId){
   var panel = document.getElementById('idm-kit-panel');
   panel.style.display = 'flex';
   // Расширяем модал до нужной ширины
-  document.getElementById('itemDetailModal').style.maxWidth = '900px';
+  document.getElementById('itemDetailModal').style.maxWidth = '90vw';
 }
 
 function idmCloseKitPanel(){
@@ -1797,7 +1797,7 @@ function idmCloseKitPanel(){
   document.getElementById('idm-kit-panel').style.display = 'none';
   document.getElementById('idm-kp-photo-wrap').style.display = 'none';
   document.getElementById('idm-kp-photo').src = '';
-  document.getElementById('itemDetailModal').style.maxWidth = '560px';
+  document.getElementById('itemDetailModal').style.maxWidth = '90vw';
   // Сбрасываем подсветку тегов
   document.querySelectorAll('#idm-kits-tags button').forEach(function(b){
     b.style.background = 'linear-gradient(135deg,#ede8ff,#e4ddff)';
