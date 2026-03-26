@@ -404,6 +404,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
         <input type="text" class="search-input" id="searchInput" placeholder="Поиск по наименованию или коду…" oninput="onSearch()">
       </div>
       <div class="results-info" id="resultsInfo">—</div>
+      <button onclick="exportToExcel('catalog')" title="Выгрузить в Excel" style="background:linear-gradient(135deg,#1a7a3a,#2aaa5a);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;white-space:nowrap;transition:all .2s;">📥 Excel</button>
     </div>
     <div class="table-wrap" id="tableWrap">
       <table>
@@ -425,6 +426,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
           <input type="text" class="search-input" id="lightSearch" placeholder="Поиск по световому оборудованию…" oninput="onLightSearch()">
         </div>
         <div class="results-info" id="lightResultsInfo">—</div>
+        <button onclick="exportToExcel('light')" title="Выгрузить в Excel" style="background:linear-gradient(135deg,#1a7a3a,#2aaa5a);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;white-space:nowrap;transition:all .2s;">📥 Excel</button>
       </div>
       <div class="light-body">
         <div class="light-table-wrap" id="lightTableWrap">
@@ -486,6 +488,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
           <option value="">Все категории</option>
         </select>
         <div class="results-info" id="tvResultsInfo">—</div>
+        <button onclick="exportToExcel('tv')" title="Выгрузить в Excel" style="background:linear-gradient(135deg,#1a7a3a,#2aaa5a);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;white-space:nowrap;transition:all .2s;">📥 Excel</button>
       </div>
       <div class="light-body">
         <div class="light-table-wrap" id="tvTableWrap">
@@ -3040,6 +3043,70 @@ function escHtml(s){
 // совместимость
 function filterKits(){}
 function renderKits(){}
+
+// ═══ EXPORT TO EXCEL ═══
+function exportToExcel(section){
+  var data, headers, filename, sheetName;
+
+  if(section==='catalog'){
+    data = filteredItems;
+    headers = ['Код','Наименование','Краткое описание'];
+    sheetName = currentCat==='all' ? 'Все категории' : currentCat;
+    var q = document.getElementById('searchInput').value.trim();
+    filename = 'Каталог' + (q ? '_'+q : '') + '.xlsx';
+  } else if(section==='light'){
+    data = lightFiltered;
+    headers = ['Код','Наименование'];
+    sheetName = 'Световое оборудование';
+    var q = document.getElementById('lightSearch').value.trim();
+    filename = 'Световое' + (q ? '_'+q : '') + '.xlsx';
+  } else if(section==='tv'){
+    data = tvFiltered;
+    headers = ['Код','Наименование','Краткое описание'];
+    sheetName = 'Слаботочное оборудование';
+    var q = document.getElementById('tvSearch').value.trim();
+    filename = 'Слаботочное' + (q ? '_'+q : '') + '.xlsx';
+  } else { return; }
+
+  if(!data || !data.length){ showToast('Нет данных для выгрузки','error'); return; }
+
+  var wb = XLSX.utils.book_new();
+  var rows = [headers];
+  data.forEach(function(it){
+    if(section==='light'){
+      rows.push([it.code||'', it.name||'']);
+    } else {
+      rows.push([it.code||'', it.name||'', it.short||'']);
+    }
+  });
+  var ws = XLSX.utils.aoa_to_sheet(rows);
+
+  // Ширина колонок
+  if(section==='light'){
+    ws['!cols'] = [{wch:18},{wch:50}];
+  } else {
+    ws['!cols'] = [{wch:18},{wch:50},{wch:35}];
+  }
+
+  // Стилизация заголовков (bold + цвет фона)
+  // XLSX utils не поддерживает стили напрямую, используем xlsx-style-lite подход:
+  // Заголовки будут выделены через cell formatting
+  var range = XLSX.utils.decode_range(ws['!ref']);
+  for(var c = range.s.c; c <= range.e.c; c++){
+    var addr = XLSX.utils.encode_cell({r:0, c:c});
+    if(!ws[addr]) continue;
+    // Добавляем стиль через s property (работает с SheetJS Pro / xlsx-style)
+    ws[addr].s = {
+      font: {bold:true, color:{rgb:'FFFFFF'}},
+      fill: {fgColor:{rgb:'2A4A7F'}},
+      alignment: {horizontal:'center'}
+    };
+  }
+
+  XLSX.utils.book_append_sheet(wb, ws, sheetName.substring(0,31));
+  XLSX.writeFile(wb, filename);
+  showToast('📥 Выгружено '+data.length.toLocaleString('ru')+' позиций','ok');
+}
 
 // ═══ INIT ═══
 initShopSelect();
