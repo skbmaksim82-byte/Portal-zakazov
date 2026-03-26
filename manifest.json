@@ -1,0 +1,24 @@
+{
+  "name": "Портал заказов — Склад",
+  "short_name": "Портал заказов",
+  "description": "Управление складским оборудованием Kari",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#edeef2",
+  "theme_color": "#2a4a7f",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
