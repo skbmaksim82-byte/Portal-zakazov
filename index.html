@@ -453,6 +453,11 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
         <span class="search-icon">🔍</span>
         <input type="text" class="search-input" id="searchInput" placeholder="Поиск по наименованию или коду…" oninput="onSearch()">
       </div>
+      <div style="display:flex;gap:2px;flex-shrink:0;">
+        <button id="photoFilterAll" onclick="setPhotoFilter('all')" style="padding:5px 10px;border:1.5px solid var(--border);border-radius:7px 0 0 7px;background:var(--surface3);color:var(--text);font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;">Все</button>
+        <button id="photoFilterYes" onclick="setPhotoFilter('yes')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;">📷 С фото</button>
+        <button id="photoFilterNo" onclick="setPhotoFilter('no')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;border-radius:0 7px 7px 0;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;">Без фото</button>
+      </div>
       <div class="results-info" id="resultsInfo">—</div>
       <button onclick="exportToExcel('catalog')" title="Выгрузить в Excel" style="background:linear-gradient(135deg,#1a7a3a,#2aaa5a);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;white-space:nowrap;transition:all .2s;">📥 Excel</button>
     </div>
@@ -1030,6 +1035,7 @@ var GDRIVE_EXT = 'jpg';
 var SVET_PHOTOS = {};   // код → URL (Foto Svet)
 var SLAB_PHOTOS = {};   // код → URL (Foto slabotoch)
 var OBORUD_PHOTOS = {}; // код → URL (Foto Oborud — основной каталог)
+var REKLAM_PHOTOS = {}; // код → URL (Foto Reklama — рекламные материалы)
 
 function getImgUrl(item) {
   var all = getAllImgUrls(item);
@@ -1155,7 +1161,7 @@ function initShopSelect(){
 }
 
 // ═══ CATALOG STATE ═══
-var allItems=[],currentCat="all",currentSearch="",filteredItems=[],renderedCount=0,isRendering=false,cart={};
+var allItems=[],currentCat="all",currentSearch="",currentPhotoFilter="all",filteredItems=[],renderedCount=0,isRendering=false,cart={};
 var PAGE=60;
 
 function loadCatalog(obj,label){
@@ -1930,17 +1936,32 @@ function selectCat(c){
 }
 function onSearch(){currentSearch=document.getElementById("searchInput").value;applyFilters();}
 
+function setPhotoFilter(mode){
+  currentPhotoFilter=mode;
+  ['All','Yes','No'].forEach(function(s){
+    var b=document.getElementById('photoFilter'+s);
+    if(!b) return;
+    var active=(s.toLowerCase()===mode)||(s==='All'&&mode==='all');
+    b.style.background=active?'var(--surface3)':'var(--surface2)';
+    b.style.color=active?'var(--text)':'var(--text3)';
+  });
+  applyFilters();
+}
+
 function applyFilters(){
   var q=currentSearch.toLowerCase().trim();
   filteredItems=allItems.filter(function(it){
     if(currentCat==="karikids"){
       var isKK=(it.name&&it.name.toUpperCase().indexOf("\u041a\u041a")>=0)||(it.code&&it.code.toUpperCase().indexOf("\u041a\u041a")>=0);
       if(!isKK)return false;
-      if(q)return it.name.toLowerCase().indexOf(q)>=0||it.code.toLowerCase().indexOf(q)>=0||(it.short&&it.short.toLowerCase().indexOf(q)>=0);
-      return true;
+      if(q&&!(it.name.toLowerCase().indexOf(q)>=0||it.code.toLowerCase().indexOf(q)>=0||(it.short&&it.short.toLowerCase().indexOf(q)>=0)))return false;
+    } else {
+      if(currentCat!=="all"&&it.cat!==currentCat)return false;
+      if(q&&!(it.name.toLowerCase().indexOf(q)>=0||it.code.toLowerCase().indexOf(q)>=0||(it.short&&it.short.toLowerCase().indexOf(q)>=0)))return false;
     }
-    if(currentCat!=="all"&&it.cat!==currentCat)return false;
-    if(q)return it.name.toLowerCase().indexOf(q)>=0||it.code.toLowerCase().indexOf(q)>=0||(it.short&&it.short.toLowerCase().indexOf(q)>=0);
+    // Фильтр по фото
+    if(currentPhotoFilter==='yes'){ if(!getImgUrl(it)) return false; }
+    if(currentPhotoFilter==='no'){ if(getImgUrl(it)) return false; }
     return true;
   });
   renderedCount=0;
@@ -2318,14 +2339,16 @@ function updateFromGitHub(){
   var p3 = loadGitHubXlsx();
   var p4 = loadGitHubPhotos('Foto%20Oborud',   OBORUD_PHOTOS,   'Foto Oborud');
   var p5 = loadComplectPhotos();
+  var p6 = loadGitHubPhotos('Foto%20Reklama',  REKLAM_PHOTOS,   'Foto Reklama');
 
-  Promise.all([p1, p2, p3, p4, p5])
+  Promise.all([p1, p2, p3, p4, p5, p6])
     .then(function(results){
       var svetCnt      = results[0];
       var slabCnt      = results[1];
       var xlsxInfo     = results[2];
       var oborudCnt    = results[3];
       var complectCnt  = results[4];
+      var reklamCnt    = results[5];
 
       // Применяем фото к световому
       lightAll.forEach(function(it){
@@ -2341,6 +2364,11 @@ function updateFromGitHub(){
       allItems.forEach(function(it){
         var url = photoByCode(it.code, OBORUD_PHOTOS);
         if(url) it.photo = url;
+        // Рекламные материалы
+        if(!it.photo){
+          var rUrl = photoByCode(it.code, REKLAM_PHOTOS);
+          if(rUrl) it.photo = rUrl;
+        }
       });
       // Применяем фото к комплектам по имени
       allKits.forEach(function(kit){
@@ -2358,6 +2386,7 @@ function updateFromGitHub(){
       var msg = '✅ Обновлено с GitHub!\n'
         + '📊 ' + xlsxInfo + '\n'
         + '🏪 Оборудование: ' + oborudCnt + ' фото\n'
+        + '🎨 Рекламные: ' + reklamCnt + ' фото\n'
         + '📦 Комплекты: ' + complectCnt + ' фото\n'
         + '💡 Световое: ' + svetCnt + ' фото\n'
         + '📺 Слаботочное: ' + slabCnt + ' фото';
@@ -2402,7 +2431,8 @@ function getAllImgUrls(item){
   var sv = photosByCode(item.code, SVET_PHOTOS);
   var sl = photosByCode(item.code, SLAB_PHOTOS);
   var ob = photosByCode(item.code, OBORUD_PHOTOS);
-  urls = urls.concat(sv).concat(sl).concat(ob);
+  var rk = photosByCode(item.code, REKLAM_PHOTOS);
+  urls = urls.concat(sv).concat(sl).concat(ob).concat(rk);
   // Фото из Excel / поля photo/thumb (если ещё не в списке)
   var ex = item.photo && item.photo.indexOf('http')===0 ? item.photo : (item.thumb && item.thumb.indexOf('http')===0 ? item.thumb : null);
   if(ex && urls.indexOf(ex)<0) urls.unshift(ex);
