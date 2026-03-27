@@ -1,5 +1,5 @@
 // Service Worker — Портал заказов PWA
-var CACHE_NAME = 'portal-zakazov-v1';
+var CACHE_NAME = 'portal-zakazov-v2';
 var URLS_TO_CACHE = [
   './',
   './index.html',
@@ -10,7 +10,7 @@ var URLS_TO_CACHE = [
   'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js'
 ];
 
-// Install — кэшируем основные файлы
+// Install — кэшируем и сразу активируем
 self.addEventListener('install', function(event) {
   event.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {
@@ -29,16 +29,24 @@ self.addEventListener('activate', function(event) {
         names.filter(function(name) { return name !== CACHE_NAME; })
              .map(function(name) { return caches.delete(name); })
       );
+    }).then(function() {
+      return self.clients.claim();
     })
   );
-  self.clients.claim();
 });
 
-// Fetch — Network First для API/GitHub, Cache First для статики
+// Слушаем команду SKIP_WAITING от клиента
+self.addEventListener('message', function(event) {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
+
+// Fetch — Network First для API/GitHub, Stale-While-Revalidate для остального
 self.addEventListener('fetch', function(event) {
   var url = event.request.url;
 
-  // GitHub API и raw — всегда сеть (свежие данные каталога)
+  // GitHub API и raw — всегда сеть
   if (url.indexOf('api.github.com') >= 0 || url.indexOf('raw.githubusercontent.com') >= 0) {
     event.respondWith(
       fetch(event.request).catch(function() {
@@ -48,21 +56,10 @@ self.addEventListener('fetch', function(event) {
     return;
   }
 
-  // Остальное — сначала кэш, потом сеть
+  // Остальное — кэш + обновление в фоне
   event.respondWith(
     caches.match(event.request).then(function(cached) {
-      if (cached) {
-        // Обновляем кэш в фоне
-        fetch(event.request).then(function(response) {
-          if (response && response.status === 200) {
-            caches.open(CACHE_NAME).then(function(cache) {
-              cache.put(event.request, response);
-            });
-          }
-        }).catch(function() {});
-        return cached;
-      }
-      return fetch(event.request).then(function(response) {
+      var fetchPromise = fetch(event.request).then(function(response) {
         if (response && response.status === 200) {
           var clone = response.clone();
           caches.open(CACHE_NAME).then(function(cache) {
@@ -70,7 +67,9 @@ self.addEventListener('fetch', function(event) {
           });
         }
         return response;
-      });
+      }).catch(function() { return cached; });
+
+      return cached || fetchPromise;
     })
   );
 });

@@ -3292,16 +3292,92 @@ applyLightFilters();
 })();
 </script>
 <script>
-// ═══ PWA Service Worker ═══
-if('serviceWorker' in navigator){
+// ═══ PWA Service Worker + Автообновление ═══
+(function(){
+  if(!('serviceWorker' in navigator)) return;
+
+  var updateBanner = null;
+  var newWorker = null;
+
+  function showUpdateBanner(){
+    if(updateBanner) return;
+    updateBanner = document.createElement('div');
+    updateBanner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;'
+      +'background:linear-gradient(135deg,#1a6a3a,#2a9a5a);color:#fff;padding:12px 20px;'
+      +'display:flex;align-items:center;justify-content:center;gap:14px;font-family:Nunito,sans-serif;'
+      +'font-size:14px;font-weight:700;box-shadow:0 4px 20px rgba(0,0,0,.25);'
+      +'animation:swBannerIn .4s ease;';
+    updateBanner.innerHTML = '<span>🔄 Доступна новая версия приложения</span>';
+
+    var btn = document.createElement('button');
+    btn.textContent = 'Обновить сейчас';
+    btn.style.cssText = 'background:#fff;color:#1a6a3a;border:none;border-radius:8px;padding:8px 18px;'
+      +'font-size:13px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;'
+      +'box-shadow:0 2px 8px rgba(0,0,0,.15);transition:all .2s;';
+    btn.onmouseover = function(){ this.style.transform='translateY(-1px)'; };
+    btn.onmouseout = function(){ this.style.transform=''; };
+    btn.onclick = function(){
+      if(newWorker){ newWorker.postMessage({type:'SKIP_WAITING'}); }
+      else { window.location.reload(); }
+    };
+
+    var dismiss = document.createElement('button');
+    dismiss.textContent = '✕';
+    dismiss.style.cssText = 'background:rgba(255,255,255,.2);border:none;color:#fff;width:28px;height:28px;'
+      +'border-radius:50%;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;';
+    dismiss.onclick = function(){ updateBanner.remove(); updateBanner=null; };
+
+    updateBanner.appendChild(btn);
+    updateBanner.appendChild(dismiss);
+    document.body.appendChild(updateBanner);
+  }
+
+  // Inject animation keyframes
+  var st = document.createElement('style');
+  st.textContent = '@keyframes swBannerIn{from{transform:translateY(-100%);opacity:0}to{transform:translateY(0);opacity:1}}';
+  document.head.appendChild(st);
+
   window.addEventListener('load', function(){
     navigator.serviceWorker.register('sw.js').then(function(reg){
-      console.log('[PWA] SW registered, scope:', reg.scope);
+      console.log('[PWA] SW registered');
+
+      // Если уже ждёт новый worker
+      if(reg.waiting){
+        newWorker = reg.waiting;
+        showUpdateBanner();
+      }
+
+      // Следим за новыми worker'ами
+      reg.addEventListener('updatefound', function(){
+        var installing = reg.installing;
+        if(!installing) return;
+        installing.addEventListener('statechange', function(){
+          if(installing.state === 'installed' && navigator.serviceWorker.controller){
+            // Новая версия установлена, но ещё не активна
+            newWorker = installing;
+            showUpdateBanner();
+          }
+        });
+      });
+
+      // Проверяем обновления каждые 5 минут
+      setInterval(function(){
+        reg.update().catch(function(){});
+      }, 5 * 60 * 1000);
+
     }).catch(function(err){
-      console.log('[PWA] SW registration failed:', err);
+      console.log('[PWA] SW failed:', err);
+    });
+
+    // Когда новый SW активировался — перезагружаем
+    var refreshing = false;
+    navigator.serviceWorker.addEventListener('controllerchange', function(){
+      if(refreshing) return;
+      refreshing = true;
+      window.location.reload();
     });
   });
-}
+})();
 </script>
 </body>
 </html>
