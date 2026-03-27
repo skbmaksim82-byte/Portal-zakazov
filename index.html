@@ -356,8 +356,51 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     </div>
   </div>
   <div class="header-right">
+    <button onclick="openFeedback()" style="background:rgba(220,170,50,.2);backdrop-filter:blur(8px);color:#ffe080;border:1px solid rgba(220,170,50,.3);border-radius:10px;padding:8px 14px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 0 12px rgba(220,170,50,.12);transition:all .25s;white-space:nowrap;" onmouseover="this.style.background='rgba(220,170,50,.35)';this.style.borderColor='rgba(220,170,50,.6)'" onmouseout="this.style.background='rgba(220,170,50,.2)';this.style.borderColor='rgba(220,170,50,.3)'">✉️ Обратная связь</button>
     <button class="update-btn" onclick="updateFromGitHub()"><span id="updateIcon">☁️</span> Обновить</button>
     <button class="cart-btn" onclick="toggleCart()">🛒 Корзина <span class="cart-count" id="cartCountBadge">0</span></button>
+  </div>
+</div>
+
+<!-- Feedback modal -->
+<div id="feedbackOverlay" style="position:fixed;inset:0;background:rgba(30,32,40,.5);backdrop-filter:blur(4px);z-index:600;display:none;align-items:center;justify-content:center;" onclick="if(event.target===this)closeFeedback()">
+  <div style="background:#fff;border-radius:16px;padding:0;max-width:480px;width:92vw;box-shadow:0 20px 60px rgba(0,0,0,.25);overflow:hidden;animation:authIn .3s ease;">
+    <!-- Header -->
+    <div style="background:linear-gradient(135deg,#b8860b,#daa520);padding:18px 24px;display:flex;align-items:center;gap:10px;">
+      <span style="font-size:20px;">✉️</span>
+      <div style="flex:1;">
+        <div style="font-size:16px;font-weight:800;color:#fff;">Обратная связь</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.65);">Сообщение отправится на m.skiba@kari.com</div>
+      </div>
+      <button onclick="closeFeedback()" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:28px;height:28px;border-radius:50%;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:900;">✕</button>
+    </div>
+    <!-- Body -->
+    <div style="padding:20px 24px;display:flex;flex-direction:column;gap:14px;">
+      <!-- Поиск позиции -->
+      <div>
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;">Позиция (необязательно)</div>
+        <div style="position:relative;">
+          <input id="fb-search" type="text" placeholder="Поиск по номенклатуре или наименованию…" oninput="fbSearch()" autocomplete="off"
+            style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:'Nunito',sans-serif;outline:none;box-sizing:border-box;">
+          <div id="fb-results" style="display:none;position:absolute;top:100%;left:0;right:0;max-height:180px;overflow-y:auto;background:#fff;border:1px solid var(--border);border-top:none;border-radius:0 0 9px 9px;box-shadow:0 8px 20px rgba(0,0,0,.12);z-index:10;"></div>
+        </div>
+        <div id="fb-selected" style="display:none;margin-top:6px;padding:6px 10px;background:#f0f4fa;border-radius:8px;font-size:12px;color:var(--text);display:none;">
+          <span id="fb-sel-code" style="font-weight:800;"></span> <span id="fb-sel-name"></span>
+          <button onclick="fbClearSelection()" style="float:right;background:none;border:none;color:var(--text3);cursor:pointer;font-size:12px;">✕</button>
+        </div>
+      </div>
+      <!-- Текст сообщения -->
+      <div>
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;">Сообщение</div>
+        <textarea id="fb-message" rows="4" placeholder="Опишите проблему, предложение или вопрос…"
+          style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:'Nunito',sans-serif;outline:none;resize:vertical;min-height:80px;box-sizing:border-box;"></textarea>
+      </div>
+      <!-- Кнопка отправить -->
+      <button onclick="fbSend()" style="width:100%;height:40px;background:linear-gradient(135deg,#b8860b,#daa520);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s;box-shadow:0 3px 12px rgba(184,134,11,.3);"
+        onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
+        📨 Отправить через Outlook
+      </button>
+    </div>
   </div>
 </div>
 
@@ -3249,6 +3292,90 @@ function crc32(buf){
   for(var i=0;i<buf.length;i++) crc=tbl[(crc^buf[i])&0xFF]^(crc>>>8);
   return (crc^0xFFFFFFFF)>>>0;
 }
+
+// ═══ FEEDBACK ═══
+var fbSelectedItem = null;
+
+function openFeedback(){
+  document.getElementById('feedbackOverlay').style.display='flex';
+  document.getElementById('fb-search').value='';
+  document.getElementById('fb-message').value='';
+  document.getElementById('fb-results').style.display='none';
+  fbClearSelection();
+}
+function closeFeedback(){
+  document.getElementById('feedbackOverlay').style.display='none';
+}
+function fbSearch(){
+  var q = document.getElementById('fb-search').value.trim().toLowerCase();
+  var res = document.getElementById('fb-results');
+  if(!q || q.length<2){ res.style.display='none'; return; }
+  // Ищем по всем каталогам
+  var found = [];
+  allItems.forEach(function(it){
+    if(found.length>=15) return;
+    if((it.code&&it.code.toLowerCase().indexOf(q)>=0)||(it.name&&it.name.toLowerCase().indexOf(q)>=0))
+      found.push(it);
+  });
+  if(typeof lightAll!=='undefined') lightAll.forEach(function(it){
+    if(found.length>=15) return;
+    if((it.code&&it.code.toLowerCase().indexOf(q)>=0)||(it.name&&it.name.toLowerCase().indexOf(q)>=0))
+      found.push(it);
+  });
+  if(typeof tvAll!=='undefined') tvAll.forEach(function(it){
+    if(found.length>=15) return;
+    if((it.code&&it.code.toLowerCase().indexOf(q)>=0)||(it.name&&it.name.toLowerCase().indexOf(q)>=0))
+      found.push(it);
+  });
+  if(!found.length){ res.style.display='none'; return; }
+  res.innerHTML='';
+  found.forEach(function(it){
+    var row = document.createElement('div');
+    row.style.cssText='padding:8px 12px;cursor:pointer;border-bottom:1px solid #f0f0f0;font-size:12px;transition:background .1s;';
+    row.onmouseenter=function(){this.style.background='#f0f4fa';};
+    row.onmouseleave=function(){this.style.background='';};
+    row.innerHTML='<b>'+escHtml(it.code)+'</b> '+escHtml(it.name);
+    row.onclick=function(){
+      fbSelectedItem=it;
+      document.getElementById('fb-search').value='';
+      res.style.display='none';
+      var sel=document.getElementById('fb-selected');
+      sel.style.display='block';
+      document.getElementById('fb-sel-code').textContent=it.code;
+      document.getElementById('fb-sel-name').textContent=it.name;
+    };
+    res.appendChild(row);
+  });
+  res.style.display='';
+}
+function fbClearSelection(){
+  fbSelectedItem=null;
+  document.getElementById('fb-selected').style.display='none';
+  document.getElementById('fb-sel-code').textContent='';
+  document.getElementById('fb-sel-name').textContent='';
+}
+function fbSend(){
+  var msg = document.getElementById('fb-message').value.trim();
+  if(!msg){ showToast('Введите текст сообщения','error'); return; }
+  var subject = 'Портал заказов — Обратная связь';
+  var body = '';
+  if(fbSelectedItem){
+    subject += ': '+fbSelectedItem.code;
+    body += 'Позиция: '+fbSelectedItem.code+' — '+fbSelectedItem.name+'\n\n';
+  }
+  body += msg;
+  var mailto = 'mailto:m.skiba@kari.com'
+    +'?subject='+encodeURIComponent(subject)
+    +'&body='+encodeURIComponent(body);
+  window.open(mailto,'_self');
+  closeFeedback();
+  showToast('📨 Outlook открыт для отправки','ok');
+}
+// Закрыть выпадашку при клике вне
+document.addEventListener('click',function(e){
+  if(!e.target.closest('#fb-search')&&!e.target.closest('#fb-results'))
+    document.getElementById('fb-results').style.display='none';
+});
 
 // ═══ INIT ═══
 initShopSelect();
