@@ -370,7 +370,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
       <span style="font-size:20px;">✉️</span>
       <div style="flex:1;">
         <div style="font-size:16px;font-weight:800;color:#fff;">Обратная связь</div>
-        <div style="font-size:11px;color:rgba(255,255,255,.65);">Сообщение отправится на m.skiba@kari.com</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.65);">Сообщение отправится на <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3d50134e56545f5c7d565c4f54135e5250">[email&#160;protected]</a></div>
       </div>
       <button onclick="closeFeedback()" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:28px;height:28px;border-radius:50%;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:900;">✕</button>
     </div>
@@ -480,6 +480,14 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
           <span class="search-icon">🔍</span>
           <input type="text" class="search-input" id="lightSearch" placeholder="Поиск по световому оборудованию…" oninput="onLightSearch()">
         </div>
+        <select id="light-cat-filter" onchange="onLightCatFilter()" style="height:36px;padding:0 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;cursor:pointer;display:none;">
+          <option value="">Все разделы</option>
+        </select>
+        <div style="display:flex;gap:2px;flex-shrink:0;">
+          <button id="lightPhotoFilterAll" onclick="setLightPhotoFilter('all')" style="padding:5px 10px;border:1.5px solid var(--border);border-radius:7px 0 0 7px;background:var(--surface3);color:var(--text);font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;">Все</button>
+          <button id="lightPhotoFilterYes" onclick="setLightPhotoFilter('yes')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;">📷 С фото</button>
+          <button id="lightPhotoFilterNo" onclick="setLightPhotoFilter('no')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;border-radius:0 7px 7px 0;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;">Без фото</button>
+        </div>
         <div class="results-info" id="lightResultsInfo">—</div>
         <button onclick="exportToExcel('light')" title="Выгрузить в Excel" style="background:linear-gradient(135deg,#1a7a3a,#2aaa5a);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;white-space:nowrap;transition:all .2s;">📥 Excel</button>
       </div>
@@ -507,6 +515,14 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
       <div class="search-wrap">
         <span class="search-icon">🔍</span>
         <input type="text" class="search-input" id="kitsSearch" placeholder="Поиск по комплектам…" oninput="onKitsSearch()">
+      </div>
+      <select id="kits-cat-filter" onchange="onKitsCatFilter()" style="height:36px;padding:0 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;cursor:pointer;display:none;">
+        <option value="">Все разделы</option>
+      </select>
+      <div style="display:flex;gap:2px;flex-shrink:0;">
+        <button id="kitsPhotoFilterAll" onclick="setKitsPhotoFilter('all')" style="padding:5px 10px;border:1.5px solid var(--border);border-radius:7px 0 0 7px;background:var(--surface3);color:var(--text);font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;">Все</button>
+        <button id="kitsPhotoFilterYes" onclick="setKitsPhotoFilter('yes')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;">📷 С фото</button>
+        <button id="kitsPhotoFilterNo" onclick="setKitsPhotoFilter('no')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;border-radius:0 7px 7px 0;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;">Без фото</button>
       </div>
       <div class="results-info" id="kitsResultsInfo">—</div>
     </div>
@@ -542,6 +558,11 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
         <select id="slabot-cat-filter" onchange="onSlabotCatFilter()" style="height:36px;padding:0 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;cursor:pointer;display:none;">
           <option value="">Все категории</option>
         </select>
+        <div style="display:flex;gap:2px;flex-shrink:0;">
+          <button id="tvPhotoFilterAll" onclick="setTvPhotoFilter('all')" style="padding:5px 10px;border:1.5px solid var(--border);border-radius:7px 0 0 7px;background:var(--surface3);color:var(--text);font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;">Все</button>
+          <button id="tvPhotoFilterYes" onclick="setTvPhotoFilter('yes')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;">📷 С фото</button>
+          <button id="tvPhotoFilterNo" onclick="setTvPhotoFilter('no')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;border-radius:0 7px 7px 0;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;">Без фото</button>
+        </div>
         <div class="results-info" id="tvResultsInfo">—</div>
         <button onclick="exportToExcel('tv')" title="Выгрузить в Excel" style="background:linear-gradient(135deg,#1a7a3a,#2aaa5a);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;white-space:nowrap;transition:all .2s;">📥 Excel</button>
       </div>
@@ -883,7 +904,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 <div class="overlay" id="overlay" onclick="closeAll()"></div>
 <div class="toast" id="toast"></div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ═══ DATA ═══
 
 // ═══ СОВМЕСТИМОСТЬ DATA ═══
@@ -1005,7 +1026,7 @@ function onSlabotCatFilter(){
 // ═══ TV DATA ═══
 var TV_ITEMS = []; // заполняется из Excel при загрузке
 var tvAll = [], tvFiltered = [], tvRendered = 0, tvRendering = false;
-var tvSearch = '';
+var tvSearch = '', tvPhotoFilter = 'all';
 
 // ═══ GOOGLE DRIVE IMAGES CONFIG ═══
 // Инструкция по настройке:
@@ -1212,11 +1233,25 @@ function showTvPanel(){
 
 function onTvSearch(){ tvSearch = document.getElementById('tvSearch').value; applyTvFilters(); }
 
+function setTvPhotoFilter(mode){
+  tvPhotoFilter=mode;
+  ['All','Yes','No'].forEach(function(s){
+    var b=document.getElementById('tvPhotoFilter'+s);
+    if(!b) return;
+    var active=(s.toLowerCase()===mode)||(s==='All'&&mode==='all');
+    b.style.background=active?'var(--surface3)':'var(--surface2)';
+    b.style.color=active?'var(--text)':'var(--text3)';
+  });
+  applyTvFilters();
+}
+
 function applyTvFilters(){
   var q = tvSearch.toLowerCase().trim();
   tvFiltered = tvAll.filter(function(it){
-    if(!q) return true;
-    return it.name.toLowerCase().indexOf(q) >= 0 || it.code.toLowerCase().indexOf(q) >= 0 || (it.short||'').toLowerCase().indexOf(q) >= 0;
+    if(q&&!(it.name.toLowerCase().indexOf(q) >= 0 || it.code.toLowerCase().indexOf(q) >= 0 || (it.short||'').toLowerCase().indexOf(q) >= 0)) return false;
+    if(tvPhotoFilter==='yes'){ if(!getImgUrl(it)) return false; }
+    if(tvPhotoFilter==='no'){ if(getImgUrl(it)) return false; }
+    return true;
   });
   tvRendered = 0;
   document.getElementById('tvBody').innerHTML = '';
@@ -2043,15 +2078,60 @@ function updateInfo(){
 // ═══ LIGHT CATALOG STATE ═══
 var lightAll=LIGHT_ITEMS, lightFiltered=[], lightRendered=0, lightRendering=false;
 var lightSearch='', selectedLightRow=null;
+var lightPhotoFilter='all', lightCatFilter='';
+var LIGHT_CATS={}; // { категория: [items] } — заполняется при загрузке xlsx
 var currentPreviewImg='', currentPreviewCaption='';
 
 function onLightSearch(){lightSearch=document.getElementById("lightSearch").value;applyLightFilters();}
 
+function setLightPhotoFilter(mode){
+  lightPhotoFilter=mode;
+  ['All','Yes','No'].forEach(function(s){
+    var b=document.getElementById('lightPhotoFilter'+s);
+    if(!b) return;
+    var active=(s.toLowerCase()===mode)||(s==='All'&&mode==='all');
+    b.style.background=active?'var(--surface3)':'var(--surface2)';
+    b.style.color=active?'var(--text)':'var(--text3)';
+  });
+  applyLightFilters();
+}
+
+function onLightCatFilter(){
+  lightCatFilter=document.getElementById('light-cat-filter').value;
+  // Перестраиваем lightAll из LIGHT_CATS
+  var flat=[];
+  if(lightCatFilter && LIGHT_CATS[lightCatFilter]){
+    flat=LIGHT_CATS[lightCatFilter];
+  } else {
+    Object.values(LIGHT_CATS).forEach(function(arr){arr.forEach(function(it){flat.push(it);});});
+  }
+  if(flat.length) lightAll=flat;
+  applyLightFilters();
+}
+
+function updateLightCatFilter(){
+  var sel=document.getElementById('light-cat-filter');
+  if(!sel) return;
+  var cats=Object.keys(LIGHT_CATS).sort();
+  if(cats.length<2){sel.style.display='none';return;}
+  var prev=sel.value;
+  sel.innerHTML='<option value="">Все разделы</option>';
+  cats.forEach(function(cat){
+    var opt=document.createElement('option');
+    opt.value=cat; opt.textContent=cat+' ('+LIGHT_CATS[cat].length+')';
+    sel.appendChild(opt);
+  });
+  if(prev) sel.value=prev;
+  sel.style.display='';
+}
+
 function applyLightFilters(){
   var q=lightSearch.toLowerCase().trim();
   lightFiltered=lightAll.filter(function(it){
-    if(!q)return true;
-    return it.name.toLowerCase().indexOf(q)>=0||it.code.toLowerCase().indexOf(q)>=0;
+    if(q&&!(it.name.toLowerCase().indexOf(q)>=0||it.code.toLowerCase().indexOf(q)>=0)) return false;
+    if(lightPhotoFilter==='yes'){ if(!getImgUrl(it)) return false; }
+    if(lightPhotoFilter==='no'){ if(getImgUrl(it)) return false; }
+    return true;
   });
   lightRendered=0;
   document.getElementById("lightBody").innerHTML="";
@@ -2260,7 +2340,11 @@ function processFile(file){
       // Обновляем световое оборудование
       if(obj["Световое оборудование"]&&obj["Световое оборудование"].length){
         lightAll=obj["Световое оборудование"];
+        // Строим LIGHT_CATS по полю cat
+        LIGHT_CATS={};
+        lightAll.forEach(function(it){ var c=it.cat||''; if(c){if(!LIGHT_CATS[c])LIGHT_CATS[c]=[];LIGHT_CATS[c].push(it);} });
         lightFiltered=[];lightRendered=0;
+        updateLightCatFilter();
         if(currentTab==="light")applyLightFilters();
         var lcnt=document.getElementById("cnt-light");
         if(lcnt)lcnt.textContent=lightAll.length.toLocaleString("ru");
@@ -2316,6 +2400,9 @@ function parseRowsForCat(rows, fixedCat){
       name:name,
       short:iShort>=0?String(r[iShort]||"").trim():""
     };
+    // Раздел/Категория (для светового и других листов)
+    var iCatCol=h.findIndex(function(c){return c==='Раздел'||c==='Категория'||c==='Группа';});
+    if(iCatCol>=0&&r[iCatCol]){ var cv=String(r[iCatCol]).trim(); if(cv) item.cat=cv; }
     if(iThumb>=0&&r[iThumb]){
       var photoVal=String(r[iThumb]).trim();
       if(photoVal) item.photo=photoVal; // URL из Excel (для всех категорий)
@@ -2546,7 +2633,10 @@ function loadGitHubXlsx(){
 
       if(obj['Световое оборудование'] && obj['Световое оборудование'].length){
         lightAll = obj['Световое оборудование'];
+        LIGHT_CATS={};
+        lightAll.forEach(function(it){ var c=it.cat||''; if(c){if(!LIGHT_CATS[c])LIGHT_CATS[c]=[];LIGHT_CATS[c].push(it);} });
         lightFiltered=[]; lightRendered=0;
+        updateLightCatFilter();
         if(currentTab==='light') applyLightFilters();
         var lcnt=document.getElementById('cnt-light');
         if(lcnt) lcnt.textContent=lightAll.length.toLocaleString('ru');
@@ -2835,6 +2925,8 @@ function showToast(msg,type){
 var allKits = [];
 var kitsFiltered = [];
 var kitsCart = {};
+var kitsPhotoFilter = 'all', kitsCatFilter = '';
+var KITS_CATS = {}; // { категория: [kits] } — заполняется при загрузке
 
 // Предзагруженные комплекты
 var KITS_PRELOAD = [
@@ -2928,15 +3020,60 @@ function parseKitsRows(rows){
   });
   document.getElementById('cnt-kits').textContent = allKits.length;
   kitsFiltered = allKits.slice();
+  updateKitsCatFilter();
   renderKitsTable();
   document.getElementById('kitsResultsInfo').textContent = allKits.length + ' комплектов';
 }
 
 function onKitsSearch(){
+  applyKitsFilters();
+}
+
+function setKitsPhotoFilter(mode){
+  kitsPhotoFilter=mode;
+  ['All','Yes','No'].forEach(function(s){
+    var b=document.getElementById('kitsPhotoFilter'+s);
+    if(!b) return;
+    var active=(s.toLowerCase()===mode)||(s==='All'&&mode==='all');
+    b.style.background=active?'var(--surface3)':'var(--surface2)';
+    b.style.color=active?'var(--text)':'var(--text3)';
+  });
+  applyKitsFilters();
+}
+
+function onKitsCatFilter(){
+  kitsCatFilter=document.getElementById('kits-cat-filter').value;
+  applyKitsFilters();
+}
+
+function updateKitsCatFilter(){
+  var sel=document.getElementById('kits-cat-filter');
+  if(!sel) return;
+  // Собираем категории из allKits
+  var cats={};
+  allKits.forEach(function(k){ var c=k.category||''; if(c) cats[c]=(cats[c]||0)+1; });
+  var catList=Object.keys(cats).sort();
+  if(catList.length<2){sel.style.display='none';return;}
+  var prev=sel.value;
+  sel.innerHTML='<option value="">Все разделы</option>';
+  catList.forEach(function(cat){
+    var opt=document.createElement('option');
+    opt.value=cat; opt.textContent=cat+' ('+cats[cat]+')';
+    sel.appendChild(opt);
+  });
+  if(prev) sel.value=prev;
+  sel.style.display='';
+}
+
+function applyKitsFilters(){
   var q = document.getElementById('kitsSearch').value.toLowerCase().trim();
   kitsFiltered = allKits.filter(function(k){
-    return !q || k.name.toLowerCase().indexOf(q) >= 0 || k.id.toLowerCase().indexOf(q) >= 0 ||
-           (k.desc && k.desc.toLowerCase().indexOf(q) >= 0);
+    if(kitsCatFilter && (k.category||'')!==kitsCatFilter) return false;
+    if(q && !(k.name.toLowerCase().indexOf(q)>=0 || k.id.toLowerCase().indexOf(q)>=0 ||
+              (k.desc && k.desc.toLowerCase().indexOf(q)>=0))) return false;
+    if(kitsPhotoFilter==='yes'){ if(!getKitImgUrl(k)) return false; }
+    if(kitsPhotoFilter==='no'){ if(getKitImgUrl(k)) return false; }
+    return true;
   });
   renderKitsTable();
   document.getElementById('kitsResultsInfo').textContent = kitsFiltered.length + ' из ' + allKits.length;
@@ -2946,6 +3083,7 @@ function initKitsPreload(){
   if(allKits.length === 0 && KITS_PRELOAD.length > 0){
     allKits = KITS_PRELOAD.slice();
     kitsFiltered = allKits.slice();
+    updateKitsCatFilter();
     document.getElementById('cnt-kits').textContent = allKits.length;
     document.getElementById('kitsResultsInfo').textContent = allKits.length + ' комплектов';
     renderKitsTable();
@@ -3444,14 +3582,4 @@ applyLightFilters();
 <script>
 // ═══ PWA Service Worker ═══
 if('serviceWorker' in navigator){
-  window.addEventListener('load', function(){
-    navigator.serviceWorker.register('sw.js').then(function(reg){
-      console.log('[PWA] SW registered');
-    }).catch(function(err){
-      console.log('[PWA] SW failed:', err);
-    });
-  });
-}
-</script>
-</body>
-</html>
+  window.addEventListener('load', functi
