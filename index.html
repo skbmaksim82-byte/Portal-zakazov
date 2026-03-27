@@ -2313,9 +2313,6 @@ function updateFromGitHub(){
   var icon = document.getElementById('updateIcon');
   icon.innerHTML = "<span class='spin'>⏳</span>";
 
-  // Проверяем обновление самого приложения
-  if(typeof checkAppUpdate==='function') checkAppUpdate();
-
   var p1 = loadGitHubPhotos('Foto%20Svet',     SVET_PHOTOS,     'Foto Svet');
   var p2 = loadGitHubPhotos('Foto%20slabotoch', SLAB_PHOTOS,     'Foto slabotoch');
   var p3 = loadGitHubXlsx();
@@ -3415,101 +3412,16 @@ applyLightFilters();
 })();
 </script>
 <script>
-// ═══ PWA Service Worker + Автообновление ═══
-(function(){
-  if(!('serviceWorker' in navigator)) return;
-
-  var updateBanner = null;
-  var newWorker = null;
-  var swReg = null;
-
-  function showUpdateBanner(){
-    if(updateBanner) return;
-    updateBanner = document.createElement('div');
-    updateBanner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;'
-      +'background:linear-gradient(135deg,#1a6a3a,#2a9a5a);color:#fff;padding:12px 20px;'
-      +'display:flex;align-items:center;justify-content:center;gap:14px;font-family:Nunito,sans-serif;'
-      +'font-size:14px;font-weight:700;box-shadow:0 4px 20px rgba(0,0,0,.25);'
-      +'animation:swBannerIn .4s ease;';
-    updateBanner.innerHTML = '<span>🔄 Доступна новая версия приложения</span>';
-
-    var btn = document.createElement('button');
-    btn.textContent = 'Обновить сейчас';
-    btn.style.cssText = 'background:#fff;color:#1a6a3a;border:none;border-radius:8px;padding:8px 18px;'
-      +'font-size:13px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;'
-      +'box-shadow:0 2px 8px rgba(0,0,0,.15);transition:all .2s;';
-    btn.onclick = function(){
-      if(newWorker){ newWorker.postMessage({type:'SKIP_WAITING'}); }
-      else { window.location.reload(true); }
-    };
-
-    var dismiss = document.createElement('button');
-    dismiss.textContent = '✕';
-    dismiss.style.cssText = 'background:rgba(255,255,255,.2);border:none;color:#fff;width:28px;height:28px;'
-      +'border-radius:50%;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;';
-    dismiss.onclick = function(){ updateBanner.remove(); updateBanner=null; };
-
-    updateBanner.appendChild(btn);
-    updateBanner.appendChild(dismiss);
-    document.body.appendChild(updateBanner);
-  }
-
-  var st = document.createElement('style');
-  st.textContent = '@keyframes swBannerIn{from{transform:translateY(-100%);opacity:0}to{transform:translateY(0);opacity:1}}';
-  document.head.appendChild(st);
-
-  // Принудительная проверка обновлений (вызывается из кнопки ☁️ Обновить)
-  window.checkAppUpdate = function(){
-    if(!swReg) return;
-    swReg.update().then(function(){
-      // Если после update есть waiting worker — показываем баннер
-      if(swReg.waiting){
-        newWorker = swReg.waiting;
-        showUpdateBanner();
-      }
-    }).catch(function(){});
-  };
-
+// ═══ PWA Service Worker ═══
+if('serviceWorker' in navigator){
   window.addEventListener('load', function(){
-    // Регистрируем SW с отключением кэша через параметр
-    navigator.serviceWorker.register('sw.js?v=' + Date.now(), {updateViaCache:'none'}).then(function(reg){
-      swReg = reg;
+    navigator.serviceWorker.register('sw.js').then(function(reg){
       console.log('[PWA] SW registered');
-
-      if(reg.waiting){
-        newWorker = reg.waiting;
-        showUpdateBanner();
-      }
-
-      reg.addEventListener('updatefound', function(){
-        var installing = reg.installing;
-        if(!installing) return;
-        installing.addEventListener('statechange', function(){
-          if(installing.state === 'installed' && navigator.serviceWorker.controller){
-            newWorker = installing;
-            showUpdateBanner();
-          }
-        });
-      });
-
-      // Проверяем обновления каждые 2 минуты
-      setInterval(function(){
-        reg.update().catch(function(){});
-      }, 2 * 60 * 1000);
-
     }).catch(function(err){
       console.log('[PWA] SW failed:', err);
     });
-
-    // Перезагрузка при активации нового SW
-    var refreshing = false;
-    navigator.serviceWorker.addEventListener('controllerchange', function(){
-      if(refreshing) return;
-      refreshing = true;
-      window.location.reload();
-    });
   });
-})();
+}
 </script>
 </body>
 </html>
