@@ -1633,40 +1633,16 @@ function idmFillCompat(code){
 
   links.forEach(function(link){
     var row = document.createElement('div');
-    row.style.cssText='display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;'
-      +'background:#fff;border:1px solid #d0e8d0;transition:all .15s;';
+    row.style.cssText='display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;'
+      +'background:#fff;border:1px solid #d0e8d0;transition:all .15s;cursor:pointer;';
     row.onmouseenter=function(){this.style.borderColor='#80c080';this.style.boxShadow='0 2px 8px rgba(0,100,0,.08)';};
     row.onmouseleave=function(){this.style.borderColor='#d0e8d0';this.style.boxShadow='none';};
+    if(link.comment) row.title=link.comment;
 
-    // Иконка типа
-    var typeIcon = link.type==='заменяет'?'🔄':link.type==='требует'?'⚠️':'🔗';
-    var ico = document.createElement('span');
-    ico.textContent=typeIcon; ico.style.cssText='font-size:14px;flex-shrink:0;';
-
-    // Инфо (код + название), кликабельно
-    var info = document.createElement('div');
-    info.style.cssText='flex:1;min-width:0;cursor:pointer;';
-    info.title=link.comment||'Нажмите для просмотра';
-    var nameEl = document.createElement('div');
-    nameEl.textContent=link.name;
-    nameEl.style.cssText='font-size:12px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;';
-    var codeLine = document.createElement('div');
-    codeLine.style.cssText='display:flex;align-items:center;gap:6px;margin-top:2px;';
-    var codeEl = document.createElement('span');
-    codeEl.textContent=link.code;
-    codeEl.style.cssText='font-family:monospace;font-size:10px;color:#2a8a4a;font-weight:700;';
-    var typeTag = document.createElement('span');
-    typeTag.textContent=link.type||'подходит';
-    typeTag.style.cssText='font-size:9px;border-radius:10px;padding:1px 7px;font-weight:700;';
-    if(link.type==='требует'){typeTag.style.background='#fff0e0';typeTag.style.color='#b06000';}
-    else if(link.type==='заменяет'){typeTag.style.background='#e8e0ff';typeTag.style.color='#5030a0';}
-    else{typeTag.style.background='#d0f0d0';typeTag.style.color='#1a6a2a';}
-    codeLine.appendChild(codeEl); codeLine.appendChild(typeTag);
-    info.appendChild(nameEl); info.appendChild(codeLine);
-
-    // Клик по инфо — открыть карточку
+    // Клик по строке — открыть карточку
     (function(lnk){
-      info.onclick = function(){
+      row.onclick = function(e){
+        if(e.target.closest('input')||e.target.closest('button')) return;
         var found = allItems.find(function(a){return a.code===lnk.code;});
         if(!found) found = lightAll.find(function(a){return a.code===lnk.code;});
         if(!found && typeof tvAll!=='undefined') found = tvAll.find(function(a){return a.code===lnk.code;});
@@ -1675,17 +1651,34 @@ function idmFillCompat(code){
       };
     })(link);
 
+    // Номенклатура (жирный)
+    var codeEl = document.createElement('span');
+    codeEl.textContent=link.code;
+    codeEl.style.cssText='font-size:12px;font-weight:800;color:var(--text);white-space:nowrap;flex-shrink:0;';
+
+    // Наименование
+    var nameEl = document.createElement('span');
+    nameEl.textContent=link.name;
+    nameEl.style.cssText='font-size:12px;font-weight:500;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0;';
+
+    // Иконка типа связи
+    var typeIcon = link.type==='заменяет'?'🔄':link.type==='требует'?'⚠️':'🔗';
+    var ico = document.createElement('span');
+    ico.textContent=typeIcon;
+    ico.title=(link.type||'подходит');
+    ico.style.cssText='font-size:13px;flex-shrink:0;';
+
     // Кол-во
     var qtyInp = document.createElement('input');
     qtyInp.type='number'; qtyInp.min='1'; qtyInp.value='1';
-    qtyInp.style.cssText='width:42px;height:28px;border:1px solid #c0d8c0;border-radius:6px;text-align:center;font-family:monospace;font-size:12px;font-weight:700;outline:none;flex-shrink:0;';
+    qtyInp.style.cssText='width:38px;height:26px;border:1px solid #c0d8c0;border-radius:6px;text-align:center;font-family:monospace;font-size:12px;font-weight:700;outline:none;flex-shrink:0;';
     qtyInp.onclick=function(e){e.stopPropagation();};
 
     // Кнопка в корзину
     var inCart = !!cart[link.code];
     var addBtn = document.createElement('button');
     addBtn.textContent = inCart ? '✓' : '+';
-    addBtn.style.cssText='width:30px;height:30px;border:none;border-radius:8px;color:#fff;font-size:15px;font-weight:700;cursor:pointer;flex-shrink:0;transition:all .15s;display:flex;align-items:center;justify-content:center;';
+    addBtn.style.cssText='width:28px;height:28px;border:none;border-radius:7px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;flex-shrink:0;transition:all .15s;display:flex;align-items:center;justify-content:center;';
     addBtn.style.background = inCart ? 'linear-gradient(135deg,#3aaa6a,#2a8a4a)' : 'linear-gradient(135deg,#2a8a4a,#1a6a3a)';
     (function(lnk, abtn, qinp){
       abtn.onclick = function(e){
@@ -1708,7 +1701,7 @@ function idmFillCompat(code){
       };
     })(link, addBtn, qtyInp);
 
-    row.appendChild(ico); row.appendChild(info); row.appendChild(qtyInp); row.appendChild(addBtn);
+    row.appendChild(codeEl); row.appendChild(nameEl); row.appendChild(ico); row.appendChild(qtyInp); row.appendChild(addBtn);
     list.appendChild(row);
   });
 }
