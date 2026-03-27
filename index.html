@@ -2426,7 +2426,7 @@ function updateFromGitHub(){
   var p3 = loadGitHubXlsx();
   var p4 = loadGitHubPhotos('Foto%20Oborud',   OBORUD_PHOTOS,   'Foto Oborud');
   var p5 = loadComplectPhotos();
-  var p6 = loadGitHubPhotos('Foto%20Reklama',  REKLAM_PHOTOS,   'Foto Reklama');
+  var p6 = loadGitHubPhotos('Foto%20reklama',  REKLAM_PHOTOS,   'Foto reklama');
 
   Promise.all([p1, p2, p3, p4, p5, p6])
     .then(function(results){
