@@ -1,8 +1,6 @@
-// Service Worker — Портал заказов PWA
-var CACHE_NAME = 'portal-zakazov-v3';
-var URLS_TO_CACHE = [
-  './',
-  './index.html',
+// Service Worker — Портал заказов PWA v5
+var CACHE_NAME = 'portal-zakazov-v5';
+var STATIC_ASSETS = [
   './manifest.json',
   './icon-192.png',
   './icon-512.png',
@@ -10,24 +8,23 @@ var URLS_TO_CACHE = [
   'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js'
 ];
 
-// Install — кэшируем и сразу активируем
+// Install — кэшируем статику, сразу активируем
 self.addEventListener('install', function(event) {
   event.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {
-      console.log('[SW] Caching app shell');
-      return cache.addAll(URLS_TO_CACHE);
+      return cache.addAll(STATIC_ASSETS);
     })
   );
   self.skipWaiting();
 });
 
-// Activate — удаляем старые кэши
+// Activate — удаляем все старые кэши
 self.addEventListener('activate', function(event) {
   event.waitUntil(
     caches.keys().then(function(names) {
       return Promise.all(
-        names.filter(function(name) { return name !== CACHE_NAME; })
-             .map(function(name) { return caches.delete(name); })
+        names.filter(function(n) { return n !== CACHE_NAME; })
+             .map(function(n) { return caches.delete(n); })
       );
     }).then(function() {
       return self.clients.claim();
@@ -35,40 +32,49 @@ self.addEventListener('activate', function(event) {
   );
 });
 
-// Слушаем команду SKIP_WAITING от клиента
+// Команда от клиента — немедленная активация
 self.addEventListener('message', function(event) {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }
 });
 
-// Fetch — Network First для API/GitHub, Stale-While-Revalidate для остального
+// Fetch
 self.addEventListener('fetch', function(event) {
   var url = event.request.url;
 
-  // GitHub API и raw — всегда сеть
+  // GitHub API/raw — всегда сеть (данные каталога)
   if (url.indexOf('api.github.com') >= 0 || url.indexOf('raw.githubusercontent.com') >= 0) {
+    event.respondWith(fetch(event.request).catch(function() { return caches.match(event.request); }));
+    return;
+  }
+
+  // index.html и навигация — NETWORK FIRST (всегда свежая версия)
+  if (event.request.mode === 'navigate' || url.indexOf('index.html') >= 0) {
     event.respondWith(
-      fetch(event.request).catch(function() {
+      fetch(event.request).then(function(response) {
+        if (response && response.status === 200) {
+          var clone = response.clone();
+          caches.open(CACHE_NAME).then(function(cache) { cache.put(event.request, clone); });
+        }
+        return response;
+      }).catch(function() {
         return caches.match(event.request);
       })
     );
     return;
   }
 
-  // Остальное — кэш + обновление в фоне
+  // Статика — Cache First, обновляем в фоне
   event.respondWith(
     caches.match(event.request).then(function(cached) {
       var fetchPromise = fetch(event.request).then(function(response) {
         if (response && response.status === 200) {
           var clone = response.clone();
-          caches.open(CACHE_NAME).then(function(cache) {
-            cache.put(event.request, clone);
-          });
+          caches.open(CACHE_NAME).then(function(cache) { cache.put(event.request, clone); });
         }
         return response;
       }).catch(function() { return cached; });
-
       return cached || fetchPromise;
     })
   );
