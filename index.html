@@ -35,21 +35,38 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
              radial-gradient(ellipse 400px 100px at 80% 50%,rgba(116,88,184,.10),transparent);
   pointer-events:none;}
 .header-particles{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
-.header-particles span{
+/* Листики */
+.header-particles .leaf{
   position:absolute;
-  color:rgba(255,255,255,.75);
-  font-size:14px;
   line-height:1;
   opacity:0;
-  animation:snowFall linear infinite;
+  animation:leafFall linear forwards;
+  user-select:none;
+  transform-origin:center center;
+}
+@keyframes leafFall{
+  0%  {opacity:0;  transform:translateY(-16px) translateX(0)        rotate(0deg)  scale(.7);}
+  8%  {opacity:.9;}
+  30% {           transform:translateY(20px)  translateX(var(--dx1)) rotate(var(--r1)) scale(1);}
+  60% {           transform:translateY(44px)  translateX(var(--dx2)) rotate(var(--r2)) scale(.95);}
+  90% {opacity:.6;}
+  100%{opacity:0;  transform:translateY(74px)  translateX(var(--dx3)) rotate(var(--r3)) scale(.8);}
+}
+/* Птицы */
+.header-particles .bird{
+  position:absolute;
+  line-height:1;
+  opacity:0;
+  animation:birdFly linear forwards;
   user-select:none;
 }
-@keyframes snowFall{
-  0%  {opacity:0; transform:translateY(-10px) translateX(0) rotate(0deg);}
-  10% {opacity:.8;}
-  50% {transform:translateY(37px) translateX(var(--drift,0px)) rotate(180deg);}
-  90% {opacity:.5;}
-  100%{opacity:0; transform:translateY(74px) translateX(0) rotate(360deg);}
+@keyframes birdFly{
+  0%  {opacity:0;  transform:translateX(0)   translateY(0);}
+  6%  {opacity:.95;}
+  40% {           transform:translateX(38%)  translateY(var(--by1));}
+  70% {           transform:translateX(72%)  translateY(var(--by2));}
+  92% {opacity:.7;}
+  100%{opacity:0;  transform:translateX(115%) translateY(var(--by3));}
 }
 .logo{display:flex;align-items:center;gap:14px;position:relative;z-index:1;}
 .logo-icon{width:40px;height:40px;background:linear-gradient(135deg,#5a8fd1,#8468c8);
@@ -362,7 +379,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <div>
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="logo-text">Портал заказов — Склад</div>
-        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.20</div>
+        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.21</div>
       </div>
       <div class="logo-sub" id="catalogInfo">Загрузка…</div>
     </div>
@@ -918,7 +935,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ═══ ВЕРСИЯ ПРИЛОЖЕНИЯ ═══
-var APP_VERSION = '1.20';
+var APP_VERSION = '1.21';
 // При каждом обновлении index.html — менять только эту строку (1.17, 1.18 и т.д.)
 (function(){ var el = document.getElementById('appVersionBadge'); if(el) el.textContent = 'v' + APP_VERSION; })();
 
@@ -3717,35 +3734,79 @@ document.addEventListener('click',function(e){
 initShopSelect();
 applyLightFilters();
 
-// ═══ HEADER SNOWFLAKES ═══
+// ═══ HEADER SPRING ANIMATION ═══
 (function(){
   var container = document.getElementById('hdrParticles');
   if(!container) return;
-  var flakes = ['❄','❅','❆','✦','*'];
-  function spawnFlake(){
-    var s = document.createElement('span');
-    var size = 10 + Math.random()*14;  // 10–24px
-    s.textContent = flakes[Math.floor(Math.random()*flakes.length)];
-    s.style.fontSize = size+'px';
-    s.style.left = (Math.random()*102-1)+'%';
-    s.style.top = '-20px';
-    s.style.opacity = '0';
-    // Чуть разные оттенки белого
-    var alpha = (.45 + Math.random()*.35).toFixed(2);
-    s.style.color = 'rgba(255,255,255,'+alpha+')';
-    var dur = 4 + Math.random()*5;  // 4–9с
-    s.style.animationDuration = dur+'s';
-    s.style.animationDelay = '0s';
-    // Горизонтальный дрейф через CSS-переменную
-    var drift = (Math.random()*30-15).toFixed(1);  // -15..+15px
-    s.style.setProperty('--drift', drift+'px');
-    container.appendChild(s);
-    setTimeout(function(){ s.remove(); }, (dur+0.5)*1000);
+
+  // ── Листики ──
+  var leafEmoji = ['🌿','🍃','🌱','🍀','🌾'];
+  var leafColors = [
+    'rgba(80,200,80,.85)','rgba(50,180,50,.8)','rgba(100,210,70,.8)',
+    'rgba(60,160,60,.75)','rgba(120,200,80,.85)','rgba(40,150,90,.8)'
+  ];
+
+  function spawnLeaf(){
+    var el = document.createElement('span');
+    el.className = 'leaf';
+    var size = 11 + Math.random()*13;
+    el.textContent = leafEmoji[Math.floor(Math.random()*leafEmoji.length)];
+    el.style.fontSize = size+'px';
+    el.style.left = (Math.random()*104-2)+'%';
+    el.style.top  = '-18px';
+    // Волнообразный дрейф по X
+    var swing = 12 + Math.random()*18;
+    var dir   = Math.random()>.5 ? 1 : -1;
+    el.style.setProperty('--dx1', (dir*swing*.4)+'px');
+    el.style.setProperty('--dx2', (dir*-swing*.6)+'px');
+    el.style.setProperty('--dx3', (dir*swing*.3)+'px');
+    // Вращение
+    var rot = 80 + Math.random()*160;
+    el.style.setProperty('--r1', (dir*rot*.3)+'deg');
+    el.style.setProperty('--r2', (dir*rot*.7)+'deg');
+    el.style.setProperty('--r3', (dir*rot)+'deg');
+    var dur = 4.5 + Math.random()*4.5;
+    el.style.animationDuration = dur+'s';
+    container.appendChild(el);
+    setTimeout(function(){ el.remove(); }, dur*1000+200);
   }
-  // Начальный залп
-  for(var i=0;i<12;i++) setTimeout(spawnFlake, i*150);
-  // Непрерывно
-  setInterval(spawnFlake, 400);
+
+  // ── Птицы ──
+  var birdEmoji = ['🐦','🐦‍⬛','🦜'];
+
+  function spawnBird(){
+    var el = document.createElement('span');
+    el.className = 'bird';
+    var size = 13 + Math.random()*10;
+    el.textContent = birdEmoji[Math.floor(Math.random()*birdEmoji.length)];
+    el.style.fontSize = size+'px';
+    // Стартуют за левым краем
+    el.style.left  = '-40px';
+    // Случайная высота внутри шапки
+    var topPct = 10 + Math.random()*75;
+    el.style.top = topPct+'%';
+    // Волнообразный полёт по Y (дуга)
+    var amp = 6 + Math.random()*12;
+    var upDown = Math.random()>.5 ? 1 : -1;
+    el.style.setProperty('--by1', (upDown*-amp)+'px');
+    el.style.setProperty('--by2', (upDown*amp*.5)+'px');
+    el.style.setProperty('--by3', (upDown*-amp*.3)+'px');
+    var dur = 5 + Math.random()*4;
+    el.style.animationDuration = dur+'s';
+    container.appendChild(el);
+    setTimeout(function(){ el.remove(); }, dur*1000+300);
+  }
+
+  // Начальный залп листьев
+  for(var i=0;i<10;i++) setTimeout(spawnLeaf, i*180);
+  // Непрерывные листья
+  setInterval(spawnLeaf, 500);
+
+  // Первые птицы чуть позже
+  setTimeout(function(){
+    spawnBird();
+    setInterval(spawnBird, 3500 + Math.random()*1500);
+  }, 1200);
 })();
 
 // Автозагрузка каталога с GitHub при старте
