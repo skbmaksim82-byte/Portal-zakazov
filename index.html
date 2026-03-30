@@ -2485,15 +2485,6 @@ function updateFromGitHub(){
       }
       var xlsxInfo = xlsxResult.value;
 
-      // Собираем некритические ошибки фото-папок для отображения в уведомлении
-      var photoErrors = [];
-      [results[0], results[1], results[3], results[4], results[5]].forEach(function(r, i){
-        if(r.status === 'rejected'){
-          var labels = ['Foto Svet','Foto slabotoch','Foto Oborud','Foto Complect','Foto reklama'];
-          photoErrors.push(labels[i] + ': ' + r.reason.message);
-        }
-      });
-
       // Применяем фото к световому
       lightAll.forEach(function(it){
         var url = photoByCode(it.code, SVET_PHOTOS);
@@ -2527,15 +2518,21 @@ function updateFromGitHub(){
       if(currentTab === 'tv'){ tvFiltered=[]; tvRendered=0; document.getElementById('tvBody').innerHTML=''; applyTvFilters(); }
       if(currentTab === 'catalog' || currentTab === 'karikids'){ renderedCount=0; document.getElementById('tableBody').innerHTML=''; renderNextPage(); }
 
-      var msg = '✅ Обновлено с GitHub!\n'
-        + '📊 ' + xlsxInfo + '\n'
-        + '🏪 Оборудование: ' + oborudCnt + ' фото\n'
-        + '🎨 Рекламные: ' + reklamCnt + ' фото\n'
-        + '📦 Комплекты: ' + complectCnt + ' фото\n'
-        + '💡 Световое: ' + svetCnt + ' фото\n'
-        + '📺 Слаботочное: ' + slabCnt + ' фото';
-      if(photoErrors.length) msg += '\n⚠️ ' + photoErrors.join('; ');
-      showGitHubToast(msg);
+      // Собираем строки с флагами ok/error для отображения галочек/крестиков
+      var lines = [];
+      lines.push({ ok: true,             icon: '📊', text: 'Каталог xlsx: ' + xlsxInfo });
+      lines.push({ ok: oborudCnt > 0,   icon: '🏪', text: 'Оборудование: ' + oborudCnt + ' фото' });
+      lines.push({ ok: reklamCnt > 0,   icon: '🎨', text: 'Рекламные: ' + reklamCnt + ' фото' });
+      lines.push({ ok: complectCnt > 0, icon: '📦', text: 'Комплекты: ' + complectCnt + ' фото' });
+      lines.push({ ok: svetCnt > 0,     icon: '💡', text: 'Световое: ' + svetCnt + ' фото' });
+      lines.push({ ok: slabCnt > 0,     icon: '📺', text: 'Слаботочное: ' + slabCnt + ' фото' });
+      [results[0], results[1], results[3], results[4], results[5]].forEach(function(r, i){
+        if(r.status === 'rejected'){
+          var labels = ['Foto Svet','Foto slabotoch','Foto Oborud','Foto Complect','Foto reklama'];
+          lines.push({ ok: false, icon: '⚠️', text: labels[i] + ': ' + r.reason.message });
+        }
+      });
+      showGitHubToast(lines);
       icon.textContent = '☁️';
     });
 }
@@ -2709,26 +2706,83 @@ function loadGitHubXlsx(){
     });
 }
 
-function showGitHubToast(msg){
-  // Расширенное уведомление — небольшой попап
+function showGitHubToast(lines){
   var existing = document.getElementById('ghToast');
   if(existing) existing.remove();
+
   var div = document.createElement('div');
   div.id = 'ghToast';
   div.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);'
-    + 'background:#1a2a1a;color:#fff;border-radius:14px;padding:16px 24px;font-size:13px;font-weight:600;'
-    + 'z-index:500;box-shadow:0 8px 32px rgba(0,0,0,.3);white-space:pre-line;line-height:1.7;'
-    + 'border:1px solid #3a6a3a;min-width:280px;text-align:center;'
-    + 'animation:slideUp .3s ease;';
-  div.innerHTML = msg.replace(/\n/g,'<br>');
+    + 'background:#111b11;color:#fff;border-radius:16px;padding:0;font-size:13px;font-weight:600;'
+    + 'z-index:500;box-shadow:0 12px 40px rgba(0,0,0,.45);'
+    + 'border:1px solid #2d5a2d;min-width:300px;max-width:420px;overflow:hidden;'
+    + 'animation:slideUp .35s cubic-bezier(.34,1.56,.64,1);';
+
+  // Заголовок
+  var header = document.createElement('div');
+  header.style.cssText = 'background:linear-gradient(135deg,#1e4d1e,#2a6a2a);'
+    + 'padding:12px 42px 12px 18px;display:flex;align-items:center;gap:10px;'
+    + 'border-bottom:1px solid rgba(255,255,255,.08);';
+  header.innerHTML = '<span style="font-size:18px;">☁️</span>'
+    + '<span style="font-size:14px;font-weight:800;letter-spacing:-.2px;">Обновление с GitHub</span>';
+  div.appendChild(header);
+
   // Кнопка закрытия
   var closeBtn = document.createElement('button');
   closeBtn.textContent = '✕';
-  closeBtn.style.cssText = 'position:absolute;top:8px;right:10px;background:none;border:none;color:#aaa;cursor:pointer;font-size:14px;';
+  closeBtn.style.cssText = 'position:absolute;top:10px;right:12px;background:rgba(255,255,255,.12);'
+    + 'border:none;color:#ccc;cursor:pointer;font-size:13px;width:24px;height:24px;'
+    + 'border-radius:50%;display:flex;align-items:center;justify-content:center;'
+    + 'line-height:1;transition:background .15s;';
+  closeBtn.onmouseenter = function(){ this.style.background='rgba(255,255,255,.25)'; };
+  closeBtn.onmouseleave = function(){ this.style.background='rgba(255,255,255,.12)'; };
   closeBtn.onclick = function(){ div.remove(); };
   div.appendChild(closeBtn);
+
+  // Список строк
+  var list = document.createElement('div');
+  list.style.cssText = 'padding:10px 16px 14px;display:flex;flex-direction:column;gap:5px;';
+
+  lines.forEach(function(line, i){
+    var row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:6px 10px;'
+      + 'border-radius:8px;background:rgba(255,255,255,.04);'
+      + 'opacity:0;transform:translateX(-8px);'
+      + 'transition:opacity .25s ' + (i * 80) + 'ms, transform .25s ' + (i * 80) + 'ms;';
+
+    // Иконка статуса
+    var statusIcon = document.createElement('span');
+    statusIcon.textContent = line.ok ? '✓' : '✕';
+    statusIcon.style.cssText = 'flex-shrink:0;width:20px;height:20px;border-radius:50%;'
+      + 'color:#fff;font-size:' + (line.ok ? '12' : '11') + 'px;font-weight:900;'
+      + 'display:flex;align-items:center;justify-content:center;'
+      + (line.ok
+          ? 'background:#22c55e;box-shadow:0 0 8px rgba(34,197,94,.5);'
+          : 'background:#ef4444;box-shadow:0 0 8px rgba(239,68,68,.5);');
+
+    // Emoji категории
+    var catIcon = document.createElement('span');
+    catIcon.textContent = line.icon;
+    catIcon.style.cssText = 'flex-shrink:0;font-size:14px;';
+
+    // Текст
+    var text = document.createElement('span');
+    text.textContent = line.text;
+    text.style.cssText = 'flex:1;font-size:12px;font-weight:600;line-height:1.3;'
+      + 'color:' + (line.ok ? '#d1fae5' : '#fecaca') + ';';
+
+    row.appendChild(statusIcon);
+    row.appendChild(catIcon);
+    row.appendChild(text);
+    list.appendChild(row);
+
+    // Анимация появления
+    setTimeout(function(){ row.style.opacity='1'; row.style.transform='translateX(0)'; }, 50 + i * 80);
+  });
+
+  div.appendChild(list);
   document.body.appendChild(div);
-  setTimeout(function(){ if(div.parentNode) div.remove(); }, 5000);
+  setTimeout(function(){ if(div.parentNode) div.remove(); }, 7000);
 }
 
 function openUploadModal(){document.getElementById("uploadModal").classList.add("show");document.getElementById("overlay").classList.add("show");}
