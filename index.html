@@ -354,7 +354,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <div>
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="logo-text">Портал заказов — Склад</div>
-        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.16</div>
+        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.17</div>
       </div>
       <div class="logo-sub" id="catalogInfo">Загрузка…</div>
     </div>
@@ -455,7 +455,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <div class="toolbar">
       <div class="search-wrap">
         <span class="search-icon">🔍</span>
-        <input type="text" class="search-input" id="searchInput" placeholder="Поиск по наименованию или коду…" oninput="onSearch()">
+        <input type="text" class="search-input" id="searchInput" placeholder="Поиск по всем категориям — наименование или код…" oninput="onSearch()">
       </div>
       <div style="display:flex;gap:2px;flex-shrink:0;">
         <button id="photoFilterAll" onclick="setPhotoFilter('all')" style="padding:5px 10px;border:1.5px solid var(--border);border-radius:7px 0 0 7px;background:var(--surface3);color:var(--text);font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;">Все</button>
@@ -910,7 +910,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ═══ ВЕРСИЯ ПРИЛОЖЕНИЯ ═══
-var APP_VERSION = '1.16';
+var APP_VERSION = '1.17';
 // При каждом обновлении index.html — менять только эту строку (1.17, 1.18 и т.д.)
 (function(){ var el = document.getElementById('appVersionBadge'); if(el) el.textContent = 'v' + APP_VERSION; })();
 
@@ -1982,9 +1982,38 @@ function selectCat(c){
   showCatalogPanel();
   applyFilters();
 }
-function onSearch(){currentSearch=document.getElementById("searchInput").value;applyFilters();}
+function onSearch(){
+  currentSearch = document.getElementById("searchInput").value;
+  var q = currentSearch.toLowerCase().trim();
 
-function setPhotoFilter(mode){
+  // Если выбрана конкретная категория (не all) и открыта её панель — просто фильтруем внутри
+  if(currentCat !== 'all' && currentCat !== 'karikids'){
+    // Световое и слаботочное — синхронизируем их поиск
+    if(currentCat === 'light'){
+      document.getElementById('lightSearch').value = currentSearch;
+      lightSearch = currentSearch;
+      applyLightFilters();
+      return;
+    }
+    if(currentCat === 'tv'){
+      document.getElementById('tvSearch').value = currentSearch;
+      tvSearch = currentSearch;
+      applyTvFilters();
+      return;
+    }
+    applyFilters();
+    return;
+  }
+
+  // При «Все категории» или «Кари Кидс» — если есть запрос, переключаем на каталог и ищем по всему
+  if(q && currentCat === 'all'){
+    // Переключаем на панель каталога (без смены currentCat)
+    showCatalogPanel();
+  }
+  applyFilters();
+}
+
+function applyFilters(){(mode){
   currentPhotoFilter=mode;
   ['All','Yes','No'].forEach(function(s){
     var b=document.getElementById('photoFilter'+s);
@@ -1998,7 +2027,22 @@ function setPhotoFilter(mode){
 
 function applyFilters(){
   var q=currentSearch.toLowerCase().trim();
-  filteredItems=allItems.filter(function(it){
+
+  // Базовый пул: при поиске по «Все категории» включаем световое и слаботочное
+  var pool = allItems;
+  if(q && currentCat === 'all'){
+    // Добавляем световое с виртуальным cat='light'
+    var lightItems = lightAll.map(function(it){
+      return {code:it.code, name:it.name, short:it.short||'', cat:'light', photo:it.photo||it.thumb||''};
+    });
+    // Добавляем слаботочное с виртуальным cat='tv'
+    var tvItems = tvAll.map(function(it){
+      return {code:it.code, name:it.name, short:it.short||it.desc||'', cat:'tv', photo:it.photo||it.thumb||''};
+    });
+    pool = allItems.concat(lightItems).concat(tvItems);
+  }
+
+  filteredItems=pool.filter(function(it){
     if(currentCat==="karikids"){
       var isKK=(it.name&&it.name.toUpperCase().indexOf("\u041a\u041a")>=0)||(it.code&&it.code.toUpperCase().indexOf("\u041a\u041a")>=0);
       if(!isKK)return false;
@@ -2016,7 +2060,7 @@ function applyFilters(){
   document.getElementById("tableBody").innerHTML="";
   if(!filteredItems.length){
     var tr=document.createElement("tr"),td=document.createElement("td");
-    td.colSpan=5;td.style.cssText="text-align:center;padding:40px;color:var(--text3);font-size:14px";
+    td.colSpan=7;td.style.cssText="text-align:center;padding:40px;color:var(--text3);font-size:14px";
     td.textContent="🔍 Ничего не найдено";tr.appendChild(td);
     document.getElementById("tableBody").appendChild(tr);
   }else{renderNextPage();}
