@@ -52,21 +52,36 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
   90% {opacity:.6;}
   100%{opacity:0;  transform:translateY(74px)  translateX(var(--dx3)) rotate(var(--r3)) scale(.8);}
 }
-/* Птицы */
+/* Птицы — фазы управляются JS */
 .header-particles .bird{
   position:absolute;
   line-height:1;
   opacity:0;
-  animation:birdFly linear forwards;
   user-select:none;
+  transition:left .05s linear, top .05s linear;
+  z-index:2;
 }
-@keyframes birdFly{
-  0%  {opacity:0;  transform:translateX(0)   translateY(0);}
-  6%  {opacity:.95;}
-  40% {           transform:translateX(38%)  translateY(var(--by1));}
-  70% {           transform:translateX(72%)  translateY(var(--by2));}
-  92% {opacity:.7;}
-  100%{opacity:0;  transform:translateX(115%) translateY(var(--by3));}
+/* Влёт: прилетает слева к месту посадки */
+@keyframes birdFlyIn{
+  0%  {opacity:0;  transform:translateY(0);}
+  8%  {opacity:1;}
+  100%{opacity:1;  transform:translateY(0);}
+}
+/* Клёв: голова вниз-вверх */
+@keyframes birdPeck{
+  0%,100%{transform:rotate(0deg)   translateY(0);}
+  20%    {transform:rotate(18deg)  translateY(3px);}
+  40%    {transform:rotate(0deg)   translateY(0);}
+  60%    {transform:rotate(15deg)  translateY(2px);}
+  80%    {transform:rotate(0deg)   translateY(0);}
+}
+/* Взлёт и улёт вправо */
+@keyframes birdFlyOut{
+  0%  {opacity:1; transform:translateX(0)   translateY(0);}
+  15% {           transform:translateX(30px) translateY(-18px);}
+  60% {           transform:translateX(var(--ox)) translateY(var(--oy));}
+  90% {opacity:.6;}
+  100%{opacity:0; transform:translateX(var(--ox2)) translateY(var(--oy2));}
 }
 .logo{display:flex;align-items:center;gap:14px;position:relative;z-index:1;}
 .logo-icon{width:40px;height:40px;background:linear-gradient(135deg,#5a8fd1,#8468c8);
@@ -379,7 +394,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <div>
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="logo-text">Портал заказов — Склад</div>
-        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.21</div>
+        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.22</div>
       </div>
       <div class="logo-sub" id="catalogInfo">Загрузка…</div>
     </div>
@@ -935,7 +950,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ═══ ВЕРСИЯ ПРИЛОЖЕНИЯ ═══
-var APP_VERSION = '1.21';
+var APP_VERSION = '1.22';
 // При каждом обновлении index.html — менять только эту строку (1.17, 1.18 и т.д.)
 (function(){ var el = document.getElementById('appVersionBadge'); if(el) el.textContent = 'v' + APP_VERSION; })();
 
@@ -3772,41 +3787,104 @@ applyLightFilters();
   }
 
   // ── Птицы ──
-  var birdEmoji = ['🐦','🐦‍⬛','🦜'];
+  // ── Птицы ──
+  // Набор птиц: emoji + имя для разнообразия
+  var birds = [
+    {e:'🐦',  name:'воробей'},
+    {e:'🐧',  name:'пингвин'},
+    {e:'🦜',  name:'попугай'},
+    {e:'🦢',  name:'лебедь'},
+    {e:'🦆',  name:'утка'},
+    {e:'🐤',  name:'цыплёнок'},
+    {e:'🦉',  name:'сова'},
+    {e:'🦅',  name:'орёл'},
+  ];
+  var lastBirdIdx = -1;
 
   function spawnBird(){
+    // Выбираем птицу, отличную от предыдущей
+    var idx;
+    do { idx = Math.floor(Math.random()*birds.length); } while(idx === lastBirdIdx);
+    lastBirdIdx = idx;
+    var bird = birds[idx];
+
     var el = document.createElement('span');
     el.className = 'bird';
-    var size = 13 + Math.random()*10;
-    el.textContent = birdEmoji[Math.floor(Math.random()*birdEmoji.length)];
+    el.textContent = bird.e;
+    var size = 18 + Math.random()*8; // 18-26px
     el.style.fontSize = size+'px';
-    // Стартуют за левым краем
-    el.style.left  = '-40px';
-    // Случайная высота внутри шапки
-    var topPct = 10 + Math.random()*75;
-    el.style.top = topPct+'%';
-    // Волнообразный полёт по Y (дуга)
-    var amp = 6 + Math.random()*12;
-    var upDown = Math.random()>.5 ? 1 : -1;
-    el.style.setProperty('--by1', (upDown*-amp)+'px');
-    el.style.setProperty('--by2', (upDown*amp*.5)+'px');
-    el.style.setProperty('--by3', (upDown*-amp*.3)+'px');
-    var dur = 5 + Math.random()*4;
-    el.style.animationDuration = dur+'s';
+
+    // Стартовая позиция — за левым краем, случайная высота в верхней части шапки
+    var startX = -50;
+    var headerH = container.offsetHeight || 64;
+    // Место посадки — нижний край шапки (с небольшим отступом)
+    var landY = headerH - size - 4;
+    var landX = 80 + Math.random() * (window.innerWidth * 0.6); // где-то в середине
+
+    el.style.left   = startX + 'px';
+    el.style.top    = (headerH * 0.3) + 'px'; // стартовая высота полёта
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(0)';
     container.appendChild(el);
-    setTimeout(function(){ el.remove(); }, dur*1000+300);
+
+    // ── ФАЗА 1: влёт (2 сек) ──
+    var flyInDur = 2000;
+    // Анимируем position через rAF-интерполяцию
+    var flyInStart = null;
+    var startTop = headerH * 0.3;
+
+    el.style.opacity = '0';
+    el.style.animation = 'birdFlyIn '+flyInDur+'ms linear forwards';
+
+    function flyIn(ts){
+      if(!flyInStart) flyInStart = ts;
+      var p = Math.min((ts - flyInStart) / flyInDur, 1);
+      // плавная кривая easeInOut
+      var ep = p < .5 ? 2*p*p : -1+(4-2*p)*p;
+      el.style.left    = (startX + (landX - startX) * ep) + 'px';
+      el.style.top     = (startTop + (landY - startTop) * ep) + 'px';
+      el.style.opacity = Math.min(p * 8, 1).toString();
+      if(p < 1) requestAnimationFrame(flyIn);
+    }
+    requestAnimationFrame(flyIn);
+
+    // ── ФАЗА 2: посадка + клёв (4 сек) ──
+    setTimeout(function(){
+      el.style.animation = 'none';
+      el.style.left    = landX + 'px';
+      el.style.top     = landY + 'px';
+      el.style.opacity = '1';
+      el.style.transformOrigin = 'bottom center';
+      el.style.animation = 'birdPeck .7s ease-in-out 5'; // 5 клевков ~3.5с
+    }, flyInDur);
+
+    // ── ФАЗА 3: взлёт и улёт вправо (2.5 сек) ──
+    var peckDur = 3800;
+    setTimeout(function(){
+      el.style.animation = 'none';
+      // Улетает вправо за экран
+      var flyOutW = window.innerWidth - landX + 80;
+      el.style.setProperty('--ox',  (flyOutW * .5)+'px');
+      el.style.setProperty('--oy',  '-30px');
+      el.style.setProperty('--ox2', flyOutW+'px');
+      el.style.setProperty('--oy2', '-15px');
+      el.style.animation = 'birdFlyOut 2.5s ease-in forwards';
+
+      // Удаляем после улёта
+      setTimeout(function(){ el.remove(); }, 2600);
+    }, flyInDur + peckDur);
   }
+
+  // Первая птица через 2 секунды, затем каждые 15 секунд
+  setTimeout(function(){
+    spawnBird();
+    setInterval(spawnBird, 15000);
+  }, 2000);
 
   // Начальный залп листьев
   for(var i=0;i<10;i++) setTimeout(spawnLeaf, i*180);
   // Непрерывные листья
   setInterval(spawnLeaf, 500);
-
-  // Первые птицы чуть позже
-  setTimeout(function(){
-    spawnBird();
-    setInterval(spawnBird, 3500 + Math.random()*1500);
-  }, 1200);
 })();
 
 // Автозагрузка каталога с GitHub при старте
