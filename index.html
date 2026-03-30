@@ -145,6 +145,9 @@ thead{position:sticky;top:0;z-index:10;background:var(--surface2);box-shadow:0 2
 th{text-align:left;padding:10px 14px;font-size:10px;font-weight:800;letter-spacing:1.5px;
   text-transform:uppercase;color:var(--text3);border-bottom:1.5px solid var(--border2);white-space:nowrap;}
 th.th-qty{width:150px;text-align:center;}th.th-code{width:140px;}
+th.th-section{width:155px;}
+.td-section-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;
+  font-size:10px;font-weight:800;white-space:nowrap;border:1px solid currentColor;opacity:.9;}
 th.th-action{width:58px;text-align:center;}th.th-img{width:46px;text-align:center;}
 tbody tr{background:var(--surface2);border-bottom:1px solid var(--border);transition:background .12s;}
 tbody tr:nth-child(even){background:#f8f9fb;}
@@ -464,7 +467,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <div class="table-wrap" id="tableWrap">
       <table>
         <thead><tr>
-          <th class="th-img">Фото</th><th class="th-code">Код</th><th>Наименование</th><th style="text-align:center">Краткое описание</th>
+          <th class="th-img">Фото</th><th class="th-code">Код</th><th class="th-section">Раздел</th><th>Наименование</th><th style="text-align:center">Краткое описание</th>
           <th class="th-qty">Количество</th><th class="th-action">В корзину</th>
         </tr></thead>
         <tbody id="tableBody"></tbody>
@@ -1530,9 +1533,19 @@ function openItemDetail(item, cartKeyPrefix, keepKitPanel) {
   // Раздел
   var cw = document.getElementById('idm-cat-wrap');
   var ce = document.getElementById('idm-cat');
-  if(cat && cat !== 'light' && cat !== 'karikids'){
-    ce.textContent = (IDM_HEADER_ICONS[cat]||'') + ' ' + cat;
-    ce.style.color = IDM_HEADER_COLORS[cat] ? '#555' : 'var(--text2)';
+  var catLabel = cat;
+  var catIcon  = IDM_HEADER_ICONS[cat] || '📦';
+  if(cat === 'light')    { catLabel = 'Световое оборудование'; }
+  if(cat === 'karikids') { catLabel = 'Кари Кидс'; }
+  if(catLabel){
+    var catColor = (CAT_COLORS && CAT_COLORS[cat]) || (cat==='light'?'#e07a20':cat==='karikids'?'#c0392b':'#4a7fc1');
+    ce.innerHTML = '';
+    var badge = document.createElement('span');
+    badge.style.cssText = 'display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;'
+      +'font-size:13px;font-weight:800;'
+      +'color:'+catColor+';background:'+catColor+'18;border:1.5px solid '+catColor+'55;';
+    badge.textContent = catIcon + ' ' + catLabel;
+    ce.appendChild(badge);
     cw.style.display='';
   } else { cw.style.display='none'; }
 
@@ -2044,6 +2057,23 @@ function renderNextPage(){
     }
 
     var td1=document.createElement("td");td1.className="td-code";td1.textContent=it.code;
+
+    // Ячейка «Раздел»
+    var tdSec=document.createElement("td");tdSec.style.cssText="padding:6px 10px;";
+    (function(item){
+      var catKey = item.cat || '';
+      var label='', icon='', color='#888';
+      if(catKey==='light'){  label='Световое';   icon='💡'; color='#e07a20'; }
+      else if(catKey==='karikids'){ label='Кари Кидс'; icon='👧'; color='#c0392b'; }
+      else if(catKey){ label=catKey; icon=CAT_ICONS[catKey]||'📦'; color=CAT_COLORS[catKey]||'#4a7fc1'; }
+      if(label){
+        var b=document.createElement('span'); b.className='td-section-badge';
+        b.style.cssText='color:'+color+';background:'+color+'18;border-color:'+color+'55;';
+        b.textContent=icon+' '+label;
+        tdSec.appendChild(b);
+      }
+    })(it);
+
     var td2=document.createElement("td");td2.className="td-name";td2.title=it.name;td2.textContent=it.name;
     var td3=document.createElement("td");td3.className="td-short";td3.textContent=it.short||"";
     var wrap=document.createElement("div");wrap.className="qty-wrap";
@@ -2060,7 +2090,7 @@ function renderNextPage(){
     ab.id="ab-"+it.code;ab.textContent=inC?"✓":"+";
     (function(code){ab.onclick=function(e){e.stopPropagation();tog(code);};})(it.code);
     var td5=document.createElement("td");td5.appendChild(ab);
-    tr.appendChild(tdImg);tr.appendChild(td1);tr.appendChild(td2);tr.appendChild(td3);tr.appendChild(td4);tr.appendChild(td5);
+    tr.appendChild(tdImg);tr.appendChild(td1);tr.appendChild(tdSec);tr.appendChild(td2);tr.appendChild(td3);tr.appendChild(td4);tr.appendChild(td5);
     fr.appendChild(tr);
   }
   tb.appendChild(fr);renderedCount=end;isRendering=false;
@@ -2483,17 +2513,19 @@ function updateFromGitHub(){
 
       // Собираем строки с флагами ok/error для отображения галочек/крестиков
       var lines = [];
-      lines.push({ ok: true,  icon: '📊', text: 'Каталог xlsx: ' + xlsxInfo });
+      lines.push({ ok: true,            icon: '📊', text: 'Каталог xlsx: ' + xlsxInfo });
       lines.push({ ok: oborudCnt > 0,   icon: '🏪', text: 'Оборудование: ' + oborudCnt + ' фото' });
       lines.push({ ok: reklamCnt > 0,   icon: '🎨', text: 'Рекламные: ' + reklamCnt + ' фото' });
       lines.push({ ok: complectCnt > 0, icon: '📦', text: 'Комплекты: ' + complectCnt + ' фото' });
       lines.push({ ok: svetCnt > 0,     icon: '💡', text: 'Световое: ' + svetCnt + ' фото' });
       lines.push({ ok: slabCnt > 0,     icon: '📺', text: 'Слаботочное: ' + slabCnt + ' фото' });
-      // Добавляем ошибочные папки отдельными строками
+      // Ошибки папок — отдельными строками (только если была ошибка, без дублирования со счётчиком)
       [results[0], results[1], results[3], results[4], results[5]].forEach(function(r, i){
         if(r.status === 'rejected'){
           var labels = ['Foto Svet','Foto slabotoch','Foto Oborud','Foto Complect','Foto reklama'];
-          lines.push({ ok: false, icon: '⚠️', text: labels[i] + ': ' + r.reason.message });
+          // Заменяем соответствующую строку-счётчик на строку с ошибкой
+          var mapIdx = [4, 5, 1, 3, 2]; // индексы в lines[]
+          lines[mapIdx[i]] = { ok: false, icon: ['💡','📺','🏪','📦','🎨'][i], text: labels[i] + ': ' + r.reason.message };
         }
       });
       showGitHubToast(lines);
@@ -2671,7 +2703,6 @@ function loadGitHubXlsx(){
 }
 
 function showGitHubToast(lines){
-  // Расширенное уведомление — попап со списком загрузки
   var existing = document.getElementById('ghToast');
   if(existing) existing.remove();
 
@@ -2680,80 +2711,68 @@ function showGitHubToast(lines){
   div.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);'
     + 'background:#111b11;color:#fff;border-radius:16px;padding:0;font-size:13px;font-weight:600;'
     + 'z-index:500;box-shadow:0 12px 40px rgba(0,0,0,.45);'
-    + 'border:1px solid #2d5a2d;min-width:300px;max-width:420px;overflow:hidden;'
+    + 'border:1px solid #2d5a2d;min-width:300px;max-width:480px;overflow:hidden;'
     + 'animation:slideUp .35s cubic-bezier(.34,1.56,.64,1);';
 
   // Заголовок
   var header = document.createElement('div');
   header.style.cssText = 'background:linear-gradient(135deg,#1e4d1e,#2a6a2a);'
-    + 'padding:12px 42px 12px 18px;display:flex;align-items:center;gap:10px;'
+    + 'padding:11px 42px 11px 18px;display:flex;align-items:center;gap:10px;'
     + 'border-bottom:1px solid rgba(255,255,255,.08);';
-  header.innerHTML = '<span style="font-size:18px;">☁️</span>'
+  header.innerHTML = '<span style="font-size:17px;">☁️</span>'
     + '<span style="font-size:14px;font-weight:800;letter-spacing:-.2px;">Обновление с GitHub</span>';
   div.appendChild(header);
 
   // Кнопка закрытия
   var closeBtn = document.createElement('button');
   closeBtn.textContent = '✕';
-  closeBtn.style.cssText = 'position:absolute;top:10px;right:12px;background:rgba(255,255,255,.12);'
-    + 'border:none;color:#ccc;cursor:pointer;font-size:13px;width:24px;height:24px;'
-    + 'border-radius:50%;display:flex;align-items:center;justify-content:center;'
-    + 'line-height:1;transition:background .15s;';
-  closeBtn.onmouseenter = function(){ this.style.background='rgba(255,255,255,.25)'; };
+  closeBtn.style.cssText = 'position:absolute;top:9px;right:11px;background:rgba(255,255,255,.12);'
+    + 'border:none;color:#ccc;cursor:pointer;font-size:12px;width:22px;height:22px;'
+    + 'border-radius:50%;display:flex;align-items:center;justify-content:center;transition:background .15s;';
+  closeBtn.onmouseenter = function(){ this.style.background='rgba(255,255,255,.28)'; };
   closeBtn.onmouseleave = function(){ this.style.background='rgba(255,255,255,.12)'; };
   closeBtn.onclick = function(){ div.remove(); };
   div.appendChild(closeBtn);
 
   // Список строк
   var list = document.createElement('div');
-  list.style.cssText = 'padding:10px 16px 14px;display:flex;flex-direction:column;gap:5px;';
+  list.style.cssText = 'padding:10px 14px 13px;display:flex;flex-direction:column;gap:4px;';
 
-  // Рендерим каждую строку с задержкой (эффект последовательного появления)
   lines.forEach(function(line, i){
     var row = document.createElement('div');
-    row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:6px 10px;'
+    row.style.cssText = 'display:flex;align-items:center;gap:9px;padding:5px 9px;'
       + 'border-radius:8px;background:rgba(255,255,255,.04);'
-      + 'opacity:0;transform:translateX(-8px);transition:opacity .25s,transform .25s;'
-      + 'transition-delay:' + (i * 80) + 'ms;';
+      + 'opacity:0;transform:translateX(-8px);'
+      + 'transition:opacity .22s ' + (i*70) + 'ms,transform .22s ' + (i*70) + 'ms;';
 
-    // Иконка статуса (галочка / крестик)
     var statusIcon = document.createElement('span');
-    if(line.ok){
-      statusIcon.textContent = '✓';
-      statusIcon.style.cssText = 'flex-shrink:0;width:20px;height:20px;border-radius:50%;'
-        + 'background:#22c55e;color:#fff;font-size:12px;font-weight:900;'
-        + 'display:flex;align-items:center;justify-content:center;'
-        + 'box-shadow:0 0 8px rgba(34,197,94,.5);';
-    } else {
-      statusIcon.textContent = '✕';
-      statusIcon.style.cssText = 'flex-shrink:0;width:20px;height:20px;border-radius:50%;'
-        + 'background:#ef4444;color:#fff;font-size:11px;font-weight:900;'
-        + 'display:flex;align-items:center;justify-content:center;'
-        + 'box-shadow:0 0 8px rgba(239,68,68,.5);';
-    }
+    statusIcon.textContent = line.ok ? '✓' : '✕';
+    statusIcon.style.cssText = 'flex-shrink:0;width:18px;height:18px;border-radius:50%;'
+      + 'font-size:10px;font-weight:900;display:flex;align-items:center;justify-content:center;'
+      + (line.ok
+          ? 'background:#22c55e;color:#fff;box-shadow:0 0 7px rgba(34,197,94,.5);'
+          : 'background:#ef4444;color:#fff;box-shadow:0 0 7px rgba(239,68,68,.5);');
 
-    // Emoji категории
     var catIcon = document.createElement('span');
     catIcon.textContent = line.icon;
-    catIcon.style.cssText = 'flex-shrink:0;font-size:14px;';
+    catIcon.style.cssText = 'flex-shrink:0;font-size:13px;';
 
-    // Текст
     var text = document.createElement('span');
     text.textContent = line.text;
-    text.style.cssText = 'flex:1;font-size:12px;font-weight:600;color:' + (line.ok ? '#d1fae5' : '#fecaca') + ';line-height:1.3;';
+    text.style.cssText = 'flex:1;font-size:12px;font-weight:600;line-height:1.3;'
+      + 'color:' + (line.ok ? '#d1fae5' : '#fecaca') + ';';
 
     row.appendChild(statusIcon);
     row.appendChild(catIcon);
     row.appendChild(text);
     list.appendChild(row);
 
-    // Анимируем появление с задержкой
-    setTimeout(function(){ row.style.opacity='1'; row.style.transform='translateX(0)'; }, 50 + i * 80);
+    setTimeout(function(){ row.style.opacity='1'; row.style.transform='translateX(0)'; }, 40 + i*70);
   });
 
   div.appendChild(list);
   document.body.appendChild(div);
-  setTimeout(function(){ if(div.parentNode) div.remove(); }, 7000);
+  setTimeout(function(){ if(div.parentNode) div.remove(); }, 8000);
 }
 
 function openUploadModal(){document.getElementById("uploadModal").classList.add("show");document.getElementById("overlay").classList.add("show");}
