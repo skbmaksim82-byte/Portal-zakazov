@@ -2428,14 +2428,34 @@ function updateFromGitHub(){
   var p5 = loadComplectPhotos();
   var p6 = loadGitHubPhotos('Foto%20reklama',  REKLAM_PHOTOS,   'Foto reklama');
 
-  Promise.all([p1, p2, p3, p4, p5, p6])
+  // Используем allSettled — ошибка одной папки с фото не блокирует загрузку xlsx и каталога
+  Promise.allSettled([p1, p2, p3, p4, p5, p6])
     .then(function(results){
-      var svetCnt      = results[0];
-      var slabCnt      = results[1];
-      var xlsxInfo     = results[2];
-      var oborudCnt    = results[3];
-      var complectCnt  = results[4];
-      var reklamCnt    = results[5];
+      // Извлекаем значения — fulfilled даёт value, rejected даёт null + собираем ошибки
+      function val(r, fallback){ return r.status === 'fulfilled' ? r.value : fallback; }
+      var svetCnt      = val(results[0], 0);
+      var slabCnt      = val(results[1], 0);
+      var xlsxResult   = results[2];
+      var oborudCnt    = val(results[3], 0);
+      var complectCnt  = val(results[4], 0);
+      var reklamCnt    = val(results[5], 0);
+
+      // Если xlsx не загрузился — это критическая ошибка, сообщаем и выходим
+      if(xlsxResult.status === 'rejected'){
+        showToast('❌ Ошибка загрузки каталога: ' + xlsxResult.reason.message, 'error');
+        icon.textContent = '☁️';
+        return;
+      }
+      var xlsxInfo = xlsxResult.value;
+
+      // Собираем некритические ошибки фото-папок для отображения в уведомлении
+      var photoErrors = [];
+      [results[0], results[1], results[3], results[4], results[5]].forEach(function(r, i){
+        if(r.status === 'rejected'){
+          var labels = ['Foto Svet','Foto slabotoch','Foto Oborud','Foto Complect','Foto reklama'];
+          photoErrors.push(labels[i] + ': ' + r.reason.message);
+        }
+      });
 
       // Применяем фото к световому
       lightAll.forEach(function(it){
@@ -2477,13 +2497,9 @@ function updateFromGitHub(){
         + '📦 Комплекты: ' + complectCnt + ' фото\n'
         + '💡 Световое: ' + svetCnt + ' фото\n'
         + '📺 Слаботочное: ' + slabCnt + ' фото';
+      if(photoErrors.length) msg += '\n⚠️ ' + photoErrors.join('; ');
       showGitHubToast(msg);
       icon.textContent = '☁️';
-    })
-    .catch(function(err){
-      showToast('❌ Ошибка загрузки: ' + err.message, 'error');
-      icon.textContent = '☁️';
-      console.error(err);
     });
 }
 
@@ -2530,7 +2546,7 @@ function getAllImgUrls(item){
 }
 
 function loadGitHubPhotos(folder, targetMap, label){
-  return fetch(GITHUB_API + folder)
+  return fetch(GITHUB_API + folder, {cache: 'no-cache'})
     .then(function(r){
       if(!r.ok) throw new Error('Не удалось загрузить список ' + label + ' (HTTP ' + r.status + ')');
       return r.json();
@@ -2561,7 +2577,7 @@ function loadGitHubPhotos(folder, targetMap, label){
 // Загружает фото комплектов: имя файла (без расширения) = название комплекта
 // Поддерживает кириллику и пробелы в именах
 function loadComplectPhotos(){
-  return fetch(GITHUB_API + 'Foto%20Complect')
+  return fetch(GITHUB_API + 'Foto%20Complect', {cache: 'no-cache'})
     .then(function(r){
       if(!r.ok) throw new Error('Не удалось загрузить Foto Complect (HTTP ' + r.status + ')');
       return r.json();
@@ -2587,7 +2603,7 @@ function loadComplectPhotos(){
 }
 
 function loadGitHubXlsx(){
-  return fetch(GITHUB_XLSX)
+  return fetch(GITHUB_XLSX, {cache: 'no-cache'})
     .then(function(r){
       if(!r.ok) throw new Error('Не удалось скачать XLSX (HTTP ' + r.status + ')');
       return r.arrayBuffer();

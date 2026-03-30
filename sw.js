@@ -1,5 +1,5 @@
 // Service Worker — Портал заказов PWA v6
-var CACHE_NAME = 'portal-zakazov-v9';
+var CACHE_NAME = 'portal-zakazov-v10';
 var URLS_TO_CACHE = [
   './',
   './index.html',
