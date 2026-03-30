@@ -352,7 +352,10 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
       </div>
     </div>
     <div>
-      <div class="logo-text">Портал заказов — Склад</div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="logo-text">Портал заказов — Склад</div>
+        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.16</div>
+      </div>
       <div class="logo-sub" id="catalogInfo">Загрузка…</div>
     </div>
   </div>
@@ -906,6 +909,11 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 <div class="toast" id="toast"></div>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ═══ ВЕРСИЯ ПРИЛОЖЕНИЯ ═══
+var APP_VERSION = '1.16';
+// При каждом обновлении index.html — менять только эту строку (1.17, 1.18 и т.д.)
+(function(){ var el = document.getElementById('appVersionBadge'); if(el) el.textContent = 'v' + APP_VERSION; })();
+
 // ═══ DATA ═══
 
 // ═══ СОВМЕСТИМОСТЬ DATA ═══
