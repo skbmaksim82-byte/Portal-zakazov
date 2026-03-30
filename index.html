@@ -465,7 +465,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <div class="table-wrap" id="tableWrap">
       <table>
         <thead><tr>
-          <th class="th-img">Фото</th><th class="th-code">Код</th><th>Наименование</th><th style="width:140px;">Раздел</th><th style="text-align:center">Краткое описание</th>
+          <th class="th-img">Фото</th><th class="th-code">Код</th><th style="width:8cm;">Наименование</th><th style="text-align:center">Краткое описание</th><th style="width:5cm;text-align:center;">Раздел</th>
           <th class="th-qty">Количество</th><th class="th-action">В корзину</th>
         </tr></thead>
         <tbody id="tableBody"></tbody>
@@ -2079,7 +2079,7 @@ function renderNextPage(){
     var td1=document.createElement("td");td1.className="td-code";td1.textContent=it.code;
     var td2=document.createElement("td");td2.className="td-name";td2.title=it.name;td2.textContent=it.name;
     // Раздел
-    var tdSec=document.createElement("td");tdSec.style.cssText="padding:9px 10px;";
+    var tdSec=document.createElement("td");tdSec.style.cssText="padding:9px 10px;text-align:center;";
     var badge=makeSectionBadge(it.cat);
     if(badge) tdSec.appendChild(badge);
     var td3=document.createElement("td");td3.className="td-short";td3.textContent=it.short||"";
@@ -2097,7 +2097,7 @@ function renderNextPage(){
     ab.id="ab-"+it.code;ab.textContent=inC?"✓":"+";
     (function(code){ab.onclick=function(e){e.stopPropagation();tog(code);};})(it.code);
     var td5=document.createElement("td");td5.appendChild(ab);
-    tr.appendChild(tdImg);tr.appendChild(td1);tr.appendChild(td2);tr.appendChild(tdSec);tr.appendChild(td3);tr.appendChild(td4);tr.appendChild(td5);
+    tr.appendChild(tdImg);tr.appendChild(td1);tr.appendChild(td2);tr.appendChild(td3);tr.appendChild(tdSec);tr.appendChild(td4);tr.appendChild(td5);
     fr.appendChild(tr);
   }
   tb.appendChild(fr);renderedCount=end;isRendering=false;
