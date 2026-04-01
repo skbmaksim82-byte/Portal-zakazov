@@ -374,7 +374,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <div>
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="logo-text">Портал заказов — Склад</div>
-        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.25</div>
+        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.26</div>
       </div>
       <div class="logo-sub" id="catalogInfo">Загрузка…</div>
     </div>
@@ -906,6 +906,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     </div></div>
     <input type="hidden" id="shopName">
     <button class="send-btn" onclick="sendOrder()">📧 Отправить заявку на склад</button>
+    <button class="send-btn" onclick="sendToAdminDir()" style="background:linear-gradient(135deg,#5a3a9a,#7a52c8);box-shadow:0 4px 14px rgba(116,88,184,.35);margin-top:6px;">👔 Отправить административному директору</button>
   </div>
 </div>
 
@@ -931,7 +932,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ═══ ВЕРСИЯ ПРИЛОЖЕНИЯ ═══
-var APP_VERSION = '1.25';
+var APP_VERSION = '1.26';
 // При каждом обновлении index.html — менять только эту строку (1.17, 1.18 и т.д.)
 (function(){ var el = document.getElementById('appVersionBadge'); if(el) el.textContent = 'v' + APP_VERSION; })();
 
@@ -3105,6 +3106,81 @@ function sendOrder(){
   },500);
 }
 function closeModal(){document.getElementById("successModal").classList.remove("show");closeCart();}
+
+// ── Email административного директора ──
+var ADMIN_DIR_EMAIL = 'm.skiba@kari.com'; // ← изменить на нужный адрес
+
+function sendToAdminDir(){
+  var sel = document.getElementById("shopSelect");
+  var shopNum = sel.value;
+  if(!shopNum || shopNum === "0"){ alert("Выберите магазин из списка."); return; }
+  if(!Object.keys(cart).length){ alert("Корзина пуста!"); return; }
+
+  var shopName = document.getElementById("shopName").value.trim() || ('Магазин ' + shopNum);
+  var contact  = document.getElementById("contactName").value.trim();
+  var phone    = document.getElementById("contactPhone").value.trim();
+  var comment  = document.getElementById("orderComment").value.trim();
+  var date     = new Date().toLocaleString("ru-RU");
+
+  // Тема письма
+  var subject = "Заказ оборудования " + shopNum;
+
+  // Тело — шапка
+  var body = "Заказ оборудования\n";
+  body += "Магазин: " + shopName + " (№ " + shopNum + ")\n";
+  body += "Дата: " + date + "\n";
+  if(contact) body += "Контакт: " + contact + (phone ? " / " + phone : "") + "\n";
+  if(comment) body += "Комментарий: " + comment + "\n";
+  body += "\n";
+
+  // Заголовок таблицы
+  var COL1 = 18, COL2 = 50, COL3 = 8;
+  function pad(s, n){ s = String(s); while(s.length < n) s += ' '; return s.slice(0,n); }
+  body += pad("Номенклатура", COL1) + "  " + pad("Наименование", COL2) + "  " + "Кол-во\n";
+  body += pad("─".repeat(COL1), COL1) + "  " + pad("─".repeat(COL2), COL2) + "  " + "──────\n";
+
+  // Строки позиций — сначала обычные, потом комплекты
+  var regKeys = Object.keys(cart).filter(function(k){ return !cart[k].kitId; });
+  var kitKeys = Object.keys(cart).filter(function(k){ return  cart[k].kitId; });
+
+  if(regKeys.length){
+    regKeys.forEach(function(k){
+      var item = cart[k].item || {};
+      var qty  = cart[k].qty || 1;
+      body += pad(item.code || '', COL1) + "  " + pad(item.name || '', COL2) + "  " + qty + "\n";
+    });
+  }
+
+  if(kitKeys.length){
+    body += "\n--- Комплекты ---\n";
+    var kg = {};
+    kitKeys.forEach(function(k){
+      var e = cart[k];
+      if(!kg[e.kitId]) kg[e.kitId] = {name: e.kitName, mult: e.kitMult, items: []};
+      if(!e._kitGroup) kg[e.kitId].items.push(e);
+    });
+    Object.keys(kg).forEach(function(id){
+      var g = kg[id];
+      body += "\nКомплект " + id + " — " + g.name + " × " + g.mult + "\n";
+      g.items.forEach(function(e){
+        body += pad(e.code || '', COL1) + "  " + pad(e.name || '', COL2) + "  " + (e.qty || 1) + "\n";
+      });
+    });
+  }
+
+  // Итог
+  var totalPos = Object.keys(cart).length;
+  var totalQty = Object.keys(cart).reduce(function(s,k){ return s + (cart[k].qty || 1); }, 0);
+  body += "\n" + "─".repeat(COL1 + COL2 + 10) + "\n";
+  body += "Итого позиций: " + totalPos + "   Итого единиц: " + totalQty + "\n";
+
+  var mailto = "mailto:" + ADMIN_DIR_EMAIL
+    + "?subject=" + encodeURIComponent(subject)
+    + "&body="    + encodeURIComponent(body);
+
+  window.location.href = mailto;
+  showToast("👔 Outlook открыт — письмо директору", "ok");
+}
 
 var toastTimer;
 function showToast(msg,type){
