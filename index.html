@@ -256,6 +256,16 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 .cart-item-cat{font-size:10px;padding:2px 6px;border-radius:20px;font-weight:700;white-space:nowrap;
   flex-shrink:0;border:1px solid currentColor;}
 .cart-item-qty{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:800;color:var(--btn-add);width:30px;text-align:right;flex-shrink:0;}
+.cart-qty-wrap{display:flex;align-items:center;gap:0;flex-shrink:0;}
+.cart-qty-btn{width:24px;height:24px;background:linear-gradient(135deg,#6a7080,var(--btn-qty));border:none;color:#fff;
+  font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:background .15s;line-height:1;font-family:monospace;}
+.cart-qty-btn:first-child{border-radius:6px 0 0 6px;}
+.cart-qty-btn:last-child{border-radius:0 6px 6px 0;}
+.cart-qty-btn:hover{background:linear-gradient(135deg,#4a7fc1,#5a8fd1);}
+.cart-qty-input{width:38px;height:24px;background:var(--surface3);border:1px solid var(--border2);
+  border-left:none;border-right:none;color:var(--text);font-family:'JetBrains Mono',monospace;
+  font-size:12px;font-weight:700;text-align:center;outline:none;}
 .cart-remove{background:transparent;border:none;color:var(--text3);cursor:pointer;font-size:15px;
   padding:0;transition:color .15s;flex-shrink:0;width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:5px;}
 .cart-remove:hover{color:var(--btn-close);background:rgba(192,80,96,.1);}
@@ -364,7 +374,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <div>
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="logo-text">Портал заказов — Склад</div>
-        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.23</div>
+        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.24</div>
       </div>
       <div class="logo-sub" id="catalogInfo">Загрузка…</div>
     </div>
@@ -920,7 +930,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ═══ ВЕРСИЯ ПРИЛОЖЕНИЯ ═══
-var APP_VERSION = '1.23';
+var APP_VERSION = '1.24';
 // При каждом обновлении index.html — менять только эту строку (1.17, 1.18 и т.д.)
 (function(){ var el = document.getElementById('appVersionBadge'); if(el) el.textContent = 'v' + APP_VERSION; })();
 
@@ -3028,10 +3038,21 @@ function updCart(){
     var inf=document.createElement("div");inf.className="cart-item-info";inf.appendChild(ni);inf.appendChild(ci);
     var cat=document.createElement("span");cat.className="cart-item-cat";cat.style.color=col;
     cat.textContent=item.cat.toString().split(" ")[0];
-    var qel=document.createElement("span");qel.className="cart-item-qty";qel.textContent="×"+qty;
+    // Контрол количества
+    var qwrap=document.createElement("div");qwrap.className="cart-qty-wrap";
+    var qbm=document.createElement("button");qbm.className="cart-qty-btn";qbm.textContent="−";
+    var qinp=document.createElement("input");qinp.className="cart-qty-input";qinp.type="number";qinp.min="1";qinp.value=qty;
+    var qbp=document.createElement("button");qbp.className="cart-qty-btn";qbp.textContent="+";
+    qwrap.appendChild(qbm);qwrap.appendChild(qinp);qwrap.appendChild(qbp);
+    (function(cc){
+      qbm.onclick=function(){ var v=Math.max(1,(parseInt(qinp.value)||1)-1); qinp.value=v; if(cart[cc]){cart[cc].qty=v;} updCart(); };
+      qbp.onclick=function(){ var v=(parseInt(qinp.value)||1)+1; qinp.value=v; if(cart[cc]){cart[cc].qty=v;} updCart(); };
+      qinp.oninput=function(){ var v=Math.max(1,parseInt(this.value)||1); if(cart[cc]){cart[cc].qty=v;} };
+      qinp.onblur=function(){ var v=Math.max(1,parseInt(this.value)||1); qinp.value=v; if(cart[cc]){cart[cc].qty=v;} updCart(); };
+    })(code);
     var rm=document.createElement("button");rm.className="cart-remove";rm.title="Убрать";rm.textContent="✕";
     (function(cc,isLight){rm.onclick=function(){if(isLight){togLight({code:cc.slice(2),thumb:'',img:''});}else{tog(cc);}};})(code,code.startsWith('L:'));
-    d.appendChild(inf);d.appendChild(cat);d.appendChild(qel);d.appendChild(rm);
+    d.appendChild(inf);d.appendChild(cat);d.appendChild(qwrap);d.appendChild(rm);
     c.appendChild(d);
   });
 }
