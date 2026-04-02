@@ -374,7 +374,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <div>
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="logo-text">Портал заказов — Склад</div>
-        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.26</div>
+        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.27</div>
       </div>
       <div class="logo-sub" id="catalogInfo">Загрузка…</div>
     </div>
@@ -932,7 +932,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ═══ ВЕРСИЯ ПРИЛОЖЕНИЯ ═══
-var APP_VERSION = '1.26';
+var APP_VERSION = '1.27';
 // При каждом обновлении index.html — менять только эту строку (1.17, 1.18 и т.д.)
 (function(){ var el = document.getElementById('appVersionBadge'); if(el) el.textContent = 'v' + APP_VERSION; })();
 
@@ -1088,6 +1088,7 @@ var SVET_PHOTOS = {};   // код → URL (Foto Svet)
 var SLAB_PHOTOS = {};   // код → URL (Foto slabotoch)
 var OBORUD_PHOTOS = {}; // код → URL (Foto Oborud — основной каталог)
 var REKLAM_PHOTOS = {}; // код → URL (Foto Reklama — рекламные материалы)
+var UVELIR_PHOTOS = {}; // код → URL (Foto Uvelir — ювелирное оборудование)
 
 function getImgUrl(item) {
   var all = getAllImgUrls(item);
@@ -2538,9 +2539,10 @@ function updateFromGitHub(){
   var p4 = loadGitHubPhotos('Foto%20Oborud',   OBORUD_PHOTOS,   'Foto Oborud');
   var p5 = loadComplectPhotos();
   var p6 = loadGitHubPhotos('Foto%20reklama',  REKLAM_PHOTOS,   'Foto reklama');
+  var p7 = loadGitHubPhotos('Foto%20Uvelir',   UVELIR_PHOTOS,   'Foto Uvelir');
 
   // Используем allSettled — ошибка одной папки с фото не блокирует загрузку xlsx и каталога
-  Promise.allSettled([p1, p2, p3, p4, p5, p6])
+  Promise.allSettled([p1, p2, p3, p4, p5, p6, p7])
     .then(function(results){
       // Извлекаем значения — fulfilled даёт value, rejected даёт null + собираем ошибки
       function val(r, fallback){ return r.status === 'fulfilled' ? r.value : fallback; }
@@ -2550,6 +2552,7 @@ function updateFromGitHub(){
       var oborudCnt    = val(results[3], 0);
       var complectCnt  = val(results[4], 0);
       var reklamCnt    = val(results[5], 0);
+      var uvelirCnt    = val(results[6], 0);
 
       // Если xlsx не загрузился — это критическая ошибка, сообщаем и выходим
       if(xlsxResult.status === 'rejected'){
@@ -2578,6 +2581,11 @@ function updateFromGitHub(){
           var rUrl = photoByCode(it.code, REKLAM_PHOTOS);
           if(rUrl) it.photo = rUrl;
         }
+        // Ювелирное оборудование
+        if(!it.photo && it.cat === 'Ювелирное оборудование'){
+          var uUrl = photoByCode(it.code, UVELIR_PHOTOS);
+          if(uUrl) it.photo = uUrl;
+        }
       });
       // Применяем фото к комплектам по имени
       allKits.forEach(function(kit){
@@ -2600,9 +2608,11 @@ function updateFromGitHub(){
       lines.push({ ok: complectCnt > 0, icon: '📦', text: 'Комплекты: ' + complectCnt + ' фото' });
       lines.push({ ok: svetCnt > 0,     icon: '💡', text: 'Световое: ' + svetCnt + ' фото' });
       lines.push({ ok: slabCnt > 0,     icon: '📺', text: 'Слаботочное: ' + slabCnt + ' фото' });
-      [results[0], results[1], results[3], results[4], results[5]].forEach(function(r, i){
+      lines.push({ ok: uvelirCnt > 0,   icon: '💎', text: 'Ювелирное: ' + uvelirCnt + ' фото' });
+      // results: 0=Svet,1=Slab,2=xlsx,3=Oborud,4=Complect,5=Reklam,6=Uvelir
+      [results[0], results[1], results[3], results[4], results[5], results[6]].forEach(function(r, i){
         if(r.status === 'rejected'){
-          var labels = ['Foto Svet','Foto slabotoch','Foto Oborud','Foto Complect','Foto reklama'];
+          var labels = ['Foto Svet','Foto slabotoch','Foto Oborud','Foto Complect','Foto reklama','Foto Uvelir'];
           lines.push({ ok: false, icon: '⚠️', text: labels[i] + ': ' + r.reason.message });
         }
       });
@@ -2643,7 +2653,8 @@ function getAllImgUrls(item){
   var sl = photosByCode(item.code, SLAB_PHOTOS);
   var ob = photosByCode(item.code, OBORUD_PHOTOS);
   var rk = photosByCode(item.code, REKLAM_PHOTOS);
-  urls = urls.concat(sv).concat(sl).concat(ob).concat(rk);
+  var uv = photosByCode(item.code, UVELIR_PHOTOS);
+  urls = urls.concat(sv).concat(sl).concat(ob).concat(rk).concat(uv);
   // Фото из Excel / поля photo/thumb (если ещё не в списке)
   var ex = item.photo && item.photo.indexOf('http')===0 ? item.photo : (item.thumb && item.thumb.indexOf('http')===0 ? item.thumb : null);
   if(ex && urls.indexOf(ex)<0) urls.unshift(ex);
