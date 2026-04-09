@@ -374,7 +374,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <div>
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="logo-text">Портал заказов — Склад</div>
-        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.31</div>
+        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.33</div>
       </div>
       <div class="logo-sub" id="catalogInfo">Загрузка…</div>
     </div>
@@ -449,27 +449,66 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 <div id="catalogSection" class="layout">
   <div class="sidebar" id="catalogSidebar">
     <div class="sidebar-title">Разделы каталога</div>
+
+    <!-- Все категории -->
     <button class="cat-btn active" onclick="selectCat('all')" id="btn-all" style="--cat-color:#4a7fc1">
       <span class="cat-icon">🗂️</span><span class="cat-label">Все категории</span><span class="cat-count" id="cnt-all">0</span>
     </button>
+
     <div class="sidebar-divider"></div>
-    <!-- category buttons injected here by JS -->
-    <div class="sidebar-divider" id="light-divider"></div>
-    <button class="cat-btn" onclick="selectCat('light')" id="btn-light" style="--cat-color:#e07a20">
-      <span class="cat-icon">💡</span><span class="cat-label">Световое оборудование</span><span class="cat-count">293</span>
+
+    <!-- Торговое оборудование -->
+    <button class="cat-btn" onclick="selectCat('Торговое оборудование')" id="btn-Торговое оборудование" style="--cat-color:#4a7fc1">
+      <span class="cat-icon">🏪</span><span class="cat-label">Торговое оборудование</span><span class="cat-count" id="cnt-Торговое оборудование">0</span>
     </button>
+
+    <!-- Ювелирное оборудование -->
+    <button class="cat-btn" onclick="selectCat('Ювелирное оборудование')" id="btn-Ювелирное оборудование" style="--cat-color:#b84580">
+      <span class="cat-icon">💎</span><span class="cat-label">Ювелирное оборудование</span><span class="cat-count" id="cnt-Ювелирное оборудование">0</span>
+    </button>
+
+    <!-- Кари Кидс -->
     <button class="cat-btn" onclick="selectCat('karikids')" id="btn-karikids" style="--cat-color:#c0392b">
       <span class="cat-icon">👧</span><span class="cat-label">Кари Кидс</span><span class="cat-count" id="cnt-karikids">0</span>
     </button>
-    <div class="sidebar-divider" id="kits-divider"></div>
-    <button class="cat-btn" onclick="selectCat('kits')" id="btn-kits" style="--cat-color:#6b48c8">
-      <span class="cat-icon">📦</span><span class="cat-label">Комплекты</span><span class="cat-count" id="cnt-kits">0</span>
+
+    <!-- Рекламные материалы -->
+    <button class="cat-btn" onclick="selectCat('Рекламные материалы')" id="btn-Рекламные материалы" style="--cat-color:#c07a2a">
+      <span class="cat-icon">📢</span><span class="cat-label">Рекламные материалы</span><span class="cat-count" id="cnt-Рекламные материалы">0</span>
     </button>
-    <div class="sidebar-divider" id="tv-divider"></div>
+
+    <!-- Канцелярия -->
+    <button class="cat-btn" onclick="selectCat('Канцелярия')" id="btn-Канцелярия" style="--cat-color:#7458b8">
+      <span class="cat-icon">📎</span><span class="cat-label">Канцелярия</span><span class="cat-count" id="cnt-Канцелярия">0</span>
+    </button>
+
+    <div class="sidebar-divider" id="light-divider"></div>
+
+    <!-- Световое оборудование -->
+    <button class="cat-btn" onclick="selectCat('light')" id="btn-light" style="--cat-color:#e07a20">
+      <span class="cat-icon">💡</span><span class="cat-label">Световое оборудование</span><span class="cat-count" id="cnt-light">0</span>
+    </button>
+
+    <!-- Слаботочное оборудование -->
     <button class="cat-btn" onclick="selectCat('tv')" id="btn-tv" style="--cat-color:#0e7490">
       <span class="cat-icon">📺</span><span class="cat-label">Слаботочное оборудование</span><span class="cat-count" id="cnt-tv">0</span>
     </button>
+
+    <!-- ИТ оборудование -->
+    <button class="cat-btn" onclick="selectCat('ИТ оборудование')" id="btn-ИТ оборудование" style="--cat-color:#0e6ba8">
+      <span class="cat-icon">💻</span><span class="cat-label">ИТ оборудование</span><span class="cat-count" id="cnt-ИТ оборудование">0</span>
+    </button>
+
+    <div class="sidebar-divider" id="kits-divider"></div>
+
+    <!-- Комплекты -->
+    <button class="cat-btn" onclick="selectCat('kits')" id="btn-kits" style="--cat-color:#6b48c8">
+      <span class="cat-icon">📦</span><span class="cat-label">Комплекты</span><span class="cat-count" id="cnt-kits">0</span>
+    </button>
+
     <div class="sidebar-divider" id="nlist-divider"></div>
+
+    <!-- Загрузка номенклатур -->
     <button class="cat-btn" onclick="selectCat('nlist')" id="btn-nlist" style="--cat-color:#be5103">
       <span class="cat-icon">📋</span><span class="cat-label">Загрузка номенклатур</span><span class="cat-count" id="cnt-nlist">0</span>
     </button>
@@ -988,7 +1027,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ═══ ВЕРСИЯ ПРИЛОЖЕНИЯ ═══
-var APP_VERSION = '1.31';
+var APP_VERSION = '1.33';
 // При каждом обновлении index.html — менять только эту строку (1.17, 1.18 и т.д.)
 (function(){ var el = document.getElementById('appVersionBadge'); if(el) el.textContent = 'v' + APP_VERSION; })();
 
@@ -1145,6 +1184,7 @@ var SLAB_PHOTOS = {};   // код → URL (Foto slabotoch)
 var OBORUD_PHOTOS = {}; // код → URL (Foto Oborud — основной каталог)
 var REKLAM_PHOTOS = {}; // код → URL (Foto Reklama — рекламные материалы)
 var UVELIR_PHOTOS = {}; // код → URL (Foto Uvelir — ювелирное оборудование)
+var IT_PHOTOS = {};     // код → URL (IT oborud — ИТ оборудование)
 
 function getImgUrl(item) {
   var all = getAllImgUrls(item);
@@ -1175,13 +1215,15 @@ var CAT_COLORS={
   "Торговое оборудование":"#4a7fc1","Рекламные материалы":"#c07a2a",
   "Строительные материалы":"#3a9068","Канцелярия":"#7458b8",
   "Ювелирное оборудование":"#b84580","Материалы для оборудования":"#c05a2a",
+  "ИТ оборудование":"#0e6ba8",
   "Неизвестное оборудование":"#7a7e90"
 };
 var CAT_ICONS={
   "Торговое оборудование":"🏪","Рекламные материалы":"📢","Строительные материалы":"🏗️",
-  "Канцелярия":"📎","Ювелирное оборудование":"💎","Материалы для оборудования":"⚙️","Неизвестное оборудование":"❓"
+  "Канцелярия":"📎","Ювелирное оборудование":"💎","Материалы для оборудования":"⚙️",
+  "ИТ оборудование":"💻","Неизвестное оборудование":"❓"
 };
-var CAT_ORDER=["Торговое оборудование","Рекламные материалы","Строительные материалы","Канцелярия","Ювелирное оборудование","Материалы для оборудования","Неизвестное оборудование"];
+var CAT_ORDER=["Торговое оборудование","Рекламные материалы","Строительные материалы","Канцелярия","Ювелирное оборудование","Материалы для оборудования","ИТ оборудование","Неизвестное оборудование"];
 var GRP_T=["MaterTO","MaterSHOP","MaterTula","MaterSORT","Materials"];
 var GRP_R=["MaterRek","materRek","MaterDECOR","materDECOR","MaterZBL","MaterialAD","MaterCATAL","materCATAL","MaterPromo"];
 var GRP_S=["MaterBUILD"],GRP_K=["MaterUNI","MaterSUV"],GRP_J=["MaterJEW"],GRP_O=["MaterOborT"];
@@ -1288,28 +1330,29 @@ function loadCatalog(obj,label){
 }
 
 function rebuildSidebar(obj){
-  var sb=document.getElementById("catalogSidebar");
-  // Remove only dynamically-added category buttons (not btn-all, not btn-light, not light-divider, not btn-karikids, not btn-kits)
-  sb.querySelectorAll(".cat-btn:not(#btn-all):not(#btn-light):not(#btn-karikids):not(#btn-kits):not(#btn-tv):not(#btn-nlist),.sidebar-divider:not(#light-divider):not(#kits-divider):not(#tv-divider):not(#nlist-divider)").forEach(function(e){e.remove();});
-  document.getElementById("cnt-all").textContent=allItems.length.toLocaleString("ru");
-  // ТВ счётчик не меняется при обновлении каталога (отдельный лист)
-  var tvCnt=document.getElementById("cnt-tv");
-  if(tvCnt&&tvAll.length) tvCnt.textContent=tvAll.length.toLocaleString("ru");
-  // Update Кари Кидс count
-  var kkItems=allItems.filter(function(it){return it.name&&it.name.toUpperCase().indexOf("КК")>=0||it.code&&it.code.toUpperCase().indexOf("КК")>=0;});
-  document.getElementById("cnt-karikids").textContent=kkItems.length.toLocaleString("ru");
-  var lightDivider=document.getElementById("light-divider");
+  // Обновляем счётчики — кнопки теперь статичные в HTML
+  document.getElementById("cnt-all").textContent = allItems.length.toLocaleString("ru");
+
+  // Счётчики по каждой категории из CAT_ORDER
   CAT_ORDER.forEach(function(c){
-    if(!obj[c]||!obj[c].length)return;
-    var btn=document.createElement("button");btn.className="cat-btn";btn.id="btn-"+c;
-    btn.style.setProperty("--cat-color",CAT_COLORS[c]||"#888");
-    var icon=document.createElement("span");icon.className="cat-icon";icon.textContent=CAT_ICONS[c]||"📦";
-    var lbl=document.createElement("span");lbl.className="cat-label";lbl.textContent=c;
-    var cnt=document.createElement("span");cnt.className="cat-count";cnt.textContent=obj[c].length.toLocaleString("ru");
-    btn.appendChild(icon);btn.appendChild(lbl);btn.appendChild(cnt);
-    btn.onclick=(function(cc){return function(){selectCat(cc);};})(c);
-    sb.insertBefore(btn, lightDivider);
+    var el = document.getElementById("cnt-"+c);
+    if(el) el.textContent = (obj[c] ? obj[c].length : 0).toLocaleString("ru");
   });
+
+  // Слаботочное (tvAll)
+  var tvCnt = document.getElementById("cnt-tv");
+  if(tvCnt && tvAll.length) tvCnt.textContent = tvAll.length.toLocaleString("ru");
+
+  // Световое (lightAll)
+  var lcnt = document.getElementById("cnt-light");
+  if(lcnt && lightAll.length) lcnt.textContent = lightAll.length.toLocaleString("ru");
+
+  // Кари Кидс
+  var kkItems = allItems.filter(function(it){
+    return (it.name && it.name.toUpperCase().indexOf("КК") >= 0) ||
+           (it.code && it.code.toUpperCase().indexOf("КК") >= 0);
+  });
+  document.getElementById("cnt-karikids").textContent = kkItems.length.toLocaleString("ru");
 }
 
 function showTvPanel(){
@@ -1594,6 +1637,7 @@ var IDM_HEADER_COLORS = {
   'Канцелярия':                  'linear-gradient(135deg,#1a4a4a,#2a8a8a)',
   'Ювелирное оборудование':      'linear-gradient(135deg,#4a3a0a,#9a7a10)',
   'Материалы для оборудования':  'linear-gradient(135deg,#3a1a5a,#7a3a9a)',
+  'ИТ оборудование':             'linear-gradient(135deg,#0a2a4a,#0e6ba8)',
   'Неизвестное оборудование':    'linear-gradient(135deg,#3a3a3a,#6a6a6a)',
   'light':                       'linear-gradient(135deg,#5a3a00,#c07000)',
   'karikids':                    'linear-gradient(135deg,#6a1010,#c03030)'
@@ -1601,7 +1645,7 @@ var IDM_HEADER_COLORS = {
 var IDM_HEADER_ICONS = {
   'Торговое оборудование':'🏪','Рекламные материалы':'📢','Строительные материалы':'🏗️',
   'Канцелярия':'📎','Ювелирное оборудование':'💎','Материалы для оборудования':'⚙️',
-  'Неизвестное оборудование':'❓','light':'💡','karikids':'👧'
+  'ИТ оборудование':'💻','Неизвестное оборудование':'❓','light':'💡','karikids':'👧'
 };
 
 function openItemDetail(item, cartKeyPrefix, keepKitPanel) {
@@ -2167,6 +2211,7 @@ var SECTION_BADGE_STYLES = {
   'Канцелярия':                 {color:'#1a7a7a',bg:'#d8f0f0'},
   'Ювелирное оборудование':     {color:'#8a6000',bg:'#faf0cc'},
   'Материалы для оборудования': {color:'#6a2a8a',bg:'#f0e0fa'},
+  'ИТ оборудование':            {color:'#0e6ba8',bg:'#dceefa'},
   'Неизвестное оборудование':   {color:'#555',   bg:'#eee'},
   'light':                      {color:'#904800',bg:'#fef0d0'},
   'karikids':                   {color:'#8a1010',bg:'#fce0e0'}
@@ -2467,6 +2512,7 @@ function processFile(file){
         "Канцелярия":"Канцелярия",
         "Ювелирное оборудование":"Ювелирное оборудование",
         "Материалы для оборудования":"Материалы для оборудования",
+        "ИТ оборудование":"ИТ оборудование",
         "Световое оборудование":"Световое оборудование",
         "Кари Кидс":"Кари Кидс",
         "Неизвестное оборудование":"Неизвестное оборудование",
@@ -2609,9 +2655,10 @@ function updateFromGitHub(){
   var p5 = loadComplectPhotos();
   var p6 = loadGitHubPhotos('Foto%20reklama',  REKLAM_PHOTOS,   'Foto reklama');
   var p7 = loadGitHubPhotos('Foto%20Uvelir',   UVELIR_PHOTOS,   'Foto Uvelir');
+  var p8 = loadGitHubPhotos('IT%20oborud',     IT_PHOTOS,       'IT oborud');
 
   // Используем allSettled — ошибка одной папки с фото не блокирует загрузку xlsx и каталога
-  Promise.allSettled([p1, p2, p3, p4, p5, p6, p7])
+  Promise.allSettled([p1, p2, p3, p4, p5, p6, p7, p8])
     .then(function(results){
       // Извлекаем значения — fulfilled даёт value, rejected даёт null + собираем ошибки
       function val(r, fallback){ return r.status === 'fulfilled' ? r.value : fallback; }
@@ -2622,6 +2669,7 @@ function updateFromGitHub(){
       var complectCnt  = val(results[4], 0);
       var reklamCnt    = val(results[5], 0);
       var uvelirCnt    = val(results[6], 0);
+      var itCnt        = val(results[7], 0);
 
       // Если xlsx не загрузился — это критическая ошибка, сообщаем и выходим
       if(xlsxResult.status === 'rejected'){
@@ -2655,6 +2703,11 @@ function updateFromGitHub(){
           var uUrl = photoByCode(it.code, UVELIR_PHOTOS);
           if(uUrl) it.photo = uUrl;
         }
+        // ИТ оборудование
+        if(!it.photo && it.cat === 'ИТ оборудование'){
+          var itUrl = photoByCode(it.code, IT_PHOTOS);
+          if(itUrl) it.photo = itUrl;
+        }
       });
       // Применяем фото к комплектам по имени
       allKits.forEach(function(kit){
@@ -2678,10 +2731,11 @@ function updateFromGitHub(){
       lines.push({ ok: svetCnt > 0,     icon: '💡', text: 'Световое: ' + svetCnt + ' фото' });
       lines.push({ ok: slabCnt > 0,     icon: '📺', text: 'Слаботочное: ' + slabCnt + ' фото' });
       lines.push({ ok: uvelirCnt > 0,   icon: '💎', text: 'Ювелирное: ' + uvelirCnt + ' фото' });
-      // results: 0=Svet,1=Slab,2=xlsx,3=Oborud,4=Complect,5=Reklam,6=Uvelir
-      [results[0], results[1], results[3], results[4], results[5], results[6]].forEach(function(r, i){
+      lines.push({ ok: itCnt > 0,       icon: '💻', text: 'ИТ оборудование: ' + itCnt + ' фото' });
+      // results: 0=Svet,1=Slab,2=xlsx,3=Oborud,4=Complect,5=Reklam,6=Uvelir,7=IT
+      [results[0], results[1], results[3], results[4], results[5], results[6], results[7]].forEach(function(r, i){
         if(r.status === 'rejected'){
-          var labels = ['Foto Svet','Foto slabotoch','Foto Oborud','Foto Complect','Foto reklama','Foto Uvelir'];
+          var labels = ['Foto Svet','Foto slabotoch','Foto Oborud','Foto Complect','Foto reklama','Foto Uvelir','IT oborud'];
           lines.push({ ok: false, icon: '⚠️', text: labels[i] + ': ' + r.reason.message });
         }
       });
@@ -2723,7 +2777,8 @@ function getAllImgUrls(item){
   var ob = photosByCode(item.code, OBORUD_PHOTOS);
   var rk = photosByCode(item.code, REKLAM_PHOTOS);
   var uv = photosByCode(item.code, UVELIR_PHOTOS);
-  urls = urls.concat(sv).concat(sl).concat(ob).concat(rk).concat(uv);
+  var it = photosByCode(item.code, IT_PHOTOS);
+  urls = urls.concat(sv).concat(sl).concat(ob).concat(rk).concat(uv).concat(it);
   // Фото из Excel / поля photo/thumb (если ещё не в списке)
   var ex = item.photo && item.photo.indexOf('http')===0 ? item.photo : (item.thumb && item.thumb.indexOf('http')===0 ? item.thumb : null);
   if(ex && urls.indexOf(ex)<0) urls.unshift(ex);
@@ -4267,6 +4322,7 @@ var PHOTO_FOLDERS = [
   { label: '💡 Световое оборудование',     folder: 'Foto Svet'      },
   { label: '📺 Слаботочное оборудование',  folder: 'Foto slabotoch' },
   { label: '💎 Ювелирное оборудование',    folder: 'Foto Uvelir'    },
+  { label: '💻 ИТ оборудование',           folder: 'IT oborud'      },
   { label: '📦 Комплекты',                 folder: 'Foto Complect'  },
 ];
 
