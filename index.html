@@ -374,7 +374,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <div>
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="logo-text">Портал заказов — Склад</div>
-        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.27</div>
+        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.28</div>
       </div>
       <div class="logo-sub" id="catalogInfo">Загрузка…</div>
     </div>
@@ -467,6 +467,10 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <div class="sidebar-divider" id="tv-divider"></div>
     <button class="cat-btn" onclick="selectCat('tv')" id="btn-tv" style="--cat-color:#0e7490">
       <span class="cat-icon">📺</span><span class="cat-label">Слаботочное оборудование</span><span class="cat-count" id="cnt-tv">0</span>
+    </button>
+    <div class="sidebar-divider" id="nlist-divider"></div>
+    <button class="cat-btn" onclick="selectCat('nlist')" id="btn-nlist" style="--cat-color:#be5103">
+      <span class="cat-icon">📋</span><span class="cat-label">Список номенклатур</span><span class="cat-count" id="cnt-nlist">0</span>
     </button>
   </div>
 
@@ -607,9 +611,60 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
       </div>
     </div>
   </div>
-</div>
 
-<!-- Kit Detail Modal -->
+  <!-- Панель: Список номенклатур -->
+  <div id="nlistPanel" style="display:none;flex:1;flex-direction:column;overflow:hidden;">
+    <!-- Тулбар -->
+    <div class="toolbar" style="gap:10px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0;">
+        <span style="font-size:16px;flex-shrink:0;">📋</span>
+        <span style="font-size:13px;font-weight:700;color:var(--text2);white-space:nowrap;">Список номенклатур</span>
+        <span class="results-info" id="nlistInfo" style="margin-left:4px;">—</span>
+      </div>
+      <input type="file" id="nlistFileInput" accept=".xlsx,.xls" style="display:none">
+      <button onclick="document.getElementById('nlistFileInput').click()"
+        style="background:linear-gradient(135deg,#2a5fa8,#4a7fc1);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;white-space:nowrap;transition:all .2s;"
+        onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
+        📂 Загрузить xlsx
+      </button>
+      <button onclick="clearNlist()"
+        style="background:linear-gradient(135deg,#7a1a1a,#c03030);color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;white-space:nowrap;transition:all .2s;"
+        onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
+        🗑 Очистить
+      </button>
+    </div>
+    <!-- Тело: пустое состояние или таблица -->
+    <div class="table-wrap" id="nlistWrap" style="flex:1;overflow-y:auto;">
+      <!-- Дроп-зона (показывается когда список пуст) -->
+      <div id="nlistDropZone" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:16px;padding:40px;cursor:pointer;"
+           onclick="document.getElementById('nlistFileInput').click()">
+        <div style="font-size:52px;">📋</div>
+        <div style="font-size:16px;font-weight:800;color:var(--text2);">Загрузите список номенклатур</div>
+        <div style="font-size:13px;color:var(--text3);text-align:center;max-width:340px;line-height:1.6;">
+          Excel-файл со столбцом кодов номенклатур.<br>Каждый код — в отдельной строке.
+        </div>
+        <div style="border:2.5px dashed var(--border2);border-radius:12px;padding:18px 36px;color:var(--text3);font-size:13px;font-weight:600;margin-top:4px;">
+          Нажмите или перетащите файл сюда
+        </div>
+      </div>
+      <!-- Таблица результатов (скрыта пока нет данных) -->
+      <table id="nlistTable" style="display:none;width:100%;border-collapse:collapse;">
+        <thead>
+          <tr>
+            <th class="th-img">Фото</th>
+            <th class="th-code">Код</th>
+            <th style="width:8cm;">Наименование</th>
+            <th style="text-align:center;">Краткое описание</th>
+            <th style="width:5cm;text-align:center;">Раздел</th>
+            <th class="th-qty">Количество</th>
+            <th class="th-action">В корзину</th>
+          </tr>
+        </thead>
+        <tbody id="nlistBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
 <div class="upload-modal" id="kitDetailModal" style="max-width:780px;width:92vw;padding:0;overflow:hidden;border-radius:16px;">
   <div style="background:linear-gradient(135deg,#2d1b69,#6b48c8);padding:20px 24px;display:flex;align-items:center;gap:12px;">
     <span style="font-size:22px">📦</span>
@@ -932,7 +987,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ═══ ВЕРСИЯ ПРИЛОЖЕНИЯ ═══
-var APP_VERSION = '1.27';
+var APP_VERSION = '1.28';
 // При каждом обновлении index.html — менять только эту строку (1.17, 1.18 и т.д.)
 (function(){ var el = document.getElementById('appVersionBadge'); if(el) el.textContent = 'v' + APP_VERSION; })();
 
@@ -1175,6 +1230,7 @@ function showLightPanel(){
   document.getElementById('lightPanel').style.display = 'flex';
   document.getElementById('kitsPanel').style.display = 'none';
   
+  document.getElementById('nlistPanel').style.display = 'none';
   var sf=document.getElementById('slabot-cat-filter'); if(sf) sf.style.display='none';document.getElementById('tvPanel').style.display = 'none';
   if(lightFiltered.length===0) applyLightFilters();
 }
@@ -1183,7 +1239,7 @@ function showCatalogPanel(){
   document.getElementById('mainCatalogPanel').style.display = '';
   document.getElementById('lightPanel').style.display = 'none';
   document.getElementById('kitsPanel').style.display = 'none';
-  
+  document.getElementById('nlistPanel').style.display = 'none';
   var sf=document.getElementById('slabot-cat-filter'); if(sf) sf.style.display='none';document.getElementById('tvPanel').style.display = 'none';
 }
 function showKitsPanel(){
@@ -1192,6 +1248,7 @@ function showKitsPanel(){
   document.getElementById('lightPanel').style.display = 'none';
   document.getElementById('kitsPanel').style.display = 'flex';
   
+  document.getElementById('nlistPanel').style.display = 'none';
   var sf=document.getElementById('slabot-cat-filter'); if(sf) sf.style.display='none';document.getElementById('tvPanel').style.display = 'none';
   initKitsPreload();
 }
@@ -1232,7 +1289,7 @@ function loadCatalog(obj,label){
 function rebuildSidebar(obj){
   var sb=document.getElementById("catalogSidebar");
   // Remove only dynamically-added category buttons (not btn-all, not btn-light, not light-divider, not btn-karikids, not btn-kits)
-  sb.querySelectorAll(".cat-btn:not(#btn-all):not(#btn-light):not(#btn-karikids):not(#btn-kits):not(#btn-tv),.sidebar-divider:not(#light-divider):not(#kits-divider):not(#tv-divider)").forEach(function(e){e.remove();});
+  sb.querySelectorAll(".cat-btn:not(#btn-all):not(#btn-light):not(#btn-karikids):not(#btn-kits):not(#btn-tv):not(#btn-nlist),.sidebar-divider:not(#light-divider):not(#kits-divider):not(#tv-divider):not(#nlist-divider)").forEach(function(e){e.remove();});
   document.getElementById("cnt-all").textContent=allItems.length.toLocaleString("ru");
   // ТВ счётчик не меняется при обновлении каталога (отдельный лист)
   var tvCnt=document.getElementById("cnt-tv");
@@ -1260,7 +1317,17 @@ function showTvPanel(){
   document.getElementById('lightPanel').style.display = 'none';
   document.getElementById('kitsPanel').style.display = 'none';
   document.getElementById('tvPanel').style.display = 'flex';
+  document.getElementById('nlistPanel').style.display = 'none';
   if(tvFiltered.length === 0 && tvAll.length > 0) applyTvFilters();
+}
+
+function showNlistPanel(){
+  currentTab = 'nlist';
+  document.getElementById('mainCatalogPanel').style.display = 'none';
+  document.getElementById('lightPanel').style.display = 'none';
+  document.getElementById('kitsPanel').style.display = 'none';
+  document.getElementById('tvPanel').style.display = 'none';
+  document.getElementById('nlistPanel').style.display = 'flex';
 }
 
 function onTvSearch(){ tvSearch = document.getElementById('tvSearch').value; applyTvFilters(); }
@@ -2001,6 +2068,7 @@ function selectCat(c){
   if(c==='light'){showLightPanel();return;}
   if(c==='kits'){showKitsPanel();return;}
   if(c==='tv'){showTvPanel();return;}
+  if(c==='nlist'){showNlistPanel();return;}
   if(c==='karikids'){showCatalogPanel();applyFilters();return;}
   showCatalogPanel();
   applyFilters();
@@ -3933,6 +4001,208 @@ document.addEventListener('click',function(e){
   if(!e.target.closest('#fb-search')&&!e.target.closest('#fb-results'))
     document.getElementById('fb-results').style.display='none';
 });
+
+// ═══ NOMENCLATURE LIST ═══
+var nlistItems = []; // массив найденных позиций
+
+function clearNlist(){
+  nlistItems = [];
+  renderNlist();
+  document.getElementById('cnt-nlist').textContent = '0';
+}
+
+function renderNlist(){
+  var drop  = document.getElementById('nlistDropZone');
+  var table = document.getElementById('nlistTable');
+  var body  = document.getElementById('nlistBody');
+  var info  = document.getElementById('nlistInfo');
+
+  body.innerHTML = '';
+
+  if(!nlistItems.length){
+    drop.style.display  = 'flex';
+    table.style.display = 'none';
+    info.textContent    = '—';
+    return;
+  }
+
+  drop.style.display  = 'none';
+  table.style.display = '';
+  info.textContent    = nlistItems.length + ' позиций';
+
+  var frag = document.createDocumentFragment();
+  nlistItems.forEach(function(it){
+    var found = it._found; // true = найден в каталоге
+    var tr = document.createElement('tr');
+    tr.style.opacity = found ? '1' : '.45';
+    tr.id = 'nrow-' + CSS.escape(it.code);
+    tr.style.cursor = found ? 'pointer' : 'default';
+
+    if(found){
+      (function(item){ tr.onclick = function(e){
+        if(e.target.closest('.qty-wrap') || e.target.closest('.add-btn')) return;
+        openItemDetail(item, item._prefix || '');
+      }; })(it);
+    }
+
+    // Фото
+    var tdImg = document.createElement('td');
+    tdImg.style.cssText = 'text-align:center;padding:6px 10px;';
+    var imgUrl = found ? getImgUrl(it) : null;
+    if(imgUrl){
+      var timg = document.createElement('img');
+      timg.className = 'light-thumb'; timg.src = imgUrl;
+      timg.onerror = function(){ this.style.display='none'; };
+      tdImg.appendChild(timg);
+    } else {
+      var ph = document.createElement('div');
+      ph.className = 'light-thumb-placeholder';
+      ph.textContent = found ? '📦' : '❓';
+      ph.title = found ? '' : 'Не найдено в каталоге';
+      tdImg.appendChild(ph);
+    }
+
+    // Код
+    var tdCode = document.createElement('td');
+    tdCode.className = 'td-code';
+    tdCode.textContent = it.code;
+    if(!found) tdCode.title = 'Не найдено в каталоге';
+
+    // Наименование
+    var tdName = document.createElement('td');
+    tdName.className = 'td-name';
+    tdName.textContent = it.name || (found ? '' : '— не найдено —');
+    tdName.title = it.name || '';
+
+    // Краткое описание
+    var tdShort = document.createElement('td');
+    tdShort.className = 'td-short';
+    tdShort.textContent = it.short || '';
+
+    // Раздел
+    var tdSec = document.createElement('td');
+    tdSec.style.cssText = 'padding:9px 10px;text-align:center;';
+    if(found && it.cat){
+      var badge = makeSectionBadge(it.cat);
+      if(badge) tdSec.appendChild(badge);
+    }
+
+    // Количество
+    var wrap = document.createElement('div'); wrap.className = 'qty-wrap';
+    var bm = document.createElement('button'); bm.className = 'qty-btn'; bm.textContent = '−';
+    var inp = document.createElement('input'); inp.className = 'qty-input'; inp.type = 'number'; inp.min = '1';
+    var inCart = !!cart[it.code];
+    inp.value = inCart ? cart[it.code].qty : 1;
+    inp.id = 'qty-' + it.code;
+    var bp = document.createElement('button'); bp.className = 'qty-btn'; bp.textContent = '+';
+    if(found){
+      (function(code){ bm.onclick=function(e){e.stopPropagation();chQ(code,-1);}; })(it.code);
+      (function(code){ inp.onclick=function(e){e.stopPropagation();}; inp.onchange=function(){sQ(code,this.value);}; })(it.code);
+      (function(code){ bp.onclick=function(e){e.stopPropagation();chQ(code,1);}; })(it.code);
+    } else {
+      bm.disabled = bp.disabled = inp.disabled = true;
+      bm.style.opacity = bp.style.opacity = '0.4';
+    }
+    wrap.appendChild(bm); wrap.appendChild(inp); wrap.appendChild(bp);
+    var tdQty = document.createElement('td'); tdQty.appendChild(wrap);
+
+    // В корзину
+    var tdAct = document.createElement('td');
+    if(found){
+      var ab = document.createElement('button');
+      ab.className = 'add-btn' + (inCart ? ' added' : '');
+      ab.id = 'ab-' + it.code;
+      ab.textContent = inCart ? '✓' : '+';
+      (function(code){ ab.onclick = function(e){ e.stopPropagation(); tog(code); }; })(it.code);
+      tdAct.appendChild(ab);
+    }
+
+    tr.appendChild(tdImg); tr.appendChild(tdCode); tr.appendChild(tdName);
+    tr.appendChild(tdShort); tr.appendChild(tdSec); tr.appendChild(tdQty); tr.appendChild(tdAct);
+    frag.appendChild(tr);
+  });
+  body.appendChild(frag);
+}
+
+function loadNlistFile(file){
+  if(!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e){
+    try {
+      var data = new Uint8Array(e.target.result);
+      var wb = XLSX.read(data, {type:'array'});
+      var ws = wb.Sheets[wb.SheetNames[0]];
+      var rows = XLSX.utils.sheet_to_json(ws, {header:1, defval:''});
+
+      // Собираем все непустые значения из первого столбца (кроме заголовка если строковый)
+      var codes = [];
+      rows.forEach(function(row, ri){
+        var val = String(row[0]||'').trim();
+        if(!val) return;
+        // Пропускаем заголовок (первая строка, если не похожа на код)
+        if(ri === 0 && !/^[A-Za-zА-Яа-я0-9]/.test(val)) return;
+        codes.push(val);
+      });
+
+      if(!codes.length){ showToast('Не найдено кодов в первом столбце', 'error'); return; }
+
+      // Ищем каждый код в allItems, lightAll, tvAll
+      nlistItems = codes.map(function(code){
+        // Поиск без учёта регистра
+        var found = allItems.find(function(it){ return it.code && it.code.toLowerCase() === code.toLowerCase(); });
+        var prefix = '';
+        if(!found){
+          found = lightAll.find(function(it){ return it.code && it.code.toLowerCase() === code.toLowerCase(); });
+          if(found){ found = Object.assign({}, found, {cat:'light'}); prefix = 'L:'; }
+        }
+        if(!found){
+          found = tvAll.find(function(it){ return it.code && it.code.toLowerCase() === code.toLowerCase(); });
+          if(found){ found = Object.assign({}, found, {cat:'tv'}); prefix = 'TV:'; }
+        }
+
+        if(found){
+          return Object.assign({}, found, {_found: true, _prefix: prefix});
+        } else {
+          return {code: code, name: '', short: '', cat: '', _found: false, _prefix: ''};
+        }
+      });
+
+      var foundCnt  = nlistItems.filter(function(i){ return i._found; }).length;
+      var notFound  = nlistItems.length - foundCnt;
+      document.getElementById('cnt-nlist').textContent = nlistItems.length;
+      renderNlist();
+
+      var msg = '📋 Загружено ' + nlistItems.length + ' кодов';
+      if(notFound) msg += ' · ❓ не найдено: ' + notFound;
+      showToast(msg, foundCnt ? 'ok' : 'error');
+
+      // Переключаемся на панель
+      selectCat('nlist');
+
+    } catch(err){
+      showToast('Ошибка чтения файла: ' + err.message, 'error');
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+// File input
+document.getElementById('nlistFileInput').addEventListener('change', function(e){
+  loadNlistFile(e.target.files[0]);
+  this.value = '';
+});
+
+// Drag & drop на зону
+(function(){
+  var dz = document.getElementById('nlistDropZone');
+  dz.addEventListener('dragover', function(e){ e.preventDefault(); dz.style.background='#e8f4e8'; });
+  dz.addEventListener('dragleave', function(){ dz.style.background=''; });
+  dz.addEventListener('drop', function(e){
+    e.preventDefault(); dz.style.background='';
+    var f = e.dataTransfer.files[0];
+    if(f) loadNlistFile(f);
+  });
+})();
 
 // ═══ INIT ═══
 initShopSelect();
