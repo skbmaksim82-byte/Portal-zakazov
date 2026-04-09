@@ -374,7 +374,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <div>
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="logo-text">Портал заказов — Склад</div>
-        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.33</div>
+        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.35</div>
       </div>
       <div class="logo-sub" id="catalogInfo">Загрузка…</div>
     </div>
@@ -1027,7 +1027,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ═══ ВЕРСИЯ ПРИЛОЖЕНИЯ ═══
-var APP_VERSION = '1.33';
+var APP_VERSION = '1.35';
 // При каждом обновлении index.html — менять только эту строку (1.17, 1.18 и т.д.)
 (function(){ var el = document.getElementById('appVersionBadge'); if(el) el.textContent = 'v' + APP_VERSION; })();
 
@@ -1094,9 +1094,9 @@ function parseSlabotRows(rows){
   var newCats = {};
   for(var i=1; i<rows.length; i++){
     var r = rows[i];
-    var name = String(r[iName]||'').trim();
     var code = String(r[iCode]||'').trim();
-    if(!name||name==='None') continue;
+    if(!code||code==='None') continue; // пропускаем только если нет кода
+    var name = String(r[iName]||'').trim();
     var cat  = String(r[iCat]||'').trim() || 'Прочее';
     var item = {code:code, name:name, short:String(r[iShort]||'').trim()};
     if(!newCats[cat]) newCats[cat]=[];
@@ -1255,10 +1255,11 @@ function parseRows(rows){
   var out={};CAT_ORDER.forEach(function(c){out[c]=[];});
   for(var i=hi+1;i<rows.length;i++){
     var r=rows[i];if(!r||!r.length)continue;
+    var code=String(r[iCode>=0?iCode:0]||"").trim();
+    if(!code||code==="undefined")continue; // пропускаем только если нет кода
     var name=String(r[iName]||"").trim();
-    if(!name||name==="undefined"||/не использ/i.test(name))continue;
     var c=catOf(name,r[iGrp]);
-    var item={code:String(r[iCode]||"").trim(),name:name,short:String(r[iShort]||"").trim()};
+    var item={code:code,name:name,short:String(r[iShort]||"").trim()};
     if(iPhoto>=0&&r[iPhoto]){var pv=String(r[iPhoto]).trim();if(pv)item.photo=pv;}
     out[c].push(item);
   }
@@ -2620,10 +2621,11 @@ function parseRowsForCat(rows, fixedCat){
   var out=[];
   for(var i=hi+1;i<rows.length;i++){
     var r=rows[i];if(!r||!r.length)continue;
+    var code=String(r[iCode>=0?iCode:0]||"").trim();
+    if(!code||code==="undefined")continue; // пропускаем только если нет кода
     var name=String(r[iName>=0?iName:1]||"").trim();
-    if(!name||name==="undefined"||/не использ/i.test(name))continue;
     var item={
-      code:String(r[iCode>=0?iCode:0]||"").trim(),
+      code:code,
       name:name,
       short:iShort>=0?String(r[iShort]||"").trim():""
     };
