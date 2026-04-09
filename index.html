@@ -374,13 +374,14 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <div>
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="logo-text">Портал заказов — Склад</div>
-        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.28</div>
+        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.30</div>
       </div>
       <div class="logo-sub" id="catalogInfo">Загрузка…</div>
     </div>
   </div>
   <div class="header-right">
     <button onclick="openFeedback()" style="background:rgba(220,170,50,.2);backdrop-filter:blur(8px);color:#ffe080;border:1px solid rgba(220,170,50,.3);border-radius:10px;padding:8px 14px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 0 12px rgba(220,170,50,.12);transition:all .25s;white-space:nowrap;" onmouseover="this.style.background='rgba(220,170,50,.35)';this.style.borderColor='rgba(220,170,50,.6)'" onmouseout="this.style.background='rgba(220,170,50,.2)';this.style.borderColor='rgba(220,170,50,.3)'">✉️ Обратная связь</button>
+    <button onclick="openPhotoUpload()" style="background:rgba(180,80,180,.2);backdrop-filter:blur(8px);color:#e8a0ff;border:1px solid rgba(180,80,180,.3);border-radius:10px;padding:8px 14px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 0 12px rgba(180,80,180,.12);transition:all .25s;white-space:nowrap;" onmouseover="this.style.background='rgba(180,80,180,.35)';this.style.borderColor='rgba(180,80,180,.6)'" onmouseout="this.style.background='rgba(180,80,180,.2)';this.style.borderColor='rgba(180,80,180,.3)'">📸 Фото</button>
     <button class="update-btn" onclick="updateFromGitHub()"><span id="updateIcon">☁️</span> Обновить</button>
     <button class="cart-btn" onclick="toggleCart()">🛒 Корзина <span class="cart-count" id="cartCountBadge">0</span></button>
   </div>
@@ -470,7 +471,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     </button>
     <div class="sidebar-divider" id="nlist-divider"></div>
     <button class="cat-btn" onclick="selectCat('nlist')" id="btn-nlist" style="--cat-color:#be5103">
-      <span class="cat-icon">📋</span><span class="cat-label">Список номенклатур</span><span class="cat-count" id="cnt-nlist">0</span>
+      <span class="cat-icon">📋</span><span class="cat-label">Загрузка номенклатур</span><span class="cat-count" id="cnt-nlist">0</span>
     </button>
   </div>
 
@@ -612,13 +613,13 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     </div>
   </div>
 
-  <!-- Панель: Список номенклатур -->
+  <!-- Панель: Загрузка номенклатур -->
   <div id="nlistPanel" style="display:none;flex:1;flex-direction:column;overflow:hidden;">
     <!-- Тулбар -->
     <div class="toolbar" style="gap:10px;flex-wrap:wrap;">
       <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0;">
         <span style="font-size:16px;flex-shrink:0;">📋</span>
-        <span style="font-size:13px;font-weight:700;color:var(--text2);white-space:nowrap;">Список номенклатур</span>
+        <span style="font-size:13px;font-weight:700;color:var(--text2);white-space:nowrap;">Загрузка номенклатур</span>
         <span class="results-info" id="nlistInfo" style="margin-left:4px;">—</span>
       </div>
       <input type="file" id="nlistFileInput" accept=".xlsx,.xls" style="display:none">
@@ -987,7 +988,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ═══ ВЕРСИЯ ПРИЛОЖЕНИЯ ═══
-var APP_VERSION = '1.28';
+var APP_VERSION = '1.30';
 // При каждом обновлении index.html — менять только эту строку (1.17, 1.18 и т.д.)
 (function(){ var el = document.getElementById('appVersionBadge'); if(el) el.textContent = 'v' + APP_VERSION; })();
 
@@ -4256,7 +4257,274 @@ applyLightFilters();
   loadCatalog({}, "⏳ Загрузка каталога с GitHub…");
   updateFromGitHub();
 })();
+
+// ═══ PHOTO UPLOAD ═══
+
+// Папки GitHub и их метки
+var PHOTO_FOLDERS = [
+  { label: '🏪 Торговое оборудование',    folder: 'Foto Oborud'    },
+  { label: '🎨 Рекламные материалы',       folder: 'Foto reklama'   },
+  { label: '💡 Световое оборудование',     folder: 'Foto Svet'      },
+  { label: '📺 Слаботочное оборудование',  folder: 'Foto slabotoch' },
+  { label: '💎 Ювелирное оборудование',    folder: 'Foto Uvelir'    },
+  { label: '📦 Комплекты',                 folder: 'Foto Complect'  },
+];
+
+var _puFile = null; // текущий выбранный файл
+
+function openPhotoUpload(){
+  _puFile = null;
+  document.getElementById('pu-code').value = '';
+  document.getElementById('pu-folder').value = '';
+  document.getElementById('pu-file-input').value = '';
+  document.getElementById('pu-preview').style.display = 'none';
+  document.getElementById('pu-drop').style.display = 'flex';
+  document.getElementById('pu-file-info').textContent = '';
+  document.getElementById('pu-error').textContent = '';
+  document.getElementById('pu-status').textContent = '';
+  // PAT из localStorage
+  var saved = localStorage.getItem('gh_pat') || '';
+  document.getElementById('pu-pat').value = saved;
+  document.getElementById('pu-overlay').style.display = 'flex';
+}
+
+function closePhotoUpload(){
+  document.getElementById('pu-overlay').style.display = 'none';
+}
+
+function puSetError(msg){
+  document.getElementById('pu-error').textContent = msg;
+}
+
+function puSetStatus(msg, color){
+  var el = document.getElementById('pu-status');
+  el.textContent = msg;
+  el.style.color = color || 'var(--text2)';
+}
+
+function puHandleFile(file){
+  puSetError('');
+  document.getElementById('pu-file-info').textContent = '';
+
+  // Формат
+  if(!file.type.match(/^image\/(png|jpeg)$/)){
+    puSetError('❌ Только PNG и JPEG файлы');
+    _puFile = null;
+    return;
+  }
+  // Размер
+  if(file.size > 500 * 1024){
+    puSetError('❌ Файл превышает 500 KB (сейчас: ' + (file.size/1024).toFixed(0) + ' KB)');
+    _puFile = null;
+    return;
+  }
+
+  _puFile = file;
+  var ext = file.type === 'image/png' ? 'png' : 'jpg';
+  document.getElementById('pu-file-info').textContent =
+    '✅ ' + file.name + ' · ' + (file.size/1024).toFixed(1) + ' KB · ' + ext.toUpperCase();
+
+  // Превью
+  var reader = new FileReader();
+  reader.onload = function(e){
+    var img = document.getElementById('pu-preview-img');
+    img.src = e.target.result;
+    document.getElementById('pu-drop').style.display = 'none';
+    document.getElementById('pu-preview').style.display = 'flex';
+  };
+  reader.readAsDataURL(file);
+}
+
+function puClearFile(){
+  _puFile = null;
+  document.getElementById('pu-file-input').value = '';
+  document.getElementById('pu-file-info').textContent = '';
+  document.getElementById('pu-preview').style.display = 'none';
+  document.getElementById('pu-drop').style.display = 'flex';
+  puSetError('');
+}
+
+async function puUpload(){
+  puSetError('');
+  puSetStatus('');
+
+  var code   = document.getElementById('pu-code').value.trim();
+  var folder = document.getElementById('pu-folder').value;
+  var pat    = document.getElementById('pu-pat').value.trim();
+
+  // Валидация
+  if(!code){    puSetError('❌ Введите код номенклатуры'); return; }
+  if(!folder){  puSetError('❌ Выберите раздел (папку)'); return; }
+  if(!_puFile){ puSetError('❌ Выберите фото'); return; }
+  if(!pat){     puSetError('❌ Введите GitHub токен (PAT)'); return; }
+
+  // Сохраняем PAT
+  localStorage.setItem('gh_pat', pat);
+
+  var ext      = _puFile.type === 'image/png' ? 'png' : 'jpg';
+  var fileName = code + '.' + ext;
+  var filePath = folder + '/' + fileName;
+
+  puSetStatus('⏳ Загрузка...', '#2a7ac0');
+  document.getElementById('pu-btn').disabled = true;
+
+  try {
+    // Читаем файл как base64
+    var base64 = await new Promise(function(res, rej){
+      var r = new FileReader();
+      r.onload  = function(){ res(r.result.split(',')[1]); };
+      r.onerror = function(){ rej(new Error('Ошибка чтения файла')); };
+      r.readAsDataURL(_puFile);
+    });
+
+    // Проверяем — существует ли файл (нужен sha для обновления)
+    var sha = null;
+    var checkResp = await fetch(
+      'https://api.github.com/repos/skbmaksim82-byte/Portal-zakazov/contents/' +
+      encodeURIComponent(folder) + '/' + encodeURIComponent(fileName),
+      { headers: { 'Authorization': 'token ' + pat, 'Accept': 'application/vnd.github+json' },
+        cache: 'no-cache' }
+    );
+    if(checkResp.ok){
+      var checkData = await checkResp.json();
+      sha = checkData.sha;
+    }
+
+    // Загружаем через GitHub API
+    var body = {
+      message: 'Фото: ' + fileName + ' [Портал заказов]',
+      content: base64
+    };
+    if(sha) body.sha = sha; // обновление существующего
+
+    var resp = await fetch(
+      'https://api.github.com/repos/skbmaksim82-byte/Portal-zakazov/contents/' +
+      encodeURIComponent(folder) + '/' + encodeURIComponent(fileName),
+      { method: 'PUT',
+        headers: { 'Authorization': 'token ' + pat,
+                   'Accept': 'application/vnd.github+json',
+                   'Content-Type': 'application/json' },
+        body: JSON.stringify(body) }
+    );
+
+    if(resp.ok){
+      puSetStatus('✅ Фото загружено: ' + filePath, '#1a7a3a');
+      showToast('📸 Фото ' + fileName + ' загружено в ' + folder, 'ok');
+      puClearFile();
+      document.getElementById('pu-code').value = '';
+    } else {
+      var err = await resp.json();
+      puSetError('❌ GitHub: ' + (err.message || resp.status));
+    }
+  } catch(e){
+    puSetError('❌ ' + e.message);
+  } finally {
+    document.getElementById('pu-btn').disabled = false;
+  }
+}
+
+// Инициализация drag&drop и file input для модального окна
+document.addEventListener('DOMContentLoaded', function(){
+  // Заполняем выпадающий список папок
+  var sel = document.getElementById('pu-folder');
+  if(sel){
+    PHOTO_FOLDERS.forEach(function(f){
+      var opt = document.createElement('option');
+      opt.value = f.folder;
+      opt.textContent = f.label;
+      sel.appendChild(opt);
+    });
+  }
+
+  var dz = document.getElementById('pu-drop');
+  var fi = document.getElementById('pu-file-input');
+  if(!dz || !fi) return;
+  dz.addEventListener('dragover',  function(e){ e.preventDefault(); dz.style.borderColor='#7a52c8'; });
+  dz.addEventListener('dragleave', function(){  dz.style.borderColor=''; });
+  dz.addEventListener('drop',      function(e){ e.preventDefault(); dz.style.borderColor=''; if(e.dataTransfer.files[0]) puHandleFile(e.dataTransfer.files[0]); });
+  fi.addEventListener('change',    function(){  if(fi.files[0]) puHandleFile(fi.files[0]); });
+});
 </script>
+
+<!-- ═══ PHOTO UPLOAD MODAL ═══ -->
+<div id="pu-overlay" style="display:none;position:fixed;inset:0;background:rgba(20,20,35,.6);backdrop-filter:blur(5px);z-index:700;align-items:center;justify-content:center;" onclick="if(event.target===this)closePhotoUpload()">
+  <div style="background:var(--surface2);border-radius:18px;width:min(520px,94vw);box-shadow:0 24px 64px rgba(0,0,0,.35);overflow:hidden;animation:authIn .3s ease;">
+
+    <!-- Заголовок -->
+    <div style="background:linear-gradient(135deg,#4a1a7a,#8040c8);padding:18px 24px;display:flex;align-items:center;gap:12px;">
+      <span style="font-size:22px;">📸</span>
+      <div style="flex:1;">
+        <div style="font-size:16px;font-weight:800;color:#fff;">Загрузка фото</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.6);">PNG / JPEG · не более 500 KB · имя файла = код</div>
+      </div>
+      <button onclick="closePhotoUpload()" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:30px;height:30px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:900;">✕</button>
+    </div>
+
+    <div style="padding:22px 24px;display:flex;flex-direction:column;gap:16px;">
+
+      <!-- Код номенклатуры -->
+      <div>
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;">Код номенклатуры *</div>
+        <input id="pu-code" type="text" placeholder="Например: RUM0520385" autocomplete="off"
+          style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:14px;font-family:'JetBrains Mono',monospace;font-weight:600;outline:none;box-sizing:border-box;color:var(--text);background:var(--surface3);"
+          onfocus="this.style.borderColor='#8040c8'" onblur="this.style.borderColor=''">
+      </div>
+
+      <!-- Раздел (папка) -->
+      <div>
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;">Раздел (папка) *</div>
+        <select id="pu-folder"
+          style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:'Nunito',sans-serif;font-weight:600;outline:none;box-sizing:border-box;color:var(--text);background:var(--surface3);cursor:pointer;"
+          onfocus="this.style.borderColor='#8040c8'" onblur="this.style.borderColor=''">
+          <option value="">— Выберите раздел —</option>
+        </select>
+      </div>
+
+      <!-- Drag & Drop зона -->
+      <div id="pu-drop" onclick="document.getElementById('pu-file-input').click()"
+        style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border:2.5px dashed var(--border2);border-radius:12px;padding:24px 16px;cursor:pointer;transition:border-color .2s,background .2s;"
+        onmouseover="this.style.background='var(--surface3)'" onmouseout="this.style.background=''">
+        <div style="font-size:36px;">🖼️</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text2);">Нажмите или перетащите фото</div>
+        <div style="font-size:11px;color:var(--text3);">PNG или JPEG · максимум 500 KB</div>
+        <input id="pu-file-input" type="file" accept="image/png,image/jpeg" style="display:none">
+      </div>
+
+      <!-- Превью -->
+      <div id="pu-preview" style="display:none;align-items:center;gap:14px;background:var(--surface3);border-radius:10px;padding:10px 14px;">
+        <img id="pu-preview-img" src="" alt="" style="width:72px;height:72px;object-fit:contain;border-radius:8px;border:1px solid var(--border);background:#fff;">
+        <div style="flex:1;min-width:0;">
+          <div id="pu-file-info" style="font-size:12px;font-weight:600;color:var(--text2);word-break:break-all;"></div>
+        </div>
+        <button onclick="puClearFile()" style="background:var(--btn-close);border:none;color:#fff;width:26px;height:26px;border-radius:50%;font-size:13px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;">✕</button>
+      </div>
+
+      <!-- Ошибка -->
+      <div id="pu-error" style="font-size:12px;font-weight:700;color:#c03030;min-height:18px;"></div>
+
+      <!-- GitHub PAT токен -->
+      <div>
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;">GitHub токен (PAT) *</div>
+        <input id="pu-pat" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off"
+          style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:'JetBrains Mono',monospace;font-weight:500;outline:none;box-sizing:border-box;color:var(--text);background:var(--surface3);"
+          onfocus="this.style.borderColor='#8040c8'" onblur="this.style.borderColor=''">
+        <div style="font-size:11px;color:var(--text3);margin-top:5px;">Токен сохраняется локально в браузере. Нужны права: <code>repo</code></div>
+      </div>
+
+      <!-- Статус загрузки -->
+      <div id="pu-status" style="font-size:13px;font-weight:700;min-height:18px;"></div>
+
+      <!-- Кнопка загрузки -->
+      <button id="pu-btn" onclick="puUpload()"
+        style="width:100%;height:44px;background:linear-gradient(135deg,#5a1a9a,#8040c8);color:#fff;border:none;border-radius:11px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s;box-shadow:0 4px 16px rgba(128,64,200,.35);"
+        onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
+        📤 Загрузить на GitHub
+      </button>
+
+    </div>
+  </div>
+</div>
+
 <script>
 // ═══ PWA Service Worker ═══
 if('serviceWorker' in navigator){
