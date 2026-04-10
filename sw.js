@@ -1,4 +1,4 @@
-const CACHE_NAME = 'portal-zakazov-v36';
+const CACHE_NAME = 'portal-zakazov-v38';
 const ASSETS = [
   './',
   './index.html',
