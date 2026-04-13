@@ -13,6 +13,12 @@
 <title>Портал заказов — Склад</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+<style>
+/* ── LOTTIE ICON CONTAINERS ── */
+.lottie-icon{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.lottie-icon canvas,.lottie-icon svg{display:block;}
+</style>
 <style>
 :root{
   --bg:#edeef2;--bg2:#e4e5ea;--surface:#f4f5f8;--surface2:#ffffff;--surface3:#ecedf1;
@@ -374,16 +380,16 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <div>
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="logo-text">Портал заказов — Склад</div>
-        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.37</div>
+        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.38</div>
       </div>
       <div class="logo-sub" id="catalogInfo">Загрузка…</div>
     </div>
   </div>
   <div class="header-right">
-    <button onclick="openFeedback()" style="background:rgba(220,170,50,.2);backdrop-filter:blur(8px);color:#ffe080;border:1px solid rgba(220,170,50,.3);border-radius:10px;padding:8px 14px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 0 12px rgba(220,170,50,.12);transition:all .25s;white-space:nowrap;" onmouseover="this.style.background='rgba(220,170,50,.35)';this.style.borderColor='rgba(220,170,50,.6)'" onmouseout="this.style.background='rgba(220,170,50,.2)';this.style.borderColor='rgba(220,170,50,.3)'">✉️ Обратная связь</button>
-    <button onclick="openPhotoUpload()" style="background:rgba(180,80,180,.2);backdrop-filter:blur(8px);color:#e8a0ff;border:1px solid rgba(180,80,180,.3);border-radius:10px;padding:8px 14px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 0 12px rgba(180,80,180,.12);transition:all .25s;white-space:nowrap;" onmouseover="this.style.background='rgba(180,80,180,.35)';this.style.borderColor='rgba(180,80,180,.6)'" onmouseout="this.style.background='rgba(180,80,180,.2)';this.style.borderColor='rgba(180,80,180,.3)'">📸 Загрузка Фото</button>
-    <button class="update-btn" onclick="updateFromGitHub()"><span id="updateIcon">☁️</span> Обновить</button>
-    <button class="cart-btn" onclick="toggleCart()">🛒 Корзина <span class="cart-count" id="cartCountBadge">0</span></button>
+    <button onclick="openFeedback()" style="background:rgba(220,170,50,.2);backdrop-filter:blur(8px);color:#ffe080;border:1px solid rgba(220,170,50,.3);border-radius:10px;padding:8px 14px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 0 12px rgba(220,170,50,.12);transition:all .25s;white-space:nowrap;" onmouseover="this.style.background='rgba(220,170,50,.35)';this.style.borderColor='rgba(220,170,50,.6)'" onmouseout="this.style.background='rgba(220,170,50,.2)';this.style.borderColor='rgba(220,170,50,.3)'"><span class="lottie-icon" id="lottie-feedback" style="width:20px;height:20px;"></span> Обратная связь</button>
+    <button onclick="openPhotoUpload()" style="background:rgba(180,80,180,.2);backdrop-filter:blur(8px);color:#e8a0ff;border:1px solid rgba(180,80,180,.3);border-radius:10px;padding:8px 14px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 0 12px rgba(180,80,180,.12);transition:all .25s;white-space:nowrap;" onmouseover="this.style.background='rgba(180,80,180,.35)';this.style.borderColor='rgba(180,80,180,.6)'" onmouseout="this.style.background='rgba(180,80,180,.2)';this.style.borderColor='rgba(180,80,180,.3)'"><span class="lottie-icon" id="lottie-photo" style="width:20px;height:20px;"></span> Загрузка Фото</button>
+    <button class="update-btn" onclick="updateFromGitHub()"><span class="lottie-icon" id="lottie-update" style="width:20px;height:20px;"></span><span id="updateIcon" style="display:none;">☁️</span> Обновить</button>
+    <button class="cart-btn" onclick="toggleCart()"><span class="lottie-icon" id="lottie-cart" style="width:22px;height:22px;"></span> Корзина <span class="cart-count" id="cartCountBadge">0</span></button>
   </div>
 </div>
 
@@ -452,65 +458,65 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 
     <!-- Все категории -->
     <button class="cat-btn active" onclick="selectCat('all')" id="btn-all" style="--cat-color:#4a7fc1">
-      <span class="cat-icon">🗂️</span><span class="cat-label">Все категории</span><span class="cat-count" id="cnt-all">0</span>
+      <span class="cat-icon lottie-icon" id="lottie-cat-all" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Все категории</span><span class="cat-count" id="cnt-all">0</span>
     </button>
 
     <div class="sidebar-divider"></div>
 
     <!-- Торговое оборудование -->
     <button class="cat-btn" onclick="selectCat('Торговое оборудование')" id="btn-Торговое оборудование" style="--cat-color:#4a7fc1">
-      <span class="cat-icon">🏪</span><span class="cat-label">Торговое оборудование</span><span class="cat-count" id="cnt-Торговое оборудование">0</span>
+      <span class="cat-icon lottie-icon" id="lottie-cat-torg" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Торговое оборудование</span><span class="cat-count" id="cnt-Торговое оборудование">0</span>
     </button>
 
     <!-- Ювелирное оборудование -->
     <button class="cat-btn" onclick="selectCat('Ювелирное оборудование')" id="btn-Ювелирное оборудование" style="--cat-color:#b84580">
-      <span class="cat-icon">💎</span><span class="cat-label">Ювелирное оборудование</span><span class="cat-count" id="cnt-Ювелирное оборудование">0</span>
+      <span class="cat-icon lottie-icon" id="lottie-cat-uvelir" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Ювелирное оборудование</span><span class="cat-count" id="cnt-Ювелирное оборудование">0</span>
     </button>
 
     <!-- Кари Кидс -->
     <button class="cat-btn" onclick="selectCat('karikids')" id="btn-karikids" style="--cat-color:#c0392b">
-      <span class="cat-icon">👧</span><span class="cat-label">Кари Кидс</span><span class="cat-count" id="cnt-karikids">0</span>
+      <span class="cat-icon lottie-icon" id="lottie-cat-kids" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Кари Кидс</span><span class="cat-count" id="cnt-karikids">0</span>
     </button>
 
     <!-- Рекламные материалы -->
     <button class="cat-btn" onclick="selectCat('Рекламные материалы')" id="btn-Рекламные материалы" style="--cat-color:#c07a2a">
-      <span class="cat-icon">📢</span><span class="cat-label">Рекламные материалы</span><span class="cat-count" id="cnt-Рекламные материалы">0</span>
+      <span class="cat-icon lottie-icon" id="lottie-cat-reklam" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Рекламные материалы</span><span class="cat-count" id="cnt-Рекламные материалы">0</span>
     </button>
 
     <!-- Канцелярия -->
     <button class="cat-btn" onclick="selectCat('Канцелярия')" id="btn-Канцелярия" style="--cat-color:#7458b8">
-      <span class="cat-icon">📎</span><span class="cat-label">Канцелярия</span><span class="cat-count" id="cnt-Канцелярия">0</span>
+      <span class="cat-icon lottie-icon" id="lottie-cat-kanc" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Канцелярия</span><span class="cat-count" id="cnt-Канцелярия">0</span>
     </button>
 
     <div class="sidebar-divider" id="light-divider"></div>
 
     <!-- Световое оборудование -->
     <button class="cat-btn" onclick="selectCat('light')" id="btn-light" style="--cat-color:#e07a20">
-      <span class="cat-icon">💡</span><span class="cat-label">Световое оборудование</span><span class="cat-count" id="cnt-light">0</span>
+      <span class="cat-icon lottie-icon" id="lottie-cat-light" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Световое оборудование</span><span class="cat-count" id="cnt-light">0</span>
     </button>
 
     <!-- Слаботочное оборудование -->
     <button class="cat-btn" onclick="selectCat('tv')" id="btn-tv" style="--cat-color:#0e7490">
-      <span class="cat-icon">📺</span><span class="cat-label">Слаботочное оборудование</span><span class="cat-count" id="cnt-tv">0</span>
+      <span class="cat-icon lottie-icon" id="lottie-cat-tv" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Слаботочное оборудование</span><span class="cat-count" id="cnt-tv">0</span>
     </button>
 
     <!-- ИТ оборудование -->
     <button class="cat-btn" onclick="selectCat('ИТ оборудование')" id="btn-ИТ оборудование" style="--cat-color:#0e6ba8">
-      <span class="cat-icon">💻</span><span class="cat-label">ИТ оборудование</span><span class="cat-count" id="cnt-ИТ оборудование">0</span>
+      <span class="cat-icon lottie-icon" id="lottie-cat-it" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">ИТ оборудование</span><span class="cat-count" id="cnt-ИТ оборудование">0</span>
     </button>
 
     <div class="sidebar-divider" id="kits-divider"></div>
 
     <!-- Комплекты -->
     <button class="cat-btn" onclick="selectCat('kits')" id="btn-kits" style="--cat-color:#6b48c8">
-      <span class="cat-icon">📦</span><span class="cat-label">Комплекты</span><span class="cat-count" id="cnt-kits">0</span>
+      <span class="cat-icon lottie-icon" id="lottie-cat-kits" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Комплекты</span><span class="cat-count" id="cnt-kits">0</span>
     </button>
 
     <div class="sidebar-divider" id="nlist-divider"></div>
 
     <!-- Загрузка номенклатур -->
     <button class="cat-btn" onclick="selectCat('nlist')" id="btn-nlist" style="--cat-color:#be5103">
-      <span class="cat-icon">📋</span><span class="cat-label">Загрузка номенклатур</span><span class="cat-count" id="cnt-nlist">0</span>
+      <span class="cat-icon lottie-icon" id="lottie-cat-nlist" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Загрузка номенклатур</span><span class="cat-count" id="cnt-nlist">0</span>
     </button>
   </div>
 
@@ -518,7 +524,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
   <div class="main" id="mainCatalogPanel">
     <div class="toolbar">
       <div class="search-wrap">
-        <span class="search-icon">🔍</span>
+        <span class="search-icon lottie-icon" id="lottie-search-main" style="width:20px;height:20px;left:8px;"></span>
         <input type="text" class="search-input" id="searchInput" placeholder="Поиск по всем категориям — наименование или код…" oninput="onSearch()">
       </div>
       <div style="display:flex;gap:2px;flex-shrink:0;">
@@ -545,7 +551,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <div class="main" style="display:flex;flex-direction:column;overflow:hidden;flex:1;">
       <div class="toolbar">
         <div class="search-wrap">
-          <span class="search-icon">🔍</span>
+          <span class="search-icon lottie-icon" id="lottie-search-light" style="width:20px;height:20px;left:8px;"></span>
           <input type="text" class="search-input" id="lightSearch" placeholder="Поиск по световому оборудованию…" oninput="onLightSearch()">
         </div>
         <select id="light-cat-filter" onchange="onLightCatFilter()" style="height:36px;padding:0 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;cursor:pointer;display:none;">
@@ -970,7 +976,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <h2>🛒 Корзина заказа</h2>
     <div style="display:flex;align-items:center;gap:8px;">
       <button class="clear-cart-btn" id="clearCartBtn" onclick="clearCart()" title="Очистить корзину" style="display:none;">🗑 Очистить</button>
-      <button onclick="exportCartToExcel()" title="Выгрузить корзину в Excel" style="background:linear-gradient(135deg,#1a7a3a,#2aaa5a);color:#fff;border:none;border-radius:8px;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;transition:all .2s;white-space:nowrap;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">📥 Excel</button>
+      <button onclick="exportCartToExcel()" title="Выгрузить корзину в Excel" style="background:linear-gradient(135deg,#1a7a3a,#2aaa5a);color:#fff;border:none;border-radius:8px;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;transition:all .2s;white-space:nowrap;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''"><span class="lottie-icon" id="lottie-cart-excel" style="width:16px;height:16px;"></span> Excel</button>
       <button class="close-btn" onclick="closeCart()">✕</button>
     </div>
   </div>
@@ -1000,8 +1006,8 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
       <input type="text" class="form-input" id="orderComment" placeholder="Срочная поставка…">
     </div></div>
     <input type="hidden" id="shopName">
-    <button class="send-btn" onclick="sendOrder()">📧 Отправить заявку на склад</button>
-    <button class="send-btn" onclick="sendToAdminDir()" style="background:linear-gradient(135deg,#5a3a9a,#7a52c8);box-shadow:0 4px 14px rgba(116,88,184,.35);margin-top:6px;">👔 Отправить административному директору</button>
+    <button class="send-btn" onclick="sendOrder()"><span class="lottie-icon" id="lottie-send-order" style="width:18px;height:18px;"></span> Отправить заявку на склад</button>
+    <button class="send-btn" onclick="sendToAdminDir()" style="background:linear-gradient(135deg,#5a3a9a,#7a52c8);box-shadow:0 4px 14px rgba(116,88,184,.35);margin-top:6px;"><span class="lottie-icon" id="lottie-send-admin" style="width:18px;height:18px;"></span> Отправить административному директору</button>
   </div>
 </div>
 
@@ -1027,7 +1033,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ═══ ВЕРСИЯ ПРИЛОЖЕНИЯ ═══
-var APP_VERSION = '1.37';
+var APP_VERSION = '1.38';
 // При каждом обновлении index.html — менять только эту строку (1.17, 1.18 и т.д.)
 (function(){
   var el = document.getElementById('appVersionBadge');
@@ -2653,7 +2659,7 @@ var GITHUB_XLSX = GITHUB_RAW + '%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA_%D0%BE%D0%B
 
 function updateFromGitHub(){
   var icon = document.getElementById('updateIcon');
-  icon.innerHTML = "<span class='spin'>⏳</span>";
+  icon.innerHTML = "<span class='spin' style='font-size:14px;'>⏳</span>";
 
   var p1 = loadGitHubPhotos('Foto%20Svet',     SVET_PHOTOS,     'Foto Svet');
   var p2 = loadGitHubPhotos('Foto%20slabotoch', SLAB_PHOTOS,     'Foto slabotoch');
@@ -4264,6 +4270,86 @@ document.getElementById('nlistFileInput').addEventListener('change', function(e)
     e.preventDefault(); dz.style.background='';
     var f = e.dataTransfer.files[0];
     if(f) loadNlistFile(f);
+  });
+})();
+
+// ═══ LOTTIE ICONS ═══
+(function(){
+  if(typeof lottie === 'undefined') return;
+
+  // Универсальная функция создания lottie
+  function L(id, animData, loop, autoplay){
+    var el = document.getElementById(id);
+    if(!el) return null;
+    return lottie.loadAnimation({
+      container: el, renderer: 'svg',
+      loop: loop !== false, autoplay: autoplay !== false,
+      animationData: animData
+    });
+  }
+
+  // ── АНИМАЦИИ ──
+
+  // Поиск — лупа с пульсацией
+  var searchAnim = {"v":"5.7.4","fr":30,"ip":0,"op":60,"w":24,"h":24,"layers":[{"ty":4,"nm":"search","ks":{"o":{"a":0,"k":100},"r":{"a":1,"k":[{"t":0,"s":[0],"e":[15],"i":{"x":[0.5],"y":[1]},"o":{"x":[0.5],"y":[0]}},{"t":30,"s":[15],"e":[0],"i":{"x":[0.5],"y":[1]},"o":{"x":[0.5],"y":[0]}},{"t":60,"s":[0]}]},"p":{"a":0,"k":[12,12,0]},"s":{"a":1,"k":[{"t":0,"s":[100,100],"e":[110,110],"i":{"x":[0.5],"y":[1]},"o":{"x":[0.5],"y":[0]}},{"t":30,"s":[110,110],"e":[100,100],"i":{"x":[0.5],"y":[1]},"o":{"x":[0.5],"y":[0]}},{"t":60,"s":[100,100]}]}},"shapes":[{"ty":"gr","it":[{"ty":"el","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[12,12]}},{"ty":"st","c":{"a":0,"k":[0.4,0.4,0.5,1]},"w":{"a":0,"k":2}},{"ty":"tr","p":{"a":0,"k":[9,9]},"s":{"a":0,"k":[100,100]}}]},{"ty":"gr","it":[{"ty":"sh","ks":{"a":0,"k":{"i":[[0,0]],"o":[[0,0]],"v":[[15,15],[20,20]],"c":false}}},{"ty":"st","c":{"a":0,"k":[0.4,0.4,0.5,1]},"lc":2,"w":{"a":0,"k":2.5}},{"ty":"tr","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[100,100]}}]}]}]};
+
+  // Обновить — облако со стрелкой вращение
+  var updateAnim = {"v":"5.7.4","fr":30,"ip":0,"op":60,"w":24,"h":24,"layers":[{"ty":4,"nm":"cloud","ks":{"o":{"a":0,"k":100},"r":{"a":1,"k":[{"t":0,"s":[0]},{"t":60,"s":[360]}]},"p":{"a":0,"k":[12,12,0]},"s":{"a":0,"k":[100,100]}},"shapes":[{"ty":"gr","it":[{"ty":"el","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[16,16]}},{"ty":"st","c":{"a":0,"k":[0.36,0.87,0.93,1]},"w":{"a":0,"k":2.5},"d":[{"n":"d","nm":"dash","v":{"a":0,"k":8}},{"n":"g","nm":"gap","v":{"a":0,"k":4}}]},{"ty":"fl","c":{"a":0,"k":[0,0,0,0]}},{"ty":"tr","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[100,100]}}]},{"ty":"gr","it":[{"ty":"sh","ks":{"a":0,"k":{"i":[[0,0],[0,0],[0,0]],"o":[[0,0],[0,0],[0,0]],"v":[[-3,-6],[0,-9],[3,-6]],"c":false}}},{"ty":"st","c":{"a":0,"k":[0.36,0.87,0.93,1]},"lc":2,"lj":2,"w":{"a":0,"k":2.5}},{"ty":"tr","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[100,100]}}]}]}]};
+
+  // Корзина — тряска
+  var cartAnim = {"v":"5.7.4","fr":30,"ip":0,"op":90,"w":24,"h":24,"layers":[{"ty":4,"nm":"cart","ks":{"o":{"a":0,"k":100},"r":{"a":1,"k":[{"t":0,"s":[0],"e":[-8],"i":{"x":[0.5],"y":[1]},"o":{"x":[0.5],"y":[0]}},{"t":8,"s":[-8],"e":[8],"i":{"x":[0.5],"y":[1]},"o":{"x":[0.5],"y":[0]}},{"t":16,"s":[8],"e":[0],"i":{"x":[0.5],"y":[1]},"o":{"x":[0.5],"y":[0]}},{"t":24,"s":[0]},{"t":90,"s":[0]}]},"p":{"a":0,"k":[12,12,0]},"s":{"a":0,"k":[100,100]}},"shapes":[{"ty":"gr","it":[{"ty":"sh","ks":{"a":0,"k":{"i":[[0,0],[0,0],[0,0],[0,0]],"o":[[0,0],[0,0],[0,0],[0,0]],"v":[[2,6],[4,4],[14,4],[16,6],[2,6]],"c":true}}},{"ty":"fl","c":{"a":0,"k":[0.77,0.69,1,1]}},{"ty":"tr","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[100,100]}}]},{"ty":"gr","it":[{"ty":"sh","ks":{"a":0,"k":{"i":[[0,0],[0,0]],"o":[[0,0],[0,0]],"v":[[4,4],[2,1]],"c":false}}},{"ty":"st","c":{"a":0,"k":[0.77,0.69,1,1]},"lc":2,"w":{"a":0,"k":1.5}},{"ty":"tr","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[100,100]}}]},{"ty":"gr","it":[{"ty":"el","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[3,3]}},{"ty":"fl","c":{"a":0,"k":[0.77,0.69,1,1]}},{"ty":"tr","p":{"a":0,"k":[6,9]},"s":{"a":0,"k":[100,100]}}]},{"ty":"gr","it":[{"ty":"el","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[3,3]}},{"ty":"fl","c":{"a":0,"k":[0.77,0.69,1,1]}},{"ty":"tr","p":{"a":0,"k":[12,9]},"s":{"a":0,"k":[100,100]}}]}]}]};
+
+  // Письмо — взлёт
+  var emailAnim = {"v":"5.7.4","fr":30,"ip":0,"op":60,"w":24,"h":24,"layers":[{"ty":4,"nm":"email","ks":{"o":{"a":0,"k":100},"p":{"a":1,"k":[{"t":0,"s":[12,12,0],"e":[12,8,0],"i":{"x":[0.5],"y":[1]},"o":{"x":[0.5],"y":[0]}},{"t":20,"s":[12,8,0],"e":[12,12,0],"i":{"x":[0.5],"y":[1]},"o":{"x":[0.5],"y":[0]}},{"t":40,"s":[12,12,0]},{"t":60,"s":[12,12,0]}]},"s":{"a":0,"k":[100,100]}},"shapes":[{"ty":"gr","it":[{"ty":"rc","p":{"a":0,"k":[0,1]},"s":{"a":0,"k":[18,14]},"r":{"a":0,"k":2}},{"ty":"st","c":{"a":0,"k":[1,1,1,1]},"w":{"a":0,"k":1.5}},{"ty":"fl","c":{"a":0,"k":[0.29,0.67,0.376,1]}},{"ty":"tr","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[100,100]}}]},{"ty":"gr","it":[{"ty":"sh","ks":{"a":0,"k":{"i":[[0,0],[0,0],[0,0]],"o":[[0,0],[0,0],[0,0]],"v":[[-9,-6],[0,0],[9,-6]],"c":false}}},{"ty":"st","c":{"a":0,"k":[1,1,1,1]},"lc":2,"w":{"a":0,"k":1.5}},{"ty":"tr","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[100,100]}}]}]}]};
+
+  // Директор — галстук пульсация
+  var adminAnim = {"v":"5.7.4","fr":30,"ip":0,"op":60,"w":24,"h":24,"layers":[{"ty":4,"nm":"tie","ks":{"o":{"a":0,"k":100},"s":{"a":1,"k":[{"t":0,"s":[100,100]},{"t":15,"s":[110,110]},{"t":30,"s":[100,100]},{"t":60,"s":[100,100]}]},"p":{"a":0,"k":[12,12,0]}},"shapes":[{"ty":"gr","it":[{"ty":"sh","ks":{"a":0,"k":{"i":[[0,0],[0,0],[0,0],[0,0]],"o":[[0,0],[0,0],[0,0],[0,0]],"v":[[0,-8],[4,-2],[2,8],[-2,8],[-4,-2]],"c":true}}},{"ty":"fl","c":{"a":0,"k":[0.35,0.22,0.6,1]}},{"ty":"tr","p":{"a":0,"k":[12,12]},"s":{"a":0,"k":[100,100]}}]}]}]};
+
+  // Excel — стрелка вниз
+  var excelAnim = {"v":"5.7.4","fr":30,"ip":0,"op":60,"w":24,"h":24,"layers":[{"ty":4,"nm":"excel","ks":{"o":{"a":0,"k":100},"p":{"a":1,"k":[{"t":0,"s":[12,12,0],"e":[12,14,0],"i":{"x":[0.5],"y":[1]},"o":{"x":[0.5],"y":[0]}},{"t":15,"s":[12,14,0],"e":[12,12,0],"i":{"x":[0.5],"y":[1]},"o":{"x":[0.5],"y":[0]}},{"t":30,"s":[12,12,0]},{"t":60,"s":[12,12,0]}]},"s":{"a":0,"k":[100,100]}},"shapes":[{"ty":"gr","it":[{"ty":"sh","ks":{"a":0,"k":{"i":[[0,0],[0,0],[0,0]],"o":[[0,0],[0,0],[0,0]],"v":[[0,-6],[0,4],[-4,0]],"c":false}}},{"ty":"st","c":{"a":0,"k":[1,1,1,1]},"lc":2,"w":{"a":0,"k":2}},{"ty":"tr","p":{"a":0,"k":[12,10]},"s":{"a":0,"k":[100,100]}}]},{"ty":"gr","it":[{"ty":"sh","ks":{"a":0,"k":{"i":[[0,0],[0,0],[0,0]],"o":[[0,0],[0,0],[0,0]],"v":[[0,-6],[0,4],[4,0]],"c":false}}},{"ty":"st","c":{"a":0,"k":[1,1,1,1]},"lc":2,"w":{"a":0,"k":2}},{"ty":"tr","p":{"a":0,"k":[12,10]},"s":{"a":0,"k":[100,100]}}]},{"ty":"gr","it":[{"ty":"sh","ks":{"a":0,"k":{"i":[[0,0],[0,0]],"o":[[0,0],[0,0]],"v":[[-6,6],[6,6]],"c":false}}},{"ty":"st","c":{"a":0,"k":[1,1,1,1]},"lc":2,"w":{"a":0,"k":2}},{"ty":"tr","p":{"a":0,"k":[12,10]},"s":{"a":0,"k":[100,100]}}]}]}]};
+
+  // Фото — вспышка
+  var photoAnim = {"v":"5.7.4","fr":30,"ip":0,"op":60,"w":24,"h":24,"layers":[{"ty":4,"nm":"photo","ks":{"o":{"a":0,"k":100},"s":{"a":1,"k":[{"t":0,"s":[100,100]},{"t":10,"s":[115,115]},{"t":20,"s":[100,100]},{"t":60,"s":[100,100]}]},"p":{"a":0,"k":[12,12,0]}},"shapes":[{"ty":"gr","it":[{"ty":"rc","p":{"a":0,"k":[0,1]},"s":{"a":0,"k":[20,16]},"r":{"a":0,"k":3}},{"ty":"st","c":{"a":0,"k":[0.91,0.63,1,1]},"w":{"a":0,"k":1.5}},{"ty":"fl","c":{"a":0,"k":[0.56,0.25,0.56,1]}},{"ty":"tr","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[100,100]}}]},{"ty":"gr","it":[{"ty":"el","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[8,8]}},{"ty":"fl","c":{"a":0,"k":[0.91,0.63,1,1]}},{"ty":"tr","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[100,100]}}]}]}]};
+
+  // Иконки сайдбара — цветные точки с пульсом
+  function makeDotAnim(r,g,b){
+    return {"v":"5.7.4","fr":30,"ip":0,"op":90,"w":20,"h":20,"layers":[{"ty":4,"nm":"dot","ks":{"o":{"a":0,"k":100},"s":{"a":1,"k":[{"t":0,"s":[100,100]},{"t":20,"s":[120,120]},{"t":45,"s":[100,100]},{"t":90,"s":[100,100]}]},"p":{"a":0,"k":[10,10,0]}},"shapes":[{"ty":"gr","it":[{"ty":"el","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[14,14]}},{"ty":"fl","c":{"a":0,"k":[r,g,b,1]}},{"ty":"tr","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[100,100]}}]}]}]};
+  }
+
+  // ── ИНИЦИАЛИЗАЦИЯ ──
+  // Поиск
+  [['lottie-search-main',searchAnim],['lottie-search-light',searchAnim],
+   ['lottie-search-kits',searchAnim],['lottie-search-tv',searchAnim]].forEach(function(p){
+    L(p[0], JSON.parse(JSON.stringify(p[1])), true, true);
+  });
+
+  // Шапка
+  L('lottie-update',  updateAnim, true,  true);
+  L('lottie-cart',    cartAnim,   true,  true);
+  L('lottie-feedback',emailAnim,  true,  true);
+  L('lottie-photo',   photoAnim,  true,  true);
+
+  // Корзина
+  L('lottie-send-order', emailAnim,  true, true);
+  L('lottie-send-admin', adminAnim,  true, true);
+  L('lottie-cart-excel', excelAnim,  true, true);
+
+  // Сайдбар — у каждой категории свой цвет
+  var cats = [
+    ['lottie-cat-all',    0.29, 0.49, 0.76],
+    ['lottie-cat-torg',   0.29, 0.49, 0.76],
+    ['lottie-cat-uvelir', 0.72, 0.27, 0.50],
+    ['lottie-cat-kids',   0.75, 0.22, 0.17],
+    ['lottie-cat-reklam', 0.75, 0.48, 0.17],
+    ['lottie-cat-kanc',   0.46, 0.35, 0.72],
+    ['lottie-cat-light',  0.88, 0.48, 0.13],
+    ['lottie-cat-tv',     0.05, 0.46, 0.56],
+    ['lottie-cat-it',     0.05, 0.42, 0.66],
+    ['lottie-cat-kits',   0.42, 0.28, 0.78],
+    ['lottie-cat-nlist',  0.75, 0.32, 0.01],
+  ];
+  cats.forEach(function(c){
+    L(c[0], makeDotAnim(c[1],c[2],c[3]), true, true);
   });
 })();
 
