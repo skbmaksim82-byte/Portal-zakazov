@@ -380,7 +380,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <div>
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="logo-text">Портал заказов — Склад</div>
-        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.38</div>
+        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.39</div>
       </div>
       <div class="logo-sub" id="catalogInfo">Загрузка…</div>
     </div>
@@ -1033,7 +1033,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ═══ ВЕРСИЯ ПРИЛОЖЕНИЯ ═══
-var APP_VERSION = '1.38';
+var APP_VERSION = '1.39';
 // При каждом обновлении index.html — менять только эту строку (1.17, 1.18 и т.д.)
 (function(){
   var el = document.getElementById('appVersionBadge');
@@ -4273,84 +4273,136 @@ document.getElementById('nlistFileInput').addEventListener('change', function(e)
   });
 })();
 
-// ═══ LOTTIE ICONS ═══
+// ═══ ANIMATED ICONS (inline SVG + CSS) ═══
 (function(){
-  if(typeof lottie === 'undefined') return;
 
-  // Универсальная функция создания lottie
-  function L(id, animData, loop, autoplay){
+  // Вставляет анимированный SVG в контейнер
+  function setIcon(id, svgHTML){
     var el = document.getElementById(id);
-    if(!el) return null;
-    return lottie.loadAnimation({
-      container: el, renderer: 'svg',
-      loop: loop !== false, autoplay: autoplay !== false,
-      animationData: animData
-    });
+    if(el) el.innerHTML = svgHTML;
   }
 
-  // ── АНИМАЦИИ ──
+  // ── SVG иконки с CSS анимациями ──
 
-  // Поиск — лупа с пульсацией
-  var searchAnim = {"v":"5.7.4","fr":30,"ip":0,"op":60,"w":24,"h":24,"layers":[{"ty":4,"nm":"search","ks":{"o":{"a":0,"k":100},"r":{"a":1,"k":[{"t":0,"s":[0],"e":[15],"i":{"x":[0.5],"y":[1]},"o":{"x":[0.5],"y":[0]}},{"t":30,"s":[15],"e":[0],"i":{"x":[0.5],"y":[1]},"o":{"x":[0.5],"y":[0]}},{"t":60,"s":[0]}]},"p":{"a":0,"k":[12,12,0]},"s":{"a":1,"k":[{"t":0,"s":[100,100],"e":[110,110],"i":{"x":[0.5],"y":[1]},"o":{"x":[0.5],"y":[0]}},{"t":30,"s":[110,110],"e":[100,100],"i":{"x":[0.5],"y":[1]},"o":{"x":[0.5],"y":[0]}},{"t":60,"s":[100,100]}]}},"shapes":[{"ty":"gr","it":[{"ty":"el","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[12,12]}},{"ty":"st","c":{"a":0,"k":[0.4,0.4,0.5,1]},"w":{"a":0,"k":2}},{"ty":"tr","p":{"a":0,"k":[9,9]},"s":{"a":0,"k":[100,100]}}]},{"ty":"gr","it":[{"ty":"sh","ks":{"a":0,"k":{"i":[[0,0]],"o":[[0,0]],"v":[[15,15],[20,20]],"c":false}}},{"ty":"st","c":{"a":0,"k":[0.4,0.4,0.5,1]},"lc":2,"w":{"a":0,"k":2.5}},{"ty":"tr","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[100,100]}}]}]}]};
+  var css = `
+    @keyframes ai-spin   { to { transform: rotate(360deg); } }
+    @keyframes ai-pulse  { 0%,100%{transform:scale(1);opacity:.9} 50%{transform:scale(1.25);opacity:1} }
+    @keyframes ai-bounce { 0%,100%{transform:translateY(0)} 40%{transform:translateY(-4px)} 70%{transform:translateY(-2px)} }
+    @keyframes ai-shake  { 0%,100%{transform:rotate(0)} 20%{transform:rotate(-12deg)} 60%{transform:rotate(12deg)} 80%{transform:rotate(-6deg)} }
+    @keyframes ai-blink  { 0%,90%,100%{opacity:1} 95%{opacity:0.2} }
+    @keyframes ai-down   { 0%,100%{transform:translateY(0)} 50%{transform:translateY(3px)} }
+    @keyframes ai-up     { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-3px)} }
+    @keyframes ai-dash   { to { stroke-dashoffset: -30; } }
+    .ai-spin    { animation: ai-spin   2s linear infinite; transform-origin: center; }
+    .ai-pulse   { animation: ai-pulse  2s ease-in-out infinite; transform-origin: center; }
+    .ai-bounce  { animation: ai-bounce 1.8s ease-in-out infinite; }
+    .ai-shake   { animation: ai-shake  2.5s ease-in-out infinite; transform-origin: center bottom; }
+    .ai-blink   { animation: ai-blink  3s ease-in-out infinite; }
+    .ai-down    { animation: ai-down   1.5s ease-in-out infinite; }
+    .ai-up      { animation: ai-up     1.8s ease-in-out infinite; }
+    .ai-dash    { animation: ai-dash   1.5s linear infinite; }
+  `;
+  var styleEl = document.createElement('style');
+  styleEl.textContent = css;
+  document.head.appendChild(styleEl);
 
-  // Обновить — облако со стрелкой вращение
-  var updateAnim = {"v":"5.7.4","fr":30,"ip":0,"op":60,"w":24,"h":24,"layers":[{"ty":4,"nm":"cloud","ks":{"o":{"a":0,"k":100},"r":{"a":1,"k":[{"t":0,"s":[0]},{"t":60,"s":[360]}]},"p":{"a":0,"k":[12,12,0]},"s":{"a":0,"k":[100,100]}},"shapes":[{"ty":"gr","it":[{"ty":"el","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[16,16]}},{"ty":"st","c":{"a":0,"k":[0.36,0.87,0.93,1]},"w":{"a":0,"k":2.5},"d":[{"n":"d","nm":"dash","v":{"a":0,"k":8}},{"n":"g","nm":"gap","v":{"a":0,"k":4}}]},{"ty":"fl","c":{"a":0,"k":[0,0,0,0]}},{"ty":"tr","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[100,100]}}]},{"ty":"gr","it":[{"ty":"sh","ks":{"a":0,"k":{"i":[[0,0],[0,0],[0,0]],"o":[[0,0],[0,0],[0,0]],"v":[[-3,-6],[0,-9],[3,-6]],"c":false}}},{"ty":"st","c":{"a":0,"k":[0.36,0.87,0.93,1]},"lc":2,"lj":2,"w":{"a":0,"k":2.5}},{"ty":"tr","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[100,100]}}]}]}]};
+  // 🔍 Поиск — лупа с пульсацией
+  var searchSVG = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g class="ai-pulse">
+      <circle cx="8.5" cy="8.5" r="5.5" stroke="#9699aa" stroke-width="2"/>
+      <line x1="12.5" y1="12.5" x2="17" y2="17" stroke="#9699aa" stroke-width="2" stroke-linecap="round"/>
+    </g></svg>`;
 
-  // Корзина — тряска
-  var cartAnim = {"v":"5.7.4","fr":30,"ip":0,"op":90,"w":24,"h":24,"layers":[{"ty":4,"nm":"cart","ks":{"o":{"a":0,"k":100},"r":{"a":1,"k":[{"t":0,"s":[0],"e":[-8],"i":{"x":[0.5],"y":[1]},"o":{"x":[0.5],"y":[0]}},{"t":8,"s":[-8],"e":[8],"i":{"x":[0.5],"y":[1]},"o":{"x":[0.5],"y":[0]}},{"t":16,"s":[8],"e":[0],"i":{"x":[0.5],"y":[1]},"o":{"x":[0.5],"y":[0]}},{"t":24,"s":[0]},{"t":90,"s":[0]}]},"p":{"a":0,"k":[12,12,0]},"s":{"a":0,"k":[100,100]}},"shapes":[{"ty":"gr","it":[{"ty":"sh","ks":{"a":0,"k":{"i":[[0,0],[0,0],[0,0],[0,0]],"o":[[0,0],[0,0],[0,0],[0,0]],"v":[[2,6],[4,4],[14,4],[16,6],[2,6]],"c":true}}},{"ty":"fl","c":{"a":0,"k":[0.77,0.69,1,1]}},{"ty":"tr","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[100,100]}}]},{"ty":"gr","it":[{"ty":"sh","ks":{"a":0,"k":{"i":[[0,0],[0,0]],"o":[[0,0],[0,0]],"v":[[4,4],[2,1]],"c":false}}},{"ty":"st","c":{"a":0,"k":[0.77,0.69,1,1]},"lc":2,"w":{"a":0,"k":1.5}},{"ty":"tr","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[100,100]}}]},{"ty":"gr","it":[{"ty":"el","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[3,3]}},{"ty":"fl","c":{"a":0,"k":[0.77,0.69,1,1]}},{"ty":"tr","p":{"a":0,"k":[6,9]},"s":{"a":0,"k":[100,100]}}]},{"ty":"gr","it":[{"ty":"el","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[3,3]}},{"ty":"fl","c":{"a":0,"k":[0.77,0.69,1,1]}},{"ty":"tr","p":{"a":0,"k":[12,9]},"s":{"a":0,"k":[100,100]}}]}]}]};
+  // ☁️ Обновить — стрелка по кругу
+  var updateSVG = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g class="ai-spin">
+      <path d="M10 3a7 7 0 1 1-4.95 2.05" stroke="#7ddfee" stroke-width="2" stroke-linecap="round" stroke-dasharray="22 8"/>
+      <polyline points="5,2 5,6 9,6" fill="none" stroke="#7ddfee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </g></svg>`;
 
-  // Письмо — взлёт
-  var emailAnim = {"v":"5.7.4","fr":30,"ip":0,"op":60,"w":24,"h":24,"layers":[{"ty":4,"nm":"email","ks":{"o":{"a":0,"k":100},"p":{"a":1,"k":[{"t":0,"s":[12,12,0],"e":[12,8,0],"i":{"x":[0.5],"y":[1]},"o":{"x":[0.5],"y":[0]}},{"t":20,"s":[12,8,0],"e":[12,12,0],"i":{"x":[0.5],"y":[1]},"o":{"x":[0.5],"y":[0]}},{"t":40,"s":[12,12,0]},{"t":60,"s":[12,12,0]}]},"s":{"a":0,"k":[100,100]}},"shapes":[{"ty":"gr","it":[{"ty":"rc","p":{"a":0,"k":[0,1]},"s":{"a":0,"k":[18,14]},"r":{"a":0,"k":2}},{"ty":"st","c":{"a":0,"k":[1,1,1,1]},"w":{"a":0,"k":1.5}},{"ty":"fl","c":{"a":0,"k":[0.29,0.67,0.376,1]}},{"ty":"tr","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[100,100]}}]},{"ty":"gr","it":[{"ty":"sh","ks":{"a":0,"k":{"i":[[0,0],[0,0],[0,0]],"o":[[0,0],[0,0],[0,0]],"v":[[-9,-6],[0,0],[9,-6]],"c":false}}},{"ty":"st","c":{"a":0,"k":[1,1,1,1]},"lc":2,"w":{"a":0,"k":1.5}},{"ty":"tr","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[100,100]}}]}]}]};
+  // 🛒 Корзина — тряска
+  var cartSVG = `<svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g class="ai-shake">
+      <path d="M2 3h2l2.5 9h9L18 6H6" stroke="#c4b0ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="9" cy="18" r="1.5" fill="#c4b0ff"/>
+      <circle cx="15" cy="18" r="1.5" fill="#c4b0ff"/>
+    </g></svg>`;
 
-  // Директор — галстук пульсация
-  var adminAnim = {"v":"5.7.4","fr":30,"ip":0,"op":60,"w":24,"h":24,"layers":[{"ty":4,"nm":"tie","ks":{"o":{"a":0,"k":100},"s":{"a":1,"k":[{"t":0,"s":[100,100]},{"t":15,"s":[110,110]},{"t":30,"s":[100,100]},{"t":60,"s":[100,100]}]},"p":{"a":0,"k":[12,12,0]}},"shapes":[{"ty":"gr","it":[{"ty":"sh","ks":{"a":0,"k":{"i":[[0,0],[0,0],[0,0],[0,0]],"o":[[0,0],[0,0],[0,0],[0,0]],"v":[[0,-8],[4,-2],[2,8],[-2,8],[-4,-2]],"c":true}}},{"ty":"fl","c":{"a":0,"k":[0.35,0.22,0.6,1]}},{"ty":"tr","p":{"a":0,"k":[12,12]},"s":{"a":0,"k":[100,100]}}]}]}]};
+  // ✉️ Обратная связь — конверт с подпрыгиванием
+  var feedbackSVG = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g class="ai-bounce">
+      <rect x="2" y="5" width="16" height="11" rx="2" stroke="#ffe080" stroke-width="1.8"/>
+      <polyline points="2,6 10,12 18,6" stroke="#ffe080" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </g></svg>`;
 
-  // Excel — стрелка вниз
-  var excelAnim = {"v":"5.7.4","fr":30,"ip":0,"op":60,"w":24,"h":24,"layers":[{"ty":4,"nm":"excel","ks":{"o":{"a":0,"k":100},"p":{"a":1,"k":[{"t":0,"s":[12,12,0],"e":[12,14,0],"i":{"x":[0.5],"y":[1]},"o":{"x":[0.5],"y":[0]}},{"t":15,"s":[12,14,0],"e":[12,12,0],"i":{"x":[0.5],"y":[1]},"o":{"x":[0.5],"y":[0]}},{"t":30,"s":[12,12,0]},{"t":60,"s":[12,12,0]}]},"s":{"a":0,"k":[100,100]}},"shapes":[{"ty":"gr","it":[{"ty":"sh","ks":{"a":0,"k":{"i":[[0,0],[0,0],[0,0]],"o":[[0,0],[0,0],[0,0]],"v":[[0,-6],[0,4],[-4,0]],"c":false}}},{"ty":"st","c":{"a":0,"k":[1,1,1,1]},"lc":2,"w":{"a":0,"k":2}},{"ty":"tr","p":{"a":0,"k":[12,10]},"s":{"a":0,"k":[100,100]}}]},{"ty":"gr","it":[{"ty":"sh","ks":{"a":0,"k":{"i":[[0,0],[0,0],[0,0]],"o":[[0,0],[0,0],[0,0]],"v":[[0,-6],[0,4],[4,0]],"c":false}}},{"ty":"st","c":{"a":0,"k":[1,1,1,1]},"lc":2,"w":{"a":0,"k":2}},{"ty":"tr","p":{"a":0,"k":[12,10]},"s":{"a":0,"k":[100,100]}}]},{"ty":"gr","it":[{"ty":"sh","ks":{"a":0,"k":{"i":[[0,0],[0,0]],"o":[[0,0],[0,0]],"v":[[-6,6],[6,6]],"c":false}}},{"ty":"st","c":{"a":0,"k":[1,1,1,1]},"lc":2,"w":{"a":0,"k":2}},{"ty":"tr","p":{"a":0,"k":[12,10]},"s":{"a":0,"k":[100,100]}}]}]}]};
+  // 📸 Загрузка фото — вспышка
+  var photoSVG = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g class="ai-blink">
+      <rect x="2" y="6" width="16" height="11" rx="2" stroke="#e8a0ff" stroke-width="1.8"/>
+      <circle cx="10" cy="11.5" r="3" stroke="#e8a0ff" stroke-width="1.8"/>
+      <path d="M7 6l1.5-3h3L13 6" stroke="#e8a0ff" stroke-width="1.8" stroke-linejoin="round"/>
+    </g></svg>`;
 
-  // Фото — вспышка
-  var photoAnim = {"v":"5.7.4","fr":30,"ip":0,"op":60,"w":24,"h":24,"layers":[{"ty":4,"nm":"photo","ks":{"o":{"a":0,"k":100},"s":{"a":1,"k":[{"t":0,"s":[100,100]},{"t":10,"s":[115,115]},{"t":20,"s":[100,100]},{"t":60,"s":[100,100]}]},"p":{"a":0,"k":[12,12,0]}},"shapes":[{"ty":"gr","it":[{"ty":"rc","p":{"a":0,"k":[0,1]},"s":{"a":0,"k":[20,16]},"r":{"a":0,"k":3}},{"ty":"st","c":{"a":0,"k":[0.91,0.63,1,1]},"w":{"a":0,"k":1.5}},{"ty":"fl","c":{"a":0,"k":[0.56,0.25,0.56,1]}},{"ty":"tr","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[100,100]}}]},{"ty":"gr","it":[{"ty":"el","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[8,8]}},{"ty":"fl","c":{"a":0,"k":[0.91,0.63,1,1]}},{"ty":"tr","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[100,100]}}]}]}]};
+  // 📧 Отправить заявку — взлёт конверта
+  var sendSVG = `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g class="ai-up">
+      <rect x="1" y="5" width="16" height="10" rx="2" fill="rgba(255,255,255,0.25)" stroke="white" stroke-width="1.6"/>
+      <polyline points="1,6 9,11 17,6" stroke="white" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+    </g></svg>`;
 
-  // Иконки сайдбара — цветные точки с пульсом
-  function makeDotAnim(r,g,b){
-    return {"v":"5.7.4","fr":30,"ip":0,"op":90,"w":20,"h":20,"layers":[{"ty":4,"nm":"dot","ks":{"o":{"a":0,"k":100},"s":{"a":1,"k":[{"t":0,"s":[100,100]},{"t":20,"s":[120,120]},{"t":45,"s":[100,100]},{"t":90,"s":[100,100]}]},"p":{"a":0,"k":[10,10,0]}},"shapes":[{"ty":"gr","it":[{"ty":"el","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[14,14]}},{"ty":"fl","c":{"a":0,"k":[r,g,b,1]}},{"ty":"tr","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[100,100]}}]}]}]};
+  // 👔 Административный директор — галстук пульс
+  var adminSVG = `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g class="ai-pulse">
+      <circle cx="9" cy="5" r="3.5" stroke="white" stroke-width="1.6"/>
+      <path d="M2 16c0-3.866 3.134-7 7-7s7 3.134 7 7" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M9 9l-1.5 4L9 16l1.5-3z" fill="white" opacity="0.7"/>
+    </g></svg>`;
+
+  // 📥 Excel — стрелка вниз
+  var excelSVG = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g class="ai-down">
+      <line x1="8" y1="2" x2="8" y2="10" stroke="white" stroke-width="2" stroke-linecap="round"/>
+      <polyline points="4,7 8,11 12,7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <line x1="2" y1="14" x2="14" y2="14" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    </g></svg>`;
+
+  // Сайдбар — цветные SVG иконки с пульсом
+  function makeCatSVG(emoji, color){
+    return `<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+      <circle class="ai-pulse" cx="10" cy="10" r="8" fill="${color}" opacity="0.85"/>
+      <text x="10" y="14.5" text-anchor="middle" font-size="11" fill="white">${emoji}</text>
+    </svg>`;
   }
 
-  // ── ИНИЦИАЛИЗАЦИЯ ──
-  // Поиск
-  [['lottie-search-main',searchAnim],['lottie-search-light',searchAnim],
-   ['lottie-search-kits',searchAnim],['lottie-search-tv',searchAnim]].forEach(function(p){
-    L(p[0], JSON.parse(JSON.stringify(p[1])), true, true);
+  // ── Поиск (все 4 панели) ──
+  ['lottie-search-main','lottie-search-light','lottie-search-kits','lottie-search-tv'].forEach(function(id){
+    setIcon(id, searchSVG);
   });
 
-  // Шапка
-  L('lottie-update',  updateAnim, true,  true);
-  L('lottie-cart',    cartAnim,   true,  true);
-  L('lottie-feedback',emailAnim,  true,  true);
-  L('lottie-photo',   photoAnim,  true,  true);
+  // ── Шапка ──
+  setIcon('lottie-update',   updateSVG);
+  setIcon('lottie-cart',     cartSVG);
+  setIcon('lottie-feedback', feedbackSVG);
+  setIcon('lottie-photo',    photoSVG);
 
-  // Корзина
-  L('lottie-send-order', emailAnim,  true, true);
-  L('lottie-send-admin', adminAnim,  true, true);
-  L('lottie-cart-excel', excelAnim,  true, true);
+  // ── Корзина ──
+  setIcon('lottie-send-order', sendSVG);
+  setIcon('lottie-send-admin', adminSVG);
+  setIcon('lottie-cart-excel', excelSVG);
 
-  // Сайдбар — у каждой категории свой цвет
-  var cats = [
-    ['lottie-cat-all',    0.29, 0.49, 0.76],
-    ['lottie-cat-torg',   0.29, 0.49, 0.76],
-    ['lottie-cat-uvelir', 0.72, 0.27, 0.50],
-    ['lottie-cat-kids',   0.75, 0.22, 0.17],
-    ['lottie-cat-reklam', 0.75, 0.48, 0.17],
-    ['lottie-cat-kanc',   0.46, 0.35, 0.72],
-    ['lottie-cat-light',  0.88, 0.48, 0.13],
-    ['lottie-cat-tv',     0.05, 0.46, 0.56],
-    ['lottie-cat-it',     0.05, 0.42, 0.66],
-    ['lottie-cat-kits',   0.42, 0.28, 0.78],
-    ['lottie-cat-nlist',  0.75, 0.32, 0.01],
-  ];
-  cats.forEach(function(c){
-    L(c[0], makeDotAnim(c[1],c[2],c[3]), true, true);
-  });
+  // ── Сайдбар ──
+  setIcon('lottie-cat-all',    makeCatSVG('🗂','#4a7fc1'));
+  setIcon('lottie-cat-torg',   makeCatSVG('🏪','#4a7fc1'));
+  setIcon('lottie-cat-uvelir', makeCatSVG('💎','#b84580'));
+  setIcon('lottie-cat-kids',   makeCatSVG('👧','#c0392b'));
+  setIcon('lottie-cat-reklam', makeCatSVG('📢','#c07a2a'));
+  setIcon('lottie-cat-kanc',   makeCatSVG('📎','#7458b8'));
+  setIcon('lottie-cat-light',  makeCatSVG('💡','#e07a20'));
+  setIcon('lottie-cat-tv',     makeCatSVG('📺','#0e7490'));
+  setIcon('lottie-cat-it',     makeCatSVG('💻','#0e6ba8'));
+  setIcon('lottie-cat-kits',   makeCatSVG('📦','#6b48c8'));
+  setIcon('lottie-cat-nlist',  makeCatSVG('📋','#be5103'));
+
 })();
 
 // ═══ INIT ═══
