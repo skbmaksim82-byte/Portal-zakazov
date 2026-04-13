@@ -380,7 +380,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <div>
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="logo-text">Портал заказов — Склад</div>
-        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.39</div>
+        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.42</div>
       </div>
       <div class="logo-sub" id="catalogInfo">Загрузка…</div>
     </div>
@@ -1033,7 +1033,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ═══ ВЕРСИЯ ПРИЛОЖЕНИЯ ═══
-var APP_VERSION = '1.39';
+var APP_VERSION = '1.42';
 // При каждом обновлении index.html — менять только эту строку (1.17, 1.18 и т.д.)
 (function(){
   var el = document.getElementById('appVersionBadge');
@@ -4273,135 +4273,104 @@ document.getElementById('nlistFileInput').addEventListener('change', function(e)
   });
 })();
 
-// ═══ ANIMATED ICONS (inline SVG + CSS) ═══
+// ═══ LOTTIE ICONS FROM GITHUB ═══
 (function(){
+  if(typeof lottie === 'undefined'){ console.warn('lottie not loaded'); return; }
 
-  // Вставляет анимированный SVG в контейнер
-  function setIcon(id, svgHTML){
-    var el = document.getElementById(id);
-    if(el) el.innerHTML = svgHTML;
-  }
+  // Базовый URL папки IKON на GitHub
+  var IKON_BASE = GITHUB_RAW + 'IKON/';
 
-  // ── SVG иконки с CSS анимациями ──
+  // Карта: id контейнера → имя файла в папке IKON
+  var ICONS = [
+    // Шапка
+    { id: 'lottie-feedback', file: 'Обратная связь.json',       size: 22 },
+    { id: 'lottie-photo',    file: 'Загрузка Фото.json',        size: 22 },
+    { id: 'lottie-cart',     file: 'Корзина.json',              size: 24 },
+    { id: 'lottie-update',   file: 'Обновить.json',             size: 22 },
+    // Поиск — все 4 панели (один файл, четыре контейнера)
+    { id: 'lottie-search-main',  file: 'Поиск по категориям.json', size: 22 },
+    { id: 'lottie-search-light', file: 'Поиск по категориям.json', size: 22 },
+    { id: 'lottie-search-kits',  file: 'Поиск по категориям.json', size: 22 },
+    { id: 'lottie-search-tv',    file: 'Поиск по категориям.json', size: 22 },
+    // Сайдбар
+    { id: 'lottie-cat-torg',   file: 'Торговое оборудование.json',    size: 26 },
+    { id: 'lottie-cat-light',  file: 'Световое оборудование.json',    size: 26 },
+    { id: 'lottie-cat-tv',     file: 'Слаботочное оборудование.json', size: 26 },
+    { id: 'lottie-cat-it',     file: 'ИТ Оборудование.json',          size: 26 },
+    { id: 'lottie-cat-kanc',   file: 'Канцелярия.json',               size: 26 },
+    { id: 'lottie-cat-kids',   file: 'Кари Кидс.json',                size: 26 },
+    { id: 'lottie-cat-nlist',  file: 'Загрузка номенклатур.json',     size: 26 },
+  ];
 
+  // Хранилище анимаций
+  var players = {};
+
+  ICONS.forEach(function(cfg){
+    var el = document.getElementById(cfg.id);
+    if(!el) return;
+
+    el.innerHTML = '';
+    el.style.width  = cfg.size + 'px';
+    el.style.height = cfg.size + 'px';
+
+    var anim = lottie.loadAnimation({
+      container:     el,
+      renderer:      'svg',
+      loop:          false,
+      autoplay:      false,
+      path:          IKON_BASE + encodeURIComponent(cfg.file)
+    });
+
+    players[cfg.id] = anim;
+
+    // Триггер hover — ищем родительский элемент (.cat-btn или кнопку)
+    var trigger = el.closest('.cat-btn') || el.closest('button') || el.parentElement;
+    if(trigger){
+      trigger.addEventListener('mouseenter', function(){
+        anim.setDirection(1);
+        anim.goToAndPlay(0, true);
+      });
+      trigger.addEventListener('mouseleave', function(){
+        anim.setDirection(-1);
+        anim.goToAndPlay(anim.totalFrames - 1, true);
+      });
+    }
+  });
+
+  // Оставшиеся иконки (без файлов) — CSS SVG как раньше
   var css = `
     @keyframes ai-spin   { to { transform: rotate(360deg); } }
-    @keyframes ai-pulse  { 0%,100%{transform:scale(1);opacity:.9} 50%{transform:scale(1.25);opacity:1} }
-    @keyframes ai-bounce { 0%,100%{transform:translateY(0)} 40%{transform:translateY(-4px)} 70%{transform:translateY(-2px)} }
-    @keyframes ai-shake  { 0%,100%{transform:rotate(0)} 20%{transform:rotate(-12deg)} 60%{transform:rotate(12deg)} 80%{transform:rotate(-6deg)} }
-    @keyframes ai-blink  { 0%,90%,100%{opacity:1} 95%{opacity:0.2} }
+    @keyframes ai-pulse  { 0%,100%{transform:scale(1)} 50%{transform:scale(1.25)} }
+    @keyframes ai-bounce { 0%,100%{transform:translateY(0)} 40%{transform:translateY(-4px)} }
+    @keyframes ai-shake  { 0%,100%{transform:rotate(0)} 20%{transform:rotate(-12deg)} 60%{transform:rotate(12deg)} }
     @keyframes ai-down   { 0%,100%{transform:translateY(0)} 50%{transform:translateY(3px)} }
     @keyframes ai-up     { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-3px)} }
-    @keyframes ai-dash   { to { stroke-dashoffset: -30; } }
-    .ai-spin    { animation: ai-spin   2s linear infinite; transform-origin: center; }
-    .ai-pulse   { animation: ai-pulse  2s ease-in-out infinite; transform-origin: center; }
-    .ai-bounce  { animation: ai-bounce 1.8s ease-in-out infinite; }
-    .ai-shake   { animation: ai-shake  2.5s ease-in-out infinite; transform-origin: center bottom; }
-    .ai-blink   { animation: ai-blink  3s ease-in-out infinite; }
-    .ai-down    { animation: ai-down   1.5s ease-in-out infinite; }
-    .ai-up      { animation: ai-up     1.8s ease-in-out infinite; }
-    .ai-dash    { animation: ai-dash   1.5s linear infinite; }
   `;
   var styleEl = document.createElement('style');
   styleEl.textContent = css;
   document.head.appendChild(styleEl);
 
-  // 🔍 Поиск — лупа с пульсацией
-  var searchSVG = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <g class="ai-pulse">
-      <circle cx="8.5" cy="8.5" r="5.5" stroke="#9699aa" stroke-width="2"/>
-      <line x1="12.5" y1="12.5" x2="17" y2="17" stroke="#9699aa" stroke-width="2" stroke-linecap="round"/>
-    </g></svg>`;
-
-  // ☁️ Обновить — стрелка по кругу
-  var updateSVG = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <g class="ai-spin">
-      <path d="M10 3a7 7 0 1 1-4.95 2.05" stroke="#7ddfee" stroke-width="2" stroke-linecap="round" stroke-dasharray="22 8"/>
-      <polyline points="5,2 5,6 9,6" fill="none" stroke="#7ddfee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    </g></svg>`;
-
-  // 🛒 Корзина — тряска
-  var cartSVG = `<svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <g class="ai-shake">
-      <path d="M2 3h2l2.5 9h9L18 6H6" stroke="#c4b0ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle cx="9" cy="18" r="1.5" fill="#c4b0ff"/>
-      <circle cx="15" cy="18" r="1.5" fill="#c4b0ff"/>
-    </g></svg>`;
-
-  // ✉️ Обратная связь — конверт с подпрыгиванием
-  var feedbackSVG = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <g class="ai-bounce">
-      <rect x="2" y="5" width="16" height="11" rx="2" stroke="#ffe080" stroke-width="1.8"/>
-      <polyline points="2,6 10,12 18,6" stroke="#ffe080" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-    </g></svg>`;
-
-  // 📸 Загрузка фото — вспышка
-  var photoSVG = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <g class="ai-blink">
-      <rect x="2" y="6" width="16" height="11" rx="2" stroke="#e8a0ff" stroke-width="1.8"/>
-      <circle cx="10" cy="11.5" r="3" stroke="#e8a0ff" stroke-width="1.8"/>
-      <path d="M7 6l1.5-3h3L13 6" stroke="#e8a0ff" stroke-width="1.8" stroke-linejoin="round"/>
-    </g></svg>`;
-
-  // 📧 Отправить заявку — взлёт конверта
-  var sendSVG = `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <g class="ai-up">
-      <rect x="1" y="5" width="16" height="10" rx="2" fill="rgba(255,255,255,0.25)" stroke="white" stroke-width="1.6"/>
-      <polyline points="1,6 9,11 17,6" stroke="white" stroke-width="1.6" stroke-linecap="round" fill="none"/>
-    </g></svg>`;
-
-  // 👔 Административный директор — галстук пульс
-  var adminSVG = `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <g class="ai-pulse">
-      <circle cx="9" cy="5" r="3.5" stroke="white" stroke-width="1.6"/>
-      <path d="M2 16c0-3.866 3.134-7 7-7s7 3.134 7 7" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
-      <path d="M9 9l-1.5 4L9 16l1.5-3z" fill="white" opacity="0.7"/>
-    </g></svg>`;
-
-  // 📥 Excel — стрелка вниз
-  var excelSVG = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <g class="ai-down">
-      <line x1="8" y1="2" x2="8" y2="10" stroke="white" stroke-width="2" stroke-linecap="round"/>
-      <polyline points="4,7 8,11 12,7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-      <line x1="2" y1="14" x2="14" y2="14" stroke="white" stroke-width="2" stroke-linecap="round"/>
-    </g></svg>`;
-
-  // Сайдбар — цветные SVG иконки с пульсом
-  function makeCatSVG(emoji, color){
-    return `<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-      <circle class="ai-pulse" cx="10" cy="10" r="8" fill="${color}" opacity="0.85"/>
-      <text x="10" y="14.5" text-anchor="middle" font-size="11" fill="white">${emoji}</text>
-    </svg>`;
+  function setIcon(id, svgHTML){
+    var el = document.getElementById(id);
+    if(el && !players[id]) el.innerHTML = svgHTML;
   }
 
-  // ── Поиск (все 4 панели) ──
-  ['lottie-search-main','lottie-search-light','lottie-search-kits','lottie-search-tv'].forEach(function(id){
-    setIcon(id, searchSVG);
-  });
+  // Поиск — теперь Lottie из ICONS выше
+  // Обновить — теперь Lottie из ICONS выше
 
-  // ── Шапка ──
-  setIcon('lottie-update',   updateSVG);
-  setIcon('lottie-cart',     cartSVG);
-  setIcon('lottie-feedback', feedbackSVG);
-  setIcon('lottie-photo',    photoSVG);
+  // Кнопки корзины
+  setIcon('lottie-send-order', `<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><g style="animation:ai-up 1.8s ease-in-out infinite"><rect x="1" y="5" width="16" height="10" rx="2" fill="rgba(255,255,255,0.25)" stroke="white" stroke-width="1.6"/><polyline points="1,6 9,11 17,6" stroke="white" stroke-width="1.6" stroke-linecap="round" fill="none"/></g></svg>`);
+  setIcon('lottie-send-admin', `<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><g style="animation:ai-pulse 2s ease-in-out infinite;transform-origin:9px 9px"><circle cx="9" cy="5" r="3.5" stroke="white" stroke-width="1.6"/><path d="M2 16c0-3.866 3.134-7 7-7s7 3.134 7 7" stroke="white" stroke-width="1.6" stroke-linecap="round"/></g></svg>`);
+  setIcon('lottie-cart-excel', `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><g style="animation:ai-down 1.5s ease-in-out infinite"><line x1="8" y1="2" x2="8" y2="10" stroke="white" stroke-width="2" stroke-linecap="round"/><polyline points="4,7 8,11 12,7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/><line x1="2" y1="14" x2="14" y2="14" stroke="white" stroke-width="2" stroke-linecap="round"/></g></svg>`);
 
-  // ── Корзина ──
-  setIcon('lottie-send-order', sendSVG);
-  setIcon('lottie-send-admin', adminSVG);
-  setIcon('lottie-cart-excel', excelSVG);
-
-  // ── Сайдбар ──
+  // Сайдбар без файлов — цветные кружки
+  function makeCatSVG(emoji, color){
+    return `<svg width="26" height="26" viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg"><circle cx="13" cy="13" r="11" fill="${color}" opacity="0.85"/><text x="13" y="17.5" text-anchor="middle" font-size="13" fill="white">${emoji}</text></svg>`;
+  }
   setIcon('lottie-cat-all',    makeCatSVG('🗂','#4a7fc1'));
-  setIcon('lottie-cat-torg',   makeCatSVG('🏪','#4a7fc1'));
   setIcon('lottie-cat-uvelir', makeCatSVG('💎','#b84580'));
-  setIcon('lottie-cat-kids',   makeCatSVG('👧','#c0392b'));
   setIcon('lottie-cat-reklam', makeCatSVG('📢','#c07a2a'));
-  setIcon('lottie-cat-kanc',   makeCatSVG('📎','#7458b8'));
-  setIcon('lottie-cat-light',  makeCatSVG('💡','#e07a20'));
-  setIcon('lottie-cat-tv',     makeCatSVG('📺','#0e7490'));
-  setIcon('lottie-cat-it',     makeCatSVG('💻','#0e6ba8'));
   setIcon('lottie-cat-kits',   makeCatSVG('📦','#6b48c8'));
-  setIcon('lottie-cat-nlist',  makeCatSVG('📋','#be5103'));
 
 })();
 
