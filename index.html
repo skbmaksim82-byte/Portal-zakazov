@@ -337,13 +337,21 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
 .td-section-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:10px;font-weight:700;white-space:nowrap;border:1px solid currentColor;opacity:.85;}
 /* ── Подразделы ── */
-#subcatBar{display:none;padding:8px 16px 0;gap:6px;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;}
-#subcatBar.visible{display:flex;}
-.subcat-label{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-right:4px;white-space:nowrap;}
-.subcat-btn{display:inline-flex;align-items:center;gap:5px;padding:5px 13px 5px 10px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;white-space:nowrap;margin-bottom:8px;}
-.subcat-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--surface3);}
-.subcat-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);}
-.subcat-btn .subcat-cnt{font-size:10px;opacity:.75;font-weight:800;}
+/* ── Экран выбора подраздела ── */
+.subcat-card{display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;padding:18px 20px 16px;border-radius:14px;border:1.5px solid var(--border);background:var(--surface2);cursor:pointer;transition:all .18s;min-height:100px;gap:8px;position:relative;overflow:hidden;}
+.subcat-card:hover{border-color:var(--accent);background:var(--surface3);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.12);}
+.subcat-card.all-card{border-style:dashed;border-color:var(--text3);background:var(--surface);}
+.subcat-card.all-card:hover{border-color:var(--accent);background:var(--surface2);}
+.subcat-card-name{font-size:13px;font-weight:800;color:var(--text);line-height:1.3;}
+.subcat-card-cnt{font-size:22px;font-weight:900;color:var(--accent);font-family:'JetBrains Mono',monospace;line-height:1;}
+.subcat-card-arrow{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:18px;opacity:.25;transition:opacity .15s;}
+.subcat-card:hover .subcat-card-arrow{opacity:.7;}
+/* Полоска подраздела над таблицей */
+#subcatBreadcrumb{display:none;align-items:center;gap:8px;padding:8px 16px;background:var(--surface2);border-bottom:1px solid var(--border);flex-shrink:0;}
+#subcatBreadcrumb.show{display:flex;}
+.subcat-bc-link{font-size:12px;font-weight:700;color:var(--accent);cursor:pointer;text-decoration:underline;text-underline-offset:2px;}
+.subcat-bc-sep{color:var(--text3);font-size:12px;}
+.subcat-bc-cur{font-size:12px;font-weight:800;color:var(--text);}
 #fileInput{display:none;}
 
 
@@ -388,7 +396,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <div>
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="logo-text">Портал заказов — Склад</div>
-        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.43</div>
+        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.44</div>
       </div>
       <div class="logo-sub" id="catalogInfo">Загрузка…</div>
     </div>
@@ -451,7 +459,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <ul class="authors-list" id="authorsList">
       <li><span>👤</span> —</li>
     </ul>
-    <div style="font-size:11px;color:var(--text3);margin-bottom:16px;">Версия <span id="modalAppVersion">1.43</span> · 2026</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:16px;">Версия <span id="modalAppVersion">1.44</span> · 2026</div>
     <button onclick="document.getElementById('authorsOverlay').classList.remove('show')"
       style="background:linear-gradient(135deg,#4a7fc1,#7458b8);color:#fff;border:none;border-radius:10px;
       padding:10px 28px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;
@@ -543,9 +551,17 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
       <div class="results-info" id="resultsInfo">—</div>
       <button onclick="exportToExcel('catalog')" title="Выгрузить в Excel" style="background:linear-gradient(135deg,#1a7a3a,#2aaa5a);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;white-space:nowrap;transition:all .2s;">📥 Excel</button>
     </div>
-    <!-- Панель подразделов — появляется при выборе категории с подразделами -->
-    <div id="subcatBar">
-      <span class="subcat-label">Подраздел:</span>
+    <!-- Экран выбора подраздела -->
+    <div id="subcatScreen" style="display:none;flex:1;overflow-y:auto;padding:24px 28px;">
+      <div id="subcatScreenTitle" style="font-size:13px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:20px;">Выберите подраздел</div>
+      <div id="subcatGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;"></div>
+    </div>
+    <!-- Хлебная крошка: Раздел → Подраздел (показывается когда подраздел выбран) -->
+    <div id="subcatBreadcrumb">
+      <span id="subcatBcCatLink" class="subcat-bc-link" onclick="backToSubcatScreen()">←</span>
+      <span class="subcat-bc-sep">›</span>
+      <span id="subcatBcCur" class="subcat-bc-cur"></span>
+      <span style="margin-left:auto;font-size:11px;color:var(--text3);" id="subcatBcCount"></span>
     </div>
     <div class="table-wrap" id="tableWrap">
       <table>
@@ -1045,7 +1061,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ═══ ВЕРСИЯ ПРИЛОЖЕНИЯ ═══
-var APP_VERSION = '1.43';
+var APP_VERSION = '1.44';
 // При каждом обновлении index.html — менять только эту строку (1.17, 1.18 и т.д.)
 (function(){
   var el = document.getElementById('appVersionBadge');
@@ -2135,77 +2151,137 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 
 // ═══ ПОДРАЗДЕЛЫ ═══
-// Категории у которых есть подразделы (определяется динамически после загрузки)
-function buildSubcatBar(cat){
-  var bar = document.getElementById('subcatBar');
-  if(!bar) return;
-  // Собираем уникальные подразделы для текущей категории
+var currentCatForSubcat = ''; // запоминаем раздел для возврата
+
+function getSubcatData(cat){
   var subcats = [];
   var counts = {};
+  var totalCat = 0;
   allItems.forEach(function(it){
     if(it.cat !== cat) return;
+    totalCat++;
     var s = it.subcat || '';
     if(!s) return;
     if(!counts[s]){ counts[s]=0; subcats.push(s); }
     counts[s]++;
   });
-  // Если нет подразделов — скрываем бар
-  if(!subcats.length){
-    bar.className = 'subcatBar'; // убираем visible
-    bar.style.display = 'none';
+  subcats.sort();
+  return {subcats:subcats, counts:counts, total:totalCat};
+}
+
+function showSubcatScreen(cat){
+  currentCatForSubcat = cat;
+  var data = getSubcatData(cat);
+
+  // Нет подразделов — сразу показываем таблицу
+  if(!data.subcats.length){
+    hideSubcatScreen();
     currentSubcat = '';
+    showCatalogPanel();
+    applyFilters();
     return;
   }
-  // Сортируем
-  subcats.sort();
-  // Строим кнопки
-  bar.innerHTML = '<span class="subcat-label">Подраздел:</span>';
-  // Кнопка "Все"
-  var btnAll = document.createElement('button');
-  btnAll.className = 'subcat-btn' + (currentSubcat==='' ? ' active' : '');
-  btnAll.innerHTML = 'Все <span class="subcat-cnt">(' + allItems.filter(function(i){return i.cat===cat;}).length + ')</span>';
-  btnAll.onclick = function(){ selectSubcat(''); };
-  bar.appendChild(btnAll);
-  // Кнопки подразделов
-  subcats.forEach(function(s){
-    var btn = document.createElement('button');
-    btn.className = 'subcat-btn' + (currentSubcat===s ? ' active' : '');
-    btn.innerHTML = s + ' <span class="subcat-cnt">(' + counts[s] + ')</span>';
-    btn.onclick = (function(sub){ return function(){ selectSubcat(sub); }; })(s);
-    bar.appendChild(btn);
+
+  var screen = document.getElementById('subcatScreen');
+  var grid = document.getElementById('subcatGrid');
+  var title = document.getElementById('subcatScreenTitle');
+  if(!screen) return;
+
+  // Заголовок
+  title.textContent = cat;
+
+  // Строим карточки
+  grid.innerHTML = '';
+
+  // Карточка "Все позиции"
+  var cardAll = document.createElement('div');
+  cardAll.className = 'subcat-card all-card';
+  cardAll.innerHTML = '<div class="subcat-card-name" style="color:var(--text3);">Все позиции</div><div class="subcat-card-cnt" style="color:var(--text3);">' + data.total.toLocaleString('ru') + '</div><span class="subcat-card-arrow">→</span>';
+  cardAll.onclick = function(){ selectSubcatFromScreen(''); };
+  grid.appendChild(cardAll);
+
+  // Карточки подразделов
+  data.subcats.forEach(function(s){
+    var card = document.createElement('div');
+    card.className = 'subcat-card';
+    card.innerHTML = '<div class="subcat-card-name">' + s + '</div><div class="subcat-card-cnt">' + (data.counts[s]||0).toLocaleString('ru') + '</div><span class="subcat-card-arrow">→</span>';
+    card.onclick = (function(sub){ return function(){ selectSubcatFromScreen(sub); }; })(s);
+    grid.appendChild(card);
   });
-  bar.style.display = 'flex';
+
+  // Показываем экран, скрываем таблицу и хлебную крошку
+  screen.style.display = 'flex';
+  screen.style.flexDirection = 'column';
+  var tw = document.getElementById('tableWrap');
+  if(tw) tw.style.display = 'none';
+  var bc = document.getElementById('subcatBreadcrumb');
+  if(bc) bc.className = 'subcatBreadcrumb'; // скрыть
 }
 
-function selectSubcat(sub){
+function selectSubcatFromScreen(sub){
   currentSubcat = sub;
-  // Обновляем активную кнопку
-  document.querySelectorAll('.subcat-btn').forEach(function(btn){
-    var label = btn.textContent.replace(/\s*\(\d+\)$/,'').trim();
-    btn.classList.toggle('active', sub==='' ? label==='Все' : label===sub);
-  });
+
+  // Скрываем экран подразделов
+  var screen = document.getElementById('subcatScreen');
+  if(screen) screen.style.display = 'none';
+
+  // Показываем таблицу
+  var tw = document.getElementById('tableWrap');
+  if(tw) tw.style.display = '';
+
+  // Хлебная крошка
+  var bc = document.getElementById('subcatBreadcrumb');
+  var bcCat = document.getElementById('subcatBcCatLink');
+  var bcCur = document.getElementById('subcatBcCur');
+  var bcCount = document.getElementById('subcatBcCount');
+  if(bc && bcCat && bcCur){
+    bcCat.textContent = '← ' + currentCatForSubcat;
+    bcCur.textContent = sub || 'Все позиции';
+    bc.className = 'subcatBreadcrumb show';
+    if(bcCount) bcCount.textContent = '';
+  }
+
+  showCatalogPanel();
   applyFilters();
+
+  // Обновляем счётчик в хлебной крошке после фильтрации
+  if(bcCount) bcCount.textContent = filteredItems.length.toLocaleString('ru') + ' поз.';
 }
 
-function hideSubcatBar(){
-  var bar = document.getElementById('subcatBar');
-  if(bar){ bar.style.display='none'; bar.innerHTML='<span class="subcat-label">Подраздел:</span>'; }
+function backToSubcatScreen(){
+  // Возврат к экрану выбора подраздела
   currentSubcat = '';
+  var bc = document.getElementById('subcatBreadcrumb');
+  if(bc) bc.className = 'subcatBreadcrumb';
+  var tw = document.getElementById('tableWrap');
+  if(tw) tw.style.display = 'none';
+  showSubcatScreen(currentCatForSubcat);
+}
+
+function hideSubcatScreen(){
+  var screen = document.getElementById('subcatScreen');
+  if(screen) screen.style.display = 'none';
+  var bc = document.getElementById('subcatBreadcrumb');
+  if(bc) bc.className = 'subcatBreadcrumb';
+  var tw = document.getElementById('tableWrap');
+  if(tw) tw.style.display = '';
+  currentSubcat = '';
+  currentCatForSubcat = '';
 }
 
 function selectCat(c){
-  currentSubcat=''; // сбрасываем подраздел при смене категории
+  currentSubcat='';
   currentCat=c;
   document.querySelectorAll(".cat-btn").forEach(function(b){b.classList.remove("active");});
   (document.getElementById("btn-"+c)||document.getElementById("btn-all")).classList.add("active");
-  if(c==='light'){hideSubcatBar();showLightPanel();return;}
-  if(c==='kits'){hideSubcatBar();showKitsPanel();return;}
-  if(c==='tv'){hideSubcatBar();showTvPanel();return;}
-  if(c==='nlist'){hideSubcatBar();showNlistPanel();return;}
-  if(c==='karikids'||c==='all'){hideSubcatBar();showCatalogPanel();applyFilters();return;}
+  if(c==='light'){hideSubcatScreen();showLightPanel();return;}
+  if(c==='kits'){hideSubcatScreen();showKitsPanel();return;}
+  if(c==='tv'){hideSubcatScreen();showTvPanel();return;}
+  if(c==='nlist'){hideSubcatScreen();showNlistPanel();return;}
+  if(c==='karikids'||c==='all'){hideSubcatScreen();showCatalogPanel();applyFilters();return;}
+  // Для обычных разделов — показываем экран выбора подраздела
   showCatalogPanel();
-  buildSubcatBar(c);
-  applyFilters();
+  showSubcatScreen(c);
 }
 function onSearch(){
   currentSearch = document.getElementById("searchInput").value;
