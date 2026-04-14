@@ -336,6 +336,14 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
 .td-section-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:10px;font-weight:700;white-space:nowrap;border:1px solid currentColor;opacity:.85;}
+/* ── Подразделы ── */
+#subcatBar{display:none;padding:8px 16px 0;gap:6px;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;}
+#subcatBar.visible{display:flex;}
+.subcat-label{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-right:4px;white-space:nowrap;}
+.subcat-btn{display:inline-flex;align-items:center;gap:5px;padding:5px 13px 5px 10px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;white-space:nowrap;margin-bottom:8px;}
+.subcat-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--surface3);}
+.subcat-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+.subcat-btn .subcat-cnt{font-size:10px;opacity:.75;font-weight:800;}
 #fileInput{display:none;}
 
 
@@ -380,7 +388,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <div>
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="logo-text">Портал заказов — Склад</div>
-        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.42</div>
+        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.43</div>
       </div>
       <div class="logo-sub" id="catalogInfo">Загрузка…</div>
     </div>
@@ -443,7 +451,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <ul class="authors-list" id="authorsList">
       <li><span>👤</span> —</li>
     </ul>
-    <div style="font-size:11px;color:var(--text3);margin-bottom:16px;">Версия <span id="modalAppVersion">1.36</span> · 2026</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:16px;">Версия <span id="modalAppVersion">1.43</span> · 2026</div>
     <button onclick="document.getElementById('authorsOverlay').classList.remove('show')"
       style="background:linear-gradient(135deg,#4a7fc1,#7458b8);color:#fff;border:none;border-radius:10px;
       padding:10px 28px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;
@@ -534,6 +542,10 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
       </div>
       <div class="results-info" id="resultsInfo">—</div>
       <button onclick="exportToExcel('catalog')" title="Выгрузить в Excel" style="background:linear-gradient(135deg,#1a7a3a,#2aaa5a);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;white-space:nowrap;transition:all .2s;">📥 Excel</button>
+    </div>
+    <!-- Панель подразделов — появляется при выборе категории с подразделами -->
+    <div id="subcatBar">
+      <span class="subcat-label">Подраздел:</span>
     </div>
     <div class="table-wrap" id="tableWrap">
       <table>
@@ -1033,7 +1045,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ═══ ВЕРСИЯ ПРИЛОЖЕНИЯ ═══
-var APP_VERSION = '1.42';
+var APP_VERSION = '1.43';
 // При каждом обновлении index.html — менять только эту строку (1.17, 1.18 и т.д.)
 (function(){
   var el = document.getElementById('appVersionBadge');
@@ -1100,6 +1112,7 @@ function parseSlabotRows(rows){
   var iName  = hRow.findIndex(function(c){ return c.indexOf('наименование')>=0; });
   var iShort = hRow.findIndex(function(c){ return c.indexOf('краткое')>=0||c.indexOf('описание')>=0; });
   var iCat   = hRow.findIndex(function(c){ return c.indexOf('категория')>=0; });
+  var iSubcat = hRow.findIndex(function(c){ return c.indexOf('подраздел')>=0; });
   if(iCode<0) iCode=0; if(iName<0) iName=1; if(iShort<0) iShort=2; if(iCat<0) iCat=4;
 
   var newCats = {};
@@ -1110,6 +1123,7 @@ function parseSlabotRows(rows){
     var name = String(r[iName]||'').trim();
     var cat  = String(r[iCat]||'').trim() || 'Прочее';
     var item = {code:code, name:name, short:String(r[iShort]||'').trim()};
+    if(iSubcat>=0&&r[iSubcat]){var sv=String(r[iSubcat]||'').trim();if(sv)item.subcat=sv;}
     if(!newCats[cat]) newCats[cat]=[];
     newCats[cat].push(item);
   }
@@ -1263,6 +1277,7 @@ function parseRows(rows){
   var iShort=h.findIndex(function(c){return c.indexOf("Краткое")>=0;});
   var iGrp=h.findIndex(function(c){return c.indexOf("группа")>=0;});
   var iPhoto=h.findIndex(function(c){return c.indexOf("Фото")>=0||c.indexOf("Photo")>=0||c.indexOf("URL")>=0;});
+  var iSubcat=h.findIndex(function(c){return c.indexOf("Подраздел")>=0;});
   var out={};CAT_ORDER.forEach(function(c){out[c]=[];});
   for(var i=hi+1;i<rows.length;i++){
     var r=rows[i];if(!r||!r.length)continue;
@@ -1271,6 +1286,7 @@ function parseRows(rows){
     var name=String(r[iName]||"").trim();
     var c=catOf(name,r[iGrp]);
     var item={code:code,name:name,short:String(r[iShort]||"").trim()};
+    if(iSubcat>=0&&r[iSubcat]){var sc=String(r[iSubcat]).trim();if(sc)item.subcat=sc;}
     if(iPhoto>=0&&r[iPhoto]){var pv=String(r[iPhoto]).trim();if(pv)item.photo=pv;}
     out[c].push(item);
   }
@@ -1326,12 +1342,12 @@ function initShopSelect(){
 }
 
 // ═══ CATALOG STATE ═══
-var allItems=[],currentCat="all",currentSearch="",currentPhotoFilter="all",filteredItems=[],renderedCount=0,isRendering=false,cart={};
+var allItems=[],currentCat="all",currentSearch="",currentPhotoFilter="all",currentSubcat="",filteredItems=[],renderedCount=0,isRendering=false,cart={};
 var PAGE=60;
 
 function loadCatalog(obj,label){
   allItems=[];
-  for(var c in obj){obj[c].forEach(function(it){allItems.push({code:it.code,name:it.name,short:it.short,cat:c});});}
+  for(var c in obj){obj[c].forEach(function(it){allItems.push({code:it.code,name:it.name,short:it.short,cat:c,subcat:it.subcat||''});});}
   rebuildSidebar(obj);
   currentCat="all";currentSearch="";
   document.getElementById("searchInput").value="";
@@ -2118,16 +2134,77 @@ document.addEventListener('DOMContentLoaded', function(){
   }
 });
 
+// ═══ ПОДРАЗДЕЛЫ ═══
+// Категории у которых есть подразделы (определяется динамически после загрузки)
+function buildSubcatBar(cat){
+  var bar = document.getElementById('subcatBar');
+  if(!bar) return;
+  // Собираем уникальные подразделы для текущей категории
+  var subcats = [];
+  var counts = {};
+  allItems.forEach(function(it){
+    if(it.cat !== cat) return;
+    var s = it.subcat || '';
+    if(!s) return;
+    if(!counts[s]){ counts[s]=0; subcats.push(s); }
+    counts[s]++;
+  });
+  // Если нет подразделов — скрываем бар
+  if(!subcats.length){
+    bar.className = 'subcatBar'; // убираем visible
+    bar.style.display = 'none';
+    currentSubcat = '';
+    return;
+  }
+  // Сортируем
+  subcats.sort();
+  // Строим кнопки
+  bar.innerHTML = '<span class="subcat-label">Подраздел:</span>';
+  // Кнопка "Все"
+  var btnAll = document.createElement('button');
+  btnAll.className = 'subcat-btn' + (currentSubcat==='' ? ' active' : '');
+  btnAll.innerHTML = 'Все <span class="subcat-cnt">(' + allItems.filter(function(i){return i.cat===cat;}).length + ')</span>';
+  btnAll.onclick = function(){ selectSubcat(''); };
+  bar.appendChild(btnAll);
+  // Кнопки подразделов
+  subcats.forEach(function(s){
+    var btn = document.createElement('button');
+    btn.className = 'subcat-btn' + (currentSubcat===s ? ' active' : '');
+    btn.innerHTML = s + ' <span class="subcat-cnt">(' + counts[s] + ')</span>';
+    btn.onclick = (function(sub){ return function(){ selectSubcat(sub); }; })(s);
+    bar.appendChild(btn);
+  });
+  bar.style.display = 'flex';
+}
+
+function selectSubcat(sub){
+  currentSubcat = sub;
+  // Обновляем активную кнопку
+  document.querySelectorAll('.subcat-btn').forEach(function(btn){
+    var label = btn.textContent.replace(/\s*\(\d+\)$/,'').trim();
+    btn.classList.toggle('active', sub==='' ? label==='Все' : label===sub);
+  });
+  applyFilters();
+}
+
+function hideSubcatBar(){
+  var bar = document.getElementById('subcatBar');
+  if(bar){ bar.style.display='none'; bar.innerHTML='<span class="subcat-label">Подраздел:</span>'; }
+  currentSubcat = '';
+}
+
 function selectCat(c){
+  currentSubcat=''; // сбрасываем подраздел при смене категории
   currentCat=c;
   document.querySelectorAll(".cat-btn").forEach(function(b){b.classList.remove("active");});
   (document.getElementById("btn-"+c)||document.getElementById("btn-all")).classList.add("active");
-  if(c==='light'){showLightPanel();return;}
-  if(c==='kits'){showKitsPanel();return;}
-  if(c==='tv'){showTvPanel();return;}
-  if(c==='nlist'){showNlistPanel();return;}
-  if(c==='karikids'){showCatalogPanel();applyFilters();return;}
+  if(c==='light'){hideSubcatBar();showLightPanel();return;}
+  if(c==='kits'){hideSubcatBar();showKitsPanel();return;}
+  if(c==='tv'){hideSubcatBar();showTvPanel();return;}
+  if(c==='nlist'){hideSubcatBar();showNlistPanel();return;}
+  if(c==='karikids'||c==='all'){hideSubcatBar();showCatalogPanel();applyFilters();return;}
   showCatalogPanel();
+  buildSubcatBar(c);
   applyFilters();
 }
 function onSearch(){
@@ -2197,6 +2274,7 @@ function applyFilters(){
       if(q&&!(it.name.toLowerCase().indexOf(q)>=0||it.code.toLowerCase().indexOf(q)>=0||(it.short&&it.short.toLowerCase().indexOf(q)>=0)))return false;
     } else {
       if(currentCat!=="all"&&it.cat!==currentCat)return false;
+      if(currentSubcat&&(it.subcat||"")!==currentSubcat)return false;
       if(q&&!(it.name.toLowerCase().indexOf(q)>=0||it.code.toLowerCase().indexOf(q)>=0||(it.short&&it.short.toLowerCase().indexOf(q)>=0)))return false;
     }
     // Фильтр по фото
@@ -2629,6 +2707,7 @@ function parseRowsForCat(rows, fixedCat){
   var iDesc=h.findIndex(function(c){return c==='Описание'||c.indexOf("Описание функционала")>=0;});
   if(iShort<0 && iDesc>=0) iShort=iDesc;
   var iThumb=h.findIndex(function(c){return c.indexOf("Фото")>=0||c.indexOf("Photo")>=0;});
+  var iSubcat=h.findIndex(function(c){return c.indexOf("Подраздел")>=0;});
   var out=[];
   for(var i=hi+1;i<rows.length;i++){
     var r=rows[i];if(!r||!r.length)continue;
@@ -2643,6 +2722,7 @@ function parseRowsForCat(rows, fixedCat){
     // Раздел/Категория (для светового и других листов)
     var iCatCol=h.findIndex(function(c){return c==='Раздел'||c==='Категория'||c==='Группа';});
     if(iCatCol>=0&&r[iCatCol]){ var cv=String(r[iCatCol]).trim(); if(cv) item.cat=cv; }
+    if(iSubcat>=0&&r[iSubcat]){ var sv=String(r[iSubcat]).trim(); if(sv) item.subcat=sv; }
     if(iThumb>=0&&r[iThumb]){
       var photoVal=String(r[iThumb]).trim();
       if(photoVal) item.photo=photoVal; // URL из Excel (для всех категорий)
