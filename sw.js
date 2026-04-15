@@ -1,4 +1,4 @@
-const CACHE_NAME = 'portal-zakazov-v46';
+const CACHE_NAME = 'portal-zakazov-v47';
 const ASSETS = ['/', '/index.html'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS)));
