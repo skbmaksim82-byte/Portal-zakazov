@@ -147,8 +147,10 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
   padding:12px 22px;display:flex;align-items:center;gap:14px;}
 .search-wrap{flex:1;position:relative;}
 .search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:14px;pointer-events:none;}
-.search-input{width:100%;background:var(--surface3);border:1.5px solid var(--border);border-radius:9px;
-  padding:8px 12px 8px 36px;color:var(--text);font-family:'Nunito',sans-serif;font-size:13px;font-weight:500;outline:none;transition:all .2s;}
+.search-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:20px;height:20px;border-radius:50%;background:var(--text3);border:none;cursor:pointer;display:none;align-items:center;justify-content:center;padding:0;transition:all .15s;flex-shrink:0;}
+.search-clear:hover{background:var(--accent);}
+.search-clear svg{width:10px;height:10px;fill:#fff;}
+.search-input{width:100%;background:var(--surface3);border:1.5px solid var(--border);border-radius:9px;padding:8px 34px 8px 36px;color:var(--text);font-family:'Nunito',sans-serif;font-size:13px;font-weight:500;outline:none;transition:all .2s;}
 .search-input:focus{border-color:var(--btn-add);background:var(--surface2);box-shadow:0 0 0 3px rgba(74,127,193,.12);}
 .search-input::placeholder{color:var(--text3);}
 .results-info{font-size:12px;color:var(--text3);white-space:nowrap;font-family:'JetBrains Mono',monospace;
@@ -396,7 +398,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <div>
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="logo-text">Портал заказов — Склад</div>
-        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.44</div>
+        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.45</div>
       </div>
       <div class="logo-sub" id="catalogInfo">Загрузка…</div>
     </div>
@@ -459,7 +461,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <ul class="authors-list" id="authorsList">
       <li><span>👤</span> —</li>
     </ul>
-    <div style="font-size:11px;color:var(--text3);margin-bottom:16px;">Версия <span id="modalAppVersion">1.44</span> · 2026</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:16px;">Версия <span id="modalAppVersion">1.45</span> · 2026</div>
     <button onclick="document.getElementById('authorsOverlay').classList.remove('show')"
       style="background:linear-gradient(135deg,#4a7fc1,#7458b8);color:#fff;border:none;border-radius:10px;
       padding:10px 28px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;
@@ -541,7 +543,10 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <div class="toolbar">
       <div class="search-wrap">
         <span class="search-icon lottie-icon" id="lottie-search-main" style="width:20px;height:20px;left:8px;"></span>
-        <input type="text" class="search-input" id="searchInput" placeholder="Поиск по всем категориям — наименование или код…" oninput="onSearch()">
+        <input type="text" class="search-input" id="searchInput" placeholder="Поиск по всем категориям — наименование или код…" oninput="onSearch();updateSearchClear('searchInput','searchClear')">
+        <button class="search-clear" id="searchClear" onclick="clearSearch('main')" title="Очистить поиск">
+          <svg viewBox="0 0 10 10"><path d="M1 1l8 8M9 1l-8 8" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
       </div>
       <div style="display:flex;gap:2px;flex-shrink:0;">
         <button id="photoFilterAll" onclick="setPhotoFilter('all')" style="padding:5px 10px;border:1.5px solid var(--border);border-radius:7px 0 0 7px;background:var(--surface3);color:var(--text);font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;">Все</button>
@@ -580,7 +585,10 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
       <div class="toolbar">
         <div class="search-wrap">
           <span class="search-icon lottie-icon" id="lottie-search-light" style="width:20px;height:20px;left:8px;"></span>
-          <input type="text" class="search-input" id="lightSearch" placeholder="Поиск по световому оборудованию…" oninput="onLightSearch()">
+          <input type="text" class="search-input" id="lightSearch" placeholder="Поиск по световому оборудованию…" oninput="onLightSearch();updateSearchClear('lightSearch','lightSearchClear')">
+        <button class="search-clear" id="lightSearchClear" onclick="clearSearch('light')" title="Очистить поиск">
+          <svg viewBox="0 0 10 10"><path d="M1 1l8 8M9 1l-8 8" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
         </div>
         <select id="light-cat-filter" onchange="onLightCatFilter()" style="height:36px;padding:0 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;cursor:pointer;display:none;">
           <option value="">Все разделы</option>
@@ -616,7 +624,10 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <div class="toolbar">
       <div class="search-wrap">
         <span class="search-icon">🔍</span>
-        <input type="text" class="search-input" id="kitsSearch" placeholder="Поиск по комплектам…" oninput="onKitsSearch()">
+        <input type="text" class="search-input" id="kitsSearch" placeholder="Поиск по комплектам…" oninput="onKitsSearch();updateSearchClear('kitsSearch','kitsSearchClear')">
+        <button class="search-clear" id="kitsSearchClear" onclick="clearSearch('kits')" title="Очистить поиск">
+          <svg viewBox="0 0 10 10"><path d="M1 1l8 8M9 1l-8 8" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
       </div>
       <select id="kits-cat-filter" onchange="onKitsCatFilter()" style="height:36px;padding:0 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;cursor:pointer;display:none;">
         <option value="">Все разделы</option>
@@ -655,7 +666,10 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
       <div class="toolbar">
         <div class="search-wrap">
           <span class="search-icon">🔍</span>
-          <input type="text" class="search-input" id="tvSearch" placeholder="Поиск по слаботочному оборудованию…" oninput="onTvSearch()">
+          <input type="text" class="search-input" id="tvSearch" placeholder="Поиск по слаботочному оборудованию…" oninput="onTvSearch();updateSearchClear('tvSearch','tvSearchClear')">
+        <button class="search-clear" id="tvSearchClear" onclick="clearSearch('tv')" title="Очистить поиск">
+          <svg viewBox="0 0 10 10"><path d="M1 1l8 8M9 1l-8 8" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
         </div>
         <select id="slabot-cat-filter" onchange="onSlabotCatFilter()" style="height:36px;padding:0 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;cursor:pointer;display:none;">
           <option value="">Все категории</option>
@@ -1061,7 +1075,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ═══ ВЕРСИЯ ПРИЛОЖЕНИЯ ═══
-var APP_VERSION = '1.44';
+var APP_VERSION = '1.45';
 // При каждом обновлении index.html — менять только эту строку (1.17, 1.18 и т.д.)
 (function(){
   var el = document.getElementById('appVersionBadge');
@@ -2283,6 +2297,37 @@ function selectCat(c){
   showCatalogPanel();
   showSubcatScreen(c);
 }
+// ═══ КНОПКА ОЧИСТКИ ПОИСКА ═══
+function updateSearchClear(inputId, clearId){
+  var inp = document.getElementById(inputId);
+  var btn = document.getElementById(clearId);
+  if(!inp || !btn) return;
+  btn.style.display = inp.value.length > 0 ? 'flex' : 'none';
+}
+
+function clearSearch(panel){
+  if(panel === 'main'){
+    document.getElementById('searchInput').value = '';
+    document.getElementById('searchClear').style.display = 'none';
+    currentSearch = '';
+    applyFilters();
+  } else if(panel === 'light'){
+    document.getElementById('lightSearch').value = '';
+    document.getElementById('lightSearchClear').style.display = 'none';
+    lightSearch = '';
+    applyLightFilters();
+  } else if(panel === 'kits'){
+    document.getElementById('kitsSearch').value = '';
+    document.getElementById('kitsSearchClear').style.display = 'none';
+    onKitsSearch();
+  } else if(panel === 'tv'){
+    document.getElementById('tvSearch').value = '';
+    document.getElementById('tvSearchClear').style.display = 'none';
+    tvSearch = '';
+    applyTvFilters();
+  }
+}
+
 function onSearch(){
   currentSearch = document.getElementById("searchInput").value;
   var q = currentSearch.toLowerCase().trim();
