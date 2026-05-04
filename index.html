@@ -412,7 +412,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <div>
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="logo-text">Портал заказов — Склад</div>
-        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.49</div>
+        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.50</div>
       </div>
       <div class="logo-sub" id="catalogInfo">Загрузка…</div>
     </div>
@@ -475,7 +475,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <ul class="authors-list" id="authorsList">
       <li><span>👤</span> —</li>
     </ul>
-    <div style="font-size:11px;color:var(--text3);margin-bottom:16px;">Версия <span id="modalAppVersion">1.49</span> · 2026</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:16px;">Версия <span id="modalAppVersion">1.50</span> · 2026</div>
     <button onclick="document.getElementById('authorsOverlay').classList.remove('show')"
       style="background:linear-gradient(135deg,#4a7fc1,#7458b8);color:#fff;border:none;border-radius:10px;
       padding:10px 28px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;
@@ -925,7 +925,17 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
       </div>
       <div id="idm-cat-wrap" style="display:none;">
         <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#7a9bc0;margin-bottom:6px;">РАЗДЕЛ</div>
-        <div id="idm-cat" style="font-size:13px;font-weight:700;"></div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;">
+          <div id="idm-cat" style="font-size:13px;font-weight:700;"></div>
+          <button id="idm-analog-btn" onclick="idmToggleAnalogs()" style="display:none;align-items:center;gap:5px;padding:5px 13px;border-radius:20px;border:1.5px solid #b07d00;background:#fff8e0;color:#7a5500;font-size:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;letter-spacing:.3px;transition:all .15s;">
+            ≈ Аналоги <span id="idm-analog-cnt" style="background:rgba(176,125,0,.15);border-radius:10px;padding:1px 7px;font-size:11px;margin-left:2px;"></span>
+          </button>
+        </div>
+      </div>
+      <!-- Панель аналогов в карточке -->
+      <div id="idm-analogs-panel" style="display:none;margin-top:4px;border-radius:12px;border:1.5px solid #f0e8c0;background:#fffdf0;overflow:hidden;">
+        <div style="padding:8px 14px 4px;font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#b07d00;">≈ Взаимозаменяемые аналоги</div>
+        <div id="idm-analogs-list" style="padding:4px 10px 10px;display:flex;flex-direction:column;gap:5px;"></div>
       </div>
       <!-- ══ ИСПОЛЬЗУЕТСЯ В КОМПЛЕКТАХ ══ -->
       <div id="idm-kits-wrap" style="display:none;">
@@ -1089,7 +1099,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ═══ ВЕРСИЯ ПРИЛОЖЕНИЯ ═══
-var APP_VERSION = '1.49';
+var APP_VERSION = '1.50';
 // При каждом обновлении index.html — менять только эту строку (1.17, 1.18 и т.д.)
 (function(){
   var el = document.getElementById('appVersionBadge');
@@ -1725,6 +1735,67 @@ var IDM_HEADER_ICONS = {
   'ИТ оборудование':'💻','Неизвестное оборудование':'❓','light':'💡','karikids':'👧'
 };
 
+function idmToggleAnalogs(){
+  var panel = document.getElementById('idm-analogs-panel');
+  var btn   = document.getElementById('idm-analog-btn');
+  var list  = document.getElementById('idm-analogs-list');
+  if(!panel || !btn || !list) return;
+
+  var isOpen = panel.style.display !== 'none';
+  if(isOpen){
+    panel.style.display = 'none';
+    btn.style.background = '#fff8e0';
+    btn.style.borderColor = '#b07d00';
+    btn.style.color = '#7a5500';
+    return;
+  }
+
+  // Открываем — строим список
+  var item = ANALOG_INDEX[currentItemDetailKey] || allItems.find(function(i){ return i.code===currentItemDetailKey; });
+  var codes = item ? parseAnalogCodes(item.analogs||'') : [];
+  list.innerHTML = '';
+
+  codes.forEach(function(aCode){
+    var info = ANALOG_INDEX[aCode];
+    var row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:8px;background:#fff;border:1px solid #f0e0a0;';
+
+    var codeEl = document.createElement('span');
+    codeEl.style.cssText = "font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:#5a5d6e;flex-shrink:0;";
+    codeEl.textContent = aCode;
+
+    var nameEl = document.createElement('span');
+    nameEl.style.cssText = 'font-size:12px;font-weight:600;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;';
+    nameEl.textContent = info ? info.name : '—';
+    nameEl.title = info ? info.name : aCode;
+
+    var gotoBtn = document.createElement('button');
+    gotoBtn.style.cssText = "flex-shrink:0;padding:3px 10px;border-radius:6px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text2);font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .12s;";
+    gotoBtn.textContent = '→ Открыть';
+    if(info){
+      (function(foundItem){
+        gotoBtn.onclick = function(){ openItemDetail(foundItem, ''); };
+        gotoBtn.onmouseover = function(){ this.style.borderColor='#1a6b3a';this.style.color='#1a6b3a'; };
+        gotoBtn.onmouseout  = function(){ this.style.borderColor='var(--border)';this.style.color='var(--text2)'; };
+      })(info);
+    } else {
+      gotoBtn.disabled = true;
+      gotoBtn.style.opacity = '0.4';
+      gotoBtn.title = 'Позиция не найдена';
+    }
+
+    row.appendChild(codeEl);
+    row.appendChild(nameEl);
+    row.appendChild(gotoBtn);
+    list.appendChild(row);
+  });
+
+  panel.style.display = '';
+  btn.style.background = '#ffe066';
+  btn.style.borderColor = '#e0a800';
+  btn.style.color = '#5a3d00';
+}
+
 function openItemDetail(item, cartKeyPrefix, keepKitPanel) {
   currentItemDetail = item;
   var prefix = cartKeyPrefix || ''; // '' для основного каталога, 'L:' для светового
@@ -1760,6 +1831,26 @@ function openItemDetail(item, cartKeyPrefix, keepKitPanel) {
       + 'color:'+st.color+';background:'+st.bg+';';
     cw.style.display='';
   } else { cw.style.display='none'; }
+
+  // Кнопка Аналоги в карточке
+  var idmAnalogBtn = document.getElementById('idm-analog-btn');
+  var idmAnalogCnt = document.getElementById('idm-analog-cnt');
+  var idmAnalogsPanel = document.getElementById('idm-analogs-panel');
+  if(idmAnalogBtn && idmAnalogCnt && idmAnalogsPanel){
+    // Сбрасываем панель
+    idmAnalogsPanel.style.display = 'none';
+    idmAnalogBtn.style.background = '#fff8e0';
+    idmAnalogBtn.style.borderColor = '#b07d00';
+    idmAnalogBtn.style.color = '#7a5500';
+    var analogStr = item.analogs || '';
+    var analogCodes = parseAnalogCodes(analogStr);
+    if(analogCodes.length > 0){
+      idmAnalogBtn.style.display = 'inline-flex';
+      idmAnalogCnt.textContent = analogCodes.length;
+    } else {
+      idmAnalogBtn.style.display = 'none';
+    }
+  }
 
   // Синхронизируем qty с корзиной
   var key = currentItemDetailKey;
