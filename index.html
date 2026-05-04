@@ -170,8 +170,22 @@ tbody tr:hover{background:#eef1f8!important;}
 tbody tr.in-cart{background:#eef4ff!important;border-left:3px solid var(--btn-add);}
 td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 .td-code{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:var(--text3);}
-.td-name{color:var(--text);font-weight:600;max-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.td-name{color:var(--text);font-weight:600;max-width:0;overflow:visible;}
 .td-short{color:var(--text2);font-size:12px;font-weight:500;text-align:center;}
+/* ── Аналоги ── */
+.analog-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:10px;font-weight:800;letter-spacing:.5px;cursor:pointer;border:1.5px solid #b07d00;color:#7a5500;background:#fff8e0;white-space:nowrap;transition:all .15s;user-select:none;}
+.analog-badge:hover{background:#ffe066;border-color:#e0a800;color:#5a3d00;}
+.analog-badge.open{background:#ffe066;border-color:#e0a800;color:#5a3d00;}
+.analog-row{background:#fffdf0;border-bottom:1px solid #f0e8c0;}
+.analog-row td{padding:0 !important;}
+.analog-inner{padding:8px 16px 10px 56px;display:flex;flex-direction:column;gap:5px;}
+.analog-title{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#b07d00;margin-bottom:2px;}
+.analog-item{display:flex;align-items:center;gap:10px;padding:5px 10px;border-radius:8px;background:#fff;border:1px solid #f0e0a0;transition:background .12s;}
+.analog-item:hover{background:#fffae8;border-color:#e0c060;}
+.analog-code{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:#5a5d6e;flex-shrink:0;}
+.analog-name{font-size:12px;font-weight:600;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.analog-goto{flex-shrink:0;padding:3px 10px;border-radius:6px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text2);font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .12s;}
+.analog-goto:hover{border-color:#1a6b3a;color:#1a6b3a;background:#f0faf5;}
 .qty-wrap{display:flex;align-items:center;justify-content:center;}
 .qty-btn{width:27px;height:27px;background:linear-gradient(135deg,#6a7080,var(--btn-qty));border:none;
   color:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;
@@ -398,7 +412,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <div>
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="logo-text">Портал заказов — Склад</div>
-        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.46</div>
+        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.49</div>
       </div>
       <div class="logo-sub" id="catalogInfo">Загрузка…</div>
     </div>
@@ -461,7 +475,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <ul class="authors-list" id="authorsList">
       <li><span>👤</span> —</li>
     </ul>
-    <div style="font-size:11px;color:var(--text3);margin-bottom:16px;">Версия <span id="modalAppVersion">1.46</span> · 2026</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:16px;">Версия <span id="modalAppVersion">1.49</span> · 2026</div>
     <button onclick="document.getElementById('authorsOverlay').classList.remove('show')"
       style="background:linear-gradient(135deg,#4a7fc1,#7458b8);color:#fff;border:none;border-radius:10px;
       padding:10px 28px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;
@@ -1075,7 +1089,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ═══ ВЕРСИЯ ПРИЛОЖЕНИЯ ═══
-var APP_VERSION = '1.46';
+var APP_VERSION = '1.49';
 // При каждом обновлении index.html — менять только эту строку (1.17, 1.18 и т.д.)
 (function(){
   var el = document.getElementById('appVersionBadge');
@@ -1143,6 +1157,7 @@ function parseSlabotRows(rows){
   var iShort = hRow.findIndex(function(c){ return c.indexOf('краткое')>=0||c.indexOf('описание')>=0; });
   var iCat   = hRow.findIndex(function(c){ return c.indexOf('категория')>=0; });
   var iSubcat = hRow.findIndex(function(c){ return c.indexOf('подраздел')>=0; });
+  var iAnalog = hRow.findIndex(function(c){ return c.indexOf('аналог')>=0; });
   if(iCode<0) iCode=0; if(iName<0) iName=1; if(iShort<0) iShort=2; if(iCat<0) iCat=4;
 
   var newCats = {};
@@ -1154,6 +1169,7 @@ function parseSlabotRows(rows){
     var cat  = String(r[iCat]||'').trim() || 'Прочее';
     var item = {code:code, name:name, short:String(r[iShort]||'').trim()};
     if(iSubcat>=0&&r[iSubcat]){var sv=String(r[iSubcat]||'').trim();if(sv)item.subcat=sv;}
+    if(iAnalog>=0&&r[iAnalog]){var av=String(r[iAnalog]||'').trim();if(av)item.analogs=av;}
     if(!newCats[cat]) newCats[cat]=[];
     newCats[cat].push(item);
   }
@@ -1308,6 +1324,7 @@ function parseRows(rows){
   var iGrp=h.findIndex(function(c){return c.indexOf("группа")>=0;});
   var iPhoto=h.findIndex(function(c){return c.indexOf("Фото")>=0||c.indexOf("Photo")>=0||c.indexOf("URL")>=0;});
   var iSubcat=h.findIndex(function(c){return c.indexOf("Подраздел")>=0;});
+  var iAnalog=h.findIndex(function(c){return c.indexOf("Аналог")>=0||c.indexOf("аналог")>=0;});
   var out={};CAT_ORDER.forEach(function(c){out[c]=[];});
   for(var i=hi+1;i<rows.length;i++){
     var r=rows[i];if(!r||!r.length)continue;
@@ -1317,6 +1334,7 @@ function parseRows(rows){
     var c=catOf(name,r[iGrp]);
     var item={code:code,name:name,short:String(r[iShort]||"").trim()};
     if(iSubcat>=0&&r[iSubcat]){var sc=String(r[iSubcat]).trim();if(sc)item.subcat=sc;}
+    if(iAnalog>=0&&r[iAnalog]){var ac=String(r[iAnalog]).trim();if(ac)item.analogs=ac;}
     if(iPhoto>=0&&r[iPhoto]){var pv=String(r[iPhoto]).trim();if(pv)item.photo=pv;}
     out[c].push(item);
   }
@@ -1377,7 +1395,7 @@ var PAGE=60;
 
 function loadCatalog(obj,label){
   allItems=[];
-  for(var c in obj){obj[c].forEach(function(it){allItems.push({code:it.code,name:it.name,short:it.short,cat:c,subcat:it.subcat||''});});}
+  for(var c in obj){obj[c].forEach(function(it){allItems.push({code:it.code,name:it.name,short:it.short,cat:c,subcat:it.subcat||'',analogs:it.analogs||''});});}
   rebuildSidebar(obj);
   currentCat="all";currentSearch="";
   document.getElementById("searchInput").value="";
@@ -1385,6 +1403,7 @@ function loadCatalog(obj,label){
   document.getElementById("btn-all").classList.add("active");
   applyFilters();
   document.getElementById("catalogInfo").textContent=label;
+  buildAnalogIndex(); // строим индекс кодов для быстрого поиска аналогов
 }
 
 function rebuildSidebar(obj){
@@ -2404,7 +2423,8 @@ function applyFilters(){
     return true;
   });
   renderedCount=0;
-  document.getElementById("tableBody").innerHTML="";
+  document.getElementById("tableBody").innerHTML=""; // analog-row тоже удаляются как дочерние
+  document.querySelectorAll('.analog-badge.open').forEach(function(b){ b.classList.remove('open'); });
   if(!filteredItems.length){
     var tr=document.createElement("tr"),td=document.createElement("td");
     td.colSpan=7;td.style.cssText="text-align:center;padding:40px;color:var(--text3);font-size:14px";
@@ -2443,6 +2463,108 @@ function makeSectionBadge(cat){
   return span;
 }
 
+// ═══ АНАЛОГИ ═══
+// Глобальный индекс: код → {code, name} — строится после загрузки каталога
+var ANALOG_INDEX = {}; // заполняется в buildAnalogIndex()
+
+function buildAnalogIndex(){
+  ANALOG_INDEX = {};
+  allItems.forEach(function(it){ ANALOG_INDEX[it.code] = it; });
+  lightAll.forEach(function(it){ ANALOG_INDEX[it.code] = it; });
+  tvAll.forEach(function(it){ ANALOG_INDEX[it.code] = it; });
+}
+
+function parseAnalogCodes(analogStr){
+  if(!analogStr) return [];
+  var s = analogStr.trim();
+  // Игнорируем "Нет аналогов" и подобные
+  if(/^нет\s/i.test(s)) return [];
+  // Формат слаботочного: "аналог 10000130" или "аналог RUM0512345"
+  if(/^аналог\s+/i.test(s)){
+    var code = s.replace(/^аналог\s+/i,'').trim();
+    return code ? [code] : [];
+  }
+  // Стандартный формат: коды через запятую или точку с запятой
+  return s.split(/[,;]+/).map(function(c){ return c.trim(); }).filter(Boolean);
+}
+
+function toggleAnalogRow(code, tbodyEl){
+  var existingRow = document.getElementById('analog-row-' + CSS.escape(code));
+  var badge = document.getElementById('analog-badge-' + CSS.escape(code));
+  if(existingRow){
+    existingRow.remove();
+    if(badge) badge.classList.remove('open');
+    return;
+  }
+  if(badge) badge.classList.add('open');
+
+  // Найти позицию в allItems
+  var item = allItems.find(function(i){ return i.code === code; });
+  if(!item || !item.analogs) return;
+  var codes = parseAnalogCodes(item.analogs);
+  if(!codes.length) return;
+
+  // Создаём строку аналогов
+  var tr = document.createElement('tr');
+  tr.className = 'analog-row';
+  tr.id = 'analog-row-' + CSS.escape(code);
+  var td = document.createElement('td');
+  td.colSpan = 7;
+
+  var inner = document.createElement('div');
+  inner.className = 'analog-inner';
+
+  var title = document.createElement('div');
+  title.className = 'analog-title';
+  title.textContent = '≈ Взаимозаменяемые аналоги (' + codes.length + ')';
+  inner.appendChild(title);
+
+  codes.forEach(function(aCode){
+    var info = ANALOG_INDEX[aCode];
+    var row = document.createElement('div');
+    row.className = 'analog-item';
+
+    var codeEl = document.createElement('span');
+    codeEl.className = 'analog-code';
+    codeEl.textContent = aCode;
+
+    var nameEl = document.createElement('span');
+    nameEl.className = 'analog-name';
+    nameEl.textContent = info ? info.name : '—';
+    nameEl.title = info ? info.name : aCode;
+
+    var gotoBtn = document.createElement('button');
+    gotoBtn.className = 'analog-goto';
+    gotoBtn.textContent = '→ Открыть';
+    if(info){
+      (function(foundItem){
+        gotoBtn.onclick = function(e){
+          e.stopPropagation();
+          openItemDetail(foundItem, '');
+        };
+      })(info);
+    } else {
+      gotoBtn.disabled = true;
+      gotoBtn.style.opacity = '0.4';
+      gotoBtn.title = 'Позиция не найдена в каталоге';
+    }
+
+    row.appendChild(codeEl);
+    row.appendChild(nameEl);
+    row.appendChild(gotoBtn);
+    inner.appendChild(row);
+  });
+
+  td.appendChild(inner);
+  tr.appendChild(td);
+
+  // Вставляем строку ПОСЛЕ текущей tr позиции
+  var mainRow = document.getElementById('row-' + CSS.escape(code));
+  if(mainRow && mainRow.parentNode){
+    mainRow.parentNode.insertBefore(tr, mainRow.nextSibling);
+  }
+}
+
 function renderNextPage(){
   if(isRendering)return;isRendering=true;
   var tb=document.getElementById("tableBody");
@@ -2456,7 +2578,7 @@ function renderNextPage(){
     tr.style.cursor="pointer";
     tr.title="Нажмите для просмотра";
     (function(item){ tr.onclick=function(e){
-      if(e.target.closest('.qty-wrap')||e.target.closest('.add-btn')) return;
+      if(e.target.closest('.qty-wrap')||e.target.closest('.add-btn')||e.target.closest('.analog-badge')||e.target.closest('.analog-row')) return;
       openItemDetail(item,'');
     }; })(it);
 
@@ -2477,7 +2599,25 @@ function renderNextPage(){
     }
 
     var td1=document.createElement("td");td1.className="td-code";td1.textContent=it.code;
-    var td2=document.createElement("td");td2.className="td-name";td2.title=it.name;td2.textContent=it.name;
+    var td2=document.createElement("td");td2.className="td-name";td2.title=it.name;
+    td2.style.cssText="display:table-cell;white-space:nowrap;overflow:visible;";
+    var nameSpan=document.createElement("span");nameSpan.textContent=it.name;
+    nameSpan.style.cssText="display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle;";
+    td2.appendChild(nameSpan);
+    // Бейдж АНАЛОГИ
+    if(it.analogs){
+      var aCodes=parseAnalogCodes(it.analogs);
+      if(aCodes.length>0){
+      var aBadge=document.createElement("span");
+      aBadge.className="analog-badge";
+      aBadge.id="analog-badge-"+CSS.escape(it.code);
+      aBadge.textContent="≈ АНАЛОГИ "+aCodes.length;
+      aBadge.title="Показать взаимозаменяемые позиции";
+      (function(code){aBadge.onclick=function(e){e.stopPropagation();toggleAnalogRow(code,null);};})(it.code);
+      td2.appendChild(document.createTextNode(" "));
+      td2.appendChild(aBadge);
+      } // end aCodes.length>0
+    }
     // Раздел
     var tdSec=document.createElement("td");tdSec.style.cssText="padding:9px 10px;text-align:center;";
     var badge=makeSectionBadge(it.cat);
@@ -2829,6 +2969,7 @@ function parseRowsForCat(rows, fixedCat){
   if(iShort<0 && iDesc>=0) iShort=iDesc;
   var iThumb=h.findIndex(function(c){return c.indexOf("Фото")>=0||c.indexOf("Photo")>=0;});
   var iSubcat=h.findIndex(function(c){return c.indexOf("Подраздел")>=0;});
+  var iAnalog=h.findIndex(function(c){return c.indexOf("Аналог")>=0||c.indexOf("аналог")>=0;});
   var out=[];
   for(var i=hi+1;i<rows.length;i++){
     var r=rows[i];if(!r||!r.length)continue;
@@ -2844,6 +2985,7 @@ function parseRowsForCat(rows, fixedCat){
     var iCatCol=h.findIndex(function(c){return c==='Раздел'||c==='Категория'||c==='Группа';});
     if(iCatCol>=0&&r[iCatCol]){ var cv=String(r[iCatCol]).trim(); if(cv) item.cat=cv; }
     if(iSubcat>=0&&r[iSubcat]){ var sv=String(r[iSubcat]).trim(); if(sv) item.subcat=sv; }
+    if(iAnalog>=0&&r[iAnalog]){ var av=String(r[iAnalog]).trim(); if(av) item.analogs=av; }
     if(iThumb>=0&&r[iThumb]){
       var photoVal=String(r[iThumb]).trim();
       if(photoVal) item.photo=photoVal; // URL из Excel (для всех категорий)
