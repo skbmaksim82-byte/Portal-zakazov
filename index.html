@@ -354,20 +354,17 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 .td-section-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:10px;font-weight:700;white-space:nowrap;border:1px solid currentColor;opacity:.85;}
 /* ── Подразделы ── */
 /* ── Экран выбора подраздела ── */
-.subcat-card{display:flex;flex-direction:column;width:190px;border-radius:12px;border:1.5px solid var(--border);background:var(--surface);cursor:pointer;transition:all .18s;position:relative;overflow:hidden;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.07);}
+.subcat-card{display:flex;flex-direction:column;width:190px;height:190px;border-radius:12px;border:1.5px solid var(--border);background:var(--surface2);cursor:pointer;transition:all .18s;position:relative;overflow:hidden;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.07);}
 .subcat-card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.15);}
 .subcat-card.all-card{border-style:dashed;border-color:var(--text3);}
 .subcat-card.all-card:hover{border-color:var(--accent);}
-.subcat-card-photo-wrap{width:100%;height:130px;overflow:hidden;background:var(--surface2);flex-shrink:0;}
-.subcat-card-photo{width:100%;height:100%;object-fit:cover;transition:transform .22s;display:block;}
-.subcat-card:hover .subcat-card-photo{transform:scale(1.05);}
-.subcat-card-body{padding:10px 12px 12px;background:#fff;flex:1;}
-.subcat-card-cnt{font-size:17px;font-weight:900;color:var(--text);font-family:'JetBrains Mono',monospace;line-height:1.2;text-shadow:0 1px 0 rgba(0,0,0,.06);}
-.subcat-card-name{font-size:12px;font-weight:700;color:var(--text2);line-height:1.35;margin-top:2px;}
+.subcat-card-photo-wrap{position:absolute;inset:0;width:100%;height:100%;}
+.subcat-card-photo{width:100%;height:100%;object-fit:contain;object-position:center;transition:transform .22s;display:block;background:var(--surface2);}
+.subcat-card:hover .subcat-card-photo{transform:scale(1.04);}
+.subcat-card-body{position:absolute;bottom:0;left:0;right:0;padding:8px 12px 10px;background:rgba(255,255,255,.92);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
+.subcat-card-cnt{font-size:16px;font-weight:900;color:var(--text);font-family:'JetBrains Mono',monospace;line-height:1.2;}
+.subcat-card-name{font-size:11px;font-weight:700;color:var(--text2);line-height:1.3;margin-top:1px;}
 .subcat-card-arrow{display:none;}
-/* Полоска подраздела над таблицей */
-#subcatBreadcrumb{display:none;align-items:center;gap:8px;padding:8px 16px;background:var(--surface2);border-bottom:1px solid var(--border);flex-shrink:0;}
-#subcatBreadcrumb.show{display:flex;}
 .subcat-bc-link{font-size:12px;font-weight:700;color:var(--accent);cursor:pointer;text-decoration:underline;text-underline-offset:2px;}
 .subcat-bc-sep{color:var(--text3);font-size:12px;}
 .subcat-bc-cur{font-size:12px;font-weight:800;color:var(--text);}
@@ -415,7 +412,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <div>
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="logo-text">Каталог оборудования Kari</div>
-        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.56</div>
+        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.57</div>
       </div>
       <div class="logo-sub" id="catalogInfo">Загрузка…</div>
     </div>
@@ -478,7 +475,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <ul class="authors-list" id="authorsList">
       <li><span>👤</span> —</li>
     </ul>
-    <div style="font-size:11px;color:var(--text3);margin-bottom:16px;">Версия <span id="modalAppVersion">1.56</span> · 2026</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:16px;">Версия <span id="modalAppVersion">1.57</span> · 2026</div>
     <button onclick="document.getElementById('authorsOverlay').classList.remove('show')"
       style="background:linear-gradient(135deg,#4a7fc1,#7458b8);color:#fff;border:none;border-radius:10px;
       padding:10px 28px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;
@@ -1102,7 +1099,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ═══ ВЕРСИЯ ПРИЛОЖЕНИЯ ═══
-var APP_VERSION = '1.56';
+var APP_VERSION = '1.57';
 // При каждом обновлении index.html — менять только эту строку (1.17, 1.18 и т.д.)
 (function(){
   var el = document.getElementById('appVersionBadge');
