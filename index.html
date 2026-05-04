@@ -354,14 +354,21 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 .td-section-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:10px;font-weight:700;white-space:nowrap;border:1px solid currentColor;opacity:.85;}
 /* ── Подразделы ── */
 /* ── Экран выбора подраздела ── */
-.subcat-card{display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;padding:18px 20px 16px;border-radius:14px;border:1.5px solid var(--border);background:var(--surface2);cursor:pointer;transition:all .18s;min-height:100px;gap:8px;position:relative;overflow:hidden;}
-.subcat-card:hover{border-color:var(--accent);background:var(--surface3);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.12);}
-.subcat-card.all-card{border-style:dashed;border-color:var(--text3);background:var(--surface);}
+.subcat-card{display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;width:190px;height:190px;border-radius:14px;border:1.5px solid var(--border);background:var(--surface2);cursor:pointer;transition:all .18s;position:relative;overflow:hidden;flex-shrink:0;}
+.subcat-card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.18);}
+.subcat-card.all-card{border-style:dashed;border-color:var(--text3);background:var(--surface);justify-content:center;align-items:center;}
 .subcat-card.all-card:hover{border-color:var(--accent);background:var(--surface2);}
-.subcat-card-name{font-size:13px;font-weight:800;color:var(--text);line-height:1.3;}
-.subcat-card-cnt{font-size:22px;font-weight:900;color:var(--accent);font-family:'JetBrains Mono',monospace;line-height:1;}
-.subcat-card-arrow{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:18px;opacity:.25;transition:opacity .15s;}
-.subcat-card:hover .subcat-card-arrow{opacity:.7;}
+.subcat-card-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.85;transition:opacity .18s;}
+.subcat-card:hover .subcat-card-photo{opacity:1;}
+.subcat-card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.72) 0%,rgba(0,0,0,.1) 55%,transparent 100%);}
+.subcat-card-body{position:relative;z-index:2;padding:12px 12px 10px;width:100%;box-sizing:border-box;}
+.subcat-card-name{font-size:12px;font-weight:800;color:#fff;line-height:1.3;text-shadow:0 1px 4px rgba(0,0,0,.5);}
+.subcat-card-cnt{font-size:18px;font-weight:900;color:#fff;font-family:'JetBrains Mono',monospace;line-height:1;opacity:.9;text-shadow:0 1px 4px rgba(0,0,0,.5);}
+.subcat-card-noimg .subcat-card-name{color:var(--text);}
+.subcat-card-noimg .subcat-card-cnt{color:var(--accent);}
+.subcat-card-arrow{position:absolute;right:10px;top:10px;font-size:16px;opacity:.5;z-index:2;transition:opacity .15s;color:#fff;}
+.subcat-card:hover .subcat-card-arrow{opacity:1;}
+.subcat-card-noimg .subcat-card-arrow{color:var(--text3);}
 /* Полоска подраздела над таблицей */
 #subcatBreadcrumb{display:none;align-items:center;gap:8px;padding:8px 16px;background:var(--surface2);border-bottom:1px solid var(--border);flex-shrink:0;}
 #subcatBreadcrumb.show{display:flex;}
@@ -412,7 +419,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <div>
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="logo-text">Портал заказов — Склад</div>
-        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.51</div>
+        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.52</div>
       </div>
       <div class="logo-sub" id="catalogInfo">Загрузка…</div>
     </div>
@@ -475,7 +482,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <ul class="authors-list" id="authorsList">
       <li><span>👤</span> —</li>
     </ul>
-    <div style="font-size:11px;color:var(--text3);margin-bottom:16px;">Версия <span id="modalAppVersion">1.51</span> · 2026</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:16px;">Версия <span id="modalAppVersion">1.52</span> · 2026</div>
     <button onclick="document.getElementById('authorsOverlay').classList.remove('show')"
       style="background:linear-gradient(135deg,#4a7fc1,#7458b8);color:#fff;border:none;border-radius:10px;
       padding:10px 28px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;
@@ -573,7 +580,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <!-- Экран выбора подраздела -->
     <div id="subcatScreen" style="display:none;flex:1;overflow-y:auto;padding:24px 28px;">
       <div id="subcatScreenTitle" style="font-size:13px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:20px;">Выберите подраздел</div>
-      <div id="subcatGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;"></div>
+      <div id="subcatGrid" style="display:flex;flex-wrap:wrap;gap:14px;"></div>
     </div>
     <!-- Хлебная крошка: Раздел → Подраздел (показывается когда подраздел выбран) -->
     <div id="subcatBreadcrumb">
@@ -1099,7 +1106,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ═══ ВЕРСИЯ ПРИЛОЖЕНИЯ ═══
-var APP_VERSION = '1.51';
+var APP_VERSION = '1.52';
 // При каждом обновлении index.html — менять только эту строку (1.17, 1.18 и т.д.)
 (function(){
   var el = document.getElementById('appVersionBadge');
@@ -2325,16 +2332,48 @@ function showSubcatScreen(cat){
 
   // Карточка "Все позиции"
   var cardAll = document.createElement('div');
-  cardAll.className = 'subcat-card all-card';
-  cardAll.innerHTML = '<div class="subcat-card-name" style="color:var(--text3);">Все позиции</div><div class="subcat-card-cnt" style="color:var(--text3);">' + data.total.toLocaleString('ru') + '</div><span class="subcat-card-arrow">→</span>';
+  cardAll.className = 'subcat-card all-card subcat-card-noimg';
+  cardAll.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;height:100%;padding:16px;text-align:center;">'
+    +'<div style="font-size:28px;opacity:.4;">≡</div>'
+    +'<div style="font-size:13px;font-weight:800;color:var(--text3);">Все позиции</div>'
+    +'<div style="font-size:20px;font-weight:900;color:var(--text3);font-family:'JetBrains Mono',monospace;">' + data.total.toLocaleString('ru') + '</div>'
+    +'</div>';
   cardAll.onclick = function(){ selectSubcatFromScreen(''); };
   grid.appendChild(cardAll);
 
   // Карточки подразделов
+  var pool = (cat==='light') ? lightAll : (cat==='tv') ? tvAll : allItems;
   data.subcats.forEach(function(s){
     var card = document.createElement('div');
-    card.className = 'subcat-card';
-    card.innerHTML = '<div class="subcat-card-name">' + s + '</div><div class="subcat-card-cnt">' + (data.counts[s]||0).toLocaleString('ru') + '</div><span class="subcat-card-arrow">→</span>';
+    // Ищем первый товар в подразделе с фото
+    var previewItem = null;
+    for(var pi=0; pi<pool.length; pi++){
+      var pIt = pool[pi];
+      var inCat = (cat==='light'||cat==='tv') ? true : (pIt.cat===cat);
+      if(inCat && (pIt.subcat||'')===s && getImgUrl(pIt)){
+        previewItem = pIt; break;
+      }
+    }
+    var photoUrl = previewItem ? getImgUrl(previewItem) : null;
+    if(photoUrl){
+      card.className = 'subcat-card';
+      card.innerHTML =
+        '<img class="subcat-card-photo" src="'+photoUrl+'" alt="" loading="lazy" onerror="this.style.display='none';this.parentNode.classList.add('subcat-card-noimg')">'
+        +'<div class="subcat-card-overlay"></div>'
+        +'<div class="subcat-card-body">'
+          +'<div class="subcat-card-cnt">'+(data.counts[s]||0).toLocaleString('ru')+'</div>'
+          +'<div class="subcat-card-name">'+s+'</div>'
+        +'</div>'
+        +'<span class="subcat-card-arrow">→</span>';
+    } else {
+      card.className = 'subcat-card subcat-card-noimg';
+      card.innerHTML =
+        '<div class="subcat-card-body" style="justify-content:flex-end;display:flex;flex-direction:column;height:100%;padding:16px;">'
+          +'<div class="subcat-card-cnt" style="color:var(--accent);text-shadow:none;">'+(data.counts[s]||0).toLocaleString('ru')+'</div>'
+          +'<div class="subcat-card-name" style="color:var(--text);text-shadow:none;">'+s+'</div>'
+        +'</div>'
+        +'<span class="subcat-card-arrow" style="color:var(--text3);">→</span>';
+    }
     card.onclick = (function(sub){ return function(){ selectSubcatFromScreen(sub); }; })(s);
     grid.appendChild(card);
   });
