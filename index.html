@@ -412,7 +412,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <div>
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="logo-text">Портал заказов — Склад</div>
-        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.50</div>
+        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.51</div>
       </div>
       <div class="logo-sub" id="catalogInfo">Загрузка…</div>
     </div>
@@ -475,7 +475,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <ul class="authors-list" id="authorsList">
       <li><span>👤</span> —</li>
     </ul>
-    <div style="font-size:11px;color:var(--text3);margin-bottom:16px;">Версия <span id="modalAppVersion">1.50</span> · 2026</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:16px;">Версия <span id="modalAppVersion">1.51</span> · 2026</div>
     <button onclick="document.getElementById('authorsOverlay').classList.remove('show')"
       style="background:linear-gradient(135deg,#4a7fc1,#7458b8);color:#fff;border:none;border-radius:10px;
       padding:10px 28px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;
@@ -1099,7 +1099,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ═══ ВЕРСИЯ ПРИЛОЖЕНИЯ ═══
-var APP_VERSION = '1.50';
+var APP_VERSION = '1.51';
 // При каждом обновлении index.html — менять только эту строку (1.17, 1.18 и т.д.)
 (function(){
   var el = document.getElementById('appVersionBadge');
@@ -1233,7 +1233,7 @@ function onSlabotCatFilter(){
 // ═══ TV DATA ═══
 var TV_ITEMS = []; // заполняется из Excel при загрузке
 var tvAll = [], tvFiltered = [], tvRendered = 0, tvRendering = false;
-var tvSearch = '', tvPhotoFilter = 'all';
+var tvSearch = '', tvPhotoFilter = 'all', currentTvSubcat = '';
 
 // ═══ GOOGLE DRIVE IMAGES CONFIG ═══
 // Инструкция по настройке:
@@ -1478,6 +1478,7 @@ function setTvPhotoFilter(mode){
 function applyTvFilters(){
   var q = tvSearch.toLowerCase().trim();
   tvFiltered = tvAll.filter(function(it){
+    if(currentTvSubcat && (it.subcat||'')!==currentTvSubcat) return false;
     if(q&&!(it.name.toLowerCase().indexOf(q) >= 0 || it.code.toLowerCase().indexOf(q) >= 0 || (it.short||'').toLowerCase().indexOf(q) >= 0)) return false;
     if(tvPhotoFilter==='yes'){ if(!getImgUrl(it)) return false; }
     if(tvPhotoFilter==='no'){ if(getImgUrl(it)) return false; }
@@ -2281,8 +2282,11 @@ function getSubcatData(cat){
   var subcats = [];
   var counts = {};
   var totalCat = 0;
-  allItems.forEach(function(it){
-    if(it.cat !== cat) return;
+  // Выбираем источник данных в зависимости от ключа
+  var pool = (cat==='light') ? lightAll : (cat==='tv') ? tvAll : allItems;
+  pool.forEach(function(it){
+    // для allItems фильтруем по cat, для light/tv все записи подходят
+    if(cat!=='light' && cat!=='tv' && it.cat !== cat) return;
     totalCat++;
     var s = it.subcat || '';
     if(!s) return;
@@ -2297,10 +2301,12 @@ function showSubcatScreen(cat){
   currentCatForSubcat = cat;
   var data = getSubcatData(cat);
 
-  // Нет подразделов — сразу показываем таблицу
+  // Нет подразделов — сразу показываем нативную панель
   if(!data.subcats.length){
     hideSubcatScreen();
     currentSubcat = '';
+    if(cat==='light'){ showLightPanel(); return; }
+    if(cat==='tv'){    showTvPanel();    return; }
     showCatalogPanel();
     applyFilters();
     return;
@@ -2365,6 +2371,20 @@ function selectSubcatFromScreen(sub){
     if(bcCount) bcCount.textContent = '';
   }
 
+  if(currentCatForSubcat === 'light'){
+    showLightPanel();
+    // Передаём подраздел как фильтр светового
+    if(typeof applyLightSubcat === 'function') applyLightSubcat(sub);
+    if(bcCount) bcCount.textContent = (typeof lightFiltered!=='undefined' ? lightFiltered.length : '?').toLocaleString('ru') + ' поз.';
+    return;
+  }
+  if(currentCatForSubcat === 'tv'){
+    showTvPanel();
+    if(typeof applyTvSubcat === 'function') applyTvSubcat(sub);
+    if(bcCount) bcCount.textContent = (typeof tvFiltered!=='undefined' ? tvFiltered.length : '?').toLocaleString('ru') + ' поз.';
+    return;
+  }
+
   showCatalogPanel();
   applyFilters();
 
@@ -2373,12 +2393,18 @@ function selectSubcatFromScreen(sub){
 }
 
 function backToSubcatScreen(){
-  // Возврат к экрану выбора подраздела
   currentSubcat = '';
+  currentLightSubcat = '';
+  currentTvSubcat = '';
   var bc = document.getElementById('subcatBreadcrumb');
   if(bc) bc.className = 'subcatBreadcrumb';
+  // Скрываем и таблицу и специальные панели
   var tw = document.getElementById('tableWrap');
   if(tw) tw.style.display = 'none';
+  var lp = document.getElementById('lightPanel');
+  if(lp) lp.style.display = 'none';
+  var tp = document.getElementById('tvPanel');
+  if(tp) tp.style.display = 'none';
   showSubcatScreen(currentCatForSubcat);
 }
 
@@ -2398,9 +2424,19 @@ function selectCat(c){
   currentCat=c;
   document.querySelectorAll(".cat-btn").forEach(function(b){b.classList.remove("active");});
   (document.getElementById("btn-"+c)||document.getElementById("btn-all")).classList.add("active");
-  if(c==='light'){hideSubcatScreen();showLightPanel();return;}
+  if(c==='light'){
+    currentLightSubcat='';
+    showCatalogPanel();
+    showSubcatScreen('light'); // покажет экран карточек подразделов, либо сразу lightPanel
+    return;
+  }
+  if(c==='tv'){
+    currentTvSubcat='';
+    showCatalogPanel();
+    showSubcatScreen('tv'); // покажет экран карточек подразделов, либо сразу tvPanel
+    return;
+  }
   if(c==='kits'){hideSubcatScreen();showKitsPanel();return;}
-  if(c==='tv'){hideSubcatScreen();showTvPanel();return;}
   if(c==='nlist'){hideSubcatScreen();showNlistPanel();return;}
   if(c==='karikids'||c==='all'){hideSubcatScreen();showCatalogPanel();applyFilters();return;}
   // Для обычных разделов — показываем экран выбора подраздела
@@ -2745,7 +2781,7 @@ function updateInfo(){
 
 // ═══ LIGHT CATALOG STATE ═══
 var lightAll=LIGHT_ITEMS, lightFiltered=[], lightRendered=0, lightRendering=false;
-var lightSearch='', selectedLightRow=null;
+var lightSearch='', selectedLightRow=null, currentLightSubcat='';
 var lightPhotoFilter='all', lightCatFilter='';
 var LIGHT_CATS={}; // { категория: [items] } — заполняется при загрузке xlsx
 var currentPreviewImg='', currentPreviewCaption='';
@@ -2793,9 +2829,20 @@ function updateLightCatFilter(){
   sel.style.display='';
 }
 
+function applyLightSubcat(sub){
+  currentLightSubcat = sub || '';
+  applyLightFilters();
+}
+
+function applyTvSubcat(sub){
+  currentTvSubcat = sub || '';
+  applyTvFilters();
+}
+
 function applyLightFilters(){
   var q=lightSearch.toLowerCase().trim();
   lightFiltered=lightAll.filter(function(it){
+    if(currentLightSubcat && (it.subcat||'')!==currentLightSubcat) return false;
     if(q&&!(it.name.toLowerCase().indexOf(q)>=0||it.code.toLowerCase().indexOf(q)>=0)) return false;
     if(lightPhotoFilter==='yes'){ if(!getImgUrl(it)) return false; }
     if(lightPhotoFilter==='no'){ if(getImgUrl(it)) return false; }
