@@ -1470,17 +1470,6 @@ function renderKitsScreen(){
     +kitsData.length+' \u043a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u043e\u0432</div>';
   h+='<div class="subcat-grid">';
 
-  /* Карточка «Все позиции» */
-  var totalKitItems=0;
-  for(var ti=0;ti<kitsData.length;ti++) totalKitItems+=kitsData[ti].items.length;
-  h+='<div class="kit-photo-card subcat-card--all" data-action="go-kit" data-val="-1">'
-    +'<div class="kit-photo-wrap"><div class="kit-photo-img-placeholder">\uD83D\uDCCB</div></div>'
-    +'<div class="kit-photo-body">'
-    +'<div class="kit-photo-name">\u0412\u0441\u0435 \u043f\u043e\u0437\u0438\u0446\u0438\u0438</div>'
-    +'<div class="kit-photo-count">'+totalKitItems.toLocaleString('ru')+' \u043f\u043e\u0437\u0438\u0446\u0438\u0439</div>'
-    +'<div class="kit-photo-footer"><span class="kit-photo-arrow">\u203a</span></div>'
-    +'</div></div>';
-
   for(var i=0;i<kitsData.length;i++){
     var kit=kitsData[i];
     var photosJson=(kit.photos&&kit.photos.length)?JSON.stringify(kit.photos).replace(/"/g,'&quot;'):'';
@@ -2733,8 +2722,32 @@ function parseXlsxBuffer(buf) {
       if (h.indexOf('\u043a\u043e\u0434') >= 0 && h.indexOf('\u043d\u043e\u043c') >= 0) codeCol = hi;
       else if (h === '\u0430\u0440\u0442\u0438\u043a\u0443\u043b') codeCol = hi;
       else if (h.indexOf('\u043d\u0430\u0438\u043c\u0435\u043d\u043e\u0432') >= 0 || h.indexOf('\u043d\u0430\u0437\u0432\u0430\u043d') >= 0) nameCol = hi;
-      else if (h.indexOf('\u043f\u043e\u0434\u0440\u0430\u0437\u0434\u0435\u043b') >= 0) subcatCol = hi;
+      else if (
+        h.indexOf('\u043f\u043e\u0434\u0440\u0430\u0437\u0434\u0435\u043b') >= 0 ||
+        h.indexOf('\u043a\u0430\u0442\u0435\u0433\u043e\u0440') >= 0 ||
+        h.indexOf('\u0433\u0440\u0443\u043f\u043f') >= 0 ||
+        h.indexOf('\u0440\u0430\u0437\u0434\u0435\u043b') >= 0
+      ) subcatCol = hi;
       else if (h.indexOf('\u043e\u043f\u0438\u0441\u0430\u043d') >= 0 || h.indexOf('\u043f\u0440\u0438\u043c\u0435\u0447') >= 0) descCol = hi;
+    }
+
+    /* Резерв: проверяем что subcatCol реально даёт данные.
+       Если первые 5 строк дают пустой subcat — перебираем колонки */
+    var subcatCheck = 0;
+    for (var ci2 = 1; ci2 < Math.min(6, rows.length); ci2++) {
+      if (String(rows[ci2][subcatCol] || '').trim()) { subcatCheck++; break; }
+    }
+    if (!subcatCheck) {
+      /* Ищем колонку с непустыми строковыми данными кроме codeCol и nameCol */
+      for (var fc = 0; fc < (rows[0] || []).length; fc++) {
+        if (fc === codeCol || fc === nameCol || fc === descCol) continue;
+        var hasData = false;
+        for (var fr = 1; fr < Math.min(6, rows.length); fr++) {
+          var v = String(rows[fr][fc] || '').trim();
+          if (v && isNaN(v)) { hasData = true; break; }
+        }
+        if (hasData) { subcatCol = fc; break; }
+      }
     }
 
     var sheetCount = 0;
@@ -2872,62 +2885,10 @@ function applyPhotos() {
    ГЛАВНАЯ ФУНКЦИЯ ОБНОВЛЕНИЯ
 ═══════════════════════════════════════════════════ */
 function mobUpdateFromGitHub() {
-  /* Сбрасываем флаг фонового обновления — ручное имеет приоритет */
-  _bgUpdating = false;
-  setSyncBadge('', '');
-  closeLivePanel();
-  _ghStart = Date.now();
-  _ghTimer = setInterval(updateTimer, 200);
-
-  var rows = [
-    {id:'mob-row-xlsx',   icon:'\uD83D\uDCCA', label:'\u0421\u043f\u0438\u0441\u043e\u043a_\u043e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u044f_\u0424\u0418\u041d\u0410\u041b.xlsx'},
-    {id:'mob-row-oborud', icon:'\uD83C\uDFEA', label:'\u0422\u043e\u0440\u0433\u043e\u0432\u043e\u0435 \u043e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u0435'},
-    {id:'mob-row-reklam', icon:'\uD83C\uDFA8', label:'\u0420\u0435\u043a\u043b\u0430\u043c\u043d\u044b\u0435 \u043c\u0430\u0442\u0435\u0440\u0438\u0430\u043b\u044b'},
-    {id:'mob-row-svet',   icon:'\uD83D\uDCA1', label:'\u0421\u0432\u0435\u0442\u043e\u0432\u043e\u0435 \u043e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u0435'},
-    {id:'mob-row-slab',   icon:'\uD83D\uDCE1', label:'\u0421\u043b\u0430\u0431\u043e\u0442\u043e\u0447\u043d\u043e\u0435 \u043e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u0435'},
-    {id:'mob-row-uvelir', icon:'\uD83D\uDC8E', label:'\u042e\u0432\u0435\u043b\u0438\u0440\u043d\u043e\u0435 \u043e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u0435'},
-    {id:'mob-row-it',     icon:'\uD83D\uDCBB', label:'\u0418\u0422 \u043e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u0435'},
-    {id:'mob-row-compl',  icon:'\uD83D\uDCCB', label:'\u041a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u044b (\u0444\u043e\u0442\u043e)'}
-  ];
-
-  showLivePanel(rows);
-  for (var ri = 0; ri < rows.length; ri++) setRowState(rows[ri].id, 'loading', '');
-
-  /* Параллельно: xlsx + 7 папок фото */
-  var p1 = loadXlsxLive();
-  var p2 = loadPhotoFolder('Foto%20Oborud',    OBORUD_PHOTOS,  '', 'mob-row-oborud');
-  var p3 = loadPhotoFolder('Foto%20reklama',   REKLAM_PHOTOS,  '', 'mob-row-reklam');
-  var p4 = loadPhotoFolder('Foto%20Svet',      SVET_PHOTOS,    '', 'mob-row-svet');
-  var p5 = loadPhotoFolder('Foto%20slabotoch', SLAB_PHOTOS,    '', 'mob-row-slab');
-  var p6 = loadPhotoFolder('Foto%20Uvelir',    UVELIR_PHOTOS,  '', 'mob-row-uvelir');
-  var p7 = loadPhotoFolder('IT%20oborud',      IT_PHOTOS,      '', 'mob-row-it');
-  var p8 = loadPhotoFolder('Foto%20Complect',  COMPLECT_PHOTOS,'', 'mob-row-compl');
-
-  Promise.allSettled([p1, p2, p3, p4, p5, p6, p7, p8])
-    .then(function(results) {
-      clearInterval(_ghTimer); _ghTimer = null;
-      var elapsed = ((Date.now() - _ghStart) / 1000).toFixed(1);
-      var xlsxOk = results[0].status === 'fulfilled';
-      var totalPhotos = 0;
-      for (var i = 1; i < results.length; i++) {
-        if (results[i].status === 'fulfilled') totalPhotos += (results[i].value || 0);
-      }
-      var errors = 0;
-      for (var j = 0; j < results.length; j++) if (results[j].status === 'rejected') errors++;
-
-      if (!xlsxOk) {
-        finishLivePanel('\u041e\u0448\u0438\u0431\u043a\u0430 \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0438 \u043a\u0430\u0442\u0430\u043b\u043e\u0433\u0430 \u00b7 ' + elapsed + '\u0441', false);
-        showToast('\u041e\u0448\u0438\u0431\u043a\u0430 \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0438', '');
-        return;
-      }
-
-      applyPhotos();
-      bgAutoUpdate._lastRun = Date.now(); /* не запускаем авто сразу после ручного */
-      var summary = results[0].value + ' \u00b7 ' + totalPhotos.toLocaleString('ru') + ' \u0444\u043e\u0442\u043e \u00b7 ' + elapsed + '\u0441';
-      if (errors) summary += ' \u00b7 \u26A0 ' + errors + ' \u043e\u0448\u0438\u0431\u043a\u0438';
-      finishLivePanel(summary, errors === 0);
-      showToast('\u041a\u0430\u0442\u0430\u043b\u043e\u0433 \u043e\u0431\u043d\u043e\u0432\u043b\u0451\u043d \u00b7 ' + results[0].value, 'ok');
-    });
+  /* Делегируем в фоновое обновление — прогресс виден в бейдже шапки */
+  _bgUpdating = false;          /* сбрасываем флаг чтобы запуск прошёл */
+  bgAutoUpdate._lastRun = 0;    /* сбрасываем таймер защиты */
+  bgAutoUpdate();
 }
 
 /* ═══════════════════════════════════════════════════
