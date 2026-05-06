@@ -70,6 +70,23 @@ body{font-family:'Inter',sans-serif;}
 .hdr-title{display:flex;flex-direction:column;}
 .hdr-title-main{font-size:13px;font-weight:800;color:var(--wb-text);line-height:1.2;}
 .hdr-title-sub{font-size:10px;color:var(--wb-text3);font-weight:500;}
+
+/* Бейдж синхронизации */
+.hdr-sync-badge{
+  font-size:10px;font-weight:800;
+  padding:2px 7px;border-radius:20px;
+  white-space:nowrap;flex-shrink:0;
+  transition:all .3s;
+}
+.hdr-sync-badge.loading{
+  background:#F0E6FF;color:var(--wb-purple);
+}
+.hdr-sync-badge.ok{
+  background:var(--wb-green-bg);color:#00824A;
+}
+.hdr-sync-badge.error{
+  background:#FDEAEA;color:#C0392B;
+}
 .hdr-spacer{flex:1;}
 .hdr-cart-btn{
   position:relative;width:38px;height:38px;border-radius:12px;background:var(--wb-purple-bg);
@@ -665,6 +682,7 @@ body{font-family:'Inter',sans-serif;}
           <div class="hdr-title-main" id="hdrTitleMain">Портал заказов</div>
           <div class="hdr-title-sub" id="hdrTitleSub">Склад — Kari</div>
         </div>
+        <div class="hdr-sync-badge" id="hdrSyncBadge" style="display:none;"></div>
       </div>
       <div class="hdr-spacer"></div>
       <button class="hdr-cart-btn" onclick="openCart()">
@@ -2360,6 +2378,104 @@ renderSections();
 updateHeader();
 setupEventDelegation();
 
+/* ════════════════════════════════════════════════════
+   ФОНОВОЕ АВТО-ОБНОВЛЕНИЕ
+   — тихое, без живой панели
+   — прогресс в % рядом с названием в шапке
+════════════════════════════════════════════════════ */
+var _bgUpdating = false;
+
+function setSyncBadge(text, state) {
+  var b = getEl('hdrSyncBadge');
+  if (!b) return;
+  if (!text) { b.style.display = 'none'; b.className = 'hdr-sync-badge'; return; }
+  b.style.display = 'block';
+  b.className = 'hdr-sync-badge ' + (state || '');
+  b.textContent = text;
+}
+
+function bgAutoUpdate() {
+  if (_bgUpdating) return;
+  if (!navigator.onLine) { setSyncBadge('офлайн', 'error'); return; }
+  _bgUpdating = true;
+
+  /* 8 задач: 1 xlsx + 7 папок фото */
+  var total = 8, done = 0;
+  setSyncBadge('0%', 'loading');
+
+  function tick() {
+    done++;
+    var pct = Math.round(done / total * 100);
+    setSyncBadge(pct + '%', 'loading');
+  }
+
+  var headers = getGhHeaders();
+
+  /* Оборачиваем каждый промис — считаем завершение */
+  function tracked(p) {
+    return p.then(function(v) { tick(); return v; },
+                  function(e) { tick(); throw e; });
+  }
+
+  var p1 = tracked(loadXlsxLive());
+  var p2 = tracked(loadPhotoFolder('Foto%20Oborud',    OBORUD_PHOTOS,  '', 'mob-row-oborud'));
+  var p3 = tracked(loadPhotoFolder('Foto%20reklama',   REKLAM_PHOTOS,  '', 'mob-row-reklam'));
+  var p4 = tracked(loadPhotoFolder('Foto%20Svet',      SVET_PHOTOS,    '', 'mob-row-svet'));
+  var p5 = tracked(loadPhotoFolder('Foto%20slabotoch', SLAB_PHOTOS,    '', 'mob-row-slab'));
+  var p6 = tracked(loadPhotoFolder('Foto%20Uvelir',    UVELIR_PHOTOS,  '', 'mob-row-uvelir'));
+  var p7 = tracked(loadPhotoFolder('IT%20oborud',      IT_PHOTOS,      '', 'mob-row-it'));
+  var p8 = tracked(loadPhotoFolder('Foto%20Complect',  COMPLECT_PHOTOS,'', 'mob-row-compl'));
+
+  Promise.allSettled([p1, p2, p3, p4, p5, p6, p7, p8]).then(function(results) {
+    _bgUpdating = false;
+    var xlsxOk = results[0].status === 'fulfilled';
+    var errors = 0;
+    for (var j = 0; j < results.length; j++) if (results[j].status === 'rejected') errors++;
+
+    if (!xlsxOk) {
+      setSyncBadge('ошибка', 'error');
+      setTimeout(function() { setSyncBadge('', ''); }, 5000);
+      return;
+    }
+
+    applyPhotos();
+
+    /* Считаем позиции и фото для итогового уведомления */
+    var totalPhotos = 0;
+    for (var i = 1; i < results.length; i++) {
+      if (results[i].status === 'fulfilled') totalPhotos += (results[i].value || 0);
+    }
+    var itemsCount = allItems.length;
+    var msg = '✓ ' + itemsCount.toLocaleString('ru') + ' поз. · ' + totalPhotos.toLocaleString('ru') + ' фото';
+    if (errors) msg = '⚠ ' + itemsCount.toLocaleString('ru') + ' поз.';
+
+    setSyncBadge(msg, 'ok');
+    /* Через 6 секунд скрываем бейдж */
+    setTimeout(function() { setSyncBadge('', ''); }, 6000);
+  });
+}
+
+/* Запуск при старте */
+setTimeout(bgAutoUpdate, 800);
+
+/* Запуск при возврате из фона */
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'visible') {
+    /* Обновляем не чаще чем раз в 2 минуты */
+    var now = Date.now();
+    if (!bgAutoUpdate._lastRun || now - bgAutoUpdate._lastRun > 120000) {
+      bgAutoUpdate._lastRun = now;
+      bgAutoUpdate();
+    }
+  }
+});
+/* Для iOS Safari — pageshow при выходе из back/forward cache */
+window.addEventListener('pageshow', function(e) {
+  if (e.persisted) bgAutoUpdate();
+});
+
+bgAutoUpdate._lastRun = Date.now();
+
 
 
 /* ═══════════════════════════════════════════════════
@@ -2756,6 +2872,9 @@ function applyPhotos() {
    ГЛАВНАЯ ФУНКЦИЯ ОБНОВЛЕНИЯ
 ═══════════════════════════════════════════════════ */
 function mobUpdateFromGitHub() {
+  /* Сбрасываем флаг фонового обновления — ручное имеет приоритет */
+  _bgUpdating = false;
+  setSyncBadge('', '');
   closeLivePanel();
   _ghStart = Date.now();
   _ghTimer = setInterval(updateTimer, 200);
@@ -2803,6 +2922,7 @@ function mobUpdateFromGitHub() {
       }
 
       applyPhotos();
+      bgAutoUpdate._lastRun = Date.now(); /* не запускаем авто сразу после ручного */
       var summary = results[0].value + ' \u00b7 ' + totalPhotos.toLocaleString('ru') + ' \u0444\u043e\u0442\u043e \u00b7 ' + elapsed + '\u0441';
       if (errors) summary += ' \u00b7 \u26A0 ' + errors + ' \u043e\u0448\u0438\u0431\u043a\u0438';
       finishLivePanel(summary, errors === 0);
