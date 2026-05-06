@@ -217,7 +217,9 @@ body{font-family:'Inter',sans-serif;}
   width:52px;height:52px;border-radius:12px;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;font-size:24px;
   background:linear-gradient(135deg,#f5eeff,#ead9ff);border:1px solid rgba(160,0,240,.1);
+  overflow:hidden;
 }
+.item-thumb img{width:100%;height:100%;object-fit:cover;display:block;border-radius:0;}
 .item-info{flex:1;min-width:0;}
 .item-code{font-size:9px;font-family:'Courier New',monospace;color:var(--wb-text3);letter-spacing:.3px;margin-bottom:2px;}
 .item-name{font-size:12px;font-weight:700;color:var(--wb-text);line-height:1.35;margin-bottom:5px;
@@ -314,18 +316,72 @@ body{font-family:'Inter',sans-serif;}
 .s4-scroll{flex:1;overflow-y:auto;scrollbar-width:none;background:#F4F4F4;}
 .s4-scroll::-webkit-scrollbar{display:none;}
 .s4-photo{background:#fff;height:240px;display:flex;align-items:center;justify-content:center;
-  position:relative;border-bottom:1px solid var(--wb-border);flex-shrink:0;}
+  position:relative;border-bottom:1px solid var(--wb-border);flex-shrink:0;overflow:hidden;}
+
+/* Галерея */
+.s4-gallery{
+  position:absolute;inset:0;display:none;
+  overflow:hidden;touch-action:pan-y;
+}
+.s4-gallery.show{display:block;}
+.s4-gallery-track{
+  display:flex;height:100%;
+  transition:transform .3s cubic-bezier(.4,0,.2,1);
+  will-change:transform;
+}
+.s4-gallery-slide{
+  flex-shrink:0;width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  cursor:zoom-in;
+}
+.s4-gallery-slide img{
+  width:100%;height:100%;object-fit:cover;
+  pointer-events:none;display:block;
+}
+
+/* Заглушка */
 .s4-photo-box{width:160px;height:160px;background:linear-gradient(135deg,#f0e6ff,#e2cfff);
   border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:8px;border:1.5px solid #d8b8ff;}
+  gap:8px;border:1.5px solid #d8b8ff;position:relative;z-index:1;}
 .s4-photo-emoji{font-size:54px;line-height:1;}
 .s4-photo-lbl{font-size:10px;color:#9966CC;font-weight:600;}
-.s4-photo-share{position:absolute;top:10px;right:10px;width:32px;height:32px;background:#fff;
+
+/* Счётчик */
+.s4-photo-counter{
+  position:absolute;top:10px;left:10px;
+  background:rgba(0,0,0,.45);color:#fff;
+  font-size:10px;font-weight:700;
+  padding:3px 8px;border-radius:20px;
+  display:none;z-index:5;letter-spacing:.3px;
+}
+.s4-photo-counter.show{display:block;}
+
+/* Кнопка fullscreen */
+.s4-photo-share{position:absolute;top:10px;right:10px;width:32px;height:32px;background:rgba(255,255,255,.9);
   border-radius:50%;border:1px solid var(--wb-border);display:flex;align-items:center;
-  justify-content:center;font-size:14px;cursor:pointer;}
-.s4-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:5px;}
-.s4-dot{width:6px;height:6px;border-radius:50%;background:#e0ccff;}
+  justify-content:center;font-size:15px;cursor:pointer;z-index:5;
+  box-shadow:0 2px 8px rgba(0,0,0,.12);display:none;}
+.s4-photo-share.show{display:flex;}
+
+/* Точки */
+.s4-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:5;}
+.s4-dot{width:6px;height:6px;border-radius:50%;background:rgba(160,0,240,.25);transition:all .2s;cursor:pointer;}
 .s4-dot.act{background:var(--wb-purple);width:16px;border-radius:3px;}
+
+/* Стрелки навигации */
+.s4-nav{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:32px;height:32px;border:none;border-radius:50%;
+  background:rgba(255,255,255,.85);color:var(--wb-text);
+  font-size:20px;font-weight:300;cursor:pointer;z-index:5;
+  display:none;align-items:center;justify-content:center;
+  box-shadow:0 2px 8px rgba(0,0,0,.15);line-height:1;
+  transition:background .15s;padding:0;padding-bottom:2px;
+}
+.s4-nav.show{display:flex;}
+.s4-nav:active{background:rgba(255,255,255,1);}
+.s4-nav-prev{left:8px;}
+.s4-nav-next{right:8px;}
 .s4-info{background:#fff;padding:14px;border-bottom:1px solid var(--wb-border);}
 .s4-breadcrumb{display:flex;align-items:center;gap:5px;margin-bottom:8px;flex-wrap:wrap;}
 .s4-bc-sec{display:flex;align-items:center;gap:4px;background:var(--wb-purple-bg);
@@ -449,15 +505,126 @@ body{font-family:'Inter',sans-serif;}
 .kit-item-name{font-size:11px;font-weight:600;color:var(--wb-text);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .kit-item-qty{font-size:11px;font-weight:700;color:var(--wb-purple);white-space:nowrap;flex-shrink:0;}
 .kit-add-all{margin:10px 14px;height:40px;border:none;border-radius:10px;background:var(--wb-purple);color:#fff;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;cursor:pointer;width:calc(100% - 28px);}
-/* PHOTO VIEWER */
-.photo-viewer{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:10000;display:none;flex-direction:column;align-items:center;justify-content:center;}
+/* PHOTO VIEWER — fullscreen галерея */
+.photo-viewer{position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:10000;display:none;flex-direction:column;}
 .photo-viewer.show{display:flex;}
-.photo-viewer-img{max-width:94vw;max-height:78vh;object-fit:contain;border-radius:8px;}
-.photo-viewer-code{color:rgba(255,255,255,.5);font-size:11px;margin-top:10px;font-family:'Courier New',monospace;}
-.photo-viewer-name{color:#fff;font-size:13px;font-weight:700;margin-top:4px;text-align:center;padding:0 20px;max-width:90vw;}
-.photo-viewer-close{position:absolute;top:20px;right:20px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+
+/* Шапка — инфо + счётчик, без крестика */
+.pv-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:max(16px,env(safe-area-inset-top)) 16px 8px;flex-shrink:0;
+}
+.pv-info{display:flex;flex-direction:column;min-width:0;flex:1;}
+.pv-code{color:rgba(255,255,255,.5);font-size:11px;font-family:'Courier New',monospace;}
+.pv-name{color:#fff;font-size:13px;font-weight:700;margin-top:2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pv-counter{color:rgba(255,255,255,.55);font-size:12px;font-weight:700;
+  flex-shrink:0;margin-left:12px;}
+
+/* Трек слайдов */
+.pv-track-wrap{
+  flex:1;overflow:hidden;position:relative;
+  touch-action:none; /* управляем сами — зум + свайп */
+}
+.pv-track{
+  display:flex;height:100%;
+  transition:transform .3s cubic-bezier(.4,0,.2,1);
+  will-change:transform;
+}
+.pv-slide{
+  flex-shrink:0;width:100vw;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.pv-slide img{
+  max-width:100%;max-height:100%;object-fit:contain;
+  display:block;
+  transform-origin:center center;
+  transition:transform .15s ease;
+  will-change:transform;
+  user-select:none;-webkit-user-select:none;
+}
+
+/* Нижняя панель */
+.pv-footer{
+  padding:8px 16px max(16px,env(safe-area-inset-bottom));flex-shrink:0;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+}
+.pv-dots{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;max-width:90vw;}
+.pv-dot{
+  width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.3);
+  cursor:pointer;transition:all .2s;flex-shrink:0;
+}
+.pv-dot.act{background:#fff;width:18px;border-radius:4px;}
+
+/* Кнопка Закрыть */
+.pv-close-btn{
+  width:100%;max-width:340px;height:50px;
+  border:none;border-radius:14px;cursor:pointer;
+  background:rgba(255,255,255,.15);
+  color:#fff;font-family:'Inter',sans-serif;
+  font-size:15px;font-weight:700;
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  transition:background .15s;
+}
+.pv-close-btn:active{background:rgba(255,255,255,.28);}
+
+/* Стрелки */
+.pv-nav{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:40px;height:40px;border:none;border-radius:50%;
+  background:rgba(255,255,255,.15);color:#fff;
+  font-size:22px;font-weight:300;cursor:pointer;z-index:2;
+  display:flex;align-items:center;justify-content:center;
+  line-height:1;padding:0;padding-bottom:2px;
+  transition:background .15s;
+}
+.pv-nav:active{background:rgba(255,255,255,.3);}
+.pv-nav-prev{left:8px;}
+.pv-nav-next{right:8px;}
 .tag-sub{background:#EEF4FF;color:#2563EB;}
 .subcat-card--all{border-style:dashed;}
+
+/* ══ КИТ-КАРТОЧКИ С ФОТО (как subcat, но с фото) ══ */
+.kit-photo-card{
+  border-radius:14px;border:1.5px solid var(--wb-border);background:#fff;
+  cursor:pointer;transition:all .15s;
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.kit-photo-card:active{border-color:var(--wb-purple);transform:scale(.97);}
+/* Контейнер фото — фиксированная высота, не растягивается */
+.kit-photo-wrap{
+  width:100%;height:0;padding-bottom:75%;/* соотношение 4:3 */
+  position:relative;flex-shrink:0;overflow:hidden;
+  background:linear-gradient(135deg,#f0e6ff,#e2cfff);
+}
+.kit-photo-img{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  object-fit:cover;display:block;
+}
+.kit-photo-img-placeholder{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:36px;
+}
+.kit-photo-body{padding:10px 12px 12px;flex:1;display:flex;flex-direction:column;gap:3px;}
+.kit-photo-name{font-size:12px;font-weight:800;color:var(--wb-text);line-height:1.3;}
+.kit-photo-count{font-size:10px;font-weight:600;color:var(--wb-text3);}
+.kit-photo-footer{display:flex;align-items:center;justify-content:space-between;margin-top:6px;}
+.kit-photo-add{
+  height:26px;padding:0 10px;border:none;border-radius:8px;
+  background:var(--wb-purple);color:#fff;font-size:10px;font-weight:700;
+  font-family:'Inter',sans-serif;cursor:pointer;display:flex;align-items:center;gap:4px;
+  white-space:nowrap;transition:all .15s;
+}
+.kit-photo-add:active{background:var(--wb-purple-dark);}
+.kit-photo-arrow{font-size:14px;color:var(--wb-text3);}
+.kit-photo-cnt-badge{
+  position:absolute;top:7px;right:7px;
+  background:rgba(0,0,0,.45);color:#fff;
+  font-size:9px;font-weight:700;padding:2px 6px;
+  border-radius:8px;line-height:1.4;z-index:1;
+}
 </style>
 
   <!-- PWA META -->
@@ -550,17 +717,25 @@ body{font-family:'Inter',sans-serif;}
   <div class="screen" id="s4">
     <div class="s4-scroll" id="s4scroll">
 
-      <div class="s4-photo">
-        <div class="s4-photo-box">
+      <div class="s4-photo" id="s4photoWrap">
+        <!-- Галерея фото -->
+        <div class="s4-gallery" id="s4gallery">
+          <!-- слайды рендерятся динамически -->
+        </div>
+        <!-- Заглушка (нет фото) -->
+        <div class="s4-photo-box" id="s4photoFallback">
           <div class="s4-photo-emoji" id="s4emoji">📦</div>
           <div class="s4-photo-lbl">Фото товара</div>
         </div>
-        <div class="s4-photo-share">⬆</div>
-        <div class="s4-dots">
-          <div class="s4-dot act"></div>
-          <div class="s4-dot"></div>
-          <div class="s4-dot"></div>
-        </div>
+        <!-- Счётчик фото -->
+        <div class="s4-photo-counter" id="s4photoCounter"></div>
+        <!-- Кнопка полноэкранного просмотра -->
+        <div class="s4-photo-share" id="s4photoFullBtn" onclick="s4openFullscreen()">⛶</div>
+        <!-- Точки-индикаторы -->
+        <div class="s4-dots" id="s4dots"></div>
+        <!-- Навигация стрелками -->
+        <button class="s4-nav s4-nav-prev" id="s4navPrev" onclick="s4slide(-1)">‹</button>
+        <button class="s4-nav s4-nav-next" id="s4navNext" onclick="s4slide(1)">›</button>
       </div>
 
       <div class="s4-info">
@@ -732,15 +907,20 @@ body{font-family:'Inter',sans-serif;}
         <button class="modal-close" onclick="closeModal('Update')">✕</button>
       </div>
       <div class="modal-body" id="updateModalBody">
-        <div style="font-size:12px;color:#6B6B6B;line-height:1.6;margin-bottom:16px;">
+        <div style="font-size:12px;color:#6B6B6B;line-height:1.6;margin-bottom:14px;">
           Загружает актуальный каталог и фотографии из репозитория
           <b style="color:#1A1A1A;">skbmaksim82-byte/Portal-zakazov</b>.
         </div>
+        <div class="modal-form-label">GitHub токен (PAT) — необязательно</div>
+        <input class="modal-input" type="password" id="upd-pat" placeholder="ghp_xxxxxxxxxxxx (для снятия лимита API)"
+          style="margin-bottom:6px;"
+          oninput="var v=this.value.trim();if(v)localStorage.setItem('gh_pat',v);">
+        <div style="font-size:10px;color:#AAAAAA;margin-bottom:14px;">Без токена: лимит 60 запросов/час · Токен сохраняется локально</div>
         <!-- Прогресс -->
         <div id="upd-progress" style="display:none;flex-direction:column;gap:8px;margin-bottom:14px;"></div>
         <!-- Статус -->
         <div id="upd-status" style="font-size:12px;font-weight:700;min-height:18px;margin-bottom:10px;"></div>
-        <button class="modal-submit purple" id="upd-btn" onclick="mobUpdateFromGitHub()">
+        <button class="modal-submit purple" id="upd-btn" onclick="closeModal('Update');mobUpdateFromGitHub()">
           ☁ Обновить сейчас
         </button>
       </div>
@@ -837,12 +1017,24 @@ body{font-family:'Inter',sans-serif;}
 
 
 
-  <!-- PHOTO VIEWER -->
-  <div class="photo-viewer" id="photoViewer" onclick="closePhotoViewer()">
-    <button class="photo-viewer-close" onclick="closePhotoViewer()">&#10005;</button>
-    <img class="photo-viewer-img" id="photoViewerImg" src="" alt="">
-    <div class="photo-viewer-code" id="photoViewerCode"></div>
-    <div class="photo-viewer-name" id="photoViewerName"></div>
+  <!-- PHOTO VIEWER (fullscreen) -->
+  <div class="photo-viewer" id="photoViewer">
+    <div class="pv-hdr">
+      <div class="pv-info">
+        <div class="pv-code" id="pvCode"></div>
+        <div class="pv-name" id="pvName"></div>
+      </div>
+      <div class="pv-counter" id="pvCounter"></div>
+    </div>
+    <div class="pv-track-wrap" id="pvTrackWrap">
+      <div class="pv-track" id="pvTrack"></div>
+      <button class="pv-nav pv-nav-prev" id="pvNavPrev" onclick="pvSlide(-1)">‹</button>
+      <button class="pv-nav pv-nav-next" id="pvNavNext" onclick="pvSlide(1)">›</button>
+    </div>
+    <div class="pv-footer">
+      <div class="pv-dots" id="pvDots"></div>
+      <button class="pv-close-btn" onclick="closePhotoViewer()">Закрыть</button>
+    </div>
   </div>
 
 <script>
@@ -1070,6 +1262,7 @@ function renderSubcatsFiltered(q){
    RENDER: ITEMS (Уровень 3)
 ════════════════════════════════════════════════════ */
 function renderItems(){
+  if(currentSecId==='kits'){renderKitItems();return;}
   var items=getFilteredItems();
   var cnt=getEl('itemCount'); if(cnt)cnt.textContent=items.length.toLocaleString('ru');
   var list=getEl('itemsList'); if(!list)return;
@@ -1086,7 +1279,7 @@ function renderItems(){
     h+='<div class="item-card'+(inC?' in-cart':'')+'" id="ic-'+it.id+'">';
     if(it.photo){
           if(it.photo){
-      h+='<div class="item-thumb" data-action="view-item-photo" data-val="'+it.photo+'" data-code="'+it.code+'" data-name="'+it.name.replace(/"/g,'&quot;')+'" style="cursor:zoom-in"><img src="'+it.photo+'" style="width:100%;height:100%;object-fit:cover;border-radius:10px;"></div>';
+      h+='<div class="item-thumb" data-action="view-item-photo" data-val="'+it.photo+'" data-code="'+it.code+'" data-name="'+it.name.replace(/"/g,'&quot;')+'" style="cursor:zoom-in"><img src="'+it.photo+'" style="width:100%;height:100%;object-fit:cover;"></div>';
     } else {
       h+='<div class="item-thumb" data-action="go-item" data-val="'+it.id+'">'+it.emoji+'</div>';
     }
@@ -1120,7 +1313,14 @@ function showScreen(id){
 }
 
 function goSection(secId){
-  currentSecId=secId; currentSubcat=''; currentItem=null;
+  currentSecId=secId; currentSubcat=''; currentItem=null; currentKitIdx=-1;
+  if(secId==='kits'){
+    renderKitsScreen();
+    showScreen('s2');
+    navHistory=['s1','s2'];
+    updateHeader();
+    return;
+  }
   renderSubcats(secId);
   /* renderSubcats сама вызовет goSubcat если нет подразделов */
   if(getEl('subcatScreen')&&getEl('subcatScreen').innerHTML.indexOf('subcat-grid')>=0){
@@ -1146,12 +1346,16 @@ function goBack(){
     showScreen('s3');
     navHistory=navHistory.slice(0,-1);
   } else if(prev==='s2'){
-    currentItem=null; currentSubcat='';
-    renderSubcats(currentSecId);
+    currentItem=null; currentSubcat=''; currentKitIdx=-1;
+    if(currentSecId==='kits'){
+      renderKitsScreen();
+    } else {
+      renderSubcats(currentSecId);
+    }
     showScreen('s2');
     navHistory=['s1','s2'];
   } else {
-    currentSecId=''; currentSubcat=''; currentItem=null;
+    currentSecId=''; currentSubcat=''; currentItem=null; currentKitIdx=-1;
     showScreen('s1');
     navHistory=['s1'];
   }
@@ -1194,8 +1398,12 @@ function updateHeader(){
   } else if(cur==='s2'){
     if(backBtn)backBtn.classList.add('show');
     if(titleMain)titleMain.textContent=sec?sec.name:'';
-    var data2=getSubcatData(currentSecId);
-    if(titleSub)titleSub.textContent=data2.subcats.length+' \u043f\u043e\u0434\u0440\u0430\u0437\u0434\u0435\u043b\u0430';
+    if(currentSecId==='kits'){
+      if(titleSub)titleSub.textContent=kitsData.length+' \u043a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u043e\u0432';
+    } else {
+      var data2=getSubcatData(currentSecId);
+      if(titleSub)titleSub.textContent=data2.subcats.length+' \u043f\u043e\u0434\u0440\u0430\u0437\u0434\u0435\u043b\u0430';
+    }
     if(breadcrumb){breadcrumb.classList.add('show');breadcrumb.innerHTML='<span class="bc-item" data-action="reset-home">\u0413\u043b\u0430\u0432\u043d\u0430\u044f</span><span class="bc-sep">\u203a</span><span class="bc-cur">'+(sec?sec.name:'')+'</span>';}
     if(localSrch)localSrch.style.display='flex';
     if(localInput){localInput.placeholder='\u041f\u043e\u0438\u0441\u043a: '+(sec?sec.name:'');localInput.value='';}
@@ -1229,42 +1437,142 @@ function updateHeader(){
 ════════════════════════════════════════════════════ */
 /* ════════════ КОМПЛЕКТЫ ════════════ */
 var kitsData = [];
+var currentKitIdx = -1; /* индекс открытого комплекта */
 
 function renderKitsScreen(){
   var el=getEl('subcatScreen'); if(!el)return;
   if(!kitsData.length){
-    el.innerHTML='<div class="subcat-section-title">\uD83D\uDCCB \u041a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u044b</div><div class="empty-state"><div class="empty-icon">\uD83D\uDCCB</div><div class="empty-txt">\u041a\u0430\u0442\u0430\u043b\u043e\u0433 \u043d\u0435 \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043d</div></div>';
+    el.innerHTML='<div class="subcat-section-title">\uD83D\uDCCB \u041a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u044b</div>'
+      +'<div class="empty-state"><div class="empty-icon">\uD83D\uDCCB</div>'
+      +'<div class="empty-txt">\u041a\u0430\u0442\u0430\u043b\u043e\u0433 \u043d\u0435 \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043d</div></div>';
     return;
   }
-  var h='<div class="subcat-section-title">\uD83D\uDCCB \u041a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u044b</div><div class="kit-grid">';
+
+  var h='<div class="subcat-section-title">\uD83D\uDCCB \u041a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u044b · '
+    +kitsData.length+' \u043a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u043e\u0432</div>';
+  h+='<div class="subcat-grid">';
+
+  /* Карточка «Все позиции» */
+  var totalKitItems=0;
+  for(var ti=0;ti<kitsData.length;ti++) totalKitItems+=kitsData[ti].items.length;
+  h+='<div class="kit-photo-card subcat-card--all" data-action="go-kit" data-val="-1">'
+    +'<div class="kit-photo-wrap"><div class="kit-photo-img-placeholder">\uD83D\uDCCB</div></div>'
+    +'<div class="kit-photo-body">'
+    +'<div class="kit-photo-name">\u0412\u0441\u0435 \u043f\u043e\u0437\u0438\u0446\u0438\u0438</div>'
+    +'<div class="kit-photo-count">'+totalKitItems.toLocaleString('ru')+' \u043f\u043e\u0437\u0438\u0446\u0438\u0439</div>'
+    +'<div class="kit-photo-footer"><span class="kit-photo-arrow">\u203a</span></div>'
+    +'</div></div>';
+
   for(var i=0;i<kitsData.length;i++){
     var kit=kitsData[i];
-    var ph=kit.photo?('<img src="'+kit.photo+'" onerror="this.parentNode.textContent=\'\u{1F4CB}\'">'):'&#128203;';
-    h+='<div class="kit-card" id="kit-'+i+'">';
-    h+='<div class="kit-card-header" data-action="toggle-kit" data-val="'+i+'">';
-    h+='<div class="kit-card-photo">'+ph+'</div>';
-    h+='<div class="kit-card-info"><div class="kit-card-name">'+kit.name+'</div><div class="kit-card-cnt">'+kit.items.length+' \u043f\u043e\u0437\u0438\u0446\u0438\u0439</div></div>';
-    h+='<span class="kit-card-chev">&#8250;</span></div>';
-    h+='<div class="kit-card-body">';
-    for(var j=0;j<kit.items.length;j++){
-      var it=kit.items[j];
-      var itPh=findPhotoByCode(it.code);
-      var thumb=itPh?('<img src="'+itPh+'" onerror="this.parentNode.textContent=\'&#128230;\'">'):'&#128230;';
-      var vAct=itPh?('data-action="view-item-photo" data-val="'+itPh+'" data-code="'+it.code+'" data-name="'+it.name.replace(/"/g,'&quot;')+'" style="cursor:zoom-in"'):'';
-      h+='<div class="kit-item"><div class="kit-item-thumb" '+vAct+'>'+thumb+'</div>';
-      h+='<div class="kit-item-info"><div class="kit-item-code">'+it.code+'</div><div class="kit-item-name">'+it.name+'</div></div>';
-      h+='<div class="kit-item-qty">'+it.qty+' \u0448\u0442</div></div>';
+    var photosJson=(kit.photos&&kit.photos.length)?JSON.stringify(kit.photos).replace(/"/g,'&quot;'):'';
+    var nameEsc=(kit.name||'').replace(/"/g,'&quot;');
+
+    /* Фото-блок */
+    var imgBlock;
+    if(kit.photo){
+      var cntBadge=(kit.photos&&kit.photos.length>1)
+        ?'<div class="kit-photo-cnt-badge">'+kit.photos.length+' \u0444\u043e\u0442\u043e</div>':'';
+      imgBlock='<div class="kit-photo-wrap">'
+        +'<img class="kit-photo-img" src="'+kit.photo
+        +'" onerror="this.style.display=\'none\'"'
+        +(photosJson?' data-action="kit-view-photo" data-photos="'+photosJson+'" data-name="'+nameEsc+'" style="cursor:zoom-in"':'')
+        +'>'
+        +cntBadge+'</div>';
+    } else {
+      imgBlock='<div class="kit-photo-wrap"><div class="kit-photo-img-placeholder">\uD83D\uDCCB</div></div>';
     }
-    h+='<button class="kit-add-all" data-action="add-kit" data-val="'+i+'">\uD83D\uDED2 \u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u0432\u0435\u0441\u044c \u043a\u043e\u043c\u043f\u043b\u0435\u043a\u0442</button>';
-    h+='</div></div>';
+
+    h+='<div class="kit-photo-card" data-action="go-kit" data-val="'+i+'">'
+      +imgBlock
+      +'<div class="kit-photo-body">'
+      +'<div class="kit-photo-name">'+kit.name+'</div>'
+      +'<div class="kit-photo-count">'+kit.items.length+' \u043f\u043e\u0437\u0438\u0446\u0438\u0439</div>'
+      +'<div class="kit-photo-footer">'
+      +'<button class="kit-photo-add" data-action="add-kit" data-val="'+i+'">\uD83D\uDED2 \u0412 \u043a\u043e\u0440\u0437\u0438\u043d\u0443</button>'
+      +'<span class="kit-photo-arrow">\u203a</span>'
+      +'</div>'
+      +'</div></div>';
   }
   h+='</div>';
   el.innerHTML=h;
 }
 
-function toggleKit(idx){
-  var card=getEl('kit-'+idx);
-  if(card)card.classList.toggle('open');
+function goKitDetail(idx){
+  currentKitIdx = idx;
+  currentSecId  = 'kits';
+  currentItem   = null;
+  /* idx === -1 → все позиции всех комплектов */
+  if(idx === -1){
+    currentSubcat = '';
+  } else {
+    var kit = kitsData[idx];
+    currentSubcat = kit ? kit.name : '';
+  }
+  renderKitItems();
+  showScreen('s3');
+  navHistory = ['s1','s2','s3'];
+  updateHeader();
+}
+
+function renderKitItems(){
+  var list = getEl('itemsList'); if(!list) return;
+  var items = [];
+  if(currentKitIdx === -1){
+    /* Все позиции всех комплектов */
+    for(var ki=0;ki<kitsData.length;ki++){
+      for(var ji=0;ji<kitsData[ki].items.length;ji++){
+        var it = kitsData[ki].items[ji];
+        items.push({id:'kit-'+ki+'-'+ji, code:it.code, name:it.name, qty:it.qty, kitIdx:ki, kitName:kitsData[ki].name});
+      }
+    }
+  } else {
+    var kit = kitsData[currentKitIdx];
+    if(kit){
+      for(var j=0;j<kit.items.length;j++){
+        var it2 = kit.items[j];
+        items.push({id:'kit-'+currentKitIdx+'-'+j, code:it2.code, name:it2.name, qty:it2.qty, kitIdx:currentKitIdx, kitName:kit.name});
+      }
+    }
+  }
+
+  /* Фильтр по поиску */
+  var q = ((getEl('searchLocal')||{value:''}).value||(getEl('searchGlobal')||{value:''}).value).toLowerCase().trim();
+  if(q) items = items.filter(function(it){ return it.name.toLowerCase().indexOf(q)>=0 || it.code.toLowerCase().indexOf(q)>=0; });
+
+  var cnt = getEl('itemCount'); if(cnt) cnt.textContent = items.length.toLocaleString('ru');
+
+  if(!items.length){
+    list.innerHTML='<div class="empty-state"><div class="empty-icon">\uD83D\uDD0D</div><div class="empty-txt">\u041d\u0438\u0447\u0435\u0433\u043e \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e</div></div>';
+    return;
+  }
+
+  var h='';
+  for(var i=0;i<items.length;i++){
+    var it=items[i];
+    var inC=!!cart[it.id];
+    var itPhoto=findPhotoByCode(it.code);
+    h+='<div class="item-card'+(inC?' in-cart':'')+'" id="ic-'+it.id+'">';
+    if(itPhoto){
+      h+='<div class="item-thumb" data-action="view-item-photo" data-val="'+itPhoto+'" data-code="'+it.code+'" data-name="'+it.name.replace(/"/g,'&quot;')+'" style="cursor:zoom-in"><img src="'+itPhoto+'" style="width:100%;height:100%;object-fit:cover;"></div>';
+    } else {
+      h+='<div class="item-thumb">\uD83D\uDCCB</div>';
+    }
+    h+='<div class="item-info">';
+    h+='<div class="item-code">'+it.code+'</div>';
+    h+='<div class="item-name">'+it.name+'</div>';
+    h+='<div class="item-tags">';
+    h+='<span class="tag tag-cat">\uD83D\uDCCB '+it.kitName+'</span>';
+    h+='<span class="tag" style="background:#E6F9F0;color:#00824A;">'+(it.qty||1)+' \u0448\u0442</span>';
+    h+='</div></div>';
+    h+='<div class="item-right"><div class="qty-row">';
+    h+='<button class="q-btn q-minus" data-action="q-minus" data-val="'+it.id+'">-</button>';
+    h+='<input class="q-val" type="number" value="'+(cart[it.id]?cart[it.id].qty:(it.qty||1))+'" min="1" id="qv-'+it.id+'" oninput="qInputChange(this,\''+it.id+'\')">';
+    h+='<button class="q-btn q-plus" data-action="q-plus" data-val="'+it.id+'">+</button></div>';
+    h+='<button class="add-btn'+(inC?' added':'')+'" id="ab-'+it.id+'" data-action="toggle-cart-kit" data-val="'+it.id+'" data-kit-i="'+i+'">'+(inC?'&#10003;':'+')+'</button>';
+    h+='</div></div>';
+  }
+  list.innerHTML=h;
 }
 
 function addKitToCart(idx){
@@ -1279,6 +1587,29 @@ function addKitToCart(idx){
   showToast('\u0414\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u043e '+added+' \u043f\u043e\u0437. \u0438\u0437 \u043a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u0430','ok');
 }
 
+function toggleKit(idx){ /* legacy — не используется */ }
+
+function toggleCartKitItem(id){
+  var parts=id.split('-');
+  var ki=parseInt(parts[1]),ji=parseInt(parts[2]);
+  var kit=kitsData[ki];if(!kit)return;
+  var it=kit.items[ji];if(!it)return;
+  if(cart[id]){
+    delete cart[id];
+    var ab=getEl('ab-'+id);if(ab){ab.textContent='+';ab.classList.remove('added');}
+    var ic=getEl('ic-'+id);if(ic)ic.classList.remove('in-cart');
+    showToast('\u0423\u0431\u0440\u0430\u043d\u043e \u0438\u0437 \u043a\u043e\u0440\u0437\u0438\u043d\u044b','');
+  } else {
+    var qEl=getEl('qv-'+id);
+    var qty=qEl?(parseInt(qEl.value)||1):(parseInt(it.qty)||1);
+    cart[id]={id:id,code:it.code,name:it.name,emoji:'\uD83D\uDCCB',qty:qty};
+    var ab2=getEl('ab-'+id);if(ab2){ab2.innerHTML='&#10003;';ab2.classList.add('added');}
+    var ic2=getEl('ic-'+id);if(ic2)ic2.classList.add('in-cart');
+    showToast('\u0414\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u043e \u0432 \u043a\u043e\u0440\u0437\u0438\u043d\u0443','ok');
+  }
+  updateCartBadge();
+}
+
 function findPhotoByCode(code){
   var maps=[OBORUD_PHOTOS,REKLAM_PHOTOS,SVET_PHOTOS,SLAB_PHOTOS,UVELIR_PHOTOS,IT_PHOTOS,COMPLECT_PHOTOS];
   for(var m=0;m<maps.length;m++){var arr=maps[m][code];if(arr&&arr.length)return arr[0];}
@@ -1288,23 +1619,496 @@ function findPhotoByCode(code){
 function applyKitsPhotos(){
   for(var i=0;i<kitsData.length;i++){
     var kit=kitsData[i];
-    if(!kit.photo&&kit.items.length){
-      for(var j=0;j<kit.items.length;j++){var ph=findPhotoByCode(kit.items[j].code);if(ph){kit.photo=ph;break;}}
+    kit.photo = null;
+    kit.photos = [];
+
+    /* Ищем только по имени комплекта в COMPLECT_PHOTOS */
+    var kname = kit.name || '';
+    var ckeys = Object.keys(COMPLECT_PHOTOS);
+    for(var ci=0;ci<ckeys.length;ci++){
+      var ck = ckeys[ci];
+      var ckN = ck.replace(/[_\-\s]/g,'').toLowerCase();
+      var knN = kname.replace(/[_\-\s]/g,'').toLowerCase();
+      if(ck.toLowerCase()===kname.toLowerCase() || ckN===knN || kname.toLowerCase().indexOf(ck.toLowerCase())>=0 || ck.toLowerCase().indexOf(knN)>=0){
+        var arr=COMPLECT_PHOTOS[ck];
+        if(arr&&arr.length){kit.photo=arr[0];kit.photos=arr;break;}
+      }
     }
   }
 }
 
-function openPhotoViewer(url,code,name){
-  if(!url)return;
-  var v=getEl('photoViewer');if(!v)return;
-  var img=getEl('photoViewerImg');if(img)img.src=url;
-  var c=getEl('photoViewerCode');if(c)c.textContent=code||'';
-  var n=getEl('photoViewerName');if(n)n.textContent=name||'';
+/* ════════════════════════════════════════════════════
+   ГАЛЕРЕЯ В КАРТОЧКЕ ТОВАРА (s4)
+════════════════════════════════════════════════════ */
+var _s4Photos = [];   /* массив URL фото текущего товара */
+var _s4Index  = 0;    /* текущий слайд */
+var _s4SwipeX = 0;    /* для свайпа */
+var _s4SwipeActive = false;
+
+function s4renderGallery(photos, emoji) {
+  _s4Photos = photos || [];
+  _s4Index  = 0;
+
+  var gallery  = getEl('s4gallery');
+  var fallback = getEl('s4photoFallback');
+  var counter  = getEl('s4photoCounter');
+  var fullBtn  = getEl('s4photoFullBtn');
+  var dots     = getEl('s4dots');
+  var navPrev  = getEl('s4navPrev');
+  var navNext  = getEl('s4navNext');
+  var emojiEl  = getEl('s4emoji');
+
+  if (emojiEl) emojiEl.textContent = emoji || '📦';
+
+  if (!_s4Photos.length) {
+    /* нет фото — заглушка */
+    if (gallery)  { gallery.classList.remove('show'); gallery.innerHTML = ''; }
+    if (fallback) fallback.style.display = 'flex';
+    if (counter)  counter.classList.remove('show');
+    if (fullBtn)  fullBtn.classList.remove('show');
+    if (dots)     dots.innerHTML = '';
+    if (navPrev)  navPrev.classList.remove('show');
+    if (navNext)  navNext.classList.remove('show');
+    return;
+  }
+
+  /* Есть фото — строим галерею */
+  if (fallback) fallback.style.display = 'none';
+
+  /* Слайды */
+  var trackHtml = '';
+  for (var i = 0; i < _s4Photos.length; i++) {
+    trackHtml += '<div class="s4-gallery-slide" data-action="s4-open-fullscreen" data-idx="' + i + '">'
+      + '<img src="' + _s4Photos[i] + '" loading="lazy" onerror="this.parentNode.style.background=\'#f5eeff\'">'
+      + '</div>';
+  }
+  var track = gallery ? gallery.querySelector('.s4-gallery-track') : null;
+  if (!track) {
+    if (gallery) gallery.innerHTML = '<div class="s4-gallery-track">' + trackHtml + '</div>';
+    track = gallery ? gallery.querySelector('.s4-gallery-track') : null;
+  } else {
+    track.innerHTML = trackHtml;
+  }
+
+  if (gallery) gallery.classList.add('show');
+
+  /* Счётчик */
+  if (counter) {
+    if (_s4Photos.length > 1) {
+      counter.textContent = '1 / ' + _s4Photos.length;
+      counter.classList.add('show');
+    } else {
+      counter.classList.remove('show');
+    }
+  }
+
+  /* Кнопка fullscreen */
+  if (fullBtn) fullBtn.classList.add('show');
+
+  /* Точки */
+  if (dots) {
+    if (_s4Photos.length > 1 && _s4Photos.length <= 10) {
+      var dh = '';
+      for (var di = 0; di < _s4Photos.length; di++) {
+        dh += '<div class="s4-dot' + (di === 0 ? ' act' : '') + '" onclick="s4goTo(' + di + ')"></div>';
+      }
+      dots.innerHTML = dh;
+    } else {
+      dots.innerHTML = '';
+    }
+  }
+
+  /* Стрелки */
+  s4updateNav();
+
+  /* Свайп */
+  s4setupSwipe();
+}
+
+function s4goTo(idx) {
+  if (!_s4Photos.length) return;
+  _s4Index = Math.max(0, Math.min(_s4Photos.length - 1, idx));
+  s4applySlide();
+}
+
+function s4slide(dir) {
+  s4goTo(_s4Index + dir);
+}
+
+function s4applySlide(instant) {
+  var gallery = getEl('s4gallery');
+  var track = gallery ? gallery.querySelector('.s4-gallery-track') : null;
+  if (track) {
+    track.style.transition = instant ? 'none' : 'transform .3s cubic-bezier(.4,0,.2,1)';
+    track.style.transform = 'translateX(' + (-_s4Index * 100) + '%)';
+  }
+
+  /* Счётчик */
+  var counter = getEl('s4photoCounter');
+  if (counter && _s4Photos.length > 1) {
+    counter.textContent = (_s4Index + 1) + ' / ' + _s4Photos.length;
+  }
+
+  /* Точки */
+  var dots = getEl('s4dots');
+  if (dots) {
+    var allDots = dots.querySelectorAll('.s4-dot');
+    for (var i = 0; i < allDots.length; i++) {
+      allDots[i].classList.toggle('act', i === _s4Index);
+    }
+  }
+
+  s4updateNav();
+}
+
+function s4updateNav() {
+  var navPrev = getEl('s4navPrev');
+  var navNext = getEl('s4navNext');
+  if (_s4Photos.length > 1) {
+    if (navPrev) navPrev.classList.toggle('show', _s4Index > 0);
+    if (navNext) navNext.classList.toggle('show', _s4Index < _s4Photos.length - 1);
+  } else {
+    if (navPrev) navPrev.classList.remove('show');
+    if (navNext) navNext.classList.remove('show');
+  }
+}
+
+function s4setupSwipe() {
+  var gallery = getEl('s4gallery');
+  if (!gallery || gallery._swipeInit) return;
+  gallery._swipeInit = true;
+
+  var startX, startY, isDragging = false;
+
+  function onStart(e) {
+    var touch = e.touches ? e.touches[0] : e;
+    startX = touch.clientX;
+    startY = touch.clientY;
+    isDragging = true;
+    var track = gallery.querySelector('.s4-gallery-track');
+    if (track) track.style.transition = 'none';
+  }
+  function onMove(e) {
+    if (!isDragging) return;
+    var touch = e.touches ? e.touches[0] : e;
+    var dx = touch.clientX - startX;
+    var dy = touch.clientY - startY;
+    if (Math.abs(dy) > Math.abs(dx) + 5) { isDragging = false; return; }
+    if (e.cancelable) e.preventDefault();
+    var track = gallery.querySelector('.s4-gallery-track');
+    if (track) track.style.transform = 'translateX(calc(' + (-_s4Index * 100) + '% + ' + dx + 'px))';
+  }
+  function onEnd(e) {
+    if (!isDragging) return;
+    isDragging = false;
+    var touch = e.changedTouches ? e.changedTouches[0] : e;
+    var dx = touch.clientX - startX;
+    if (dx < -50 && _s4Index < _s4Photos.length - 1) s4goTo(_s4Index + 1);
+    else if (dx > 50 && _s4Index > 0) s4goTo(_s4Index - 1);
+    else s4applySlide();
+  }
+
+  gallery.addEventListener('touchstart', onStart, {passive:true});
+  gallery.addEventListener('touchmove',  onMove,  {passive:false});
+  gallery.addEventListener('touchend',   onEnd,   {passive:true});
+}
+
+function s4openFullscreen() {
+  if (!_s4Photos.length || !currentItem) return;
+  openPhotoViewer(_s4Photos, currentItem.code, currentItem.name, _s4Index);
+}
+
+/* ════════════════════════════════════════════════════
+   FULLSCREEN PHOTO VIEWER
+════════════════════════════════════════════════════ */
+var _pvPhotos = [];
+var _pvIndex  = 0;
+
+function openPhotoViewer(photos, code, name, startIdx) {
+  /* Поддержка вызова с одной строкой (из кит-карт) */
+  if (typeof photos === 'string') photos = [photos];
+  if (!photos || !photos.length) return;
+
+  _pvPhotos = photos;
+  _pvIndex  = startIdx || 0;
+
+  var v = getEl('photoViewer'); if (!v) return;
+
+  /* Инфо */
+  var c = getEl('pvCode'); if (c) c.textContent = code || '';
+  var n = getEl('pvName'); if (n) n.textContent = name || '';
+
+  /* Слайды */
+  var track = getEl('pvTrack');
+  if (track) {
+    var html = '';
+    for (var i = 0; i < _pvPhotos.length; i++) {
+      html += '<div class="pv-slide"><img src="' + _pvPhotos[i] + '" loading="lazy"></div>';
+    }
+    track.innerHTML = html;
+    track.style.transition = 'none';
+    track.style.transform = 'translateX(' + (-_pvIndex * 100) + 'vw)';
+  }
+
+  /* Точки */
+  var dots = getEl('pvDots');
+  if (dots) {
+    if (_pvPhotos.length > 1 && _pvPhotos.length <= 12) {
+      var dh = '';
+      for (var di = 0; di < _pvPhotos.length; di++) {
+        dh += '<div class="pv-dot' + (di === _pvIndex ? ' act' : '') + '" onclick="pvGoTo(' + di + ')"></div>';
+      }
+      dots.innerHTML = dh;
+    } else {
+      dots.innerHTML = '';
+    }
+  }
+
+  /* Счётчик */
+  var ctr = getEl('pvCounter');
+  if (ctr) ctr.textContent = _pvPhotos.length > 1 ? (_pvIndex + 1) + ' / ' + _pvPhotos.length : '';
+
+  pvUpdateNav();
+  pvSetupSwipe();
+
   v.classList.add('show');
 }
-function closePhotoViewer(){
-  var v=getEl('photoViewer');if(v)v.classList.remove('show');
-  var img=getEl('photoViewerImg');if(img)img.src='';
+
+function closePhotoViewer() {
+  var v = getEl('photoViewer'); if (v) v.classList.remove('show');
+  var t = getEl('pvTrack');
+  if (t) {
+    /* Сброс зума на всех img перед очисткой */
+    var imgs = t.querySelectorAll('img');
+    for (var i = 0; i < imgs.length; i++) imgs[i].style.transform = '';
+    t.innerHTML = '';
+  }
+}
+
+function pvGoTo(idx) {
+  _pvIndex = Math.max(0, Math.min(_pvPhotos.length - 1, idx));
+  var track = getEl('pvTrack');
+  if (track) {
+    track.style.transition = 'transform .3s cubic-bezier(.4,0,.2,1)';
+    track.style.transform = 'translateX(' + (-_pvIndex * 100) + 'vw)';
+  }
+  var dots = getEl('pvDots');
+  if (dots) {
+    var allDots = dots.querySelectorAll('.pv-dot');
+    for (var i = 0; i < allDots.length; i++) allDots[i].classList.toggle('act', i === _pvIndex);
+  }
+  var ctr = getEl('pvCounter');
+  if (ctr) ctr.textContent = _pvPhotos.length > 1 ? (_pvIndex + 1) + ' / ' + _pvPhotos.length : '';
+  pvUpdateNav();
+}
+
+function pvSlide(dir) { pvGoTo(_pvIndex + dir); }
+
+function pvUpdateNav() {
+  var prev = getEl('pvNavPrev'); var next = getEl('pvNavNext');
+  if (prev) prev.style.display = (_pvPhotos.length > 1 && _pvIndex > 0) ? 'flex' : 'none';
+  if (next) next.style.display = (_pvPhotos.length > 1 && _pvIndex < _pvPhotos.length - 1) ? 'flex' : 'none';
+}
+
+function pvSetupSwipe() {
+  var wrap = getEl('pvTrackWrap');
+  if (!wrap || wrap._pvSwipeInit) return;
+  wrap._pvSwipeInit = true;
+
+  /* ── состояние зума для текущего слайда ── */
+  var _zoom = 1;
+  var _zoomMin = 1;
+  var _zoomMax = 4;
+  var _panX = 0;
+  var _panY = 0;
+
+  /* ── состояние жестов ── */
+  var _touchMode = 'none'; /* 'swipe' | 'zoom' */
+  var _startX = 0, _startY = 0;
+  var _initDist = 0, _initZoom = 1;
+  var _initPanX = 0, _initPanY = 0;
+  var _mid0X = 0, _mid0Y = 0;
+  var _swiping = false;
+  var _swipeStartX = 0;
+
+  function getCurrentImg() {
+    var track = getEl('pvTrack');
+    if (!track) return null;
+    var slides = track.querySelectorAll('.pv-slide');
+    return slides[_pvIndex] ? slides[_pvIndex].querySelector('img') : null;
+  }
+
+  function applyImgTransform(img, z, px, py, animated) {
+    if (!img) return;
+    img.style.transition = animated ? 'transform .2s ease' : 'none';
+    img.style.transform = 'translate3d(' + px + 'px,' + py + 'px,0) scale(' + z + ')';
+  }
+
+  function resetZoom(animated) {
+    _zoom = 1; _panX = 0; _panY = 0;
+    var img = getCurrentImg();
+    if (img) applyImgTransform(img, 1, 0, 0, animated);
+  }
+
+  function dist(t) {
+    var dx = t[0].clientX - t[1].clientX;
+    var dy = t[0].clientY - t[1].clientY;
+    return Math.sqrt(dx*dx + dy*dy);
+  }
+  function midpoint(t) {
+    return {
+      x: (t[0].clientX + t[1].clientX) / 2,
+      y: (t[0].clientY + t[1].clientY) / 2
+    };
+  }
+
+  function onTouchStart(e) {
+    var tc = e.touches;
+
+    if (tc.length === 2) {
+      /* ── Начало зума ── */
+      _touchMode = 'zoom';
+      _swiping = false;
+      _initDist = dist(tc);
+      _initZoom = _zoom;
+      _initPanX = _panX;
+      _initPanY = _panY;
+      var m = midpoint(tc);
+      _mid0X = m.x;
+      _mid0Y = m.y;
+      var track = getEl('pvTrack');
+      if (track) track.style.transition = 'none';
+      return;
+    }
+
+    if (tc.length === 1) {
+      _startX = tc[0].clientX;
+      _startY = tc[0].clientY;
+
+      if (_zoom > 1) {
+        /* Уже в зуме — пан по фото */
+        _touchMode = 'pan';
+        _initPanX = _panX;
+        _initPanY = _panY;
+      } else {
+        /* Не в зуме — свайп листания */
+        _touchMode = 'swipe';
+        _swiping = false;
+        _swipeStartX = tc[0].clientX;
+        var track = getEl('pvTrack');
+        if (track) track.style.transition = 'none';
+      }
+    }
+  }
+
+  function onTouchMove(e) {
+    var tc = e.touches;
+
+    if (_touchMode === 'zoom' && tc.length === 2) {
+      if (e.cancelable) e.preventDefault();
+      var newDist = dist(tc);
+      var scale = newDist / _initDist;
+      _zoom = Math.min(_zoomMax, Math.max(_zoomMin, _initZoom * scale));
+
+      /* Пан от точки пинча */
+      var m = midpoint(tc);
+      var dMx = m.x - _mid0X;
+      var dMy = m.y - _mid0Y;
+      _panX = _initPanX + dMx;
+      _panY = _initPanY + dMy;
+
+      var img = getCurrentImg();
+      applyImgTransform(img, _zoom, _panX, _panY, false);
+      return;
+    }
+
+    if (_touchMode === 'pan' && tc.length === 1) {
+      if (e.cancelable) e.preventDefault();
+      var dx = tc[0].clientX - _startX;
+      var dy = tc[0].clientY - _startY;
+      _panX = _initPanX + dx;
+      _panY = _initPanY + dy;
+      var img2 = getCurrentImg();
+      applyImgTransform(img2, _zoom, _panX, _panY, false);
+      return;
+    }
+
+    if (_touchMode === 'swipe' && tc.length === 1) {
+      var sdx = tc[0].clientX - _swipeStartX;
+      var sdy = tc[0].clientY - _startY;
+      if (!_swiping && Math.abs(sdy) > Math.abs(sdx) + 5) {
+        _touchMode = 'none'; return;
+      }
+      _swiping = true;
+      if (e.cancelable) e.preventDefault();
+      var track = getEl('pvTrack');
+      if (track) track.style.transform = 'translateX(calc(' + (-_pvIndex * 100) + 'vw + ' + sdx + 'px))';
+    }
+  }
+
+  function onTouchEnd(e) {
+    var tc = e.changedTouches;
+
+    if (_touchMode === 'zoom') {
+      /* Если зум ≤ 1.05 — сбрасываем до 1 */
+      if (_zoom <= 1.05) resetZoom(true);
+      /* Двойной тап — не реализуем, хватит пинча */
+      _touchMode = 'none';
+      return;
+    }
+
+    if (_touchMode === 'pan') {
+      _touchMode = 'none';
+      return;
+    }
+
+    if (_touchMode === 'swipe') {
+      _touchMode = 'none';
+      if (!_swiping) return;
+      var dx = tc[0].clientX - _swipeStartX;
+      if (dx < -50 && _pvIndex < _pvPhotos.length - 1) {
+        resetZoom(false);
+        pvGoTo(_pvIndex + 1);
+      } else if (dx > 50 && _pvIndex > 0) {
+        resetZoom(false);
+        pvGoTo(_pvIndex - 1);
+      } else {
+        /* Возврат */
+        var track = getEl('pvTrack');
+        if (track) {
+          track.style.transition = 'transform .3s cubic-bezier(.4,0,.2,1)';
+          track.style.transform = 'translateX(' + (-_pvIndex * 100) + 'vw)';
+        }
+      }
+    }
+  }
+
+  wrap.addEventListener('touchstart', onTouchStart, {passive:true});
+  wrap.addEventListener('touchmove',  onTouchMove,  {passive:false});
+  wrap.addEventListener('touchend',   onTouchEnd,   {passive:true});
+
+  /* Двойной тап — сброс зума */
+  var _lastTap = 0;
+  wrap.addEventListener('touchend', function(e) {
+    if (_touchMode !== 'none') return;
+    var now = Date.now();
+    if (now - _lastTap < 300) {
+      if (_zoom > 1) resetZoom(true);
+      else {
+        _zoom = 2.5; _panX = 0; _panY = 0;
+        var img = getCurrentImg();
+        applyImgTransform(img, _zoom, 0, 0, true);
+      }
+    }
+    _lastTap = now;
+  }, {passive:true});
+
+  /* При смене слайда — сбрасываем зум */
+  var _origPvGoTo = pvGoTo;
+  pvGoTo = function(idx) {
+    resetZoom(false);
+    _origPvGoTo(idx);
+  };
 }
 
 function setupEventDelegation(){
@@ -1341,8 +2145,18 @@ function setupEventDelegation(){
         if(action==='update-catalog'){mobUpdateFromGitHub();return;}
         if(action==='close-panel'){closeLivePanel();return;}
         if(action==='toggle-kit'){toggleKit(parseInt(val));return;}
+        if(action==='go-kit'){goKitDetail(parseInt(val));return;}
+        if(action==='toggle-cart-kit'){toggleCartKitItem(val);return;}
         if(action==='add-kit'){addKitToCart(parseInt(val));return;}
-        if(action==='view-item-photo'){openPhotoViewer(val,t.getAttribute('data-code'),t.getAttribute('data-name'));return;}
+        if(action==='view-item-photo'){openPhotoViewer([val],t.getAttribute('data-code'),t.getAttribute('data-name'),0);return;}
+        if(action==='kit-view-photo'){
+          var photosStr=t.getAttribute('data-photos');
+          var kitName=t.getAttribute('data-name')||'';
+          var photos=[];try{photos=JSON.parse(photosStr);}catch(e){photos=[photosStr];}
+          openPhotoViewer(photos,'',kitName,0);
+          return;
+        }
+        if(action==='s4-open-fullscreen'){s4openFullscreen();return;}
         return;
       }
       t=t.parentNode;
@@ -1477,12 +2291,12 @@ function goItem(itemId){
   var it=findItemById(itemId);if(!it)return;
   currentItem=it;
   var sec=getSec(it.secId);
-  var f={s4emoji:it.photo?'':it.emoji,s4code:it.code,s4name:it.name,s4BcSecName:sec?sec.name:'',s4BcSub:it.subcat||''};
+  var f={s4code:it.code,s4name:it.name,s4BcSecName:sec?sec.name:'',s4BcSub:it.subcat||''};
   var fk=Object.keys(f);
   for(var i=0;i<fk.length;i++){var el=getEl(fk[i]);if(el)el.textContent=f[fk[i]];}
-  /* Фото */
-  var phEl=getEl('s4emoji');
-  if(it.photo&&phEl){phEl.innerHTML='<img src="'+it.photo+'" style="width:100%;height:100%;object-fit:cover;border-radius:18px;" onerror="this.parentNode.textContent=\''+it.emoji+'\'">';}
+  /* Галерея фото */
+  var photos = (it.photos && it.photos.length) ? it.photos : (it.photo ? [it.photo] : []);
+  s4renderGallery(photos, it.emoji);
   var desc=getEl('s4desc');if(desc)desc.innerHTML=(it.desc||('\u041e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u0435 <b>'+it.code+'</b>. '+it.name));
   var inC=!!cart[it.id];
   var addBtn=getEl('s4addBtn');if(addBtn)addBtn.classList.toggle('added',inC);
@@ -1589,11 +2403,15 @@ function openModal(name) {
   var el = document.getElementById('modal' + name);
   if (!el) return;
   el.classList.add('show');
+  var saved = localStorage.getItem('gh_pat') || '';
   if (name === 'Photo') {
     puMobReset();
-    var saved = localStorage.getItem('gh_pat') || '';
     var pe = document.getElementById('pu-mob-pat');
     if (pe) pe.value = saved;
+  }
+  if (name === 'Update') {
+    var ue = document.getElementById('upd-pat');
+    if (ue) ue.value = saved;
   }
 }
 function closeModal(name) {
@@ -1699,20 +2517,64 @@ function closeLivePanel() {
 /* ═══════════════════════════════════════════════════
    ЗАГРУЗКА XLSX
 ═══════════════════════════════════════════════════ */
+function getGhHeaders() {
+  var pat = localStorage.getItem('gh_pat') || '';
+  var h = {'Accept': 'application/vnd.github+json'};
+  if (pat) h['Authorization'] = 'token ' + pat;
+  return h;
+}
+
 function loadXlsxLive() {
-  return fetch(GITHUB_XLSX, {cache: 'no-cache'})
+  var headers = getGhHeaders();
+  /* Сначала получаем download_url через API (надёжнее для файлов с кириллицей) */
+  var apiUrl = GITHUB_API + '%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA_%D0%BE%D0%B1%D0%BE%D1%80%D1%83%D0%B4%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F_%D0%A4%D0%98%D0%9D%D0%90%D0%9B.xlsx';
+  return fetch(apiUrl, {cache: 'no-cache', headers: headers})
     .then(function(r) {
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      return r.arrayBuffer();
+      if (!r.ok) throw new Error('API HTTP ' + r.status);
+      return r.json();
     })
-    .then(function(buf) {
-      var result = parseXlsxBuffer(buf);
-      setRowState('mob-row-xlsx', 'ok', result);
-      return result;
+    .then(function(meta) {
+      /* Если файл маленький — GitHub вернёт base64 напрямую */
+      if (meta.content && meta.encoding === 'base64') {
+        var b64 = meta.content.replace(/\s/g, '');
+        var binary = atob(b64);
+        var buf = new ArrayBuffer(binary.length);
+        var view = new Uint8Array(buf);
+        for (var i = 0; i < binary.length; i++) view[i] = binary.charCodeAt(i);
+        var result = parseXlsxBuffer(buf);
+        setRowState('mob-row-xlsx', 'ok', result);
+        return result;
+      }
+      /* Иначе — скачиваем по download_url */
+      var dlUrl = meta.download_url;
+      if (!dlUrl) throw new Error('Нет download_url');
+      return fetch(dlUrl, {cache: 'no-cache', headers: headers})
+        .then(function(r2) {
+          if (!r2.ok) throw new Error('DL HTTP ' + r2.status);
+          return r2.arrayBuffer();
+        })
+        .then(function(buf) {
+          var result = parseXlsxBuffer(buf);
+          setRowState('mob-row-xlsx', 'ok', result);
+          return result;
+        });
     })
     .catch(function(e) {
-      setRowState('mob-row-xlsx', 'error', e.message.slice(0, 28));
-      throw e;
+      /* Fallback — прямой raw URL */
+      return fetch(GITHUB_XLSX, {cache: 'no-cache', headers: headers})
+        .then(function(r) {
+          if (!r.ok) throw new Error('RAW HTTP ' + r.status);
+          return r.arrayBuffer();
+        })
+        .then(function(buf) {
+          var result = parseXlsxBuffer(buf);
+          setRowState('mob-row-xlsx', 'ok', result);
+          return result;
+        })
+        .catch(function(e2) {
+          setRowState('mob-row-xlsx', 'error', e2.message.slice(0, 28));
+          throw e2;
+        });
     });
 }
 
@@ -1788,6 +2650,49 @@ function parseXlsxBuffer(buf) {
 
   if (totalRows < 5) throw new Error('\u041c\u0430\u043b\u043e \u0434\u0430\u043d\u043d\u044b\u0445 \u0432 \u0444\u0430\u0439\u043b\u0435');
 
+  /* ── Парсим лист «Комплекты» отдельно → kitsData ── */
+  kitsData = [];
+  var kSheet = wb.Sheets['\u041a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u044b'];
+  if (kSheet) {
+    var kRows = LIB.utils.sheet_to_json(kSheet, {header:1, defval:''});
+    /* Структура: col0=порядок/тип, col1=название комплекта, col2=кол-во, col3=код позиции, col4=наим. позиции */
+    /* Определяем колонки по заголовку */
+    var kHdr = kRows[0] || [];
+    var kKitNameCol = 1, kCodeCol = 3, kItemNameCol = 4, kQtyCol = 2;
+    for (var khi = 0; khi < kHdr.length; khi++) {
+      var kh = String(kHdr[khi] || '').trim().toLowerCase();
+      if (kh.indexOf('\u043a\u043e\u043c\u043f\u043b\u0435\u043a\u0442') >= 0 && (kh.indexOf('\u043d\u0430\u0437\u0432') >= 0 || kh.indexOf('\u043d\u0430\u0438\u043c') >= 0)) kKitNameCol = khi;
+      else if ((kh.indexOf('\u043a\u043e\u0434') >= 0 || kh === '\u0430\u0440\u0442\u0438\u043a\u0443\u043b') && kh.indexOf('\u043f\u043e\u0437') >= 0) kCodeCol = khi;
+      else if (kh.indexOf('\u043d\u0430\u0438\u043c\u0435\u043d') >= 0 || kh.indexOf('\u043d\u0430\u0437\u0432\u0430\u043d') >= 0) kItemNameCol = khi;
+      else if (kh.indexOf('\u043a\u043e\u043b') >= 0 || kh.indexOf('\u043a\u043e\u043b-\u0432\u043e') >= 0) kQtyCol = khi;
+    }
+    var kitMap = {};   /* name → kit объект */
+    var kitOrder = []; /* порядок */
+    var lastKitName = '';
+    for (var kri = 1; kri < kRows.length; kri++) {
+      var krow = kRows[kri];
+      var kitName = String(krow[kKitNameCol] || '').trim();
+      var itemCode = String(krow[kCodeCol] || '').trim();
+      var itemName = String(krow[kItemNameCol] || '').trim();
+      var itemQty  = parseInt(krow[kQtyCol]) || 1;
+      if (kitName) lastKitName = kitName;
+      var curKitName = kitName || lastKitName;
+      if (!curKitName) continue;
+      if (!itemCode && !itemName) continue; /* пустая строка */
+      if (!kitMap[curKitName]) {
+        kitMap[curKitName] = {name: curKitName, photo: null, photos: [], items: []};
+        kitOrder.push(curKitName);
+      }
+      if (itemCode || itemName) {
+        kitMap[curKitName].items.push({code: itemCode, name: itemName, qty: itemQty});
+      }
+    }
+    for (var ki2 = 0; ki2 < kitOrder.length; ki2++) {
+      var k = kitMap[kitOrder[ki2]];
+      if (k.items.length) kitsData.push(k);
+    }
+  }
+
   /* Обновляем UI */
   renderSections();
   var cur = navHistory[navHistory.length - 1];
@@ -1801,7 +2706,8 @@ function parseXlsxBuffer(buf) {
    ЗАГРУЗКА ФОТО
 ═══════════════════════════════════════════════════ */
 function loadPhotoFolder(folder, targetMap, label, rowId) {
-  return fetch(GITHUB_API + folder, {cache: 'no-cache'})
+  var headers = getGhHeaders();
+  return fetch(GITHUB_API + folder, {cache: 'no-cache', headers: headers})
     .then(function(r) {
       if (!r.ok) throw new Error('HTTP ' + r.status);
       return r.json();
@@ -1837,7 +2743,7 @@ function applyPhotos() {
     if (!it.code) continue;
     for (var m = 0; m < maps.length; m++) {
       var arr = maps[m][it.code];
-      if (arr && arr.length) { it.photo = arr[0]; break; }
+      if (arr && arr.length) { it.photo = arr[0]; it.photos = arr; break; }
     }
   }
   var cur = navHistory[navHistory.length - 1];
