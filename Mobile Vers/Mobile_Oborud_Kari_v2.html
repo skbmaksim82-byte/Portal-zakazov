@@ -70,6 +70,16 @@ body{font-family:'Inter',sans-serif;}
 .hdr-title{display:flex;flex-direction:column;min-width:0;}
 .hdr-title-main{font-size:13px;font-weight:800;color:var(--wb-text);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .hdr-title-sub{font-size:10px;color:var(--wb-text3);font-weight:500;white-space:nowrap;}
+/* Бейдж статуса обновления — справа от «Портал заказов» */
+.hdr-sync-badge{
+  display:none;align-items:center;
+  font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;
+  white-space:nowrap;flex-shrink:0;transition:all .3s;
+}
+.hdr-sync-badge.show{display:flex;}
+.hdr-sync-badge.loading{background:rgba(160,0,240,.12);color:var(--wb-purple);}
+.hdr-sync-badge.ok{background:rgba(0,194,111,.15);color:#00824A;}
+.hdr-sync-badge.error{background:rgba(226,75,74,.12);color:#C03030;}
 .hdr-context{
   display:flex;align-items:center;justify-content:space-between;
   padding:0 14px 7px;min-height:0;overflow:hidden;
@@ -459,12 +469,25 @@ body{font-family:'Inter',sans-serif;}
 .kit-item-qty{font-size:11px;font-weight:700;color:var(--wb-purple);white-space:nowrap;flex-shrink:0;}
 .kit-add-all{margin:10px 14px;height:40px;border:none;border-radius:10px;background:var(--wb-purple);color:#fff;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;cursor:pointer;width:calc(100% - 28px);}
 /* PHOTO VIEWER */
-.photo-viewer{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:10000;display:none;flex-direction:column;align-items:center;justify-content:center;}
+.photo-viewer{position:fixed;inset:0;background:rgba(0,0,0,.94);z-index:10000;display:none;flex-direction:column;align-items:center;justify-content:center;}
 .photo-viewer.show{display:flex;}
-.photo-viewer-img{max-width:94vw;max-height:78vh;object-fit:contain;border-radius:8px;}
-.photo-viewer-code{color:rgba(255,255,255,.5);font-size:11px;margin-top:10px;font-family:'Courier New',monospace;}
-.photo-viewer-name{color:#fff;font-size:13px;font-weight:700;margin-top:4px;text-align:center;padding:0 20px;max-width:90vw;}
+.photo-viewer-img{max-width:94vw;max-height:62vh;object-fit:contain;border-radius:8px;transition:opacity .08s;user-select:none;}
+.photo-viewer-img.fading{opacity:0;}
+.photo-viewer-code{color:rgba(255,255,255,.45);font-size:11px;margin-top:8px;font-family:'Courier New',monospace;}
+.photo-viewer-name{color:#fff;font-size:13px;font-weight:700;margin-top:3px;text-align:center;padding:0 20px;max-width:90vw;}
 .photo-viewer-close{position:absolute;top:20px;right:20px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.photo-viewer-nav{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.18);border:none;color:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.photo-viewer-nav.prev{left:12px;}
+.photo-viewer-nav.next{right:12px;}
+.photo-viewer-nav.hidden{display:none;}
+#pvCounter{position:absolute;top:20px;left:20px;background:rgba(0,0,0,.5);color:#fff;font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px;display:none;}
+#pvDots{display:flex;gap:6px;margin-top:10px;justify-content:center;}
+.pv-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.35);cursor:pointer;transition:background .15s;}
+.pv-dot.active{background:#fff;width:18px;border-radius:4px;}
+#pvThumbs{display:flex;gap:6px;margin-top:8px;max-width:94vw;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
+#pvThumbs::-webkit-scrollbar{display:none;}
+.pv-thumb{width:46px;height:46px;object-fit:cover;border-radius:8px;opacity:.5;cursor:pointer;border:2px solid transparent;flex-shrink:0;}
+.pv-thumb.active{opacity:1;border-color:#fff;}
 .tag-sub{background:#EEF4FF;color:#2563EB;}
 .subcat-card--all{border-style:dashed;}
 </style>
@@ -504,7 +527,10 @@ body{font-family:'Inter',sans-serif;}
       <div class="hdr-logo" id="hdrLogo">
         <div class="hdr-logo-box"><span>П</span></div>
         <div class="hdr-title">
-          <div class="hdr-title-main">Портал заказов</div>
+          <div style="display:flex;align-items:center;gap:5px;">
+            <div class="hdr-title-main">Портал заказов</div>
+            <div class="hdr-sync-badge" id="hdrSyncBadge"></div>
+          </div>
           <div class="hdr-title-sub">Склад — Kari</div>
         </div>
       </div>
@@ -894,11 +920,16 @@ body{font-family:'Inter',sans-serif;}
 
 
   <!-- PHOTO VIEWER -->
-  <div class="photo-viewer" id="photoViewer" onclick="closePhotoViewer()">
+  <div class="photo-viewer" id="photoViewer">
     <button class="photo-viewer-close" onclick="closePhotoViewer()">&#10005;</button>
-    <img class="photo-viewer-img" id="photoViewerImg" src="" alt="">
+    <div id="pvCounter"></div>
+    <button class="photo-viewer-nav prev hidden" id="pvPrev" onclick="pvNav(-1)">&#8249;</button>
+    <img class="photo-viewer-img" id="photoViewerImg" src="" alt="" onclick="pvNav(1)">
+    <button class="photo-viewer-nav next hidden" id="pvNext" onclick="pvNav(1)">&#8250;</button>
     <div class="photo-viewer-code" id="photoViewerCode"></div>
     <div class="photo-viewer-name" id="photoViewerName"></div>
+    <div id="pvDots"></div>
+    <div id="pvThumbs"></div>
   </div>
 
 <script>
@@ -1347,9 +1378,13 @@ function addKitToCart(idx){
 }
 
 function findPhotoByCode(code){
+  var all=findAllPhotosByCode(code);
+  return all.length?all[0]:null;
+}
+function findAllPhotosByCode(code){
   var maps=[OBORUD_PHOTOS,REKLAM_PHOTOS,SVET_PHOTOS,SLAB_PHOTOS,UVELIR_PHOTOS,IT_PHOTOS,COMPLECT_PHOTOS];
-  for(var m=0;m<maps.length;m++){var arr=maps[m][code];if(arr&&arr.length)return arr[0];}
-  return null;
+  for(var m=0;m<maps.length;m++){var arr=maps[m][code];if(arr&&arr.length)return arr;}
+  return [];
 }
 
 function applyKitsPhotos(){
@@ -1361,17 +1396,67 @@ function applyKitsPhotos(){
   }
 }
 
-function openPhotoViewer(url,code,name){
-  if(!url)return;
+var _pvPhotos=[],_pvIndex=0,_pvSwipeX=0;
+
+function openPhotoViewer(urlOrArr,code,name){
+  if(!urlOrArr)return;
   var v=getEl('photoViewer');if(!v)return;
-  var img=getEl('photoViewerImg');if(img)img.src=url;
+  if(typeof urlOrArr==='string'){
+    var all=code?findAllPhotosByCode(code):[];
+    _pvPhotos=all.length?all:[urlOrArr];
+  } else {
+    _pvPhotos=urlOrArr.length?urlOrArr:[urlOrArr];
+  }
+  if(!_pvPhotos.length)return;
+  _pvIndex=0;
   var c=getEl('photoViewerCode');if(c)c.textContent=code||'';
   var n=getEl('photoViewerName');if(n)n.textContent=name||'';
+  pvRender();
   v.classList.add('show');
+  var img=getEl('photoViewerImg');
+  if(img){
+    img.addEventListener('touchstart',pvTouchStart,{passive:true});
+    img.addEventListener('touchend',pvTouchEnd,{passive:true});
+  }
 }
+
+function pvRender(){
+  var img=getEl('photoViewerImg');
+  var counter=getEl('pvCounter');
+  var dots=getEl('pvDots');
+  var thumbs=getEl('pvThumbs');
+  var prev=getEl('pvPrev');
+  var next=getEl('pvNext');
+  var n=_pvPhotos.length;
+  if(img){
+    img.classList.add('fading');
+    var src=_pvPhotos[_pvIndex];
+    setTimeout(function(){if(getEl('photoViewerImg'))getEl('photoViewerImg').src=src;if(img)img.classList.remove('fading');},80);
+  }
+  if(counter){counter.style.display=n>1?'block':'none';counter.textContent=(_pvIndex+1)+' / '+n;}
+  if(prev)prev.className='photo-viewer-nav prev'+((_pvIndex===0||n<=1)?' hidden':'');
+  if(next)next.className='photo-viewer-nav next'+((_pvIndex===n-1||n<=1)?' hidden':'');
+  if(dots){
+    if(n>1&&n<=10){var dh='';for(var i=0;i<n;i++)dh+='<div class="pv-dot'+(i===_pvIndex?' active':'')+'" onclick="pvGoTo('+i+')"></div>';dots.innerHTML=dh;}
+    else dots.innerHTML='';
+  }
+  if(thumbs){
+    if(n>1){var th='';for(var j=0;j<n;j++)th+='<img class="pv-thumb'+(j===_pvIndex?' active':'')+'" src="'+_pvPhotos[j]+'" onclick="pvGoTo('+j+')" loading="lazy">';thumbs.innerHTML=th;
+      setTimeout(function(){var a=thumbs.querySelector('.active');if(a)a.scrollIntoView({inline:'center',behavior:'smooth'});},60);
+    } else thumbs.innerHTML='';
+  }
+}
+
+function pvGoTo(idx){_pvIndex=idx;pvRender();}
+function pvNav(dir){var n=_pvPhotos.length;_pvIndex=(_pvIndex+dir+n)%n;pvRender();}
+function pvTouchStart(e){_pvSwipeX=e.touches[0].clientX;}
+function pvTouchEnd(e){var dx=e.changedTouches[0].clientX-_pvSwipeX;if(Math.abs(dx)>50)pvNav(dx<0?1:-1);}
+
 function closePhotoViewer(){
   var v=getEl('photoViewer');if(v)v.classList.remove('show');
-  var img=getEl('photoViewerImg');if(img)img.src='';
+  var img=getEl('photoViewerImg');
+  if(img){img.removeEventListener('touchstart',pvTouchStart);img.removeEventListener('touchend',pvTouchEnd);img.src='';}
+  _pvPhotos=[];_pvIndex=0;
 }
 
 function setupEventDelegation(){
@@ -1595,12 +1680,25 @@ function goItem(itemId){
   var it=findItemById(itemId);if(!it)return;
   currentItem=it;
   var sec=getSec(it.secId);
-  var f={s4emoji:it.photo?'':it.emoji,s4code:it.code,s4name:it.name,s4BcSecName:sec?sec.name:'',s4BcSub:it.subcat||''};
+  var _allPh=findAllPhotosByCode(it.code);
+  var f={s4code:it.code,s4name:it.name,s4BcSecName:sec?sec.name:'',s4BcSub:it.subcat||''};
   var fk=Object.keys(f);
   for(var i=0;i<fk.length;i++){var el=getEl(fk[i]);if(el)el.textContent=f[fk[i]];}
-  /* Фото */
+  /* Фото — галерея */
   var phEl=getEl('s4emoji');
-  if(it.photo&&phEl){phEl.innerHTML='<img src="'+it.photo+'" style="width:100%;height:100%;object-fit:cover;border-radius:18px;" onerror="this.parentNode.textContent=\''+it.emoji+'\'">';}
+  if(phEl){
+    if(_allPh.length===1){
+      phEl.innerHTML='<img src="'+_allPh[0]+'" style="width:100%;height:100%;object-fit:cover;border-radius:18px;cursor:zoom-in;" onclick="openPhotoViewer(findAllPhotosByCode(currentItem.code),currentItem.code,currentItem.name)" onerror="this.parentNode.textContent=\''+it.emoji+'\'">';
+    } else if(_allPh.length>1){
+      var gInner='<div style="position:relative;width:100%;height:100%;cursor:zoom-in;" onclick="openPhotoViewer(findAllPhotosByCode(currentItem.code),currentItem.code,currentItem.name)">';
+      gInner+='<img src="'+_allPh[0]+'" style="width:100%;height:100%;object-fit:cover;border-radius:18px;">';
+      gInner+='<div style="position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.55);color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;">1 / '+_allPh.length+'</div>';
+      gInner+='</div>';
+      phEl.innerHTML=gInner;
+    } else {
+      phEl.textContent=it.emoji;
+    }
+  }
   var desc=getEl('s4desc');if(desc)desc.innerHTML=(it.desc||('\u041e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u0435 <b>'+it.code+'</b>. '+it.name));
   var inC=!!cart[it.id];
   var addBtn=getEl('s4addBtn');if(addBtn)addBtn.classList.toggle('added',inC);
@@ -1659,10 +1757,23 @@ setInterval(updateClock,10000);updateClock();
    INIT
 ════════════════════════════════════════════════════ */
 navHistory=['s1'];
-loadDemoData();      /* Загружаем демо-данные, пока нет xlsx */
+loadDemoData();
 renderSections();
 updateHeader();
 setupEventDelegation();
+fillShopSelects();
+
+/* Авто-обновление при старте */
+setTimeout(silentUpdate, 600);
+
+/* Авто-обновление при возврате из фона */
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'visible') {
+    var now = Date.now();
+    if (!silentUpdate._lastRun || now - silentUpdate._lastRun > 120000) silentUpdate();
+  }
+});
+window.addEventListener('pageshow', function(e) { if (e.persisted) silentUpdate(); });
 
 
 
@@ -1699,6 +1810,92 @@ var SHEET_MAP = {
 
 var _ghTimer = null;
 var _ghStart  = 0;
+var _syncRunning = false;
+
+/* ═══════════════════════════════════════════════════
+   БЕЙДЖ СТАТУСА — справа от «Портал заказов»
+═══════════════════════════════════════════════════ */
+function setSyncBadge(text, state) {
+  var b = document.getElementById('hdrSyncBadge');
+  if (!b) return;
+  if (!text) { b.className = 'hdr-sync-badge'; b.textContent = ''; return; }
+  b.className = 'hdr-sync-badge show ' + (state || '');
+  b.textContent = text;
+}
+
+/* ═══════════════════════════════════════════════════
+   ТИХОЕ ОБНОВЛЕНИЕ — только бейдж, без панели
+═══════════════════════════════════════════════════ */
+function silentUpdate() {
+  if (_syncRunning) return;
+  _syncRunning = true;
+  silentUpdate._lastRun = Date.now();
+
+  var total = 8, done = 0;
+  setSyncBadge('0%', 'loading');
+
+  function tick() {
+    done++;
+    setSyncBadge(Math.round(done / total * 100) + '%', 'loading');
+  }
+
+  /* xlsx */
+  var p1 = fetch(GITHUB_XLSX, {cache: 'no-cache'})
+    .then(function(r) { if (!r.ok) throw new Error('xlsx'); return r.arrayBuffer(); })
+    .then(function(buf) { parseXlsxBuffer(buf); tick(); return true; })
+    .catch(function() { tick(); return false; });
+
+  /* 7 папок фото */
+  function silentPhoto(folder, map) {
+    return fetch(GITHUB_API + folder, {cache: 'no-cache'})
+      .then(function(r) { if (!r.ok) throw new Error(folder); return r.json(); })
+      .then(function(files) {
+        var keys = Object.keys(map);
+        for (var k = 0; k < keys.length; k++) delete map[keys[k]];
+        var cnt = 0;
+        for (var fi = 0; fi < files.length; fi++) {
+          var f = files[fi];
+          if (!/\.(png|jpg|jpeg|gif|webp)$/i.test(f.name)) continue;
+          var nameNoExt = f.name.replace(/\.[^.]+$/, '');
+          var baseCode  = nameNoExt.replace(/_\d+$/, '');
+          var url = f.download_url || (GITHUB_RAW + folder.replace(/%20/g, ' ') + '/' + f.name);
+          if (!map[baseCode]) map[baseCode] = [];
+          if (nameNoExt === baseCode) map[baseCode].unshift(url); else map[baseCode].push(url);
+          cnt++;
+        }
+        tick(); return cnt;
+      })
+      .catch(function() { tick(); return 0; });
+  }
+
+  var p2 = silentPhoto('Foto%20Oborud',    OBORUD_PHOTOS);
+  var p3 = silentPhoto('Foto%20reklama',   REKLAM_PHOTOS);
+  var p4 = silentPhoto('Foto%20Svet',      SVET_PHOTOS);
+  var p5 = silentPhoto('Foto%20slabotoch', SLAB_PHOTOS);
+  var p6 = silentPhoto('Foto%20Uvelir',    UVELIR_PHOTOS);
+  var p7 = silentPhoto('IT%20oborud',      IT_PHOTOS);
+  var p8 = silentPhoto('Foto%20Complect',  COMPLECT_PHOTOS);
+
+  Promise.allSettled([p1, p2, p3, p4, p5, p6, p7, p8])
+    .then(function(results) {
+      _syncRunning = false;
+      var xlsxOk = results[0].status === 'fulfilled' && results[0].value === true;
+      var totalPhotos = 0;
+      for (var i = 1; i < results.length; i++) {
+        if (results[i].status === 'fulfilled') totalPhotos += (results[i].value || 0);
+      }
+      if (xlsxOk) {
+        applyPhotos();
+        var msg = '\u2713 ' + allItems.length.toLocaleString('ru') + ' \u043f\u043e\u0437.';
+        if (totalPhotos) msg += ' \u00b7 ' + totalPhotos.toLocaleString('ru') + ' \u0444\u043e\u0442\u043e';
+        setSyncBadge(msg, 'ok');
+        setTimeout(function() { setSyncBadge('', ''); }, 6000);
+      } else {
+        setSyncBadge('\u26A0 \u043e\u0448\u0438\u0431\u043a\u0430', 'error');
+        setTimeout(function() { setSyncBadge('', ''); }, 5000);
+      }
+    });
+}
 
 /* ═══════════════════════════════════════════════════
    МОДАЛЬНЫЕ ОКНА
@@ -1925,8 +2122,12 @@ function parseXlsxBuffer(buf) {
       for (var hi = 0; hi < hdr.length; hi++) {
         var h = String(hdr[hi] || '').trim().toLowerCase();
         if (!h) continue;
-        if ((h.indexOf('\u043a\u043e\u0434') >= 0 && h.indexOf('\u043d\u043e\u043c') >= 0) || h === '\u043d\u043c\u043a' || h.indexOf('\u043d\u043c\u043a') >= 0) { tmpCode = hi; foundCode = true; }
-        else if (h === '\u0430\u0440\u0442\u0438\u043a\u0443\u043b') { tmpCode = hi; foundCode = true; }
+        /* «Код номенклатуры» / «НМК (Код)» — но НЕ длинные строки вроде «ИТ оборудование — Список НМК» */
+        var isCodeCell = (h.indexOf('\u043a\u043e\u0434') >= 0 && h.indexOf('\u043d\u043e\u043c') >= 0)
+          || h === '\u043d\u043c\u043a'
+          || (h.indexOf('\u043d\u043c\u043a') >= 0 && h.length < 20)  /* «НМК (Код)» — короткая */
+          || h === '\u0430\u0440\u0442\u0438\u043a\u0443\u043b';
+        if (isCodeCell) { tmpCode = hi; foundCode = true; }
         else if (h.indexOf('\u043d\u0430\u0438\u043c\u0435\u043d\u043e\u0432') >= 0 || h.indexOf('\u043d\u0430\u0437\u0432\u0430\u043d') >= 0) tmpName = hi;
         else if (h.indexOf('\u043f\u043e\u0434\u0440\u0430\u0437\u0434\u0435\u043b') >= 0) tmpSubcat = hi;
         else if (h.indexOf('\u043e\u043f\u0438\u0441\u0430\u043d') >= 0 || h.indexOf('\u043f\u0440\u0438\u043c\u0435\u0447') >= 0) tmpDesc = hi;
@@ -2036,6 +2237,9 @@ function applyPhotos() {
    ГЛАВНАЯ ФУНКЦИЯ ОБНОВЛЕНИЯ
 ═══════════════════════════════════════════════════ */
 function mobUpdateFromGitHub() {
+  /* Если идёт тихое обновление — прерываем (флагом), запускаем ручное с панелью */
+  _syncRunning = false;
+  setSyncBadge('', '');
   closeLivePanel();
   _ghStart = Date.now();
   _ghTimer = setInterval(updateTimer, 200);
@@ -2083,6 +2287,7 @@ function mobUpdateFromGitHub() {
       }
 
       applyPhotos();
+      silentUpdate._lastRun = Date.now(); /* не дублируем авто сразу после ручного */
       var summary = results[0].value + ' \u00b7 ' + totalPhotos.toLocaleString('ru') + ' \u0444\u043e\u0442\u043e \u00b7 ' + elapsed + '\u0441';
       if (errors) summary += ' \u00b7 \u26A0 ' + errors + ' \u043e\u0448\u0438\u0431\u043a\u0438';
       finishLivePanel(summary, errors === 0);
