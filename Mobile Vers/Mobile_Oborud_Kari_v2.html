@@ -43,14 +43,11 @@ body{font-family:'Inter',sans-serif;}
 .sbar-icons{display:flex;align-items:center;gap:6px;color:var(--wb-text);}
 
 /* ══ SAFE AREA (iPhone X+) ══ */
+.hdr-top{padding-top:max(8px, env(safe-area-inset-top)) !important;}
+.hdr-top{padding-left:max(14px, env(safe-area-inset-left)) !important;}
 /* ══ HEADER (sticky) ══ */
 .hdr{background:#fff;flex-shrink:0;border-bottom:1px solid var(--wb-border);}
-.hdr-top{
-  display:flex;align-items:center;gap:8px;
-  padding:calc(env(safe-area-inset-top,0px) + 8px) 14px 6px;
-  padding-top:max(8px, env(safe-area-inset-top));
-  padding-left:max(14px, env(safe-area-inset-left));
-}
+.hdr-top{display:flex;align-items:center;gap:10px;padding:calc(env(safe-area-inset-top,0px) + 8px) 14px 6px;}
 .hdr-back{
   height:34px;padding:0 12px 0 8px;border-radius:10px;
   background:var(--wb-purple-bg);border:1.5px solid rgba(160,0,240,.2);
@@ -65,40 +62,26 @@ body{font-family:'Inter',sans-serif;}
   background:var(--wb-purple);border-radius:6px;flex-shrink:0;
 }
 .hdr-back-arrow svg{width:10px;height:10px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
-
-/* Лого — flex:1 чтобы занимало свободное место, но min-width:0 для обрезки */
 .hdr-logo{display:flex;align-items:center;gap:7px;flex:1;min-width:0;overflow:hidden;}
-.hdr-logo-box{
-  width:30px;height:30px;flex-shrink:0;
-  background:linear-gradient(135deg,var(--wb-purple-dark),var(--wb-purple-light));
+.hdr-logo-box{width:30px;height:30px;background:linear-gradient(135deg,var(--wb-purple-dark),var(--wb-purple-light));
   border-radius:9px;display:flex;align-items:center;justify-content:center;
-  box-shadow:0 3px 10px rgba(160,0,240,.35);
-}
+  box-shadow:0 3px 10px rgba(160,0,240,.35);flex-shrink:0;}
 .hdr-logo-box span{font-size:13px;font-weight:900;color:#fff;}
-.hdr-title{display:flex;flex-direction:column;min-width:0;flex-shrink:1;}
-.hdr-title-main{
-  font-size:13px;font-weight:800;color:var(--wb-text);line-height:1.2;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
+.hdr-title{display:flex;flex-direction:column;min-width:0;}
+.hdr-title-main{font-size:13px;font-weight:800;color:var(--wb-text);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .hdr-title-sub{font-size:10px;color:var(--wb-text3);font-weight:500;white-space:nowrap;}
-
-/* Бейдж синхронизации — flex-shrink:0 чтобы не схлопывался */
-.hdr-sync-badge{
-  font-size:10px;font-weight:800;
-  padding:2px 7px;border-radius:20px;
-  white-space:nowrap;flex-shrink:0;
-  transition:all .3s;
+.hdr-context{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 14px 7px;min-height:0;overflow:hidden;
+  max-height:0;transition:max-height .2s,padding .2s;
 }
-.hdr-sync-badge.loading{background:#F0E6FF;color:var(--wb-purple);}
-.hdr-sync-badge.ok{background:var(--wb-green-bg);color:#00824A;}
-.hdr-sync-badge.error{background:#FDEAEA;color:#C0392B;}
-
-/* Корзина — всегда flex-shrink:0, никогда не сдвигается */
+.hdr-context.show{max-height:28px;padding-bottom:7px;}
+.hdr-ctx-name{font-size:12px;font-weight:700;color:var(--wb-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0;}
+.hdr-ctx-count{font-size:11px;font-weight:600;color:var(--wb-text3);white-space:nowrap;flex-shrink:0;margin-left:8px;}
 .hdr-cart-btn{
-  flex-shrink:0;
   position:relative;width:38px;height:38px;border-radius:12px;background:var(--wb-purple-bg);
   border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;
-  transition:background .15s;
+  transition:background .15s;flex-shrink:0;
 }
 .hdr-cart-btn:active{background:var(--wb-purple-bg2);}
 .hdr-cart-badge{
@@ -106,24 +89,11 @@ body{font-family:'Inter',sans-serif;}
   background:var(--wb-pink);color:#fff;border-radius:20px;font-size:10px;font-weight:800;
   display:none;align-items:center;justify-content:center;border:2px solid #fff;
 }
-
-/* Строка контекста — название раздела/позиции */
-.hdr-context{
-  padding:0 14px 8px;
-}
-.hdr-context-title{
-  font-size:15px;font-weight:800;color:var(--wb-text);
-  line-height:1.25;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.hdr-context-sub{
-  font-size:11px;color:var(--wb-text3);font-weight:500;margin-top:1px;
-}
 .hdr-search{display:flex;align-items:center;gap:8px;background:var(--wb-gray);border:1.5px solid var(--wb-border);
   border-radius:12px;padding:0 12px;height:38px;margin:0 14px 10px;}
 .hdr-search:focus-within{border-color:var(--wb-purple);}
 .hdr-search svg{width:15px;height:15px;flex-shrink:0;color:var(--wb-text3);}
-.hdr-search input{flex:1;border:none;background:none;outline:none;font-family:'Inter',sans-serif;font-size:16px;color:var(--wb-text);}
+.hdr-search input{flex:1;border:none;background:none;outline:none;font-family:'Inter',sans-serif;font-size:13px;color:var(--wb-text);}
 .hdr-search input::placeholder{color:var(--wb-text3);}
 .hdr-search-clear{width:18px;height:18px;border-radius:50%;background:var(--wb-text3);border:none;cursor:pointer;
   color:#fff;font-size:10px;display:none;align-items:center;justify-content:center;flex-shrink:0;}
@@ -157,11 +127,10 @@ body{font-family:'Inter',sans-serif;}
 }
 .global-results-title{font-size:13px;font-weight:800;color:var(--wb-text);}
 .global-results-count{font-size:11px;color:var(--wb-text3);}
-.global-results-list{flex:1;overflow-y:auto;padding:8px 14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;align-content:start;}
+.global-results-list{flex:1;overflow-y:auto;padding:8px 14px;display:flex;flex-direction:column;gap:8px;}
 .global-section-label{
   font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;
   color:var(--wb-text3);padding:6px 0 4px;display:flex;align-items:center;gap:6px;
-  grid-column:span 2;
 }
 .global-section-label span{font-size:14px;}
 /* ══ ACTION BTNS ROW ══ */
@@ -244,51 +213,27 @@ body{font-family:'Inter',sans-serif;}
   border:1px solid var(--wb-border);border-radius:20px;padding:4px 10px;
   font-size:11px;font-weight:600;color:var(--wb-text2);cursor:pointer;}
 
-/* Сетка карточек — 2 колонки как комплекты */
-.items-list{padding:8px 14px 20px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.items-list .empty-state{grid-column:span 2;}
-
-/* Карточка товара — вертикальная как kit-photo-card */
+.items-list{padding:8px 14px;display:flex;flex-direction:column;gap:8px;}
 .item-card{
-  background:#fff;border-radius:14px;border:1.5px solid var(--wb-border);
-  display:flex;flex-direction:column;overflow:hidden;
-  transition:border-color .15s;cursor:pointer;
-  position:relative;
+  background:#fff;border-radius:16px;border:1.5px solid var(--wb-border);
+  display:flex;align-items:center;gap:10px;padding:12px;
+  transition:border-color .15s;position:relative;
 }
-.item-card:active{transform:scale(.97);}
 .item-card.in-cart{border-color:var(--wb-purple);background:var(--wb-purple-bg);}
-
-/* Зона фото — соотношение 4:3 */
-.item-photo-wrap{
-  width:100%;height:0;padding-bottom:75%;
-  position:relative;flex-shrink:0;overflow:hidden;
-  background:linear-gradient(135deg,#f5eeff,#ead9ff);
+.item-thumb{
+  width:52px;height:52px;border-radius:12px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:24px;
+  background:linear-gradient(135deg,#f5eeff,#ead9ff);border:1px solid rgba(160,0,240,.1);
 }
-.item-photo-wrap img{
-  position:absolute;top:0;left:0;width:100%;height:100%;
-  object-fit:cover;display:block;
-}
-.item-photo-placeholder{
-  position:absolute;top:0;left:0;width:100%;height:100%;
-  display:flex;align-items:center;justify-content:center;
-  font-size:32px;
-}
-
-/* Тело карточки */
-.item-card-body{padding:8px 10px 10px;display:flex;flex-direction:column;gap:4px;flex:1;}
-.item-code{font-size:9px;font-family:'Courier New',monospace;color:var(--wb-text3);letter-spacing:.3px;}
-.item-name{font-size:11px;font-weight:700;color:var(--wb-text);line-height:1.35;
+.item-info{flex:1;min-width:0;}
+.item-code{font-size:9px;font-family:'Courier New',monospace;color:var(--wb-text3);letter-spacing:.3px;margin-bottom:2px;}
+.item-name{font-size:12px;font-weight:700;color:var(--wb-text);line-height:1.35;margin-bottom:5px;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
-.item-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:2px;}
+.item-tags{display:flex;gap:4px;flex-wrap:wrap;}
 .tag{padding:2px 7px;border-radius:20px;font-size:9px;font-weight:700;}
 .tag-cat{background:var(--wb-purple-bg);color:var(--wb-purple);}
 .tag-stock{background:var(--wb-green-bg);color:#00824A;}
-
-/* Нижняя строка — количество + добавить */
-.item-card-footer{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-top:auto;padding-top:6px;
-}
+.item-right{display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0;}
 .qty-row{display:flex;align-items:center;}
 .q-btn{width:26px;height:26px;border:none;cursor:pointer;font-size:15px;font-weight:700;
   display:flex;align-items:center;justify-content:center;transition:all .12s;}
@@ -296,17 +241,16 @@ body{font-family:'Inter',sans-serif;}
 .q-minus:active{background:#e0e0e0;}
 .q-plus{background:var(--wb-purple);border-radius:0 8px 8px 0;color:#fff;}
 .q-plus:active{background:var(--wb-purple-dark);}
-.q-val{width:28px;height:26px;background:#f7f7f7;border:none;
-  font-family:'Inter',sans-serif;font-size:16px;font-weight:800;color:var(--wb-text);text-align:center;outline:none;}
+.q-val{width:32px;height:26px;background:#f7f7f7;border:none;
+  font-family:'Inter',sans-serif;font-size:12px;font-weight:800;color:var(--wb-text);text-align:center;outline:none;}
 .add-btn{
-  width:30px;height:30px;border-radius:9px;border:none;cursor:pointer;
-  background:var(--wb-purple);color:#fff;font-size:16px;
+  width:34px;height:34px;border-radius:10px;border:none;cursor:pointer;
+  background:var(--wb-purple);color:#fff;font-size:17px;
   display:flex;align-items:center;justify-content:center;
-  box-shadow:0 3px 8px rgba(160,0,240,.3);transition:all .15s;
-  flex-shrink:0;
+  box-shadow:0 4px 12px rgba(160,0,240,.35);transition:all .15s;
 }
 .add-btn:active{transform:scale(.9);}
-.add-btn.added{background:var(--wb-green);box-shadow:0 3px 8px rgba(0,194,111,.3);}
+.add-btn.added{background:var(--wb-green);box-shadow:0 4px 12px rgba(0,194,111,.3);}
 .empty-state{text-align:center;padding:50px 20px;display:flex;flex-direction:column;align-items:center;gap:12px;}
 .empty-icon{font-size:52px;opacity:.3;}
 .empty-txt{font-size:14px;font-weight:600;color:var(--wb-text3);}
@@ -317,14 +261,14 @@ body{font-family:'Inter',sans-serif;}
 .drawer{
   position:absolute;bottom:0;left:0;right:0;background:#fff;border-radius:24px 24px 0 0;
   z-index:51;transform:translateY(100%);transition:transform .35s cubic-bezier(.32,0,.2,1);
-  max-height:80%;display:flex;flex-direction:column;
+  max-height:92%;display:flex;flex-direction:column;
 }
 .drawer.show{transform:translateY(0);}
 .drawer-handle{width:36px;height:4px;border-radius:2px;background:var(--wb-border);margin:10px auto 2px;}
 .drawer-hdr{padding:10px 16px 12px;border-bottom:1px solid var(--wb-border);display:flex;align-items:center;justify-content:space-between;}
 .drawer-hdr-title{font-size:16px;font-weight:800;}
 .drawer-close{width:28px;height:28px;border-radius:50%;background:var(--wb-gray);border:none;font-size:14px;cursor:pointer;color:var(--wb-text2);display:flex;align-items:center;justify-content:center;}
-.drawer-scroll{flex:1;overflow-y:auto;padding:12px 16px;display:flex;flex-direction:column;gap:8px;}
+.drawer-scroll{flex:0 1 auto;overflow-y:auto;max-height:160px;padding:12px 16px;display:flex;flex-direction:column;gap:8px;}
 .cart-item{display:flex;align-items:center;gap:10px;background:var(--wb-gray);border-radius:12px;padding:10px;}
 .ci-thumb{width:40px;height:40px;border-radius:8px;background:linear-gradient(135deg,#f5eeff,#ead9ff);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
 .ci-info{flex:1;min-width:0;}
@@ -332,19 +276,21 @@ body{font-family:'Inter',sans-serif;}
 .ci-code{font-size:9px;color:var(--wb-text3);font-family:'Courier New',monospace;}
 .ci-qty{font-size:12px;font-weight:800;color:var(--wb-purple);white-space:nowrap;}
 .ci-rm{width:22px;height:22px;border:none;background:none;cursor:pointer;font-size:14px;color:var(--wb-text3);}
-.drawer-footer{padding:12px 16px;border-top:1px solid var(--wb-border);}
+.drawer-footer{padding:12px 16px 20px;border-top:1px solid var(--wb-border);overflow-y:auto;max-height:65vh;}
 .dl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--wb-text3);margin-bottom:6px;}
 .shop-sel{width:100%;padding:10px 12px;border:1.5px solid var(--wb-border);border-radius:12px;
-  font-family:'Inter',sans-serif;font-size:16px;font-weight:600;color:var(--wb-text);
+  font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--wb-text);
   background:#fff;outline:none;margin-bottom:10px;appearance:none;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath fill='%23AAA' d='M0 0l6 8 6-8z'/%3E%3C/svg%3E");
   background-repeat:no-repeat;background-position:right 12px center;}
 .send-btn{width:100%;height:48px;border:none;border-radius:14px;cursor:pointer;
   background:linear-gradient(135deg,var(--wb-purple-dark),var(--wb-purple));
-  color:#fff;font-family:'Inter',sans-serif;font-size:15px;font-weight:800;
+  color:#fff;font-family:'Inter',sans-serif;font-size:14px;font-weight:800;
   display:flex;align-items:center;justify-content:center;gap:8px;
   box-shadow:0 6px 20px rgba(160,0,240,.4);transition:all .2s;}
 .send-btn:active{transform:scale(.97);}
+/* Compact form inputs inside drawer footer */
+.drawer-footer .modal-input{margin-bottom:0;padding:9px 12px;font-size:12px;}
 
 
 /* PWA INSTALL BTN */
@@ -377,72 +323,18 @@ body{font-family:'Inter',sans-serif;}
 .s4-scroll{flex:1;overflow-y:auto;scrollbar-width:none;background:#F4F4F4;}
 .s4-scroll::-webkit-scrollbar{display:none;}
 .s4-photo{background:#fff;height:240px;display:flex;align-items:center;justify-content:center;
-  position:relative;border-bottom:1px solid var(--wb-border);flex-shrink:0;overflow:hidden;}
-
-/* Галерея */
-.s4-gallery{
-  position:absolute;inset:0;display:none;
-  overflow:hidden;touch-action:pan-y;
-}
-.s4-gallery.show{display:block;}
-.s4-gallery-track{
-  display:flex;height:100%;
-  transition:transform .3s cubic-bezier(.4,0,.2,1);
-  will-change:transform;
-}
-.s4-gallery-slide{
-  flex-shrink:0;width:100%;height:100%;
-  display:flex;align-items:center;justify-content:center;
-  cursor:zoom-in;
-}
-.s4-gallery-slide img{
-  width:100%;height:100%;object-fit:cover;
-  pointer-events:none;display:block;
-}
-
-/* Заглушка */
+  position:relative;border-bottom:1px solid var(--wb-border);flex-shrink:0;}
 .s4-photo-box{width:160px;height:160px;background:linear-gradient(135deg,#f0e6ff,#e2cfff);
   border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:8px;border:1.5px solid #d8b8ff;position:relative;z-index:1;}
+  gap:8px;border:1.5px solid #d8b8ff;}
 .s4-photo-emoji{font-size:54px;line-height:1;}
 .s4-photo-lbl{font-size:10px;color:#9966CC;font-weight:600;}
-
-/* Счётчик */
-.s4-photo-counter{
-  position:absolute;top:10px;left:10px;
-  background:rgba(0,0,0,.45);color:#fff;
-  font-size:10px;font-weight:700;
-  padding:3px 8px;border-radius:20px;
-  display:none;z-index:5;letter-spacing:.3px;
-}
-.s4-photo-counter.show{display:block;}
-
-/* Кнопка fullscreen */
-.s4-photo-share{position:absolute;top:10px;right:10px;width:32px;height:32px;background:rgba(255,255,255,.9);
+.s4-photo-share{position:absolute;top:10px;right:10px;width:32px;height:32px;background:#fff;
   border-radius:50%;border:1px solid var(--wb-border);display:flex;align-items:center;
-  justify-content:center;font-size:15px;cursor:pointer;z-index:5;
-  box-shadow:0 2px 8px rgba(0,0,0,.12);display:none;}
-.s4-photo-share.show{display:flex;}
-
-/* Точки */
-.s4-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:5;}
-.s4-dot{width:6px;height:6px;border-radius:50%;background:rgba(160,0,240,.25);transition:all .2s;cursor:pointer;}
+  justify-content:center;font-size:14px;cursor:pointer;}
+.s4-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:5px;}
+.s4-dot{width:6px;height:6px;border-radius:50%;background:#e0ccff;}
 .s4-dot.act{background:var(--wb-purple);width:16px;border-radius:3px;}
-
-/* Стрелки навигации */
-.s4-nav{
-  position:absolute;top:50%;transform:translateY(-50%);
-  width:32px;height:32px;border:none;border-radius:50%;
-  background:rgba(255,255,255,.85);color:var(--wb-text);
-  font-size:20px;font-weight:300;cursor:pointer;z-index:5;
-  display:none;align-items:center;justify-content:center;
-  box-shadow:0 2px 8px rgba(0,0,0,.15);line-height:1;
-  transition:background .15s;padding:0;padding-bottom:2px;
-}
-.s4-nav.show{display:flex;}
-.s4-nav:active{background:rgba(255,255,255,1);}
-.s4-nav-prev{left:8px;}
-.s4-nav-next{right:8px;}
 .s4-info{background:#fff;padding:14px;border-bottom:1px solid var(--wb-border);}
 .s4-breadcrumb{display:flex;align-items:center;gap:5px;margin-bottom:8px;flex-wrap:wrap;}
 .s4-bc-sec{display:flex;align-items:center;gap:4px;background:var(--wb-purple-bg);
@@ -462,7 +354,7 @@ body{font-family:'Inter',sans-serif;}
   display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;}
 .s4-qb.minus{background:#f0f0f0;border-radius:10px 0 0 10px;color:#555;}
 .s4-qb.plus{background:var(--wb-purple);border-radius:0 10px 10px 0;color:#fff;}
-.s4-qval{width:38px;height:36px;background:#f7f7f7;border:none;font-size:16px;font-weight:700;
+.s4-qval{width:38px;height:36px;background:#f7f7f7;border:none;font-size:14px;font-weight:700;
   text-align:center;color:var(--wb-text);outline:none;font-family:'Inter',sans-serif;}
 .s4-add{flex:1;height:44px;background:var(--wb-purple);border:none;border-radius:12px;
   color:#fff;font-size:13px;font-weight:800;cursor:pointer;display:flex;align-items:center;
@@ -519,11 +411,11 @@ body{font-family:'Inter',sans-serif;}
 .modal-form-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;
   color:var(--wb-text3);margin-bottom:6px;}
 .modal-input{width:100%;padding:10px 12px;border:1.5px solid var(--wb-border);border-radius:12px;
-  font-family:'Inter',sans-serif;font-size:16px;color:var(--wb-text);background:#fff;
+  font-family:'Inter',sans-serif;font-size:13px;color:var(--wb-text);background:#fff;
   outline:none;margin-bottom:14px;}
 .modal-input:focus{border-color:var(--wb-purple);}
 .modal-textarea{width:100%;padding:10px 12px;border:1.5px solid var(--wb-border);border-radius:12px;
-  font-family:'Inter',sans-serif;font-size:16px;color:var(--wb-text);background:#fff;
+  font-family:'Inter',sans-serif;font-size:13px;color:var(--wb-text);background:#fff;
   outline:none;resize:none;margin-bottom:14px;min-height:100px;}
 .modal-textarea:focus{border-color:var(--wb-purple);}
 .modal-submit{width:100%;height:46px;border:none;border-radius:12px;cursor:pointer;
@@ -566,126 +458,15 @@ body{font-family:'Inter',sans-serif;}
 .kit-item-name{font-size:11px;font-weight:600;color:var(--wb-text);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .kit-item-qty{font-size:11px;font-weight:700;color:var(--wb-purple);white-space:nowrap;flex-shrink:0;}
 .kit-add-all{margin:10px 14px;height:40px;border:none;border-radius:10px;background:var(--wb-purple);color:#fff;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;cursor:pointer;width:calc(100% - 28px);}
-/* PHOTO VIEWER — fullscreen галерея */
-.photo-viewer{position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:10000;display:none;flex-direction:column;}
+/* PHOTO VIEWER */
+.photo-viewer{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:10000;display:none;flex-direction:column;align-items:center;justify-content:center;}
 .photo-viewer.show{display:flex;}
-
-/* Шапка — инфо + счётчик, без крестика */
-.pv-hdr{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:max(16px,env(safe-area-inset-top)) 16px 8px;flex-shrink:0;
-}
-.pv-info{display:flex;flex-direction:column;min-width:0;flex:1;}
-.pv-code{color:rgba(255,255,255,.5);font-size:11px;font-family:'Courier New',monospace;}
-.pv-name{color:#fff;font-size:13px;font-weight:700;margin-top:2px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.pv-counter{color:rgba(255,255,255,.55);font-size:12px;font-weight:700;
-  flex-shrink:0;margin-left:12px;}
-
-/* Трек слайдов */
-.pv-track-wrap{
-  flex:1;overflow:hidden;position:relative;
-  touch-action:none; /* управляем сами — зум + свайп */
-}
-.pv-track{
-  display:flex;height:100%;
-  transition:transform .3s cubic-bezier(.4,0,.2,1);
-  will-change:transform;
-}
-.pv-slide{
-  flex-shrink:0;width:100vw;height:100%;
-  display:flex;align-items:center;justify-content:center;
-  overflow:hidden;
-}
-.pv-slide img{
-  max-width:100%;max-height:100%;object-fit:contain;
-  display:block;
-  transform-origin:center center;
-  transition:transform .15s ease;
-  will-change:transform;
-  user-select:none;-webkit-user-select:none;
-}
-
-/* Нижняя панель */
-.pv-footer{
-  padding:8px 16px max(16px,env(safe-area-inset-bottom));flex-shrink:0;
-  display:flex;flex-direction:column;align-items:center;gap:10px;
-}
-.pv-dots{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;max-width:90vw;}
-.pv-dot{
-  width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.3);
-  cursor:pointer;transition:all .2s;flex-shrink:0;
-}
-.pv-dot.act{background:#fff;width:18px;border-radius:4px;}
-
-/* Кнопка Закрыть */
-.pv-close-btn{
-  width:100%;max-width:340px;height:50px;
-  border:none;border-radius:14px;cursor:pointer;
-  background:rgba(255,255,255,.15);
-  color:#fff;font-family:'Inter',sans-serif;
-  font-size:15px;font-weight:700;
-  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-  transition:background .15s;
-}
-.pv-close-btn:active{background:rgba(255,255,255,.28);}
-
-/* Стрелки */
-.pv-nav{
-  position:absolute;top:50%;transform:translateY(-50%);
-  width:40px;height:40px;border:none;border-radius:50%;
-  background:rgba(255,255,255,.15);color:#fff;
-  font-size:22px;font-weight:300;cursor:pointer;z-index:2;
-  display:flex;align-items:center;justify-content:center;
-  line-height:1;padding:0;padding-bottom:2px;
-  transition:background .15s;
-}
-.pv-nav:active{background:rgba(255,255,255,.3);}
-.pv-nav-prev{left:8px;}
-.pv-nav-next{right:8px;}
+.photo-viewer-img{max-width:94vw;max-height:78vh;object-fit:contain;border-radius:8px;}
+.photo-viewer-code{color:rgba(255,255,255,.5);font-size:11px;margin-top:10px;font-family:'Courier New',monospace;}
+.photo-viewer-name{color:#fff;font-size:13px;font-weight:700;margin-top:4px;text-align:center;padding:0 20px;max-width:90vw;}
+.photo-viewer-close{position:absolute;top:20px;right:20px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .tag-sub{background:#EEF4FF;color:#2563EB;}
 .subcat-card--all{border-style:dashed;}
-
-/* ══ КИТ-КАРТОЧКИ С ФОТО (как subcat, но с фото) ══ */
-.kit-photo-card{
-  border-radius:14px;border:1.5px solid var(--wb-border);background:#fff;
-  cursor:pointer;transition:all .15s;
-  display:flex;flex-direction:column;overflow:hidden;
-}
-.kit-photo-card:active{border-color:var(--wb-purple);transform:scale(.97);}
-/* Контейнер фото — фиксированная высота, не растягивается */
-.kit-photo-wrap{
-  width:100%;height:0;padding-bottom:75%;/* соотношение 4:3 */
-  position:relative;flex-shrink:0;overflow:hidden;
-  background:linear-gradient(135deg,#f0e6ff,#e2cfff);
-}
-.kit-photo-img{
-  position:absolute;top:0;left:0;width:100%;height:100%;
-  object-fit:cover;display:block;
-}
-.kit-photo-img-placeholder{
-  position:absolute;top:0;left:0;width:100%;height:100%;
-  display:flex;align-items:center;justify-content:center;
-  font-size:36px;
-}
-.kit-photo-body{padding:10px 12px 12px;flex:1;display:flex;flex-direction:column;gap:3px;}
-.kit-photo-name{font-size:12px;font-weight:800;color:var(--wb-text);line-height:1.3;}
-.kit-photo-count{font-size:10px;font-weight:600;color:var(--wb-text3);}
-.kit-photo-footer{display:flex;align-items:center;justify-content:space-between;margin-top:6px;}
-.kit-photo-add{
-  height:26px;padding:0 10px;border:none;border-radius:8px;
-  background:var(--wb-purple);color:#fff;font-size:10px;font-weight:700;
-  font-family:'Inter',sans-serif;cursor:pointer;display:flex;align-items:center;gap:4px;
-  white-space:nowrap;transition:all .15s;
-}
-.kit-photo-add:active{background:var(--wb-purple-dark);}
-.kit-photo-arrow{font-size:14px;color:var(--wb-text3);}
-.kit-photo-cnt-badge{
-  position:absolute;top:7px;right:7px;
-  background:rgba(0,0,0,.45);color:#fff;
-  font-size:9px;font-weight:700;padding:2px 6px;
-  border-radius:8px;line-height:1.4;z-index:1;
-}
 </style>
 
   <!-- PWA META -->
@@ -726,16 +507,15 @@ body{font-family:'Inter',sans-serif;}
           <div class="hdr-title-main">Портал заказов</div>
           <div class="hdr-title-sub">Склад — Kari</div>
         </div>
-        <div class="hdr-sync-badge" id="hdrSyncBadge" style="display:none;"></div>
       </div>
       <button class="hdr-cart-btn" onclick="openCart()">
         🛒<div class="hdr-cart-badge" id="cartBadge">0</div>
       </button>
     </div>
-    <!-- Строка контекста: название раздела / позиции -->
-    <div class="hdr-context" id="hdrContext" style="display:none;">
-      <div class="hdr-context-title" id="hdrContextTitle"></div>
-      <div class="hdr-context-sub" id="hdrContextSub"></div>
+    <!-- Контекстная строка: название раздела/подраздела + счётчик -->
+    <div class="hdr-context" id="hdrContext">
+      <div class="hdr-ctx-name" id="hdrCtxName"></div>
+      <div class="hdr-ctx-count" id="hdrCtxCount"></div>
     </div>
     <!-- Глобальный поиск — всегда виден -->
     <div class="hdr-search" id="hdrSearchGlobal">
@@ -783,25 +563,17 @@ body{font-family:'Inter',sans-serif;}
   <div class="screen" id="s4">
     <div class="s4-scroll" id="s4scroll">
 
-      <div class="s4-photo" id="s4photoWrap">
-        <!-- Галерея фото -->
-        <div class="s4-gallery" id="s4gallery">
-          <!-- слайды рендерятся динамически -->
-        </div>
-        <!-- Заглушка (нет фото) -->
-        <div class="s4-photo-box" id="s4photoFallback">
+      <div class="s4-photo">
+        <div class="s4-photo-box">
           <div class="s4-photo-emoji" id="s4emoji">📦</div>
           <div class="s4-photo-lbl">Фото товара</div>
         </div>
-        <!-- Счётчик фото -->
-        <div class="s4-photo-counter" id="s4photoCounter"></div>
-        <!-- Кнопка полноэкранного просмотра -->
-        <div class="s4-photo-share" id="s4photoFullBtn" onclick="s4openFullscreen()">⛶</div>
-        <!-- Точки-индикаторы -->
-        <div class="s4-dots" id="s4dots"></div>
-        <!-- Навигация стрелками -->
-        <button class="s4-nav s4-nav-prev" id="s4navPrev" onclick="s4slide(-1)">‹</button>
-        <button class="s4-nav s4-nav-next" id="s4navNext" onclick="s4slide(1)">›</button>
+        <div class="s4-photo-share">⬆</div>
+        <div class="s4-dots">
+          <div class="s4-dot act"></div>
+          <div class="s4-dot"></div>
+          <div class="s4-dot"></div>
+        </div>
       </div>
 
       <div class="s4-info">
@@ -949,17 +721,48 @@ body{font-family:'Inter',sans-serif;}
       <button class="drawer-close" onclick="closeCart()">✕</button>
     </div>
     <div class="drawer-scroll" id="drawerScroll"></div>
-    <div class="drawer-footer">
-      <div class="dl">Магазин / Объект</div>
-      <select class="shop-sel">
-        <option>— Выберите магазин —</option>
-        <option>Москва · ТЦ Европейский</option>
-        <option>Москва · ТЦ Авиапарк</option>
-        <option>Москва · ТЦ Мега Химки</option>
-        <option>СПб · ТЦ Галерея</option>
-        <option>Склад ЦС</option>
-      </select>
-      <button class="send-btn" onclick="sendOrder()">📨 Отправить заявку</button>
+    <div class="drawer-footer" id="drawerFooter">
+      <!-- Итоги -->
+      <div style="display:flex;justify-content:space-between;align-items:center;background:#F5EEFF;border-radius:12px;padding:10px 14px;margin-bottom:12px;">
+        <div style="font-size:11px;font-weight:700;color:#7B00C0;">Позиций в заказе: <span id="cartPosCount" style="font-size:15px;font-weight:900;">0</span></div>
+        <div style="font-size:11px;font-weight:700;color:#7B00C0;">Итого единиц: <span id="cartUnitCount" style="font-size:15px;font-weight:900;">0</span></div>
+      </div>
+
+      <!-- Выбор магазина -->
+      <div class="dl">ВЫБЕРИТЕ МАГАЗИН *</div>
+      <div style="position:relative;margin-bottom:10px;">
+        <select class="shop-sel" id="cart-shop-sel" onchange="onShopSelectChange('cart-shop-sel','cart-shop-email')">
+          <option value="">— Выберите номер магазина —</option>
+        </select>
+      </div>
+
+      <!-- Email магазина -->
+      <div class="dl">EMAIL МАГАЗИНА</div>
+      <input class="modal-input" type="text" id="cart-shop-email" placeholder="Подставится автоматически" readonly style="background:#F7F7F7;color:#6B6B6B;margin-bottom:10px;">
+
+      <!-- Контактное лицо + Телефон -->
+      <div style="display:flex;gap:8px;margin-bottom:10px;">
+        <div style="flex:1;">
+          <div class="dl">КОНТАКТНОЕ ЛИЦО *</div>
+          <input class="modal-input" type="text" id="cart-contact" placeholder="Иван Петров" style="margin-bottom:0;">
+        </div>
+        <div style="flex:1;">
+          <div class="dl">ТЕЛЕФОН</div>
+          <input class="modal-input" type="tel" id="cart-phone" placeholder="+7 900 000-00-00" style="margin-bottom:0;">
+        </div>
+      </div>
+
+      <!-- Комментарий -->
+      <div class="dl">КОММЕНТАРИЙ</div>
+      <input class="modal-input" type="text" id="cart-comment" placeholder="Срочная поставка…" style="margin-bottom:12px;">
+
+      <!-- Кнопки отправки -->
+      <button class="send-btn" onclick="sendOrderToWarehouse()" style="margin-bottom:8px;background:linear-gradient(135deg,#00824A,#00C26F);box-shadow:0 6px 20px rgba(0,194,111,.4);">
+        📨 Отправить заявку на склад
+      </button>
+      <button class="send-btn" onclick="sendOrderToDirector()" style="background:linear-gradient(135deg,#7B00C0,#A000F0);">
+        👤 Отправить административному директору
+      </button>
     </div>
   </div>
 
@@ -973,20 +776,15 @@ body{font-family:'Inter',sans-serif;}
         <button class="modal-close" onclick="closeModal('Update')">✕</button>
       </div>
       <div class="modal-body" id="updateModalBody">
-        <div style="font-size:12px;color:#6B6B6B;line-height:1.6;margin-bottom:14px;">
+        <div style="font-size:12px;color:#6B6B6B;line-height:1.6;margin-bottom:16px;">
           Загружает актуальный каталог и фотографии из репозитория
           <b style="color:#1A1A1A;">skbmaksim82-byte/Portal-zakazov</b>.
         </div>
-        <div class="modal-form-label">GitHub токен (PAT) — необязательно</div>
-        <input class="modal-input" type="password" id="upd-pat" placeholder="ghp_xxxxxxxxxxxx (для снятия лимита API)"
-          style="margin-bottom:6px;"
-          oninput="var v=this.value.trim();if(v)localStorage.setItem('gh_pat',v);">
-        <div style="font-size:10px;color:#AAAAAA;margin-bottom:14px;">Без токена: лимит 60 запросов/час · Токен сохраняется локально</div>
         <!-- Прогресс -->
         <div id="upd-progress" style="display:none;flex-direction:column;gap:8px;margin-bottom:14px;"></div>
         <!-- Статус -->
         <div id="upd-status" style="font-size:12px;font-weight:700;min-height:18px;margin-bottom:10px;"></div>
-        <button class="modal-submit purple" id="upd-btn" onclick="closeModal('Update');mobUpdateFromGitHub()">
+        <button class="modal-submit purple" id="upd-btn" onclick="mobUpdateFromGitHub()">
           ☁ Обновить сейчас
         </button>
       </div>
@@ -1002,6 +800,12 @@ body{font-family:'Inter',sans-serif;}
         <button class="modal-close" onclick="closeModal('Photo')">✕</button>
       </div>
       <div class="modal-body">
+        <div class="modal-form-label">Магазин *</div>
+        <select class="modal-input" id="photo-shop-sel" onchange="onShopSelectChange('photo-shop-sel','photo-shop-email')" style="appearance:none;background-image:url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%228%22%3E%3Cpath fill=%22%23AAA%22 d=%22M0 0l6 8 6-8z%22/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right 12px center;margin-bottom:4px;">
+          <option value="">— Выберите номер магазина —</option>
+        </select>
+        <input class="modal-input" type="text" id="photo-shop-email" placeholder="Email подставится автоматически" readonly style="background:#F7F7F7;color:#6B6B6B;font-size:11px;">
+
         <div class="modal-form-label">Код номенклатуры *</div>
         <input class="modal-input" type="text" id="pu-mob-code" placeholder="Например: RUM0520385" autocomplete="off">
 
@@ -1058,6 +862,12 @@ body{font-family:'Inter',sans-serif;}
         <div style="font-size:11px;color:#AAAAAA;margin-bottom:14px;">
           Сообщение отправится на <b style="color:#6B6B6B;">m.skiba@kari.com</b>
         </div>
+        <div class="modal-form-label">Магазин *</div>
+        <select class="modal-input" id="fb-shop-sel" onchange="onShopSelectChange('fb-shop-sel','fb-shop-email')" style="appearance:none;background-image:url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%228%22%3E%3Cpath fill=%22%23AAA%22 d=%22M0 0l6 8 6-8z%22/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right 12px center;margin-bottom:4px;">
+          <option value="">— Выберите номер магазина —</option>
+        </select>
+        <input class="modal-input" type="text" id="fb-shop-email" placeholder="Email подставится автоматически" readonly style="background:#F7F7F7;color:#6B6B6B;font-size:11px;">
+
         <div class="modal-form-label">Позиция (необязательно)</div>
         <input class="modal-input" type="text" id="fb-mob-search" placeholder="Поиск по наименованию или коду…" oninput="fbMobSearch()" autocomplete="off">
         <div id="fb-mob-results" style="display:none;background:#fff;border:1px solid #E8E8E8;border-radius:10px;max-height:140px;overflow-y:auto;margin-top:-10px;margin-bottom:10px;"></div>
@@ -1083,24 +893,12 @@ body{font-family:'Inter',sans-serif;}
 
 
 
-  <!-- PHOTO VIEWER (fullscreen) -->
-  <div class="photo-viewer" id="photoViewer">
-    <div class="pv-hdr">
-      <div class="pv-info">
-        <div class="pv-code" id="pvCode"></div>
-        <div class="pv-name" id="pvName"></div>
-      </div>
-      <div class="pv-counter" id="pvCounter"></div>
-    </div>
-    <div class="pv-track-wrap" id="pvTrackWrap">
-      <div class="pv-track" id="pvTrack"></div>
-      <button class="pv-nav pv-nav-prev" id="pvNavPrev" onclick="pvSlide(-1)">‹</button>
-      <button class="pv-nav pv-nav-next" id="pvNavNext" onclick="pvSlide(1)">›</button>
-    </div>
-    <div class="pv-footer">
-      <div class="pv-dots" id="pvDots"></div>
-      <button class="pv-close-btn" onclick="closePhotoViewer()">Закрыть</button>
-    </div>
+  <!-- PHOTO VIEWER -->
+  <div class="photo-viewer" id="photoViewer" onclick="closePhotoViewer()">
+    <button class="photo-viewer-close" onclick="closePhotoViewer()">&#10005;</button>
+    <img class="photo-viewer-img" id="photoViewerImg" src="" alt="">
+    <div class="photo-viewer-code" id="photoViewerCode"></div>
+    <div class="photo-viewer-name" id="photoViewerName"></div>
   </div>
 
 <script>
@@ -1148,6 +946,7 @@ var SHEET_TO_SEC = {
    Каждый элемент: {id, code, name, desc, secId, subcat, emoji, photo}
 ════════════════════════════════════════════════════ */
 var allItems = [];  /* заполняется после загрузки xlsx */
+var allShops = [];  /* [{num:'10462', email:'10462@kari.com'}, ...] */
 
 /* Заглушка до загрузки */
 var DEMO_DATA = {
@@ -1270,9 +1069,9 @@ function renderSubcats(secId){
   var el=getEl('subcatScreen'); if(!el)return;
   var h='<div class="subcat-section-title">'+sec.emoji+' '+sec.name+'</div>';
 
-  /* Если нет подразделов — сразу в список */
   if(!data.subcats.length){
-    goSubcat(secId,'');
+    /* нет подразделов — рендерим пустышку (навигация уже обработана в goSection) */
+    el.innerHTML=h;
     return;
   }
 
@@ -1328,7 +1127,6 @@ function renderSubcatsFiltered(q){
    RENDER: ITEMS (Уровень 3)
 ════════════════════════════════════════════════════ */
 function renderItems(){
-  if(currentSecId==='kits'){renderKitItems();return;}
   var items=getFilteredItems();
   var cnt=getEl('itemCount'); if(cnt)cnt.textContent=items.length.toLocaleString('ru');
   var list=getEl('itemsList'); if(!list)return;
@@ -1342,36 +1140,29 @@ function renderItems(){
     var inC=!!cart[it.id];
     var qty=(cart[it.id]&&cart[it.id].qty)||1;
     var sec=getSec(it.secId);
-
     h+='<div class="item-card'+(inC?' in-cart':'')+'" id="ic-'+it.id+'">';
-
-    /* Фото сверху */
-    h+='<div class="item-photo-wrap"'+(it.photo?' data-action="view-item-photo" data-val="'+it.photo+'" data-code="'+it.code+'" data-name="'+it.name.replace(/"/g,'&quot;')+'" style="cursor:zoom-in"':'')+'>';
     if(it.photo){
-      h+='<img src="'+it.photo+'" loading="lazy" onerror="this.parentNode.classList.add(\'no-photo\');this.remove()">';
+          if(it.photo){
+      h+='<div class="item-thumb" data-action="view-item-photo" data-val="'+it.photo+'" data-code="'+it.code+'" data-name="'+it.name.replace(/"/g,'&quot;')+'" style="cursor:zoom-in"><img src="'+it.photo+'" style="width:100%;height:100%;object-fit:cover;border-radius:10px;"></div>';
     } else {
-      h+='<div class="item-photo-placeholder">'+it.emoji+'</div>';
+      h+='<div class="item-thumb" data-action="go-item" data-val="'+it.id+'">'+it.emoji+'</div>';
     }
-    h+='</div>';
-
-    /* Тело карточки */
-    h+='<div class="item-card-body" data-action="go-item" data-val="'+it.id+'">';
+    } else {
+      h+='<div class="item-thumb" data-action="go-item" data-val="'+it.id+'">'+it.emoji+'</div>';
+    }
+    h+='<div class="item-info">';
     h+='<div class="item-code">'+it.code+'</div>';
-    h+='<div class="item-name">'+it.name+'</div>';
-    if(it.subcat){
-      h+='<div class="item-tags"><span class="tag tag-sub">'+it.subcat+'</span></div>';
-    }
-    h+='<div class="item-card-footer">';
-    h+='<div class="qty-row">';
-    h+='<button class="q-btn q-minus" data-action="q-minus" data-val="'+it.id+'">−</button>';
+    h+='<div class="item-name" data-action="go-item" data-val="'+it.id+'">'+it.name+'</div>';
+    h+='<div class="item-tags">';
+    if(sec)h+='<span class="tag tag-cat">'+sec.name+'</span>';
+    if(it.subcat)h+=' <span class="tag tag-sub">'+it.subcat+'</span>';
+    h+='</div></div>';
+    h+='<div class="item-right"><div class="qty-row">';
+    h+='<button class="q-btn q-minus" data-action="q-minus" data-val="'+it.id+'">-</button>';
     h+='<input class="q-val" type="number" value="'+qty+'" min="1" id="qv-'+it.id+'" oninput="qInputChange(this,\''+it.id+'\')">';
-    h+='<button class="q-btn q-plus" data-action="q-plus" data-val="'+it.id+'">+</button>';
-    h+='</div>';
-    h+='<button class="add-btn'+(inC?' added':'')+'" id="ab-'+it.id+'" data-action="toggle-cart" data-val="'+it.id+'">'+(inC?'&#10003;':'+')+'</button>';
-    h+='</div>';
-    h+='</div>';
-
-    h+='</div>';
+    h+='<button class="q-btn q-plus" data-action="q-plus" data-val="'+it.id+'">+</button></div>';
+    h+='<button class="add-btn'+(inC?' added':'')+'" id="ab-'+it.id+'" data-action="toggle-cart" data-val="'+it.id+'">'+(inC?'&#10003;':'+')+' </button>';
+    h+='</div></div>';
   }
   list.innerHTML=h;
 }
@@ -1386,20 +1177,16 @@ function showScreen(id){
 }
 
 function goSection(secId){
-  currentSecId=secId; currentSubcat=''; currentItem=null; currentKitIdx=-1;
-  if(secId==='kits'){
-    renderKitsScreen();
-    showScreen('s2');
-    navHistory=['s1','s2'];
-    updateHeader();
+  currentSecId=secId; currentSubcat=''; currentItem=null;
+  var data=getSubcatData(secId);
+  if(!data.subcats.length){
+    /* Нет подразделов — сразу в список */
+    goSubcat(secId,'');
     return;
   }
   renderSubcats(secId);
-  /* renderSubcats сама вызовет goSubcat если нет подразделов */
-  if(getEl('subcatScreen')&&getEl('subcatScreen').innerHTML.indexOf('subcat-grid')>=0){
-    showScreen('s2');
-    navHistory=['s1','s2'];
-  }
+  showScreen('s2');
+  navHistory=['s1','s2'];
   updateHeader();
 }
 
@@ -1419,16 +1206,12 @@ function goBack(){
     showScreen('s3');
     navHistory=navHistory.slice(0,-1);
   } else if(prev==='s2'){
-    currentItem=null; currentSubcat=''; currentKitIdx=-1;
-    if(currentSecId==='kits'){
-      renderKitsScreen();
-    } else {
-      renderSubcats(currentSecId);
-    }
+    currentItem=null; currentSubcat='';
+    renderSubcats(currentSecId);
     showScreen('s2');
     navHistory=['s1','s2'];
   } else {
-    currentSecId=''; currentSubcat=''; currentItem=null; currentKitIdx=-1;
+    currentSecId=''; currentSubcat=''; currentItem=null;
     showScreen('s1');
     navHistory=['s1'];
   }
@@ -1449,71 +1232,62 @@ function resetToHome(){
 function updateHeader(){
   var backBtn    = getEl('hdrBack');
   var breadcrumb = getEl('breadcrumb');
-  var ctxWrap    = getEl('hdrContext');
-  var ctxTitle   = getEl('hdrContextTitle');
-  var ctxSub     = getEl('hdrContextSub');
+  var ctxEl      = getEl('hdrContext');
+  var ctxName    = getEl('hdrCtxName');
+  var ctxCount   = getEl('hdrCtxCount');
   var localSrch  = getEl('hdrSearchLocal');
   var localInput = getEl('searchLocal');
-  var cur = navHistory[navHistory.length-1];
+  var cur = navHistory[navHistory.length - 1];
   var sec = getSec(currentSecId);
 
-  var grw=getEl('globalResultsWrap');if(grw)grw.classList.remove('show');
-  var sg=getEl('searchGlobal');if(sg)sg.value='';
-  var sgc=getEl('searchGlobalClear');if(sgc)sgc.classList.remove('show');
+  var grw = getEl('globalResultsWrap'); if(grw) grw.classList.remove('show');
+  var sg  = getEl('searchGlobal');      if(sg)  sg.value = '';
+  var sgc = getEl('searchGlobalClear'); if(sgc) sgc.classList.remove('show');
 
-  function setCtx(title, sub) {
-    if (!ctxWrap) return;
-    if (title) {
-      ctxWrap.style.display = 'block';
-      if (ctxTitle) ctxTitle.textContent = title;
-      if (ctxSub)   ctxSub.textContent   = sub || '';
-      if (ctxSub)   ctxSub.style.display = sub ? 'block' : 'none';
-    } else {
-      ctxWrap.style.display = 'none';
+  if(cur === 's1'){
+    if(backBtn)   backBtn.classList.remove('show');
+    if(breadcrumb){ breadcrumb.classList.remove('show'); breadcrumb.innerHTML = ''; }
+    if(ctxEl)     ctxEl.classList.remove('show');
+    if(localSrch) localSrch.style.display = 'none';
+    if(localInput) localInput.value = '';
+    var slc = getEl('searchLocalClear'); if(slc) slc.classList.remove('show');
+
+  } else if(cur === 's2'){
+    if(backBtn)   backBtn.classList.add('show');
+    if(breadcrumb){ breadcrumb.classList.add('show'); breadcrumb.innerHTML = '<span class="bc-item" data-action="reset-home">\u0413\u043b\u0430\u0432\u043d\u0430\u044f</span><span class="bc-sep">\u203a</span><span class="bc-cur">'+(sec?sec.name:'')+'</span>'; }
+    var data2 = getSubcatData(currentSecId);
+    if(ctxEl)    ctxEl.classList.add('show');
+    if(ctxName)  ctxName.textContent = sec ? sec.emoji + ' ' + sec.name : '';
+    if(ctxCount) ctxCount.textContent = data2.subcats.length ? data2.subcats.length + ' \u043f\u043e\u0434\u0440.' : data2.total.toLocaleString('ru') + ' \u043f\u043e\u0437.';
+    if(localSrch) localSrch.style.display = 'flex';
+    if(localInput){ localInput.placeholder = '\u041f\u043e\u0438\u0441\u043a: ' + (sec ? sec.name : ''); localInput.value = ''; }
+    var slc2 = getEl('searchLocalClear'); if(slc2) slc2.classList.remove('show');
+
+  } else if(cur === 's3'){
+    if(backBtn)   backBtn.classList.add('show');
+    var subLabel = currentSubcat || '\u0412\u0441\u0435 \u043f\u043e\u0437\u0438\u0446\u0438\u0438';
+    var cnt3 = getFilteredItems().length;
+    if(breadcrumb){
+      breadcrumb.classList.add('show');
+      breadcrumb.innerHTML = '<span class="bc-item" data-action="reset-home">\u0413\u043b\u0430\u0432\u043d\u0430\u044f</span><span class="bc-sep">\u203a</span><span class="bc-item" data-action="go-back">'+(sec?sec.name:'')+'</span><span class="bc-sep">\u203a</span><span class="bc-cur">'+subLabel+'</span>';
     }
-  }
-
-  if (cur === 's1') {
-    if (backBtn)   backBtn.classList.remove('show');
-    if (breadcrumb){breadcrumb.classList.remove('show');breadcrumb.innerHTML='';}
-    setCtx('', '');
-    if (localSrch) localSrch.style.display = 'none';
-    if (localInput) localInput.value = '';
-    var slc=getEl('searchLocalClear');if(slc)slc.classList.remove('show');
-
-  } else if (cur === 's2') {
-    if (backBtn) backBtn.classList.add('show');
-    var sub2 = currentSecId === 'kits'
-      ? (kitsData.length + ' комплектов')
-      : (getSubcatData(currentSecId).subcats.length + ' подразделов');
-    setCtx(sec ? sec.name : '', sub2);
-    if (breadcrumb){breadcrumb.classList.remove('show');breadcrumb.innerHTML='';}
-    if (localSrch) localSrch.style.display = 'flex';
-    if (localInput){localInput.placeholder='Поиск: '+(sec?sec.name:'');localInput.value='';}
-    var slc2=getEl('searchLocalClear');if(slc2)slc2.classList.remove('show');
-
-  } else if (cur === 's3') {
-    if (backBtn) backBtn.classList.add('show');
-    var subLabel = currentSubcat || 'Все позиции';
-    var cnt3 = (currentSecId === 'kits') ? 0 : getFilteredItems().length;
-    if (currentSecId === 'kits') {
-      var ki3 = currentKitIdx >= 0 ? kitsData[currentKitIdx] : null;
-      cnt3 = ki3 ? ki3.items.length : 0;
-    }
-    setCtx(subLabel, cnt3.toLocaleString('ru') + ' позиций');
-    if (breadcrumb){breadcrumb.classList.remove('show');breadcrumb.innerHTML='';}
-    if (localSrch) localSrch.style.display = 'flex';
-    if (localInput){localInput.placeholder='Поиск в '+subLabel;localInput.value='';}
-    var slc3=getEl('searchLocalClear');if(slc3)slc3.classList.remove('show');
+    if(ctxEl)    ctxEl.classList.add('show');
+    if(ctxName)  ctxName.textContent = subLabel;
+    if(ctxCount) ctxCount.textContent = cnt3.toLocaleString('ru') + ' \u043f\u043e\u0437.';
+    if(localSrch) localSrch.style.display = 'flex';
+    if(localInput){ localInput.placeholder = '\u041f\u043e\u0438\u0441\u043a \u0432 ' + subLabel; localInput.value = ''; }
+    var slc3 = getEl('searchLocalClear'); if(slc3) slc3.classList.remove('show');
 
   } else {
     /* s4 — карточка товара */
-    if (backBtn) backBtn.classList.add('show');
-    var iname = currentItem ? currentItem.name : 'Товар';
-    setCtx(iname, currentSubcat || (sec ? sec.name : ''));
-    if (breadcrumb){breadcrumb.classList.remove('show');breadcrumb.innerHTML='';}
-    if (localSrch) localSrch.style.display = 'none';
-    if (localInput) localInput.value = '';
+    if(backBtn)   backBtn.classList.add('show');
+    if(breadcrumb){ breadcrumb.classList.remove('show'); breadcrumb.innerHTML = ''; }
+    var iname = currentItem ? currentItem.name : '\u0422\u043e\u0432\u0430\u0440';
+    if(ctxEl)    ctxEl.classList.add('show');
+    if(ctxName)  ctxName.textContent = iname;
+    if(ctxCount) ctxCount.textContent = currentSubcat || (sec ? sec.name : '');
+    if(localSrch) localSrch.style.display = 'none';
+    if(localInput) localInput.value = '';
   }
 }
 
@@ -1522,137 +1296,42 @@ function updateHeader(){
 ════════════════════════════════════════════════════ */
 /* ════════════ КОМПЛЕКТЫ ════════════ */
 var kitsData = [];
-var currentKitIdx = -1; /* индекс открытого комплекта */
 
 function renderKitsScreen(){
   var el=getEl('subcatScreen'); if(!el)return;
   if(!kitsData.length){
-    el.innerHTML='<div class="subcat-section-title">\uD83D\uDCCB \u041a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u044b</div>'
-      +'<div class="empty-state"><div class="empty-icon">\uD83D\uDCCB</div>'
-      +'<div class="empty-txt">\u041a\u0430\u0442\u0430\u043b\u043e\u0433 \u043d\u0435 \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043d</div></div>';
+    el.innerHTML='<div class="subcat-section-title">\uD83D\uDCCB \u041a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u044b</div><div class="empty-state"><div class="empty-icon">\uD83D\uDCCB</div><div class="empty-txt">\u041a\u0430\u0442\u0430\u043b\u043e\u0433 \u043d\u0435 \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043d</div></div>';
     return;
   }
-
-  var h='<div class="subcat-section-title">\uD83D\uDCCB \u041a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u044b · '
-    +kitsData.length+' \u043a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u043e\u0432</div>';
-  h+='<div class="subcat-grid">';
-
+  var h='<div class="subcat-section-title">\uD83D\uDCCB \u041a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u044b</div><div class="kit-grid">';
   for(var i=0;i<kitsData.length;i++){
     var kit=kitsData[i];
-    var photosJson=(kit.photos&&kit.photos.length)?JSON.stringify(kit.photos).replace(/"/g,'&quot;'):'';
-    var nameEsc=(kit.name||'').replace(/"/g,'&quot;');
-
-    /* Фото-блок */
-    var imgBlock;
-    if(kit.photo){
-      var cntBadge=(kit.photos&&kit.photos.length>1)
-        ?'<div class="kit-photo-cnt-badge">'+kit.photos.length+' \u0444\u043e\u0442\u043e</div>':'';
-      imgBlock='<div class="kit-photo-wrap">'
-        +'<img class="kit-photo-img" src="'+kit.photo
-        +'" onerror="this.style.display=\'none\'"'
-        +(photosJson?' data-action="kit-view-photo" data-photos="'+photosJson+'" data-name="'+nameEsc+'" style="cursor:zoom-in"':'')
-        +'>'
-        +cntBadge+'</div>';
-    } else {
-      imgBlock='<div class="kit-photo-wrap"><div class="kit-photo-img-placeholder">\uD83D\uDCCB</div></div>';
+    var ph=kit.photo?('<img src="'+kit.photo+'" onerror="this.parentNode.textContent=\'\u{1F4CB}\'">'):'&#128203;';
+    h+='<div class="kit-card" id="kit-'+i+'">';
+    h+='<div class="kit-card-header" data-action="toggle-kit" data-val="'+i+'">';
+    h+='<div class="kit-card-photo">'+ph+'</div>';
+    h+='<div class="kit-card-info"><div class="kit-card-name">'+kit.name+'</div><div class="kit-card-cnt">'+kit.items.length+' \u043f\u043e\u0437\u0438\u0446\u0438\u0439</div></div>';
+    h+='<span class="kit-card-chev">&#8250;</span></div>';
+    h+='<div class="kit-card-body">';
+    for(var j=0;j<kit.items.length;j++){
+      var it=kit.items[j];
+      var itPh=findPhotoByCode(it.code);
+      var thumb=itPh?('<img src="'+itPh+'" onerror="this.parentNode.textContent=\'&#128230;\'">'):'&#128230;';
+      var vAct=itPh?('data-action="view-item-photo" data-val="'+itPh+'" data-code="'+it.code+'" data-name="'+it.name.replace(/"/g,'&quot;')+'" style="cursor:zoom-in"'):'';
+      h+='<div class="kit-item"><div class="kit-item-thumb" '+vAct+'>'+thumb+'</div>';
+      h+='<div class="kit-item-info"><div class="kit-item-code">'+it.code+'</div><div class="kit-item-name">'+it.name+'</div></div>';
+      h+='<div class="kit-item-qty">'+it.qty+' \u0448\u0442</div></div>';
     }
-
-    h+='<div class="kit-photo-card" data-action="go-kit" data-val="'+i+'">'
-      +imgBlock
-      +'<div class="kit-photo-body">'
-      +'<div class="kit-photo-name">'+kit.name+'</div>'
-      +'<div class="kit-photo-count">'+kit.items.length+' \u043f\u043e\u0437\u0438\u0446\u0438\u0439</div>'
-      +'<div class="kit-photo-footer">'
-      +'<button class="kit-photo-add" data-action="add-kit" data-val="'+i+'">\uD83D\uDED2 \u0412 \u043a\u043e\u0440\u0437\u0438\u043d\u0443</button>'
-      +'<span class="kit-photo-arrow">\u203a</span>'
-      +'</div>'
-      +'</div></div>';
+    h+='<button class="kit-add-all" data-action="add-kit" data-val="'+i+'">\uD83D\uDED2 \u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u0432\u0435\u0441\u044c \u043a\u043e\u043c\u043f\u043b\u0435\u043a\u0442</button>';
+    h+='</div></div>';
   }
   h+='</div>';
   el.innerHTML=h;
 }
 
-function goKitDetail(idx){
-  currentKitIdx = idx;
-  currentSecId  = 'kits';
-  currentItem   = null;
-  /* idx === -1 → все позиции всех комплектов */
-  if(idx === -1){
-    currentSubcat = '';
-  } else {
-    var kit = kitsData[idx];
-    currentSubcat = kit ? kit.name : '';
-  }
-  renderKitItems();
-  showScreen('s3');
-  navHistory = ['s1','s2','s3'];
-  updateHeader();
-}
-
-function renderKitItems(){
-  var list = getEl('itemsList'); if(!list) return;
-  var items = [];
-  if(currentKitIdx === -1){
-    /* Все позиции всех комплектов */
-    for(var ki=0;ki<kitsData.length;ki++){
-      for(var ji=0;ji<kitsData[ki].items.length;ji++){
-        var it = kitsData[ki].items[ji];
-        items.push({id:'kit-'+ki+'-'+ji, code:it.code, name:it.name, qty:it.qty, kitIdx:ki, kitName:kitsData[ki].name});
-      }
-    }
-  } else {
-    var kit = kitsData[currentKitIdx];
-    if(kit){
-      for(var j=0;j<kit.items.length;j++){
-        var it2 = kit.items[j];
-        items.push({id:'kit-'+currentKitIdx+'-'+j, code:it2.code, name:it2.name, qty:it2.qty, kitIdx:currentKitIdx, kitName:kit.name});
-      }
-    }
-  }
-
-  /* Фильтр по поиску */
-  var q = ((getEl('searchLocal')||{value:''}).value||(getEl('searchGlobal')||{value:''}).value).toLowerCase().trim();
-  if(q) items = items.filter(function(it){ return it.name.toLowerCase().indexOf(q)>=0 || it.code.toLowerCase().indexOf(q)>=0; });
-
-  var cnt = getEl('itemCount'); if(cnt) cnt.textContent = items.length.toLocaleString('ru');
-
-  if(!items.length){
-    list.innerHTML='<div class="empty-state"><div class="empty-icon">\uD83D\uDD0D</div><div class="empty-txt">\u041d\u0438\u0447\u0435\u0433\u043e \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e</div></div>';
-    return;
-  }
-
-  var h='';
-  for(var i=0;i<items.length;i++){
-    var it=items[i];
-    var inC=!!cart[it.id];
-    var itPhoto=findPhotoByCode(it.code);
-
-    h+='<div class="item-card'+(inC?' in-cart':'')+'" id="ic-'+it.id+'">';
-
-    /* Фото сверху */
-    h+='<div class="item-photo-wrap"'+(itPhoto?' data-action="view-item-photo" data-val="'+itPhoto+'" data-code="'+it.code+'" data-name="'+it.name.replace(/"/g,'&quot;')+'" style="cursor:zoom-in"':'')+'>';
-    if(itPhoto){
-      h+='<img src="'+itPhoto+'" loading="lazy" onerror="this.parentNode.classList.add(\'no-photo\');this.remove()">';
-    } else {
-      h+='<div class="item-photo-placeholder">\uD83D\uDCCB</div>';
-    }
-    h+='</div>';
-
-    /* Тело */
-    h+='<div class="item-card-body">';
-    h+='<div class="item-code">'+it.code+'</div>';
-    h+='<div class="item-name">'+it.name+'</div>';
-    h+='<div class="item-tags"><span class="tag" style="background:#E6F9F0;color:#00824A;">'+(it.qty||1)+' \u0448\u0442</span></div>';
-    h+='<div class="item-card-footer">';
-    h+='<div class="qty-row">';
-    h+='<button class="q-btn q-minus" data-action="q-minus" data-val="'+it.id+'">−</button>';
-    h+='<input class="q-val" type="number" value="'+(cart[it.id]?cart[it.id].qty:(it.qty||1))+'" min="1" id="qv-'+it.id+'" oninput="qInputChange(this,\''+it.id+'\')">';
-    h+='<button class="q-btn q-plus" data-action="q-plus" data-val="'+it.id+'">+</button>';
-    h+='</div>';
-    h+='<button class="add-btn'+(inC?' added':'')+'" id="ab-'+it.id+'" data-action="toggle-cart-kit" data-val="'+it.id+'">'+(inC?'&#10003;':'+')+'</button>';
-    h+='</div></div></div>';
-  }
-  list.innerHTML=h;
+function toggleKit(idx){
+  var card=getEl('kit-'+idx);
+  if(card)card.classList.toggle('open');
 }
 
 function addKitToCart(idx){
@@ -1667,29 +1346,6 @@ function addKitToCart(idx){
   showToast('\u0414\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u043e '+added+' \u043f\u043e\u0437. \u0438\u0437 \u043a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u0430','ok');
 }
 
-function toggleKit(idx){ /* legacy — не используется */ }
-
-function toggleCartKitItem(id){
-  var parts=id.split('-');
-  var ki=parseInt(parts[1]),ji=parseInt(parts[2]);
-  var kit=kitsData[ki];if(!kit)return;
-  var it=kit.items[ji];if(!it)return;
-  if(cart[id]){
-    delete cart[id];
-    var ab=getEl('ab-'+id);if(ab){ab.textContent='+';ab.classList.remove('added');}
-    var ic=getEl('ic-'+id);if(ic)ic.classList.remove('in-cart');
-    showToast('\u0423\u0431\u0440\u0430\u043d\u043e \u0438\u0437 \u043a\u043e\u0440\u0437\u0438\u043d\u044b','');
-  } else {
-    var qEl=getEl('qv-'+id);
-    var qty=qEl?(parseInt(qEl.value)||1):(parseInt(it.qty)||1);
-    cart[id]={id:id,code:it.code,name:it.name,emoji:'\uD83D\uDCCB',qty:qty};
-    var ab2=getEl('ab-'+id);if(ab2){ab2.innerHTML='&#10003;';ab2.classList.add('added');}
-    var ic2=getEl('ic-'+id);if(ic2)ic2.classList.add('in-cart');
-    showToast('\u0414\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u043e \u0432 \u043a\u043e\u0440\u0437\u0438\u043d\u0443','ok');
-  }
-  updateCartBadge();
-}
-
 function findPhotoByCode(code){
   var maps=[OBORUD_PHOTOS,REKLAM_PHOTOS,SVET_PHOTOS,SLAB_PHOTOS,UVELIR_PHOTOS,IT_PHOTOS,COMPLECT_PHOTOS];
   for(var m=0;m<maps.length;m++){var arr=maps[m][code];if(arr&&arr.length)return arr[0];}
@@ -1699,496 +1355,23 @@ function findPhotoByCode(code){
 function applyKitsPhotos(){
   for(var i=0;i<kitsData.length;i++){
     var kit=kitsData[i];
-    kit.photo = null;
-    kit.photos = [];
-
-    /* Ищем только по имени комплекта в COMPLECT_PHOTOS */
-    var kname = kit.name || '';
-    var ckeys = Object.keys(COMPLECT_PHOTOS);
-    for(var ci=0;ci<ckeys.length;ci++){
-      var ck = ckeys[ci];
-      var ckN = ck.replace(/[_\-\s]/g,'').toLowerCase();
-      var knN = kname.replace(/[_\-\s]/g,'').toLowerCase();
-      if(ck.toLowerCase()===kname.toLowerCase() || ckN===knN || kname.toLowerCase().indexOf(ck.toLowerCase())>=0 || ck.toLowerCase().indexOf(knN)>=0){
-        var arr=COMPLECT_PHOTOS[ck];
-        if(arr&&arr.length){kit.photo=arr[0];kit.photos=arr;break;}
-      }
+    if(!kit.photo&&kit.items.length){
+      for(var j=0;j<kit.items.length;j++){var ph=findPhotoByCode(kit.items[j].code);if(ph){kit.photo=ph;break;}}
     }
   }
 }
 
-/* ════════════════════════════════════════════════════
-   ГАЛЕРЕЯ В КАРТОЧКЕ ТОВАРА (s4)
-════════════════════════════════════════════════════ */
-var _s4Photos = [];   /* массив URL фото текущего товара */
-var _s4Index  = 0;    /* текущий слайд */
-var _s4SwipeX = 0;    /* для свайпа */
-var _s4SwipeActive = false;
-
-function s4renderGallery(photos, emoji) {
-  _s4Photos = photos || [];
-  _s4Index  = 0;
-
-  var gallery  = getEl('s4gallery');
-  var fallback = getEl('s4photoFallback');
-  var counter  = getEl('s4photoCounter');
-  var fullBtn  = getEl('s4photoFullBtn');
-  var dots     = getEl('s4dots');
-  var navPrev  = getEl('s4navPrev');
-  var navNext  = getEl('s4navNext');
-  var emojiEl  = getEl('s4emoji');
-
-  if (emojiEl) emojiEl.textContent = emoji || '📦';
-
-  if (!_s4Photos.length) {
-    /* нет фото — заглушка */
-    if (gallery)  { gallery.classList.remove('show'); gallery.innerHTML = ''; }
-    if (fallback) fallback.style.display = 'flex';
-    if (counter)  counter.classList.remove('show');
-    if (fullBtn)  fullBtn.classList.remove('show');
-    if (dots)     dots.innerHTML = '';
-    if (navPrev)  navPrev.classList.remove('show');
-    if (navNext)  navNext.classList.remove('show');
-    return;
-  }
-
-  /* Есть фото — строим галерею */
-  if (fallback) fallback.style.display = 'none';
-
-  /* Слайды */
-  var trackHtml = '';
-  for (var i = 0; i < _s4Photos.length; i++) {
-    trackHtml += '<div class="s4-gallery-slide" data-action="s4-open-fullscreen" data-idx="' + i + '">'
-      + '<img src="' + _s4Photos[i] + '" loading="lazy" onerror="this.parentNode.style.background=\'#f5eeff\'">'
-      + '</div>';
-  }
-  var track = gallery ? gallery.querySelector('.s4-gallery-track') : null;
-  if (!track) {
-    if (gallery) gallery.innerHTML = '<div class="s4-gallery-track">' + trackHtml + '</div>';
-    track = gallery ? gallery.querySelector('.s4-gallery-track') : null;
-  } else {
-    track.innerHTML = trackHtml;
-  }
-
-  if (gallery) gallery.classList.add('show');
-
-  /* Счётчик */
-  if (counter) {
-    if (_s4Photos.length > 1) {
-      counter.textContent = '1 / ' + _s4Photos.length;
-      counter.classList.add('show');
-    } else {
-      counter.classList.remove('show');
-    }
-  }
-
-  /* Кнопка fullscreen */
-  if (fullBtn) fullBtn.classList.add('show');
-
-  /* Точки */
-  if (dots) {
-    if (_s4Photos.length > 1 && _s4Photos.length <= 10) {
-      var dh = '';
-      for (var di = 0; di < _s4Photos.length; di++) {
-        dh += '<div class="s4-dot' + (di === 0 ? ' act' : '') + '" onclick="s4goTo(' + di + ')"></div>';
-      }
-      dots.innerHTML = dh;
-    } else {
-      dots.innerHTML = '';
-    }
-  }
-
-  /* Стрелки */
-  s4updateNav();
-
-  /* Свайп */
-  s4setupSwipe();
-}
-
-function s4goTo(idx) {
-  if (!_s4Photos.length) return;
-  _s4Index = Math.max(0, Math.min(_s4Photos.length - 1, idx));
-  s4applySlide();
-}
-
-function s4slide(dir) {
-  s4goTo(_s4Index + dir);
-}
-
-function s4applySlide(instant) {
-  var gallery = getEl('s4gallery');
-  var track = gallery ? gallery.querySelector('.s4-gallery-track') : null;
-  if (track) {
-    track.style.transition = instant ? 'none' : 'transform .3s cubic-bezier(.4,0,.2,1)';
-    track.style.transform = 'translateX(' + (-_s4Index * 100) + '%)';
-  }
-
-  /* Счётчик */
-  var counter = getEl('s4photoCounter');
-  if (counter && _s4Photos.length > 1) {
-    counter.textContent = (_s4Index + 1) + ' / ' + _s4Photos.length;
-  }
-
-  /* Точки */
-  var dots = getEl('s4dots');
-  if (dots) {
-    var allDots = dots.querySelectorAll('.s4-dot');
-    for (var i = 0; i < allDots.length; i++) {
-      allDots[i].classList.toggle('act', i === _s4Index);
-    }
-  }
-
-  s4updateNav();
-}
-
-function s4updateNav() {
-  var navPrev = getEl('s4navPrev');
-  var navNext = getEl('s4navNext');
-  if (_s4Photos.length > 1) {
-    if (navPrev) navPrev.classList.toggle('show', _s4Index > 0);
-    if (navNext) navNext.classList.toggle('show', _s4Index < _s4Photos.length - 1);
-  } else {
-    if (navPrev) navPrev.classList.remove('show');
-    if (navNext) navNext.classList.remove('show');
-  }
-}
-
-function s4setupSwipe() {
-  var gallery = getEl('s4gallery');
-  if (!gallery || gallery._swipeInit) return;
-  gallery._swipeInit = true;
-
-  var startX, startY, isDragging = false;
-
-  function onStart(e) {
-    var touch = e.touches ? e.touches[0] : e;
-    startX = touch.clientX;
-    startY = touch.clientY;
-    isDragging = true;
-    var track = gallery.querySelector('.s4-gallery-track');
-    if (track) track.style.transition = 'none';
-  }
-  function onMove(e) {
-    if (!isDragging) return;
-    var touch = e.touches ? e.touches[0] : e;
-    var dx = touch.clientX - startX;
-    var dy = touch.clientY - startY;
-    if (Math.abs(dy) > Math.abs(dx) + 5) { isDragging = false; return; }
-    if (e.cancelable) e.preventDefault();
-    var track = gallery.querySelector('.s4-gallery-track');
-    if (track) track.style.transform = 'translateX(calc(' + (-_s4Index * 100) + '% + ' + dx + 'px))';
-  }
-  function onEnd(e) {
-    if (!isDragging) return;
-    isDragging = false;
-    var touch = e.changedTouches ? e.changedTouches[0] : e;
-    var dx = touch.clientX - startX;
-    if (dx < -50 && _s4Index < _s4Photos.length - 1) s4goTo(_s4Index + 1);
-    else if (dx > 50 && _s4Index > 0) s4goTo(_s4Index - 1);
-    else s4applySlide();
-  }
-
-  gallery.addEventListener('touchstart', onStart, {passive:true});
-  gallery.addEventListener('touchmove',  onMove,  {passive:false});
-  gallery.addEventListener('touchend',   onEnd,   {passive:true});
-}
-
-function s4openFullscreen() {
-  if (!_s4Photos.length || !currentItem) return;
-  openPhotoViewer(_s4Photos, currentItem.code, currentItem.name, _s4Index);
-}
-
-/* ════════════════════════════════════════════════════
-   FULLSCREEN PHOTO VIEWER
-════════════════════════════════════════════════════ */
-var _pvPhotos = [];
-var _pvIndex  = 0;
-
-function openPhotoViewer(photos, code, name, startIdx) {
-  /* Поддержка вызова с одной строкой (из кит-карт) */
-  if (typeof photos === 'string') photos = [photos];
-  if (!photos || !photos.length) return;
-
-  _pvPhotos = photos;
-  _pvIndex  = startIdx || 0;
-
-  var v = getEl('photoViewer'); if (!v) return;
-
-  /* Инфо */
-  var c = getEl('pvCode'); if (c) c.textContent = code || '';
-  var n = getEl('pvName'); if (n) n.textContent = name || '';
-
-  /* Слайды */
-  var track = getEl('pvTrack');
-  if (track) {
-    var html = '';
-    for (var i = 0; i < _pvPhotos.length; i++) {
-      html += '<div class="pv-slide"><img src="' + _pvPhotos[i] + '" loading="lazy"></div>';
-    }
-    track.innerHTML = html;
-    track.style.transition = 'none';
-    track.style.transform = 'translateX(' + (-_pvIndex * 100) + 'vw)';
-  }
-
-  /* Точки */
-  var dots = getEl('pvDots');
-  if (dots) {
-    if (_pvPhotos.length > 1 && _pvPhotos.length <= 12) {
-      var dh = '';
-      for (var di = 0; di < _pvPhotos.length; di++) {
-        dh += '<div class="pv-dot' + (di === _pvIndex ? ' act' : '') + '" onclick="pvGoTo(' + di + ')"></div>';
-      }
-      dots.innerHTML = dh;
-    } else {
-      dots.innerHTML = '';
-    }
-  }
-
-  /* Счётчик */
-  var ctr = getEl('pvCounter');
-  if (ctr) ctr.textContent = _pvPhotos.length > 1 ? (_pvIndex + 1) + ' / ' + _pvPhotos.length : '';
-
-  pvUpdateNav();
-  pvSetupSwipe();
-
+function openPhotoViewer(url,code,name){
+  if(!url)return;
+  var v=getEl('photoViewer');if(!v)return;
+  var img=getEl('photoViewerImg');if(img)img.src=url;
+  var c=getEl('photoViewerCode');if(c)c.textContent=code||'';
+  var n=getEl('photoViewerName');if(n)n.textContent=name||'';
   v.classList.add('show');
 }
-
-function closePhotoViewer() {
-  var v = getEl('photoViewer'); if (v) v.classList.remove('show');
-  var t = getEl('pvTrack');
-  if (t) {
-    /* Сброс зума на всех img перед очисткой */
-    var imgs = t.querySelectorAll('img');
-    for (var i = 0; i < imgs.length; i++) imgs[i].style.transform = '';
-    t.innerHTML = '';
-  }
-}
-
-function pvGoTo(idx) {
-  _pvIndex = Math.max(0, Math.min(_pvPhotos.length - 1, idx));
-  var track = getEl('pvTrack');
-  if (track) {
-    track.style.transition = 'transform .3s cubic-bezier(.4,0,.2,1)';
-    track.style.transform = 'translateX(' + (-_pvIndex * 100) + 'vw)';
-  }
-  var dots = getEl('pvDots');
-  if (dots) {
-    var allDots = dots.querySelectorAll('.pv-dot');
-    for (var i = 0; i < allDots.length; i++) allDots[i].classList.toggle('act', i === _pvIndex);
-  }
-  var ctr = getEl('pvCounter');
-  if (ctr) ctr.textContent = _pvPhotos.length > 1 ? (_pvIndex + 1) + ' / ' + _pvPhotos.length : '';
-  pvUpdateNav();
-}
-
-function pvSlide(dir) { pvGoTo(_pvIndex + dir); }
-
-function pvUpdateNav() {
-  var prev = getEl('pvNavPrev'); var next = getEl('pvNavNext');
-  if (prev) prev.style.display = (_pvPhotos.length > 1 && _pvIndex > 0) ? 'flex' : 'none';
-  if (next) next.style.display = (_pvPhotos.length > 1 && _pvIndex < _pvPhotos.length - 1) ? 'flex' : 'none';
-}
-
-function pvSetupSwipe() {
-  var wrap = getEl('pvTrackWrap');
-  if (!wrap || wrap._pvSwipeInit) return;
-  wrap._pvSwipeInit = true;
-
-  /* ── состояние зума для текущего слайда ── */
-  var _zoom = 1;
-  var _zoomMin = 1;
-  var _zoomMax = 4;
-  var _panX = 0;
-  var _panY = 0;
-
-  /* ── состояние жестов ── */
-  var _touchMode = 'none'; /* 'swipe' | 'zoom' */
-  var _startX = 0, _startY = 0;
-  var _initDist = 0, _initZoom = 1;
-  var _initPanX = 0, _initPanY = 0;
-  var _mid0X = 0, _mid0Y = 0;
-  var _swiping = false;
-  var _swipeStartX = 0;
-
-  function getCurrentImg() {
-    var track = getEl('pvTrack');
-    if (!track) return null;
-    var slides = track.querySelectorAll('.pv-slide');
-    return slides[_pvIndex] ? slides[_pvIndex].querySelector('img') : null;
-  }
-
-  function applyImgTransform(img, z, px, py, animated) {
-    if (!img) return;
-    img.style.transition = animated ? 'transform .2s ease' : 'none';
-    img.style.transform = 'translate3d(' + px + 'px,' + py + 'px,0) scale(' + z + ')';
-  }
-
-  function resetZoom(animated) {
-    _zoom = 1; _panX = 0; _panY = 0;
-    var img = getCurrentImg();
-    if (img) applyImgTransform(img, 1, 0, 0, animated);
-  }
-
-  function dist(t) {
-    var dx = t[0].clientX - t[1].clientX;
-    var dy = t[0].clientY - t[1].clientY;
-    return Math.sqrt(dx*dx + dy*dy);
-  }
-  function midpoint(t) {
-    return {
-      x: (t[0].clientX + t[1].clientX) / 2,
-      y: (t[0].clientY + t[1].clientY) / 2
-    };
-  }
-
-  function onTouchStart(e) {
-    var tc = e.touches;
-
-    if (tc.length === 2) {
-      /* ── Начало зума ── */
-      _touchMode = 'zoom';
-      _swiping = false;
-      _initDist = dist(tc);
-      _initZoom = _zoom;
-      _initPanX = _panX;
-      _initPanY = _panY;
-      var m = midpoint(tc);
-      _mid0X = m.x;
-      _mid0Y = m.y;
-      var track = getEl('pvTrack');
-      if (track) track.style.transition = 'none';
-      return;
-    }
-
-    if (tc.length === 1) {
-      _startX = tc[0].clientX;
-      _startY = tc[0].clientY;
-
-      if (_zoom > 1) {
-        /* Уже в зуме — пан по фото */
-        _touchMode = 'pan';
-        _initPanX = _panX;
-        _initPanY = _panY;
-      } else {
-        /* Не в зуме — свайп листания */
-        _touchMode = 'swipe';
-        _swiping = false;
-        _swipeStartX = tc[0].clientX;
-        var track = getEl('pvTrack');
-        if (track) track.style.transition = 'none';
-      }
-    }
-  }
-
-  function onTouchMove(e) {
-    var tc = e.touches;
-
-    if (_touchMode === 'zoom' && tc.length === 2) {
-      if (e.cancelable) e.preventDefault();
-      var newDist = dist(tc);
-      var scale = newDist / _initDist;
-      _zoom = Math.min(_zoomMax, Math.max(_zoomMin, _initZoom * scale));
-
-      /* Пан от точки пинча */
-      var m = midpoint(tc);
-      var dMx = m.x - _mid0X;
-      var dMy = m.y - _mid0Y;
-      _panX = _initPanX + dMx;
-      _panY = _initPanY + dMy;
-
-      var img = getCurrentImg();
-      applyImgTransform(img, _zoom, _panX, _panY, false);
-      return;
-    }
-
-    if (_touchMode === 'pan' && tc.length === 1) {
-      if (e.cancelable) e.preventDefault();
-      var dx = tc[0].clientX - _startX;
-      var dy = tc[0].clientY - _startY;
-      _panX = _initPanX + dx;
-      _panY = _initPanY + dy;
-      var img2 = getCurrentImg();
-      applyImgTransform(img2, _zoom, _panX, _panY, false);
-      return;
-    }
-
-    if (_touchMode === 'swipe' && tc.length === 1) {
-      var sdx = tc[0].clientX - _swipeStartX;
-      var sdy = tc[0].clientY - _startY;
-      if (!_swiping && Math.abs(sdy) > Math.abs(sdx) + 5) {
-        _touchMode = 'none'; return;
-      }
-      _swiping = true;
-      if (e.cancelable) e.preventDefault();
-      var track = getEl('pvTrack');
-      if (track) track.style.transform = 'translateX(calc(' + (-_pvIndex * 100) + 'vw + ' + sdx + 'px))';
-    }
-  }
-
-  function onTouchEnd(e) {
-    var tc = e.changedTouches;
-
-    if (_touchMode === 'zoom') {
-      /* Если зум ≤ 1.05 — сбрасываем до 1 */
-      if (_zoom <= 1.05) resetZoom(true);
-      /* Двойной тап — не реализуем, хватит пинча */
-      _touchMode = 'none';
-      return;
-    }
-
-    if (_touchMode === 'pan') {
-      _touchMode = 'none';
-      return;
-    }
-
-    if (_touchMode === 'swipe') {
-      _touchMode = 'none';
-      if (!_swiping) return;
-      var dx = tc[0].clientX - _swipeStartX;
-      if (dx < -50 && _pvIndex < _pvPhotos.length - 1) {
-        resetZoom(false);
-        pvGoTo(_pvIndex + 1);
-      } else if (dx > 50 && _pvIndex > 0) {
-        resetZoom(false);
-        pvGoTo(_pvIndex - 1);
-      } else {
-        /* Возврат */
-        var track = getEl('pvTrack');
-        if (track) {
-          track.style.transition = 'transform .3s cubic-bezier(.4,0,.2,1)';
-          track.style.transform = 'translateX(' + (-_pvIndex * 100) + 'vw)';
-        }
-      }
-    }
-  }
-
-  wrap.addEventListener('touchstart', onTouchStart, {passive:true});
-  wrap.addEventListener('touchmove',  onTouchMove,  {passive:false});
-  wrap.addEventListener('touchend',   onTouchEnd,   {passive:true});
-
-  /* Двойной тап — сброс зума */
-  var _lastTap = 0;
-  wrap.addEventListener('touchend', function(e) {
-    if (_touchMode !== 'none') return;
-    var now = Date.now();
-    if (now - _lastTap < 300) {
-      if (_zoom > 1) resetZoom(true);
-      else {
-        _zoom = 2.5; _panX = 0; _panY = 0;
-        var img = getCurrentImg();
-        applyImgTransform(img, _zoom, 0, 0, true);
-      }
-    }
-    _lastTap = now;
-  }, {passive:true});
-
-  /* При смене слайда — сбрасываем зум */
-  var _origPvGoTo = pvGoTo;
-  pvGoTo = function(idx) {
-    resetZoom(false);
-    _origPvGoTo(idx);
-  };
+function closePhotoViewer(){
+  var v=getEl('photoViewer');if(v)v.classList.remove('show');
+  var img=getEl('photoViewerImg');if(img)img.src='';
 }
 
 function setupEventDelegation(){
@@ -2225,18 +1408,8 @@ function setupEventDelegation(){
         if(action==='update-catalog'){mobUpdateFromGitHub();return;}
         if(action==='close-panel'){closeLivePanel();return;}
         if(action==='toggle-kit'){toggleKit(parseInt(val));return;}
-        if(action==='go-kit'){goKitDetail(parseInt(val));return;}
-        if(action==='toggle-cart-kit'){toggleCartKitItem(val);return;}
         if(action==='add-kit'){addKitToCart(parseInt(val));return;}
-        if(action==='view-item-photo'){openPhotoViewer([val],t.getAttribute('data-code'),t.getAttribute('data-name'),0);return;}
-        if(action==='kit-view-photo'){
-          var photosStr=t.getAttribute('data-photos');
-          var kitName=t.getAttribute('data-name')||'';
-          var photos=[];try{photos=JSON.parse(photosStr);}catch(e){photos=[photosStr];}
-          openPhotoViewer(photos,'',kitName,0);
-          return;
-        }
-        if(action==='s4-open-fullscreen'){s4openFullscreen();return;}
+        if(action==='view-item-photo'){openPhotoViewer(val,t.getAttribute('data-code'),t.getAttribute('data-name'));return;}
         return;
       }
       t=t.parentNode;
@@ -2278,24 +1451,17 @@ function renderGlobalResults(q){
     for(var gi=0;gi<show;gi++){
       var git=secItems[gi],inC=!!cart[git.id],qty2=(cart[git.id]&&cart[git.id].qty)||1;
       h+='<div class="item-card'+(inC?' in-cart':'')+'" id="gic-'+git.id+'">';
-      h+='<div class="item-photo-wrap"'+(git.photo?' data-action="view-item-photo" data-val="'+git.photo+'" data-code="'+git.code+'" data-name="'+git.name.replace(/"/g,'&quot;')+'" style="cursor:zoom-in"':'')+'>';
-      if(git.photo){h+='<img src="'+git.photo+'" loading="lazy">';}
-      else{h+='<div class="item-photo-placeholder">'+git.emoji+'</div>';}
-      h+='</div>';
-      h+='<div class="item-card-body" data-action="go-item" data-val="'+git.id+'">';
-      h+='<div class="item-code">'+git.code+'</div>';
-      h+='<div class="item-name">'+git.name+'</div>';
-      if(git.subcat)h+='<div class="item-tags"><span class="tag tag-sub">'+git.subcat+'</span></div>';
-      h+='<div class="item-card-footer">';
-      h+='<div class="qty-row">';
-      h+='<button class="q-btn q-minus" data-action="q-minus" data-val="'+git.id+'">−</button>';
+      h+='<div class="item-thumb">'+git.emoji+'</div>';
+      h+='<div class="item-info"><div class="item-code">'+git.code+'</div><div class="item-name">'+git.name+'</div>';
+      h+='<div class="item-tags"><span class="tag tag-cat">'+sec.name+'</span>'+(git.subcat?'<span class="tag tag-sub">'+git.subcat+'</span>':'')+'</div></div>';
+      h+='<div class="item-right"><div class="qty-row">';
+      h+='<button class="q-btn q-minus" data-action="q-minus" data-val="'+git.id+'">-</button>';
       h+='<input class="q-val" type="number" value="'+qty2+'" min="1" id="qv-'+git.id+'" oninput="qInputChange(this,\''+git.id+'\')">';
-      h+='<button class="q-btn q-plus" data-action="q-plus" data-val="'+git.id+'">+</button>';
-      h+='</div>';
-      h+='<button class="add-btn'+(inC?' added':'')+'" id="ab-'+git.id+'" data-action="toggle-cart" data-val="'+git.id+'">'+(inC?'&#10003;':'+')+'</button>';
-      h+='</div></div></div>';
+      h+='<button class="q-btn q-plus" data-action="q-plus" data-val="'+git.id+'">+</button></div>';
+      h+='<button class="add-btn'+(inC?' added':'')+'" id="ab-'+git.id+'" data-action="toggle-cart" data-val="'+git.id+'">'+(inC?'&#10003;':'+')+' </button>';
+      h+='</div></div>';
     }
-    if(secItems.length>5)h+='<div style="font-size:11px;color:#A000F0;font-weight:700;text-align:center;padding:4px;grid-column:span 2;">\u0435\u0449\u0451 '+(secItems.length-5)+' \u043f\u043e\u0437\u0438\u0446\u0438\u0439</div>';
+    if(secItems.length>5)h+='<div style="font-size:11px;color:#A000F0;font-weight:700;text-align:center;padding:4px;">\u0435\u0449\u0451 '+(secItems.length-5)+' \u043f\u043e\u0437\u0438\u0446\u0438\u0439</div>';
   }
   if(!h)h='<div class="empty-state"><div class="empty-icon">\uD83D\uDD0D</div><div class="empty-txt">\u041d\u0438\u0447\u0435\u0433\u043e \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e</div></div>';
   if(wrap)wrap.innerHTML=h;
@@ -2352,24 +1518,75 @@ function closeCart(){getEl('overlay').classList.remove('show');getEl('drawer').c
 function renderCartDrawer(){
   var sc=getEl('drawerScroll');if(!sc)return;
   var keys=Object.keys(cart);
-  if(!keys.length){sc.innerHTML='<div class="empty-state"><div class="empty-icon">\uD83D\uDED2</div><div class="empty-txt">\u041a\u043e\u0440\u0437\u0438\u043d\u0430 \u043f\u0443\u0441\u0442\u0430</div></div>';return;}
-  var h='';
-  for(var i=0;i<keys.length;i++){
-    var it=cart[keys[i]];
-    h+='<div class="cart-item"><div class="ci-thumb">'+it.emoji+'</div>';
-    h+='<div class="ci-info"><div class="ci-name">'+it.name+'</div><div class="ci-code">'+it.code+'</div></div>';
-    h+='<div class="ci-qty">'+it.qty+' \u0448\u0442</div>';
-    h+='<button class="ci-rm" data-action="rm-cart" data-val="'+it.id+'">&#10005;</button></div>';
+  if(!keys.length){sc.innerHTML='<div class="empty-state"><div class="empty-icon">\uD83D\uDED2</div><div class="empty-txt">\u041a\u043e\u0440\u0437\u0438\u043d\u0430 \u043f\u0443\u0441\u0442\u0430</div></div>';}
+  else {
+    var h='';
+    for(var i=0;i<keys.length;i++){
+      var it=cart[keys[i]];
+      h+='<div class="cart-item"><div class="ci-thumb">'+it.emoji+'</div>';
+      h+='<div class="ci-info"><div class="ci-name">'+it.name+'</div><div class="ci-code">'+it.code+'</div></div>';
+      h+='<div class="ci-qty">'+it.qty+' \u0448\u0442</div>';
+      h+='<button class="ci-rm" data-action="rm-cart" data-val="'+it.id+'">&#10005;</button></div>';
+    }
+    sc.innerHTML=h;
   }
-  sc.innerHTML=h;
+  /* Обновляем счётчики */
+  var posCount = keys.length;
+  var unitCount = 0;
+  for(var j=0;j<keys.length;j++) unitCount += parseInt(cart[keys[j]].qty)||1;
+  var pc=getEl('cartPosCount'); if(pc) pc.textContent=posCount;
+  var uc=getEl('cartUnitCount'); if(uc) uc.textContent=unitCount;
 }
 function rmCart(id){delete cart[id];updateCartBadge();renderCartDrawer();var ab=getEl('ab-'+id);if(ab){ab.textContent='+';ab.classList.remove('added');}var ic=getEl('ic-'+id);if(ic)ic.classList.remove('in-cart');}
-function sendOrder(){
-  showToast('\uD83D\uDCE8 \u0417\u0430\u044f\u0432\u043a\u0430 \u043e\u0442\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0430!','ok');
-  setTimeout(closeCart,700); cart={}; updateCartBadge();
-  var cur=navHistory[navHistory.length-1];
-  if(cur==='s3')renderItems();
+function buildOrderBody() {
+  var keys = Object.keys(cart);
+  var shopNum = (getEl('cart-shop-sel')||{}).value || '';
+  var shopEmail = (getEl('cart-shop-email')||{}).value || '';
+  var contact = (getEl('cart-contact')||{}).value.trim() || '';
+  var phone = (getEl('cart-phone')||{}).value.trim() || '';
+  var comment = (getEl('cart-comment')||{}).value.trim() || '';
+  var lines = [];
+  for (var i = 0; i < keys.length; i++) {
+    var it = cart[keys[i]];
+    lines.push((i+1) + '. ' + it.code + ' — ' + it.name + ' × ' + it.qty + ' шт');
+  }
+  var body = '\u0417\u0430\u044f\u0432\u043a\u0430 \u043d\u0430 \u043e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u0435\n\n';
+  if (shopNum) body += '\u041c\u0430\u0433\u0430\u0437\u0438\u043d: ' + shopNum + (shopEmail ? ' (' + shopEmail + ')' : '') + '\n';
+  if (contact) body += '\u041a\u043e\u043d\u0442\u0430\u043a\u0442: ' + contact + '\n';
+  if (phone)   body += '\u0422\u0435\u043b\u0435\u0444\u043e\u043d: ' + phone + '\n';
+  if (comment) body += '\u041a\u043e\u043c\u043c\u0435\u043d\u0442\u0430\u0440\u0438\u0439: ' + comment + '\n';
+  body += '\n\u041f\u043e\u0437\u0438\u0446\u0438\u0438 (' + keys.length + '):\n' + lines.join('\n');
+  return {body: body, shopNum: shopNum, shopEmail: shopEmail};
 }
+
+function validateCartOrder() {
+  var shopNum = (getEl('cart-shop-sel')||{}).value || '';
+  var contact = (getEl('cart-contact')||{}).value.trim() || '';
+  if (!Object.keys(cart).length) { showToast('\u041a\u043e\u0440\u0437\u0438\u043d\u0430 \u043f\u0443\u0441\u0442\u0430', ''); return false; }
+  if (!shopNum) { showToast('\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u043c\u0430\u0433\u0430\u0437\u0438\u043d', ''); return false; }
+  if (!contact) { showToast('\u0423\u043a\u0430\u0436\u0438\u0442\u0435 \u043a\u043e\u043d\u0442\u0430\u043a\u0442\u043d\u043e\u0435 \u043b\u0438\u0446\u043e', ''); return false; }
+  return true;
+}
+
+function sendOrderToWarehouse() {
+  if (!validateCartOrder()) return;
+  var d = buildOrderBody();
+  var subj = encodeURIComponent('\u0417\u0430\u044f\u0432\u043a\u0430 \u043d\u0430 \u0441\u043a\u043b\u0430\u0434' + (d.shopNum ? ' · \u041c\u0430\u0433 #' + d.shopNum : ''));
+  window.location.href = 'mailto:m.skiba@kari.com?subject=' + subj + '&body=' + encodeURIComponent(d.body);
+  showToast('\u041e\u0442\u043a\u0440\u044b\u0432\u0430\u0435\u043c \u043f\u043e\u0447\u0442\u0443...', 'ok');
+  setTimeout(function() { closeCart(); cart = {}; updateCartBadge(); renderCartDrawer(); }, 800);
+}
+
+function sendOrderToDirector() {
+  if (!validateCartOrder()) return;
+  var d = buildOrderBody();
+  var subj = encodeURIComponent('\u0417\u0430\u044f\u0432\u043a\u0430 \u0430\u0434\u043c. \u0434\u0438\u0440\u0435\u043a\u0442\u043e\u0440\u0443' + (d.shopNum ? ' · \u041c\u0430\u0433 #' + d.shopNum : ''));
+  window.location.href = 'mailto:m.skiba@kari.com?subject=' + subj + '&body=' + encodeURIComponent(d.body);
+  showToast('\u041e\u0442\u043a\u0440\u044b\u0432\u0430\u0435\u043c \u043f\u043e\u0447\u0442\u0443...', 'ok');
+  setTimeout(function() { closeCart(); cart = {}; updateCartBadge(); renderCartDrawer(); }, 800);
+}
+
+function sendOrder() { sendOrderToWarehouse(); }
 
 /* ════════════════════════════════════════════════════
    PRODUCT CARD S4
@@ -2378,12 +1595,12 @@ function goItem(itemId){
   var it=findItemById(itemId);if(!it)return;
   currentItem=it;
   var sec=getSec(it.secId);
-  var f={s4code:it.code,s4name:it.name,s4BcSecName:sec?sec.name:'',s4BcSub:it.subcat||''};
+  var f={s4emoji:it.photo?'':it.emoji,s4code:it.code,s4name:it.name,s4BcSecName:sec?sec.name:'',s4BcSub:it.subcat||''};
   var fk=Object.keys(f);
   for(var i=0;i<fk.length;i++){var el=getEl(fk[i]);if(el)el.textContent=f[fk[i]];}
-  /* Галерея фото */
-  var photos = (it.photos && it.photos.length) ? it.photos : (it.photo ? [it.photo] : []);
-  s4renderGallery(photos, it.emoji);
+  /* Фото */
+  var phEl=getEl('s4emoji');
+  if(it.photo&&phEl){phEl.innerHTML='<img src="'+it.photo+'" style="width:100%;height:100%;object-fit:cover;border-radius:18px;" onerror="this.parentNode.textContent=\''+it.emoji+'\'">';}
   var desc=getEl('s4desc');if(desc)desc.innerHTML=(it.desc||('\u041e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u0435 <b>'+it.code+'</b>. '+it.name));
   var inC=!!cart[it.id];
   var addBtn=getEl('s4addBtn');if(addBtn)addBtn.classList.toggle('added',inC);
@@ -2447,194 +1664,6 @@ renderSections();
 updateHeader();
 setupEventDelegation();
 
-/* ════════════════════════════════════════════════════
-   СВАЙП ВНИЗ — закрытие модальных окон и корзины
-════════════════════════════════════════════════════ */
-function addSwipeDownToClose(el, closeFn) {
-  if (!el || el._swipeCloseInit) return;
-  el._swipeCloseInit = true;
-
-  var startY = 0, startX = 0, dragging = false, current = 0;
-  var isInput = false;
-
-  el.addEventListener('touchstart', function(e) {
-    /* Не реагируем если тронули input/textarea/select */
-    var tag = e.target && e.target.tagName ? e.target.tagName.toLowerCase() : '';
-    isInput = (tag === 'input' || tag === 'textarea' || tag === 'select');
-    if (isInput) return;
-
-    if (e.touches.length !== 1) return;
-    startY = e.touches[0].clientY;
-    startX = e.touches[0].clientX;
-    dragging = true;
-    current = 0;
-    el.style.transition = 'none';
-  }, {passive: true});
-
-  el.addEventListener('touchmove', function(e) {
-    if (!dragging || isInput) return;
-    if (e.touches.length !== 1) return;
-
-    var dy = e.touches[0].clientY - startY;
-    var dx = e.touches[0].clientX - startX;
-
-    /* Только вниз и преимущественно вертикально */
-    if (dy < 0 || Math.abs(dx) > Math.abs(dy)) {
-      dragging = false;
-      el.style.transform = '';
-      return;
-    }
-
-    /* Не тянем если скроллим содержимое вверх */
-    var scrollable = e.target.closest
-      ? e.target.closest('[style*="overflow"],[class*="scroll"],[class*="body"]')
-      : null;
-    if (scrollable && scrollable.scrollTop > 0) {
-      dragging = false;
-      el.style.transform = '';
-      return;
-    }
-
-    current = dy;
-    /* Сопротивление после 120px */
-    var visual = dy < 120 ? dy : 120 + (dy - 120) * 0.25;
-    el.style.transform = 'translateY(' + visual + 'px)';
-  }, {passive: true});
-
-  function onEnd() {
-    if (!dragging) return;
-    dragging = false;
-    el.style.transition = 'transform .3s cubic-bezier(.32,0,.2,1)';
-
-    if (current > 80) {
-      /* Закрываем */
-      el.style.transform = 'translateY(100%)';
-      setTimeout(function() {
-        el.style.transform = '';
-        el.style.transition = '';
-        closeFn();
-      }, 280);
-    } else {
-      /* Возврат */
-      el.style.transform = '';
-      setTimeout(function() { el.style.transition = ''; }, 300);
-    }
-  }
-
-  el.addEventListener('touchend',    onEnd, {passive: true});
-  el.addEventListener('touchcancel', onEnd, {passive: true});
-}
-
-/* Применяем к drawer (корзина) */
-addSwipeDownToClose(document.getElementById('drawer'), closeCart);
-
-/* Применяем к modal-sheet внутри каждого модального окна */
-var _modalNames = ['Update', 'Photo', 'Feedback'];
-_modalNames.forEach(function(name) {
-  var overlay = document.getElementById('modal' + name);
-  if (!overlay) return;
-  var sheet = overlay.querySelector('.modal-sheet');
-  if (sheet) addSwipeDownToClose(sheet, function() { closeModal(name); });
-});
-
-/* ════════════════════════════════════════════════════
-   ФОНОВОЕ АВТО-ОБНОВЛЕНИЕ
-   — тихое, без живой панели
-   — прогресс в % рядом с названием в шапке
-════════════════════════════════════════════════════ */
-var _bgUpdating = false;
-
-function setSyncBadge(text, state) {
-  var b = getEl('hdrSyncBadge');
-  if (!b) return;
-  if (!text) { b.style.display = 'none'; b.className = 'hdr-sync-badge'; return; }
-  b.style.display = 'block';
-  b.className = 'hdr-sync-badge ' + (state || '');
-  b.textContent = text;
-}
-
-function bgAutoUpdate() {
-  if (_bgUpdating) return;
-  if (!navigator.onLine) { setSyncBadge('офлайн', 'error'); return; }
-  _bgUpdating = true;
-
-  /* 8 задач: 1 xlsx + 7 папок фото */
-  var total = 8, done = 0;
-  setSyncBadge('0%', 'loading');
-
-  function tick() {
-    done++;
-    var pct = Math.round(done / total * 100);
-    setSyncBadge(pct + '%', 'loading');
-  }
-
-  var headers = getGhHeaders();
-
-  /* Оборачиваем каждый промис — считаем завершение */
-  function tracked(p) {
-    return p.then(function(v) { tick(); return v; },
-                  function(e) { tick(); throw e; });
-  }
-
-  var p1 = tracked(loadXlsxLive());
-  var p2 = tracked(loadPhotoFolder('Foto%20Oborud',    OBORUD_PHOTOS,  '', 'mob-row-oborud'));
-  var p3 = tracked(loadPhotoFolder('Foto%20reklama',   REKLAM_PHOTOS,  '', 'mob-row-reklam'));
-  var p4 = tracked(loadPhotoFolder('Foto%20Svet',      SVET_PHOTOS,    '', 'mob-row-svet'));
-  var p5 = tracked(loadPhotoFolder('Foto%20slabotoch', SLAB_PHOTOS,    '', 'mob-row-slab'));
-  var p6 = tracked(loadPhotoFolder('Foto%20Uvelir',    UVELIR_PHOTOS,  '', 'mob-row-uvelir'));
-  var p7 = tracked(loadPhotoFolder('IT%20oborud',      IT_PHOTOS,      '', 'mob-row-it'));
-  var p8 = tracked(loadPhotoFolder('Foto%20Complect',  COMPLECT_PHOTOS,'', 'mob-row-compl'));
-
-  Promise.allSettled([p1, p2, p3, p4, p5, p6, p7, p8]).then(function(results) {
-    _bgUpdating = false;
-    var xlsxOk = results[0].status === 'fulfilled';
-    var errors = 0;
-    for (var j = 0; j < results.length; j++) if (results[j].status === 'rejected') errors++;
-
-    if (!xlsxOk) {
-      setSyncBadge('ошибка', 'error');
-      setTimeout(function() { setSyncBadge('', ''); }, 5000);
-      return;
-    }
-
-    applyPhotos();
-
-    /* Считаем позиции и фото для итогового уведомления */
-    var totalPhotos = 0;
-    for (var i = 1; i < results.length; i++) {
-      if (results[i].status === 'fulfilled') totalPhotos += (results[i].value || 0);
-    }
-    var itemsCount = allItems.length;
-    var msg = '✓ ' + itemsCount.toLocaleString('ru') + ' поз. · ' + totalPhotos.toLocaleString('ru') + ' фото';
-    if (errors) msg = '⚠ ' + itemsCount.toLocaleString('ru') + ' поз.';
-
-    setSyncBadge(msg, 'ok');
-    /* Через 6 секунд скрываем бейдж */
-    setTimeout(function() { setSyncBadge('', ''); }, 6000);
-  });
-}
-
-/* Запуск при старте */
-setTimeout(bgAutoUpdate, 800);
-
-/* Запуск при возврате из фона */
-document.addEventListener('visibilitychange', function() {
-  if (document.visibilityState === 'visible') {
-    /* Обновляем не чаще чем раз в 2 минуты */
-    var now = Date.now();
-    if (!bgAutoUpdate._lastRun || now - bgAutoUpdate._lastRun > 120000) {
-      bgAutoUpdate._lastRun = now;
-      bgAutoUpdate();
-    }
-  }
-});
-/* Для iOS Safari — pageshow при выходе из back/forward cache */
-window.addEventListener('pageshow', function(e) {
-  if (e.persisted) bgAutoUpdate();
-});
-
-bgAutoUpdate._lastRun = Date.now();
-
 
 
 /* ═══════════════════════════════════════════════════
@@ -2678,15 +1707,11 @@ function openModal(name) {
   var el = document.getElementById('modal' + name);
   if (!el) return;
   el.classList.add('show');
-  var saved = localStorage.getItem('gh_pat') || '';
   if (name === 'Photo') {
     puMobReset();
+    var saved = localStorage.getItem('gh_pat') || '';
     var pe = document.getElementById('pu-mob-pat');
     if (pe) pe.value = saved;
-  }
-  if (name === 'Update') {
-    var ue = document.getElementById('upd-pat');
-    if (ue) ue.value = saved;
   }
 }
 function closeModal(name) {
@@ -2790,66 +1815,57 @@ function closeLivePanel() {
 }
 
 /* ═══════════════════════════════════════════════════
-   ЗАГРУЗКА XLSX
+   МАГАЗИНЫ — заполнение селектов
 ═══════════════════════════════════════════════════ */
-function getGhHeaders() {
-  var pat = localStorage.getItem('gh_pat') || '';
-  var h = {'Accept': 'application/vnd.github+json'};
-  if (pat) h['Authorization'] = 'token ' + pat;
-  return h;
+function fillShopSelects() {
+  var ids = ['cart-shop-sel', 'photo-shop-sel', 'fb-shop-sel'];
+  for (var i = 0; i < ids.length; i++) {
+    var sel = document.getElementById(ids[i]);
+    if (!sel) continue;
+    var curVal = sel.value;
+    sel.innerHTML = '<option value="">\u2014 \u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u043d\u043e\u043c\u0435\u0440 \u043c\u0430\u0433\u0430\u0437\u0438\u043d\u0430 \u2014</option>';
+    for (var j = 0; j < allShops.length; j++) {
+      var opt = document.createElement('option');
+      opt.value = allShops[j].num;
+      opt.textContent = '\u0421\u043a\u043b\u0430\u0434 #' + allShops[j].num;
+      sel.appendChild(opt);
+    }
+    if (curVal) sel.value = curVal;
+  }
 }
 
+function getShopEmail(num) {
+  for (var i = 0; i < allShops.length; i++) {
+    if (allShops[i].num === num) return allShops[i].email;
+  }
+  return '';
+}
+
+function onShopSelectChange(selId, emailId) {
+  var sel = document.getElementById(selId);
+  var emailEl = document.getElementById(emailId);
+  if (!sel || !emailEl) return;
+  var num = sel.value;
+  emailEl.value = num ? getShopEmail(num) : '';
+}
+
+/* ═══════════════════════════════════════════════════
+   ЗАГРУЗКА XLSX
+═══════════════════════════════════════════════════ */
 function loadXlsxLive() {
-  var headers = getGhHeaders();
-  /* Сначала получаем download_url через API (надёжнее для файлов с кириллицей) */
-  var apiUrl = GITHUB_API + '%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA_%D0%BE%D0%B1%D0%BE%D1%80%D1%83%D0%B4%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F_%D0%A4%D0%98%D0%9D%D0%90%D0%9B.xlsx';
-  return fetch(apiUrl, {cache: 'no-cache', headers: headers})
+  return fetch(GITHUB_XLSX, {cache: 'no-cache'})
     .then(function(r) {
-      if (!r.ok) throw new Error('API HTTP ' + r.status);
-      return r.json();
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.arrayBuffer();
     })
-    .then(function(meta) {
-      /* Если файл маленький — GitHub вернёт base64 напрямую */
-      if (meta.content && meta.encoding === 'base64') {
-        var b64 = meta.content.replace(/\s/g, '');
-        var binary = atob(b64);
-        var buf = new ArrayBuffer(binary.length);
-        var view = new Uint8Array(buf);
-        for (var i = 0; i < binary.length; i++) view[i] = binary.charCodeAt(i);
-        var result = parseXlsxBuffer(buf);
-        setRowState('mob-row-xlsx', 'ok', result);
-        return result;
-      }
-      /* Иначе — скачиваем по download_url */
-      var dlUrl = meta.download_url;
-      if (!dlUrl) throw new Error('Нет download_url');
-      return fetch(dlUrl, {cache: 'no-cache', headers: headers})
-        .then(function(r2) {
-          if (!r2.ok) throw new Error('DL HTTP ' + r2.status);
-          return r2.arrayBuffer();
-        })
-        .then(function(buf) {
-          var result = parseXlsxBuffer(buf);
-          setRowState('mob-row-xlsx', 'ok', result);
-          return result;
-        });
+    .then(function(buf) {
+      var result = parseXlsxBuffer(buf);
+      setRowState('mob-row-xlsx', 'ok', result);
+      return result;
     })
     .catch(function(e) {
-      /* Fallback — прямой raw URL */
-      return fetch(GITHUB_XLSX, {cache: 'no-cache', headers: headers})
-        .then(function(r) {
-          if (!r.ok) throw new Error('RAW HTTP ' + r.status);
-          return r.arrayBuffer();
-        })
-        .then(function(buf) {
-          var result = parseXlsxBuffer(buf);
-          setRowState('mob-row-xlsx', 'ok', result);
-          return result;
-        })
-        .catch(function(e2) {
-          setRowState('mob-row-xlsx', 'error', e2.message.slice(0, 28));
-          throw e2;
-        });
+      setRowState('mob-row-xlsx', 'error', e.message.slice(0, 28));
+      throw e;
     });
 }
 
@@ -2858,6 +1874,22 @@ function parseXlsxBuffer(buf) {
   if (!LIB) throw new Error('SheetJS \u043d\u0435 \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043d');
 
   var wb = LIB.read(new Uint8Array(buf), {type: 'array'});
+
+  /* ── Загружаем список магазинов ── */
+  allShops = [];
+  var shopsSheet = wb.Sheets['\u041c\u0430\u0433\u0430\u0437\u0438\u043d\u044b']; /* Магазины */
+  if (shopsSheet) {
+    var shopsRows = LIB.utils.sheet_to_json(shopsSheet, {header:1, defval:''});
+    for (var sri = 1; sri < shopsRows.length; sri++) {
+      var sr = shopsRows[sri];
+      var sNum = String(sr[0]||'').trim();
+      var sEmail = String(sr[1]||'').trim();
+      if (sNum && sNum !== '\u041d\u043e\u043c\u0435\u0440 \u043c\u0430\u0433\u0430\u0437\u0438\u043d\u0430') {
+        allShops.push({num: sNum, email: sEmail});
+      }
+    }
+  }
+  fillShopSelects();
 
   /* Сбрасываем allItems — плоский массив как в десктопе */
   allItems = [];
@@ -2879,56 +1911,45 @@ function parseXlsxBuffer(buf) {
       if (SECTIONS[si2].id === map.secId) { secEmoji = SECTIONS[si2].emoji; break; }
     }
 
-    /* Определяем фактические индексы колонок по заголовку строки */
-    var hdr = rows[0];
+    /* Ищем строку-заголовок в первых 5 строках (ИТ оборудование имеет 2 строки заголовков) */
     var codeCol = map.codeCol;
     var nameCol = map.nameCol;
-    var subcatCol = map.subcatCol;
+    var subcatCol = -1;  /* -1 = нет подраздела */
     var descCol  = map.descCol;
+    var dataStartRow = 1;
 
-    /* Пробуем найти колонки по названию заголовка */
-    for (var hi = 0; hi < hdr.length; hi++) {
-      var h = String(hdr[hi] || '').trim().toLowerCase();
-      if (h.indexOf('\u043a\u043e\u0434') >= 0 && h.indexOf('\u043d\u043e\u043c') >= 0) codeCol = hi;
-      else if (h === '\u0430\u0440\u0442\u0438\u043a\u0443\u043b') codeCol = hi;
-      else if (h.indexOf('\u043d\u0430\u0438\u043c\u0435\u043d\u043e\u0432') >= 0 || h.indexOf('\u043d\u0430\u0437\u0432\u0430\u043d') >= 0) nameCol = hi;
-      else if (
-        h.indexOf('\u043f\u043e\u0434\u0440\u0430\u0437\u0434\u0435\u043b') >= 0 ||
-        h.indexOf('\u043a\u0430\u0442\u0435\u0433\u043e\u0440') >= 0 ||
-        h.indexOf('\u0433\u0440\u0443\u043f\u043f') >= 0 ||
-        h.indexOf('\u0440\u0430\u0437\u0434\u0435\u043b') >= 0
-      ) subcatCol = hi;
-      else if (h.indexOf('\u043e\u043f\u0438\u0441\u0430\u043d') >= 0 || h.indexOf('\u043f\u0440\u0438\u043c\u0435\u0447') >= 0) descCol = hi;
-    }
-
-    /* Резерв: проверяем что subcatCol реально даёт данные.
-       Если первые 5 строк дают пустой subcat — перебираем колонки */
-    var subcatCheck = 0;
-    for (var ci2 = 1; ci2 < Math.min(6, rows.length); ci2++) {
-      if (String(rows[ci2][subcatCol] || '').trim()) { subcatCheck++; break; }
-    }
-    if (!subcatCheck) {
-      /* Ищем колонку с непустыми строковыми данными кроме codeCol и nameCol */
-      for (var fc = 0; fc < (rows[0] || []).length; fc++) {
-        if (fc === codeCol || fc === nameCol || fc === descCol) continue;
-        var hasData = false;
-        for (var fr = 1; fr < Math.min(6, rows.length); fr++) {
-          var v = String(rows[fr][fc] || '').trim();
-          if (v && isNaN(v)) { hasData = true; break; }
-        }
-        if (hasData) { subcatCol = fc; break; }
+    for (var hri = 0; hri < Math.min(5, rows.length); hri++) {
+      var hdr = rows[hri];
+      var foundCode = false;
+      var tmpCode = -1, tmpName = -1, tmpSubcat = -1, tmpDesc = -1;
+      for (var hi = 0; hi < hdr.length; hi++) {
+        var h = String(hdr[hi] || '').trim().toLowerCase();
+        if (!h) continue;
+        if ((h.indexOf('\u043a\u043e\u0434') >= 0 && h.indexOf('\u043d\u043e\u043c') >= 0) || h === '\u043d\u043c\u043a' || h.indexOf('\u043d\u043c\u043a') >= 0) { tmpCode = hi; foundCode = true; }
+        else if (h === '\u0430\u0440\u0442\u0438\u043a\u0443\u043b') { tmpCode = hi; foundCode = true; }
+        else if (h.indexOf('\u043d\u0430\u0438\u043c\u0435\u043d\u043e\u0432') >= 0 || h.indexOf('\u043d\u0430\u0437\u0432\u0430\u043d') >= 0) tmpName = hi;
+        else if (h.indexOf('\u043f\u043e\u0434\u0440\u0430\u0437\u0434\u0435\u043b') >= 0) tmpSubcat = hi;
+        else if (h.indexOf('\u043e\u043f\u0438\u0441\u0430\u043d') >= 0 || h.indexOf('\u043f\u0440\u0438\u043c\u0435\u0447') >= 0) tmpDesc = hi;
+      }
+      if (foundCode) {
+        if (tmpCode >= 0) codeCol = tmpCode;
+        if (tmpName >= 0) nameCol = tmpName;
+        if (tmpSubcat >= 0) subcatCol = tmpSubcat;
+        if (tmpDesc >= 0) descCol = tmpDesc;
+        dataStartRow = hri + 1;
+        break;
       }
     }
 
     var sheetCount = 0;
-    for (var ri = 1; ri < rows.length; ri++) {
+    for (var ri = dataStartRow; ri < rows.length; ri++) {
       var row = rows[ri];
       var code = String(row[codeCol] || '').trim();
       var name = String(row[nameCol] || '').trim();
       if (!code || !name) continue;
       if (SKIP_CODES[code]) continue;
 
-      var subcat = String(row[subcatCol] || '').trim();
+      var subcat = subcatCol >= 0 ? String(row[subcatCol] || '').trim() : '';
       var desc   = String(row[descCol]   || '').trim();
       if (desc === name) desc = '';
 
@@ -2949,54 +1970,15 @@ function parseXlsxBuffer(buf) {
 
   if (totalRows < 5) throw new Error('\u041c\u0430\u043b\u043e \u0434\u0430\u043d\u043d\u044b\u0445 \u0432 \u0444\u0430\u0439\u043b\u0435');
 
-  /* ── Парсим лист «Комплекты» отдельно → kitsData ── */
-  kitsData = [];
-  var kSheet = wb.Sheets['\u041a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u044b'];
-  if (kSheet) {
-    var kRows = LIB.utils.sheet_to_json(kSheet, {header:1, defval:''});
-    /* Структура: col0=порядок/тип, col1=название комплекта, col2=кол-во, col3=код позиции, col4=наим. позиции */
-    /* Определяем колонки по заголовку */
-    var kHdr = kRows[0] || [];
-    var kKitNameCol = 1, kCodeCol = 3, kItemNameCol = 4, kQtyCol = 2;
-    for (var khi = 0; khi < kHdr.length; khi++) {
-      var kh = String(kHdr[khi] || '').trim().toLowerCase();
-      if (kh.indexOf('\u043a\u043e\u043c\u043f\u043b\u0435\u043a\u0442') >= 0 && (kh.indexOf('\u043d\u0430\u0437\u0432') >= 0 || kh.indexOf('\u043d\u0430\u0438\u043c') >= 0)) kKitNameCol = khi;
-      else if ((kh.indexOf('\u043a\u043e\u0434') >= 0 || kh === '\u0430\u0440\u0442\u0438\u043a\u0443\u043b') && kh.indexOf('\u043f\u043e\u0437') >= 0) kCodeCol = khi;
-      else if (kh.indexOf('\u043d\u0430\u0438\u043c\u0435\u043d') >= 0 || kh.indexOf('\u043d\u0430\u0437\u0432\u0430\u043d') >= 0) kItemNameCol = khi;
-      else if (kh.indexOf('\u043a\u043e\u043b') >= 0 || kh.indexOf('\u043a\u043e\u043b-\u0432\u043e') >= 0) kQtyCol = khi;
-    }
-    var kitMap = {};   /* name → kit объект */
-    var kitOrder = []; /* порядок */
-    var lastKitName = '';
-    for (var kri = 1; kri < kRows.length; kri++) {
-      var krow = kRows[kri];
-      var kitName = String(krow[kKitNameCol] || '').trim();
-      var itemCode = String(krow[kCodeCol] || '').trim();
-      var itemName = String(krow[kItemNameCol] || '').trim();
-      var itemQty  = parseInt(krow[kQtyCol]) || 1;
-      if (kitName) lastKitName = kitName;
-      var curKitName = kitName || lastKitName;
-      if (!curKitName) continue;
-      if (!itemCode && !itemName) continue; /* пустая строка */
-      if (!kitMap[curKitName]) {
-        kitMap[curKitName] = {name: curKitName, photo: null, photos: [], items: []};
-        kitOrder.push(curKitName);
-      }
-      if (itemCode || itemName) {
-        kitMap[curKitName].items.push({code: itemCode, name: itemName, qty: itemQty});
-      }
-    }
-    for (var ki2 = 0; ki2 < kitOrder.length; ki2++) {
-      var k = kitMap[kitOrder[ki2]];
-      if (k.items.length) kitsData.push(k);
-    }
-  }
-
   /* Обновляем UI */
   renderSections();
   var cur = navHistory[navHistory.length - 1];
   if (cur === 's3') renderItems();
-  if (cur === 's2' && currentSecId) renderSubcats(currentSecId);
+  if (cur === 's2' && currentSecId) {
+    var updData = getSubcatData(currentSecId);
+    if (updData.subcats.length) renderSubcats(currentSecId);
+    /* если подразделы исчезли/появились — просто обновляем экран, пользователь сам перейдёт */
+  }
 
   return totalRows.toLocaleString('ru') + ' \u043f\u043e\u0437.';
 }
@@ -3005,8 +1987,7 @@ function parseXlsxBuffer(buf) {
    ЗАГРУЗКА ФОТО
 ═══════════════════════════════════════════════════ */
 function loadPhotoFolder(folder, targetMap, label, rowId) {
-  var headers = getGhHeaders();
-  return fetch(GITHUB_API + folder, {cache: 'no-cache', headers: headers})
+  return fetch(GITHUB_API + folder, {cache: 'no-cache'})
     .then(function(r) {
       if (!r.ok) throw new Error('HTTP ' + r.status);
       return r.json();
@@ -3042,7 +2023,7 @@ function applyPhotos() {
     if (!it.code) continue;
     for (var m = 0; m < maps.length; m++) {
       var arr = maps[m][it.code];
-      if (arr && arr.length) { it.photo = arr[0]; it.photos = arr; break; }
+      if (arr && arr.length) { it.photo = arr[0]; break; }
     }
   }
   var cur = navHistory[navHistory.length - 1];
@@ -3055,10 +2036,58 @@ function applyPhotos() {
    ГЛАВНАЯ ФУНКЦИЯ ОБНОВЛЕНИЯ
 ═══════════════════════════════════════════════════ */
 function mobUpdateFromGitHub() {
-  /* Делегируем в фоновое обновление — прогресс виден в бейдже шапки */
-  _bgUpdating = false;          /* сбрасываем флаг чтобы запуск прошёл */
-  bgAutoUpdate._lastRun = 0;    /* сбрасываем таймер защиты */
-  bgAutoUpdate();
+  closeLivePanel();
+  _ghStart = Date.now();
+  _ghTimer = setInterval(updateTimer, 200);
+
+  var rows = [
+    {id:'mob-row-xlsx',   icon:'\uD83D\uDCCA', label:'\u0421\u043f\u0438\u0441\u043e\u043a_\u043e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u044f_\u0424\u0418\u041d\u0410\u041b.xlsx'},
+    {id:'mob-row-oborud', icon:'\uD83C\uDFEA', label:'\u0422\u043e\u0440\u0433\u043e\u0432\u043e\u0435 \u043e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u0435'},
+    {id:'mob-row-reklam', icon:'\uD83C\uDFA8', label:'\u0420\u0435\u043a\u043b\u0430\u043c\u043d\u044b\u0435 \u043c\u0430\u0442\u0435\u0440\u0438\u0430\u043b\u044b'},
+    {id:'mob-row-svet',   icon:'\uD83D\uDCA1', label:'\u0421\u0432\u0435\u0442\u043e\u0432\u043e\u0435 \u043e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u0435'},
+    {id:'mob-row-slab',   icon:'\uD83D\uDCE1', label:'\u0421\u043b\u0430\u0431\u043e\u0442\u043e\u0447\u043d\u043e\u0435 \u043e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u0435'},
+    {id:'mob-row-uvelir', icon:'\uD83D\uDC8E', label:'\u042e\u0432\u0435\u043b\u0438\u0440\u043d\u043e\u0435 \u043e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u0435'},
+    {id:'mob-row-it',     icon:'\uD83D\uDCBB', label:'\u0418\u0422 \u043e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u0435'},
+    {id:'mob-row-compl',  icon:'\uD83D\uDCCB', label:'\u041a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u044b (\u0444\u043e\u0442\u043e)'}
+  ];
+
+  showLivePanel(rows);
+  for (var ri = 0; ri < rows.length; ri++) setRowState(rows[ri].id, 'loading', '');
+
+  /* Параллельно: xlsx + 7 папок фото */
+  var p1 = loadXlsxLive();
+  var p2 = loadPhotoFolder('Foto%20Oborud',    OBORUD_PHOTOS,  '', 'mob-row-oborud');
+  var p3 = loadPhotoFolder('Foto%20reklama',   REKLAM_PHOTOS,  '', 'mob-row-reklam');
+  var p4 = loadPhotoFolder('Foto%20Svet',      SVET_PHOTOS,    '', 'mob-row-svet');
+  var p5 = loadPhotoFolder('Foto%20slabotoch', SLAB_PHOTOS,    '', 'mob-row-slab');
+  var p6 = loadPhotoFolder('Foto%20Uvelir',    UVELIR_PHOTOS,  '', 'mob-row-uvelir');
+  var p7 = loadPhotoFolder('IT%20oborud',      IT_PHOTOS,      '', 'mob-row-it');
+  var p8 = loadPhotoFolder('Foto%20Complect',  COMPLECT_PHOTOS,'', 'mob-row-compl');
+
+  Promise.allSettled([p1, p2, p3, p4, p5, p6, p7, p8])
+    .then(function(results) {
+      clearInterval(_ghTimer); _ghTimer = null;
+      var elapsed = ((Date.now() - _ghStart) / 1000).toFixed(1);
+      var xlsxOk = results[0].status === 'fulfilled';
+      var totalPhotos = 0;
+      for (var i = 1; i < results.length; i++) {
+        if (results[i].status === 'fulfilled') totalPhotos += (results[i].value || 0);
+      }
+      var errors = 0;
+      for (var j = 0; j < results.length; j++) if (results[j].status === 'rejected') errors++;
+
+      if (!xlsxOk) {
+        finishLivePanel('\u041e\u0448\u0438\u0431\u043a\u0430 \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0438 \u043a\u0430\u0442\u0430\u043b\u043e\u0433\u0430 \u00b7 ' + elapsed + '\u0441', false);
+        showToast('\u041e\u0448\u0438\u0431\u043a\u0430 \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0438', '');
+        return;
+      }
+
+      applyPhotos();
+      var summary = results[0].value + ' \u00b7 ' + totalPhotos.toLocaleString('ru') + ' \u0444\u043e\u0442\u043e \u00b7 ' + elapsed + '\u0441';
+      if (errors) summary += ' \u00b7 \u26A0 ' + errors + ' \u043e\u0448\u0438\u0431\u043a\u0438';
+      finishLivePanel(summary, errors === 0);
+      showToast('\u041a\u0430\u0442\u0430\u043b\u043e\u0433 \u043e\u0431\u043d\u043e\u0432\u043b\u0451\u043d \u00b7 ' + results[0].value, 'ok');
+    });
 }
 
 /* ═══════════════════════════════════════════════════
@@ -3170,13 +2199,16 @@ function fbMobClear(){
 function fbMobSend(){
   var me=document.getElementById('fb-mob-msg');var msg=me?me.value.trim():'';
   if(!msg){showToast('\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0441\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u0435','');return;}
+  var shopNum=(getEl('fb-shop-sel')||{}).value||'';
+  var shopEmail=(getEl('fb-shop-email')||{}).value||'';
   var cv=(document.getElementById('fb-mob-sel-code')||{textContent:''}).textContent;
   var nv=(document.getElementById('fb-mob-sel-name')||{textContent:''}).textContent;
-  var subj=encodeURIComponent('\u041f\u043e\u0440\u0442\u0430\u043b \u0437\u0430\u043a\u0430\u0437\u043e\u0432'+(cv?' \u2014 '+cv:''));
-  var bodyText=(cv?'\u041f\u043e\u0437\u0438\u0446\u0438\u044f: '+cv+' \u2014 '+nv+'\n\n':'')+'\u0421\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u0435:\n'+msg+'\n\n\u2014 Mobile';
-  window.open('mailto:m.skiba@kari.com?subject='+subj+'&body='+encodeURIComponent(bodyText),'_blank');
-  closeModal('Feedback');if(me)me.value='';fbMobClear();
-  showToast('Outlook \u043e\u0442\u043a\u0440\u044b\u0442','ok');
+  var subj=encodeURIComponent('\u041f\u043e\u0440\u0442\u0430\u043b \u0437\u0430\u043a\u0430\u0437\u043e\u0432'+(shopNum?' \u00b7 \u041c\u0430\u0433 #'+shopNum:'')+(cv?' \u2014 '+cv:''));
+  var bodyText=(shopNum?'\u041c\u0430\u0433\u0430\u0437\u0438\u043d: '+shopNum+(shopEmail?' ('+shopEmail+')':'')+'\n\n':'')+
+    (cv?'\u041f\u043e\u0437\u0438\u0446\u0438\u044f: '+cv+' \u2014 '+nv+'\n\n':'')+'\u0421\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u0435:\n'+msg+'\n\n\u2014 Mobile';
+  window.location.href='mailto:m.skiba@kari.com?subject='+subj+'&body='+encodeURIComponent(bodyText);
+  showToast('\u041e\u0442\u043a\u0440\u044b\u0432\u0430\u0435\u043c \u043f\u043e\u0447\u0442\u0443...','ok');
+  setTimeout(function(){closeModal('Feedback');if(me)me.value='';fbMobClear();},600);
 }
 </script>
 <script>
