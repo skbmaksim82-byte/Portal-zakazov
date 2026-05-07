@@ -43,11 +43,14 @@ body{font-family:'Inter',sans-serif;}
 .sbar-icons{display:flex;align-items:center;gap:6px;color:var(--wb-text);}
 
 /* ══ SAFE AREA (iPhone X+) ══ */
-.hdr-top{padding-top:max(8px, env(safe-area-inset-top)) !important;}
-.hdr-top{padding-left:max(14px, env(safe-area-inset-left)) !important;}
 /* ══ HEADER (sticky) ══ */
 .hdr{background:#fff;flex-shrink:0;border-bottom:1px solid var(--wb-border);}
-.hdr-top{display:flex;align-items:center;gap:10px;padding:calc(env(safe-area-inset-top,0px) + 8px) 14px 6px;}
+.hdr-top{
+  display:flex;align-items:center;gap:8px;
+  padding:calc(env(safe-area-inset-top,0px) + 8px) 14px 6px;
+  padding-top:max(8px, env(safe-area-inset-top));
+  padding-left:max(14px, env(safe-area-inset-left));
+}
 .hdr-back{
   height:34px;padding:0 12px 0 8px;border-radius:10px;
   background:var(--wb-purple-bg);border:1.5px solid rgba(160,0,240,.2);
@@ -62,33 +65,37 @@ body{font-family:'Inter',sans-serif;}
   background:var(--wb-purple);border-radius:6px;flex-shrink:0;
 }
 .hdr-back-arrow svg{width:10px;height:10px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
-.hdr-logo{display:flex;align-items:center;gap:7px;flex-shrink:0;}
-.hdr-logo-box{width:30px;height:30px;background:linear-gradient(135deg,var(--wb-purple-dark),var(--wb-purple-light));
-  border-radius:9px;display:flex;align-items:center;justify-content:center;
-  box-shadow:0 3px 10px rgba(160,0,240,.35);}
-.hdr-logo-box span{font-size:13px;font-weight:900;color:#fff;}
-.hdr-title{display:flex;flex-direction:column;}
-.hdr-title-main{font-size:13px;font-weight:800;color:var(--wb-text);line-height:1.2;}
-.hdr-title-sub{font-size:10px;color:var(--wb-text3);font-weight:500;}
 
-/* Бейдж синхронизации */
+/* Лого — flex:1 чтобы занимало свободное место, но min-width:0 для обрезки */
+.hdr-logo{display:flex;align-items:center;gap:7px;flex:1;min-width:0;overflow:hidden;}
+.hdr-logo-box{
+  width:30px;height:30px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--wb-purple-dark),var(--wb-purple-light));
+  border-radius:9px;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 3px 10px rgba(160,0,240,.35);
+}
+.hdr-logo-box span{font-size:13px;font-weight:900;color:#fff;}
+.hdr-title{display:flex;flex-direction:column;min-width:0;flex-shrink:1;}
+.hdr-title-main{
+  font-size:13px;font-weight:800;color:var(--wb-text);line-height:1.2;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.hdr-title-sub{font-size:10px;color:var(--wb-text3);font-weight:500;white-space:nowrap;}
+
+/* Бейдж синхронизации — flex-shrink:0 чтобы не схлопывался */
 .hdr-sync-badge{
   font-size:10px;font-weight:800;
   padding:2px 7px;border-radius:20px;
   white-space:nowrap;flex-shrink:0;
   transition:all .3s;
 }
-.hdr-sync-badge.loading{
-  background:#F0E6FF;color:var(--wb-purple);
-}
-.hdr-sync-badge.ok{
-  background:var(--wb-green-bg);color:#00824A;
-}
-.hdr-sync-badge.error{
-  background:#FDEAEA;color:#C0392B;
-}
-.hdr-spacer{flex:1;}
+.hdr-sync-badge.loading{background:#F0E6FF;color:var(--wb-purple);}
+.hdr-sync-badge.ok{background:var(--wb-green-bg);color:#00824A;}
+.hdr-sync-badge.error{background:#FDEAEA;color:#C0392B;}
+
+/* Корзина — всегда flex-shrink:0, никогда не сдвигается */
 .hdr-cart-btn{
+  flex-shrink:0;
   position:relative;width:38px;height:38px;border-radius:12px;background:var(--wb-purple-bg);
   border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;
   transition:background .15s;
@@ -98,6 +105,19 @@ body{font-family:'Inter',sans-serif;}
   position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;padding:0 4px;
   background:var(--wb-pink);color:#fff;border-radius:20px;font-size:10px;font-weight:800;
   display:none;align-items:center;justify-content:center;border:2px solid #fff;
+}
+
+/* Строка контекста — название раздела/позиции */
+.hdr-context{
+  padding:0 14px 8px;
+}
+.hdr-context-title{
+  font-size:15px;font-weight:800;color:var(--wb-text);
+  line-height:1.25;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.hdr-context-sub{
+  font-size:11px;color:var(--wb-text3);font-weight:500;margin-top:1px;
 }
 .hdr-search{display:flex;align-items:center;gap:8px;background:var(--wb-gray);border:1.5px solid var(--wb-border);
   border-radius:12px;padding:0 12px;height:38px;margin:0 14px 10px;}
@@ -137,10 +157,11 @@ body{font-family:'Inter',sans-serif;}
 }
 .global-results-title{font-size:13px;font-weight:800;color:var(--wb-text);}
 .global-results-count{font-size:11px;color:var(--wb-text3);}
-.global-results-list{flex:1;overflow-y:auto;padding:8px 14px;display:flex;flex-direction:column;gap:8px;}
+.global-results-list{flex:1;overflow-y:auto;padding:8px 14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;align-content:start;}
 .global-section-label{
   font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;
   color:var(--wb-text3);padding:6px 0 4px;display:flex;align-items:center;gap:6px;
+  grid-column:span 2;
 }
 .global-section-label span{font-size:14px;}
 /* ══ ACTION BTNS ROW ══ */
@@ -223,29 +244,51 @@ body{font-family:'Inter',sans-serif;}
   border:1px solid var(--wb-border);border-radius:20px;padding:4px 10px;
   font-size:11px;font-weight:600;color:var(--wb-text2);cursor:pointer;}
 
-.items-list{padding:8px 14px;display:flex;flex-direction:column;gap:8px;}
+/* Сетка карточек — 2 колонки как комплекты */
+.items-list{padding:8px 14px 20px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.items-list .empty-state{grid-column:span 2;}
+
+/* Карточка товара — вертикальная как kit-photo-card */
 .item-card{
-  background:#fff;border-radius:16px;border:1.5px solid var(--wb-border);
-  display:flex;align-items:center;gap:10px;padding:12px;
-  transition:border-color .15s;position:relative;
+  background:#fff;border-radius:14px;border:1.5px solid var(--wb-border);
+  display:flex;flex-direction:column;overflow:hidden;
+  transition:border-color .15s;cursor:pointer;
+  position:relative;
 }
+.item-card:active{transform:scale(.97);}
 .item-card.in-cart{border-color:var(--wb-purple);background:var(--wb-purple-bg);}
-.item-thumb{
-  width:52px;height:52px;border-radius:12px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;font-size:24px;
-  background:linear-gradient(135deg,#f5eeff,#ead9ff);border:1px solid rgba(160,0,240,.1);
-  overflow:hidden;
+
+/* Зона фото — соотношение 4:3 */
+.item-photo-wrap{
+  width:100%;height:0;padding-bottom:75%;
+  position:relative;flex-shrink:0;overflow:hidden;
+  background:linear-gradient(135deg,#f5eeff,#ead9ff);
 }
-.item-thumb img{width:100%;height:100%;object-fit:cover;display:block;border-radius:0;}
-.item-info{flex:1;min-width:0;}
-.item-code{font-size:9px;font-family:'Courier New',monospace;color:var(--wb-text3);letter-spacing:.3px;margin-bottom:2px;}
-.item-name{font-size:12px;font-weight:700;color:var(--wb-text);line-height:1.35;margin-bottom:5px;
+.item-photo-wrap img{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  object-fit:cover;display:block;
+}
+.item-photo-placeholder{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:32px;
+}
+
+/* Тело карточки */
+.item-card-body{padding:8px 10px 10px;display:flex;flex-direction:column;gap:4px;flex:1;}
+.item-code{font-size:9px;font-family:'Courier New',monospace;color:var(--wb-text3);letter-spacing:.3px;}
+.item-name{font-size:11px;font-weight:700;color:var(--wb-text);line-height:1.35;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
-.item-tags{display:flex;gap:4px;flex-wrap:wrap;}
+.item-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:2px;}
 .tag{padding:2px 7px;border-radius:20px;font-size:9px;font-weight:700;}
 .tag-cat{background:var(--wb-purple-bg);color:var(--wb-purple);}
 .tag-stock{background:var(--wb-green-bg);color:#00824A;}
-.item-right{display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0;}
+
+/* Нижняя строка — количество + добавить */
+.item-card-footer{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:auto;padding-top:6px;
+}
 .qty-row{display:flex;align-items:center;}
 .q-btn{width:26px;height:26px;border:none;cursor:pointer;font-size:15px;font-weight:700;
   display:flex;align-items:center;justify-content:center;transition:all .12s;}
@@ -253,16 +296,17 @@ body{font-family:'Inter',sans-serif;}
 .q-minus:active{background:#e0e0e0;}
 .q-plus{background:var(--wb-purple);border-radius:0 8px 8px 0;color:#fff;}
 .q-plus:active{background:var(--wb-purple-dark);}
-.q-val{width:32px;height:26px;background:#f7f7f7;border:none;
+.q-val{width:28px;height:26px;background:#f7f7f7;border:none;
   font-family:'Inter',sans-serif;font-size:16px;font-weight:800;color:var(--wb-text);text-align:center;outline:none;}
 .add-btn{
-  width:34px;height:34px;border-radius:10px;border:none;cursor:pointer;
-  background:var(--wb-purple);color:#fff;font-size:17px;
+  width:30px;height:30px;border-radius:9px;border:none;cursor:pointer;
+  background:var(--wb-purple);color:#fff;font-size:16px;
   display:flex;align-items:center;justify-content:center;
-  box-shadow:0 4px 12px rgba(160,0,240,.35);transition:all .15s;
+  box-shadow:0 3px 8px rgba(160,0,240,.3);transition:all .15s;
+  flex-shrink:0;
 }
 .add-btn:active{transform:scale(.9);}
-.add-btn.added{background:var(--wb-green);box-shadow:0 4px 12px rgba(0,194,111,.3);}
+.add-btn.added{background:var(--wb-green);box-shadow:0 3px 8px rgba(0,194,111,.3);}
 .empty-state{text-align:center;padding:50px 20px;display:flex;flex-direction:column;align-items:center;gap:12px;}
 .empty-icon{font-size:52px;opacity:.3;}
 .empty-txt{font-size:14px;font-weight:600;color:var(--wb-text3);}
@@ -679,15 +723,19 @@ body{font-family:'Inter',sans-serif;}
       <div class="hdr-logo" id="hdrLogo">
         <div class="hdr-logo-box"><span>П</span></div>
         <div class="hdr-title">
-          <div class="hdr-title-main" id="hdrTitleMain">Портал заказов</div>
-          <div class="hdr-title-sub" id="hdrTitleSub">Склад — Kari</div>
+          <div class="hdr-title-main">Портал заказов</div>
+          <div class="hdr-title-sub">Склад — Kari</div>
         </div>
         <div class="hdr-sync-badge" id="hdrSyncBadge" style="display:none;"></div>
       </div>
-      <div class="hdr-spacer"></div>
       <button class="hdr-cart-btn" onclick="openCart()">
         🛒<div class="hdr-cart-badge" id="cartBadge">0</div>
       </button>
+    </div>
+    <!-- Строка контекста: название раздела / позиции -->
+    <div class="hdr-context" id="hdrContext" style="display:none;">
+      <div class="hdr-context-title" id="hdrContextTitle"></div>
+      <div class="hdr-context-sub" id="hdrContextSub"></div>
     </div>
     <!-- Глобальный поиск — всегда виден -->
     <div class="hdr-search" id="hdrSearchGlobal">
@@ -1294,29 +1342,36 @@ function renderItems(){
     var inC=!!cart[it.id];
     var qty=(cart[it.id]&&cart[it.id].qty)||1;
     var sec=getSec(it.secId);
+
     h+='<div class="item-card'+(inC?' in-cart':'')+'" id="ic-'+it.id+'">';
+
+    /* Фото сверху */
+    h+='<div class="item-photo-wrap"'+(it.photo?' data-action="view-item-photo" data-val="'+it.photo+'" data-code="'+it.code+'" data-name="'+it.name.replace(/"/g,'&quot;')+'" style="cursor:zoom-in"':'')+'>';
     if(it.photo){
-          if(it.photo){
-      h+='<div class="item-thumb" data-action="view-item-photo" data-val="'+it.photo+'" data-code="'+it.code+'" data-name="'+it.name.replace(/"/g,'&quot;')+'" style="cursor:zoom-in"><img src="'+it.photo+'" style="width:100%;height:100%;object-fit:cover;"></div>';
+      h+='<img src="'+it.photo+'" loading="lazy" onerror="this.parentNode.classList.add(\'no-photo\');this.remove()">';
     } else {
-      h+='<div class="item-thumb" data-action="go-item" data-val="'+it.id+'">'+it.emoji+'</div>';
+      h+='<div class="item-photo-placeholder">'+it.emoji+'</div>';
     }
-    } else {
-      h+='<div class="item-thumb" data-action="go-item" data-val="'+it.id+'">'+it.emoji+'</div>';
-    }
-    h+='<div class="item-info">';
+    h+='</div>';
+
+    /* Тело карточки */
+    h+='<div class="item-card-body" data-action="go-item" data-val="'+it.id+'">';
     h+='<div class="item-code">'+it.code+'</div>';
-    h+='<div class="item-name" data-action="go-item" data-val="'+it.id+'">'+it.name+'</div>';
-    h+='<div class="item-tags">';
-    if(sec)h+='<span class="tag tag-cat">'+sec.name+'</span>';
-    if(it.subcat)h+=' <span class="tag tag-sub">'+it.subcat+'</span>';
-    h+='</div></div>';
-    h+='<div class="item-right"><div class="qty-row">';
-    h+='<button class="q-btn q-minus" data-action="q-minus" data-val="'+it.id+'">-</button>';
+    h+='<div class="item-name">'+it.name+'</div>';
+    if(it.subcat){
+      h+='<div class="item-tags"><span class="tag tag-sub">'+it.subcat+'</span></div>';
+    }
+    h+='<div class="item-card-footer">';
+    h+='<div class="qty-row">';
+    h+='<button class="q-btn q-minus" data-action="q-minus" data-val="'+it.id+'">−</button>';
     h+='<input class="q-val" type="number" value="'+qty+'" min="1" id="qv-'+it.id+'" oninput="qInputChange(this,\''+it.id+'\')">';
-    h+='<button class="q-btn q-plus" data-action="q-plus" data-val="'+it.id+'">+</button></div>';
-    h+='<button class="add-btn'+(inC?' added':'')+'" id="ab-'+it.id+'" data-action="toggle-cart" data-val="'+it.id+'">'+(inC?'&#10003;':'+')+' </button>';
-    h+='</div></div>';
+    h+='<button class="q-btn q-plus" data-action="q-plus" data-val="'+it.id+'">+</button>';
+    h+='</div>';
+    h+='<button class="add-btn'+(inC?' added':'')+'" id="ab-'+it.id+'" data-action="toggle-cart" data-val="'+it.id+'">'+(inC?'&#10003;':'+')+'</button>';
+    h+='</div>';
+    h+='</div>';
+
+    h+='</div>';
   }
   list.innerHTML=h;
 }
@@ -1392,61 +1447,73 @@ function resetToHome(){
    HEADER
 ════════════════════════════════════════════════════ */
 function updateHeader(){
-  var backBtn   =getEl('hdrBack');
-  var breadcrumb=getEl('breadcrumb');
-  var titleMain =getEl('hdrTitleMain');
-  var titleSub  =getEl('hdrTitleSub');
-  var localSrch =getEl('hdrSearchLocal');
-  var localInput=getEl('searchLocal');
-  var cur=navHistory[navHistory.length-1];
-  var sec=getSec(currentSecId);
+  var backBtn    = getEl('hdrBack');
+  var breadcrumb = getEl('breadcrumb');
+  var ctxWrap    = getEl('hdrContext');
+  var ctxTitle   = getEl('hdrContextTitle');
+  var ctxSub     = getEl('hdrContextSub');
+  var localSrch  = getEl('hdrSearchLocal');
+  var localInput = getEl('searchLocal');
+  var cur = navHistory[navHistory.length-1];
+  var sec = getSec(currentSecId);
 
   var grw=getEl('globalResultsWrap');if(grw)grw.classList.remove('show');
   var sg=getEl('searchGlobal');if(sg)sg.value='';
   var sgc=getEl('searchGlobalClear');if(sgc)sgc.classList.remove('show');
 
-  if(cur==='s1'){
-    if(backBtn)backBtn.classList.remove('show');
-    if(breadcrumb){breadcrumb.classList.remove('show');breadcrumb.innerHTML='';}
-    if(titleMain)titleMain.textContent='\u041f\u043e\u0440\u0442\u0430\u043b \u0437\u0430\u043a\u0430\u0437\u043e\u0432';
-    if(titleSub)titleSub.textContent='\u0421\u043a\u043b\u0430\u0434 \u2014 Kari';
-    if(localSrch)localSrch.style.display='none';
-    if(localInput)localInput.value='';
-    var slc=getEl('searchLocalClear');if(slc)slc.classList.remove('show');
-  } else if(cur==='s2'){
-    if(backBtn)backBtn.classList.add('show');
-    if(titleMain)titleMain.textContent=sec?sec.name:'';
-    if(currentSecId==='kits'){
-      if(titleSub)titleSub.textContent=kitsData.length+' \u043a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u043e\u0432';
+  function setCtx(title, sub) {
+    if (!ctxWrap) return;
+    if (title) {
+      ctxWrap.style.display = 'block';
+      if (ctxTitle) ctxTitle.textContent = title;
+      if (ctxSub)   ctxSub.textContent   = sub || '';
+      if (ctxSub)   ctxSub.style.display = sub ? 'block' : 'none';
     } else {
-      var data2=getSubcatData(currentSecId);
-      if(titleSub)titleSub.textContent=data2.subcats.length+' \u043f\u043e\u0434\u0440\u0430\u0437\u0434\u0435\u043b\u0430';
+      ctxWrap.style.display = 'none';
     }
-    if(breadcrumb){breadcrumb.classList.add('show');breadcrumb.innerHTML='<span class="bc-item" data-action="reset-home">\u0413\u043b\u0430\u0432\u043d\u0430\u044f</span><span class="bc-sep">\u203a</span><span class="bc-cur">'+(sec?sec.name:'')+'</span>';}
-    if(localSrch)localSrch.style.display='flex';
-    if(localInput){localInput.placeholder='\u041f\u043e\u0438\u0441\u043a: '+(sec?sec.name:'');localInput.value='';}
+  }
+
+  if (cur === 's1') {
+    if (backBtn)   backBtn.classList.remove('show');
+    if (breadcrumb){breadcrumb.classList.remove('show');breadcrumb.innerHTML='';}
+    setCtx('', '');
+    if (localSrch) localSrch.style.display = 'none';
+    if (localInput) localInput.value = '';
+    var slc=getEl('searchLocalClear');if(slc)slc.classList.remove('show');
+
+  } else if (cur === 's2') {
+    if (backBtn) backBtn.classList.add('show');
+    var sub2 = currentSecId === 'kits'
+      ? (kitsData.length + ' комплектов')
+      : (getSubcatData(currentSecId).subcats.length + ' подразделов');
+    setCtx(sec ? sec.name : '', sub2);
+    if (breadcrumb){breadcrumb.classList.remove('show');breadcrumb.innerHTML='';}
+    if (localSrch) localSrch.style.display = 'flex';
+    if (localInput){localInput.placeholder='Поиск: '+(sec?sec.name:'');localInput.value='';}
     var slc2=getEl('searchLocalClear');if(slc2)slc2.classList.remove('show');
-  } else if(cur==='s3'){
-    if(backBtn)backBtn.classList.add('show');
-    var subLabel=currentSubcat||'\u0412\u0441\u0435 \u043f\u043e\u0437\u0438\u0446\u0438\u0438';
-    if(titleMain)titleMain.textContent=subLabel;
-    var cnt3=getFilteredItems().length;
-    if(titleSub)titleSub.textContent=cnt3.toLocaleString('ru')+' \u043f\u043e\u0437\u0438\u0446\u0438\u0439';
-    if(breadcrumb){
-      breadcrumb.classList.add('show');
-      breadcrumb.innerHTML='<span class="bc-item" data-action="reset-home">\u0413\u043b\u0430\u0432\u043d\u0430\u044f</span><span class="bc-sep">\u203a</span><span class="bc-item" data-action="go-back">'+(sec?sec.name:'')+'</span><span class="bc-sep">\u203a</span><span class="bc-cur">'+subLabel+'</span>';
+
+  } else if (cur === 's3') {
+    if (backBtn) backBtn.classList.add('show');
+    var subLabel = currentSubcat || 'Все позиции';
+    var cnt3 = (currentSecId === 'kits') ? 0 : getFilteredItems().length;
+    if (currentSecId === 'kits') {
+      var ki3 = currentKitIdx >= 0 ? kitsData[currentKitIdx] : null;
+      cnt3 = ki3 ? ki3.items.length : 0;
     }
-    if(localSrch)localSrch.style.display='flex';
-    if(localInput){localInput.placeholder='\u041f\u043e\u0438\u0441\u043a \u0432 '+subLabel;localInput.value='';}
+    setCtx(subLabel, cnt3.toLocaleString('ru') + ' позиций');
+    if (breadcrumb){breadcrumb.classList.remove('show');breadcrumb.innerHTML='';}
+    if (localSrch) localSrch.style.display = 'flex';
+    if (localInput){localInput.placeholder='Поиск в '+subLabel;localInput.value='';}
     var slc3=getEl('searchLocalClear');if(slc3)slc3.classList.remove('show');
+
   } else {
-    if(backBtn)backBtn.classList.add('show');
-    var iname=currentItem?currentItem.name:'\u0422\u043e\u0432\u0430\u0440';
-    if(titleMain)titleMain.textContent=iname.length>28?iname.slice(0,28)+'...':iname;
-    if(titleSub)titleSub.textContent=currentSubcat||(sec?sec.name:'');
-    if(breadcrumb){breadcrumb.classList.remove('show');breadcrumb.innerHTML='';}
-    if(localSrch)localSrch.style.display='none';
-    if(localInput)localInput.value='';
+    /* s4 — карточка товара */
+    if (backBtn) backBtn.classList.add('show');
+    var iname = currentItem ? currentItem.name : 'Товар';
+    setCtx(iname, currentSubcat || (sec ? sec.name : ''));
+    if (breadcrumb){breadcrumb.classList.remove('show');breadcrumb.innerHTML='';}
+    if (localSrch) localSrch.style.display = 'none';
+    if (localInput) localInput.value = '';
   }
 }
 
@@ -1559,25 +1626,31 @@ function renderKitItems(){
     var it=items[i];
     var inC=!!cart[it.id];
     var itPhoto=findPhotoByCode(it.code);
+
     h+='<div class="item-card'+(inC?' in-cart':'')+'" id="ic-'+it.id+'">';
+
+    /* Фото сверху */
+    h+='<div class="item-photo-wrap"'+(itPhoto?' data-action="view-item-photo" data-val="'+itPhoto+'" data-code="'+it.code+'" data-name="'+it.name.replace(/"/g,'&quot;')+'" style="cursor:zoom-in"':'')+'>';
     if(itPhoto){
-      h+='<div class="item-thumb" data-action="view-item-photo" data-val="'+itPhoto+'" data-code="'+it.code+'" data-name="'+it.name.replace(/"/g,'&quot;')+'" style="cursor:zoom-in"><img src="'+itPhoto+'" style="width:100%;height:100%;object-fit:cover;"></div>';
+      h+='<img src="'+itPhoto+'" loading="lazy" onerror="this.parentNode.classList.add(\'no-photo\');this.remove()">';
     } else {
-      h+='<div class="item-thumb">\uD83D\uDCCB</div>';
+      h+='<div class="item-photo-placeholder">\uD83D\uDCCB</div>';
     }
-    h+='<div class="item-info">';
+    h+='</div>';
+
+    /* Тело */
+    h+='<div class="item-card-body">';
     h+='<div class="item-code">'+it.code+'</div>';
     h+='<div class="item-name">'+it.name+'</div>';
-    h+='<div class="item-tags">';
-    h+='<span class="tag tag-cat">\uD83D\uDCCB '+it.kitName+'</span>';
-    h+='<span class="tag" style="background:#E6F9F0;color:#00824A;">'+(it.qty||1)+' \u0448\u0442</span>';
-    h+='</div></div>';
-    h+='<div class="item-right"><div class="qty-row">';
-    h+='<button class="q-btn q-minus" data-action="q-minus" data-val="'+it.id+'">-</button>';
+    h+='<div class="item-tags"><span class="tag" style="background:#E6F9F0;color:#00824A;">'+(it.qty||1)+' \u0448\u0442</span></div>';
+    h+='<div class="item-card-footer">';
+    h+='<div class="qty-row">';
+    h+='<button class="q-btn q-minus" data-action="q-minus" data-val="'+it.id+'">−</button>';
     h+='<input class="q-val" type="number" value="'+(cart[it.id]?cart[it.id].qty:(it.qty||1))+'" min="1" id="qv-'+it.id+'" oninput="qInputChange(this,\''+it.id+'\')">';
-    h+='<button class="q-btn q-plus" data-action="q-plus" data-val="'+it.id+'">+</button></div>';
-    h+='<button class="add-btn'+(inC?' added':'')+'" id="ab-'+it.id+'" data-action="toggle-cart-kit" data-val="'+it.id+'" data-kit-i="'+i+'">'+(inC?'&#10003;':'+')+'</button>';
-    h+='</div></div>';
+    h+='<button class="q-btn q-plus" data-action="q-plus" data-val="'+it.id+'">+</button>';
+    h+='</div>';
+    h+='<button class="add-btn'+(inC?' added':'')+'" id="ab-'+it.id+'" data-action="toggle-cart-kit" data-val="'+it.id+'">'+(inC?'&#10003;':'+')+'</button>';
+    h+='</div></div></div>';
   }
   list.innerHTML=h;
 }
@@ -2205,17 +2278,24 @@ function renderGlobalResults(q){
     for(var gi=0;gi<show;gi++){
       var git=secItems[gi],inC=!!cart[git.id],qty2=(cart[git.id]&&cart[git.id].qty)||1;
       h+='<div class="item-card'+(inC?' in-cart':'')+'" id="gic-'+git.id+'">';
-      h+='<div class="item-thumb">'+git.emoji+'</div>';
-      h+='<div class="item-info"><div class="item-code">'+git.code+'</div><div class="item-name">'+git.name+'</div>';
-      h+='<div class="item-tags"><span class="tag tag-cat">'+sec.name+'</span>'+(git.subcat?'<span class="tag tag-sub">'+git.subcat+'</span>':'')+'</div></div>';
-      h+='<div class="item-right"><div class="qty-row">';
-      h+='<button class="q-btn q-minus" data-action="q-minus" data-val="'+git.id+'">-</button>';
+      h+='<div class="item-photo-wrap"'+(git.photo?' data-action="view-item-photo" data-val="'+git.photo+'" data-code="'+git.code+'" data-name="'+git.name.replace(/"/g,'&quot;')+'" style="cursor:zoom-in"':'')+'>';
+      if(git.photo){h+='<img src="'+git.photo+'" loading="lazy">';}
+      else{h+='<div class="item-photo-placeholder">'+git.emoji+'</div>';}
+      h+='</div>';
+      h+='<div class="item-card-body" data-action="go-item" data-val="'+git.id+'">';
+      h+='<div class="item-code">'+git.code+'</div>';
+      h+='<div class="item-name">'+git.name+'</div>';
+      if(git.subcat)h+='<div class="item-tags"><span class="tag tag-sub">'+git.subcat+'</span></div>';
+      h+='<div class="item-card-footer">';
+      h+='<div class="qty-row">';
+      h+='<button class="q-btn q-minus" data-action="q-minus" data-val="'+git.id+'">−</button>';
       h+='<input class="q-val" type="number" value="'+qty2+'" min="1" id="qv-'+git.id+'" oninput="qInputChange(this,\''+git.id+'\')">';
-      h+='<button class="q-btn q-plus" data-action="q-plus" data-val="'+git.id+'">+</button></div>';
-      h+='<button class="add-btn'+(inC?' added':'')+'" id="ab-'+git.id+'" data-action="toggle-cart" data-val="'+git.id+'">'+(inC?'&#10003;':'+')+' </button>';
-      h+='</div></div>';
+      h+='<button class="q-btn q-plus" data-action="q-plus" data-val="'+git.id+'">+</button>';
+      h+='</div>';
+      h+='<button class="add-btn'+(inC?' added':'')+'" id="ab-'+git.id+'" data-action="toggle-cart" data-val="'+git.id+'">'+(inC?'&#10003;':'+')+'</button>';
+      h+='</div></div></div>';
     }
-    if(secItems.length>5)h+='<div style="font-size:11px;color:#A000F0;font-weight:700;text-align:center;padding:4px;">\u0435\u0449\u0451 '+(secItems.length-5)+' \u043f\u043e\u0437\u0438\u0446\u0438\u0439</div>';
+    if(secItems.length>5)h+='<div style="font-size:11px;color:#A000F0;font-weight:700;text-align:center;padding:4px;grid-column:span 2;">\u0435\u0449\u0451 '+(secItems.length-5)+' \u043f\u043e\u0437\u0438\u0446\u0438\u0439</div>';
   }
   if(!h)h='<div class="empty-state"><div class="empty-icon">\uD83D\uDD0D</div><div class="empty-txt">\u041d\u0438\u0447\u0435\u0433\u043e \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e</div></div>';
   if(wrap)wrap.innerHTML=h;
