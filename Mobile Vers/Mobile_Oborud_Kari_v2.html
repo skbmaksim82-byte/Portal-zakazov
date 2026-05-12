@@ -63,9 +63,9 @@ body{font-family:'Inter',sans-serif;}
 }
 .hdr-back-arrow svg{width:10px;height:10px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
 .hdr-logo{display:flex;align-items:center;gap:7px;flex:1;min-width:0;overflow:hidden;}
-.hdr-logo-box{width:30px;height:30px;background:linear-gradient(135deg,var(--wb-purple-dark),var(--wb-purple-light));
+.hdr-logo-box{width:30px;height:30px;background:#fff;
   border-radius:9px;display:flex;align-items:center;justify-content:center;
-  box-shadow:0 3px 10px rgba(160,0,240,.35);flex-shrink:0;}
+  box-shadow:0 2px 8px rgba(0,0,0,.12);flex-shrink:0;overflow:hidden;}
 .hdr-logo-box span{font-size:13px;font-weight:900;color:#fff;}
 .hdr-title{display:flex;flex-direction:column;min-width:0;}
 .hdr-title-main{font-size:13px;font-weight:800;color:var(--wb-text);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -546,7 +546,7 @@ body{font-family:'Inter',sans-serif;}
         Назад
       </button>
       <div class="hdr-logo" id="hdrLogo">
-        <div class="hdr-logo-box"><span>П</span></div>
+        <div class="hdr-logo-box" style="background:#fff;overflow:hidden;padding:0;"><img src="https://raw.githubusercontent.com/skbmaksim82-byte/Portal-zakazov/main/Mobile%20Vers/logo%20mobile.png" style="width:100%;height:100%;object-fit:contain;display:block;" onerror="this.style.display='none';this.parentNode.innerHTML='<span style=&quot;font-size:13px;font-weight:900;color:#fff;&quot;>К</span>'"></div>
         <div class="hdr-title">
           <div style="display:flex;align-items:center;gap:5px;">
             <div class="hdr-title-main">Портал заказов</div>
@@ -1424,18 +1424,33 @@ function findAllPhotosByCode(code){
 }
 
 function applyKitsPhotos(){
+  function norm(s){ return s.toLowerCase().replace(/\s+/g,'').replace(/[_\-]/g,''); }
+  var photoKeys = Object.keys(COMPLECT_PHOTOS);
+  var normKeys  = photoKeys.map(function(k){ return norm(k); });
+
   for(var i=0;i<kitsData.length;i++){
-    var kit=kitsData[i];
-    var kitKeys=Object.keys(COMPLECT_PHOTOS);
-    var kitPh=null;
-    var kitNameLow=kit.name.toLowerCase().replace(/\s+/g,'');
-    for(var k=0;k<kitKeys.length;k++){
-      if(kitNameLow.indexOf(kitKeys[k].toLowerCase())>=0||kitKeys[k].toLowerCase().indexOf(kitNameLow.slice(0,6))>=0){
-        var arr=COMPLECT_PHOTOS[kitKeys[k]];
-        if(arr&&arr.length){kitPh=arr[0];break;}
+    var kit = kitsData[i];
+    var kitNorm = norm(kit.name);
+    var found = null;
+
+    /* 1. Точное совпадение */
+    for(var k=0;k<normKeys.length;k++){
+      if(normKeys[k]===kitNorm){ found=COMPLECT_PHOTOS[photoKeys[k]]; break; }
+    }
+    /* 2. Ключ файла содержится в имени комплекта */
+    if(!found){
+      for(var k2=0;k2<normKeys.length;k2++){
+        if(normKeys[k2].length>3 && kitNorm.indexOf(normKeys[k2])>=0){ found=COMPLECT_PHOTOS[photoKeys[k2]]; break; }
       }
     }
-    kit.photo=kitPh||null;
+    /* 3. Имя комплекта содержится в ключе файла */
+    if(!found){
+      for(var k3=0;k3<normKeys.length;k3++){
+        if(kitNorm.length>3 && normKeys[k3].indexOf(kitNorm)>=0){ found=COMPLECT_PHOTOS[photoKeys[k3]]; break; }
+      }
+    }
+
+    kit.photo = (found&&found.length) ? found[0] : null;
   }
 }
 
@@ -1534,7 +1549,6 @@ function setupEventDelegation(){
         if(action==='fb-select'){fbMobSelect(val);return;}
         if(action==='fb-clear'){fbMobClear();return;}
         if(action==='update-catalog'){mobUpdateFromGitHub();return;}
-        if(action==='close-panel'){closeLivePanel();return;}
         if(action==='toggle-kit'){toggleKit(parseInt(val));return;}
         if(action==='add-kit'){addKitToCart(parseInt(val));return;}
         if(action==='view-item-photo'){openPhotoViewer(val,t.getAttribute('data-code'),t.getAttribute('data-name'));return;}
@@ -1964,100 +1978,6 @@ function closeModal(name) {
   if (el) el.classList.remove('show');
 }
 
-/* ═══════════════════════════════════════════════════
-   LIVE-ПАНЕЛЬ ПРОГРЕССА
-═══════════════════════════════════════════════════ */
-function showLivePanel(rows) {
-  var old = document.getElementById('mobLivePanel');
-  if (old) old.remove();
-
-  var panel = document.createElement('div');
-  panel.id = 'mobLivePanel';
-  panel.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#0f1f0f;color:#fff;border-radius:20px 20px 0 0;font-size:12px;font-weight:600;z-index:9999;box-shadow:0 -8px 32px rgba(0,0,0,.5);border-top:1px solid rgba(255,255,255,.08);transform:translateY(100%);transition:transform .35s cubic-bezier(.32,0,.2,1);max-height:70vh;overflow-y:auto;';
-
-  var hdr = document.createElement('div');
-  hdr.style.cssText = 'background:linear-gradient(135deg,#1a3a5c,#2d5a8a);padding:12px 16px 10px;display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:0;z-index:1;border-radius:20px 20px 0 0;';
-  hdr.innerHTML = '<div style="display:flex;align-items:center;gap:10px;"><span style="font-size:18px;">\u2601\uFE0F</span><div><div style="font-size:14px;font-weight:800;">\u041e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435 \u043a\u0430\u0442\u0430\u043b\u043e\u0433\u0430</div><div id="mob-timer" style="font-size:10px;color:rgba(255,255,255,.5);margin-top:1px;">0.0\u0441</div></div></div>'
-    + '<div style="display:flex;align-items:center;gap:10px;"><div style="width:90px;height:5px;background:rgba(255,255,255,.15);border-radius:3px;overflow:hidden;"><div id="mob-prog-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#4a90d9,#7ab8f5);border-radius:3px;transition:width .4s;"></div></div>'
-    + '<button id="mobPanelClose" data-action="close-panel" style="display:none;background:rgba(255,255,255,.1);border:none;color:#ccc;cursor:pointer;font-size:13px;width:26px;height:26px;border-radius:50%;">\u2715</button></div>';
-  panel.appendChild(hdr);
-
-  var list = document.createElement('div');
-  list.style.cssText = 'padding:10px 14px 16px;display:flex;flex-direction:column;gap:4px;';
-  for (var i = 0; i < rows.length; i++) {
-    var r = document.createElement('div');
-    r.id = rows[i].id;
-    r.style.cssText = 'display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:10px;transition:background .2s;';
-    r.innerHTML = '<span style="flex-shrink:0;font-size:15px;">' + rows[i].icon + '</span>'
-      + '<span style="flex:1;color:#ccc;font-size:12px;">' + rows[i].label + '</span>'
-      + '<span class="mob-row-badge" style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(255,255,255,.08);color:#888;">\u043e\u0436\u0438\u0434\u0430\u043d\u0438\u0435</span>';
-    list.appendChild(r);
-  }
-  panel.appendChild(list);
-  document.body.appendChild(panel);
-  setTimeout(function() { panel.style.transform = 'translateY(0)'; }, 50);
-  return panel;
-}
-
-function setRowState(rowId, state, detail) {
-  var row = document.getElementById(rowId);
-  if (!row) return;
-  var badge = row.querySelector('.mob-row-badge');
-  if (!badge) return;
-  var cfg = {
-    loading: {bg:'rgba(74,144,217,.3)',  color:'#7ab8f5', text:'\u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0430...',   rowBg:'rgba(74,144,217,.07)'},
-    ok:      {bg:'rgba(34,197,94,.3)',   color:'#86efac', text:detail||'\u2713',  rowBg:'rgba(34,197,94,.06)'},
-    error:   {bg:'rgba(239,68,68,.3)',   color:'#fca5a5', text:detail||'\u043e\u0448\u0438\u0431\u043a\u0430', rowBg:'rgba(239,68,68,.06)'},
-    wait:    {bg:'rgba(255,255,255,.08)',color:'#888',    text:'\u043e\u0436\u0438\u0434\u0430\u043d\u0438\u0435', rowBg:'transparent'}
-  };
-  var c = cfg[state] || cfg.wait;
-  badge.style.background = c.bg;
-  badge.style.color = c.color;
-  badge.textContent = c.text;
-  row.style.background = c.rowBg;
-  var panel = document.getElementById('mobLivePanel');
-  if (panel) {
-    var allRows = panel.querySelectorAll('[id^="mob-row-"]');
-    var done = 0;
-    for (var i = 0; i < allRows.length; i++) {
-      var b = allRows[i].querySelector('.mob-row-badge');
-      if (b && b.textContent !== '\u043e\u0436\u0438\u0434\u0430\u043d\u0438\u0435' && b.textContent !== '\u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0430...') done++;
-    }
-    var bar = document.getElementById('mob-prog-bar');
-    if (bar && allRows.length) bar.style.width = Math.round(done / allRows.length * 100) + '%';
-  }
-}
-
-function updateTimer() {
-  var el = document.getElementById('mob-timer');
-  if (el) el.textContent = ((Date.now() - _ghStart) / 1000).toFixed(1) + '\u0441';
-}
-
-function finishLivePanel(summaryText, success) {
-  clearInterval(_ghTimer); _ghTimer = null;
-  var bar = document.getElementById('mob-prog-bar');
-  if (bar) { bar.style.width = '100%'; bar.style.background = success ? '#22c55e' : '#f59e0b'; }
-  var panel = document.getElementById('mobLivePanel');
-  if (!panel) return;
-  var listDiv = panel.querySelector('div:nth-child(2)');
-  if (listDiv) {
-    var sum = document.createElement('div');
-    sum.style.cssText = 'margin-top:8px;padding:9px 12px;border-radius:10px;font-size:12px;font-weight:700;background:'
-      + (success ? 'rgba(34,197,94,.15)' : 'rgba(245,158,11,.15)') + ';color:' + (success ? '#86efac' : '#fbbf24') + ';border:1px solid rgba(255,255,255,.07);';
-    sum.textContent = (success ? '\u2705 ' : '\u26A0\uFE0F ') + summaryText;
-    listDiv.appendChild(sum);
-  }
-  var closeBtn = document.getElementById('mobPanelClose');
-  if (closeBtn) closeBtn.style.display = 'flex';
-  setTimeout(closeLivePanel, 9000);
-}
-
-function closeLivePanel() {
-  var p = document.getElementById('mobLivePanel');
-  if (!p) return;
-  p.style.transform = 'translateY(100%)';
-  setTimeout(function() { if (p.parentNode) p.remove(); }, 400);
-}
 
 /* ═══════════════════════════════════════════════════
    МАГАЗИНЫ — заполнение селектов
@@ -2094,25 +2014,6 @@ function onShopSelectChange(selId, emailId) {
   emailEl.value = num ? getShopEmail(num) : '';
 }
 
-/* ═══════════════════════════════════════════════════
-   ЗАГРУЗКА XLSX
-═══════════════════════════════════════════════════ */
-function loadXlsxLive() {
-  return fetch(GITHUB_XLSX, {cache: 'no-cache'})
-    .then(function(r) {
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      return r.arrayBuffer();
-    })
-    .then(function(buf) {
-      var result = parseXlsxBuffer(buf);
-      setRowState('mob-row-xlsx', 'ok', result);
-      return result;
-    })
-    .catch(function(e) {
-      setRowState('mob-row-xlsx', 'error', e.message.slice(0, 28));
-      throw e;
-    });
-}
 
 function parseXlsxBuffer(buf) {
   var LIB = window.XLSX;
@@ -2138,14 +2039,43 @@ function parseXlsxBuffer(buf) {
 
   /* Сбрасываем allItems — плоский массив как в десктопе */
   allItems = [];
+  kitsData = [];  /* Сбрасываем комплекты */
 
   var totalRows = 0;
   var SKIP_CODES = {'\u041a\u043e\u0434 \u043d\u043e\u043c\u0435\u043d\u043a\u043b\u0430\u0442\u0443\u0440\u044b':1, '\u041d\u041c\u041a (\u041a\u043e\u0434)':1, '\u0410\u0440\u0442\u0438\u043a\u0443\u043b':1};
 
+  /* ── Парсим комплекты отдельно (специальная структура листа) ── */
+  var kitsSheet = wb.Sheets['\u041a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u044b'];
+  if (kitsSheet) {
+    var kRows = LIB.utils.sheet_to_json(kitsSheet, {header:1, defval:''});
+    var curKit = null;
+    for (var kr = 0; kr < kRows.length; kr++) {
+      var krow = kRows[kr];
+      var col0 = String(krow[0] || '').trim();
+      if (!col0) { curKit = null; continue; }
+      /* Строка-заголовок комплекта: содержит эмодзи 📦 */
+      if (col0.indexOf('\uD83D\uDCE6') >= 0 || col0.indexOf('\u{1F4E6}') >= 0 || /^\s*📦/.test(col0)) {
+        var kitName = col0.replace(/^\s*📦\s*/u, '').trim();
+        curKit = {name: kitName, items: [], photo: null};
+        kitsData.push(curKit);
+        continue;
+      }
+      /* Строка детали: col[3]=код, col[4]=название, col[5]=количество */
+      var itemCode = String(krow[3] || '').trim();
+      var itemName = String(krow[4] || '').trim();
+      var itemQty  = parseFloat(krow[5]) || 1;
+      if (curKit && itemCode && itemName) {
+        curKit.items.push({code: itemCode, name: itemName, qty: itemQty});
+      }
+    }
+    totalRows += kitsData.length;
+  }
+
   for (var si = 0; si < wb.SheetNames.length; si++) {
     var sName = wb.SheetNames[si];
     var map = SHEET_MAP[sName];
-    if (!map) continue;  /* Пропускаем Сводка, Магазины, Таблица совместимости */
+    if (!map) continue;
+    if (sName === '\u041a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u044b') continue; /* парсится отдельно */
 
     var rows = LIB.utils.sheet_to_json(wb.Sheets[sName], {header:1, defval:''});
     if (rows.length < 2) continue;
@@ -2232,38 +2162,6 @@ function parseXlsxBuffer(buf) {
   return totalRows.toLocaleString('ru') + ' \u043f\u043e\u0437.';
 }
 
-/* ═══════════════════════════════════════════════════
-   ЗАГРУЗКА ФОТО
-═══════════════════════════════════════════════════ */
-function loadPhotoFolder(folder, targetMap, label, rowId) {
-  return fetch(GITHUB_API + folder, {cache: 'no-cache'})
-    .then(function(r) {
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      return r.json();
-    })
-    .then(function(files) {
-      var keys = Object.keys(targetMap);
-      for (var ki = 0; ki < keys.length; ki++) delete targetMap[keys[ki]];
-      var count = 0;
-      for (var fi = 0; fi < files.length; fi++) {
-        var f = files[fi];
-        if (!/\.(png|jpg|jpeg|gif|webp)$/i.test(f.name)) continue;
-        var nameNoExt = f.name.replace(/\.[^.]+$/, '');
-        var baseCode  = nameNoExt.replace(/_\d+$/, '');
-        var url = f.download_url || (GITHUB_RAW + folder.replace(/%20/g, ' ') + '/' + f.name);
-        if (!targetMap[baseCode]) targetMap[baseCode] = [];
-        if (nameNoExt === baseCode) targetMap[baseCode].unshift(url);
-        else targetMap[baseCode].push(url);
-        count++;
-      }
-      setRowState(rowId, 'ok', count + ' \u0444\u043e\u0442\u043e');
-      return count;
-    })
-    .catch(function(e) {
-      setRowState(rowId, 'error', e.message.slice(0, 22));
-      return 0;
-    });
-}
 
 function applyPhotos() {
   var maps = [OBORUD_PHOTOS, REKLAM_PHOTOS, SVET_PHOTOS, SLAB_PHOTOS, UVELIR_PHOTOS, IT_PHOTOS, COMPLECT_PHOTOS];
@@ -2285,62 +2183,8 @@ function applyPhotos() {
    ГЛАВНАЯ ФУНКЦИЯ ОБНОВЛЕНИЯ
 ═══════════════════════════════════════════════════ */
 function mobUpdateFromGitHub() {
-  /* Если идёт тихое обновление — прерываем (флагом), запускаем ручное с панелью */
-  _syncRunning = false;
-  setSyncBadge('', '');
-  closeLivePanel();
-  _ghStart = Date.now();
-  _ghTimer = setInterval(updateTimer, 200);
-
-  var rows = [
-    {id:'mob-row-xlsx',   icon:'\uD83D\uDCCA', label:'\u0421\u043f\u0438\u0441\u043e\u043a_\u043e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u044f_\u0424\u0418\u041d\u0410\u041b.xlsx'},
-    {id:'mob-row-oborud', icon:'\uD83C\uDFEA', label:'\u0422\u043e\u0440\u0433\u043e\u0432\u043e\u0435 \u043e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u0435'},
-    {id:'mob-row-reklam', icon:'\uD83C\uDFA8', label:'\u0420\u0435\u043a\u043b\u0430\u043c\u043d\u044b\u0435 \u043c\u0430\u0442\u0435\u0440\u0438\u0430\u043b\u044b'},
-    {id:'mob-row-svet',   icon:'\uD83D\uDCA1', label:'\u0421\u0432\u0435\u0442\u043e\u0432\u043e\u0435 \u043e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u0435'},
-    {id:'mob-row-slab',   icon:'\uD83D\uDCE1', label:'\u0421\u043b\u0430\u0431\u043e\u0442\u043e\u0447\u043d\u043e\u0435 \u043e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u0435'},
-    {id:'mob-row-uvelir', icon:'\uD83D\uDC8E', label:'\u042e\u0432\u0435\u043b\u0438\u0440\u043d\u043e\u0435 \u043e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u0435'},
-    {id:'mob-row-it',     icon:'\uD83D\uDCBB', label:'\u0418\u0422 \u043e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u0435'},
-    {id:'mob-row-compl',  icon:'\uD83D\uDCCB', label:'\u041a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u044b (\u0444\u043e\u0442\u043e)'}
-  ];
-
-  showLivePanel(rows);
-  for (var ri = 0; ri < rows.length; ri++) setRowState(rows[ri].id, 'loading', '');
-
-  /* Параллельно: xlsx + 7 папок фото */
-  var p1 = loadXlsxLive();
-  var p2 = loadPhotoFolder('Foto%20Oborud',    OBORUD_PHOTOS,  '', 'mob-row-oborud');
-  var p3 = loadPhotoFolder('Foto%20reklama',   REKLAM_PHOTOS,  '', 'mob-row-reklam');
-  var p4 = loadPhotoFolder('Foto%20Svet',      SVET_PHOTOS,    '', 'mob-row-svet');
-  var p5 = loadPhotoFolder('Foto%20slabotoch', SLAB_PHOTOS,    '', 'mob-row-slab');
-  var p6 = loadPhotoFolder('Foto%20Uvelir',    UVELIR_PHOTOS,  '', 'mob-row-uvelir');
-  var p7 = loadPhotoFolder('IT%20oborud',      IT_PHOTOS,      '', 'mob-row-it');
-  var p8 = loadPhotoFolder('Foto%20Complect',  COMPLECT_PHOTOS,'', 'mob-row-compl');
-
-  Promise.allSettled([p1, p2, p3, p4, p5, p6, p7, p8])
-    .then(function(results) {
-      clearInterval(_ghTimer); _ghTimer = null;
-      var elapsed = ((Date.now() - _ghStart) / 1000).toFixed(1);
-      var xlsxOk = results[0].status === 'fulfilled';
-      var totalPhotos = 0;
-      for (var i = 1; i < results.length; i++) {
-        if (results[i].status === 'fulfilled') totalPhotos += (results[i].value || 0);
-      }
-      var errors = 0;
-      for (var j = 0; j < results.length; j++) if (results[j].status === 'rejected') errors++;
-
-      if (!xlsxOk) {
-        finishLivePanel('\u041e\u0448\u0438\u0431\u043a\u0430 \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0438 \u043a\u0430\u0442\u0430\u043b\u043e\u0433\u0430 \u00b7 ' + elapsed + '\u0441', false);
-        showToast('\u041e\u0448\u0438\u0431\u043a\u0430 \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0438', '');
-        return;
-      }
-
-      applyPhotos();
-      silentUpdate._lastRun = Date.now(); /* не дублируем авто сразу после ручного */
-      var summary = results[0].value + ' \u00b7 ' + totalPhotos.toLocaleString('ru') + ' \u0444\u043e\u0442\u043e \u00b7 ' + elapsed + '\u0441';
-      if (errors) summary += ' \u00b7 \u26A0 ' + errors + ' \u043e\u0448\u0438\u0431\u043a\u0438';
-      finishLivePanel(summary, errors === 0);
-      showToast('\u041a\u0430\u0442\u0430\u043b\u043e\u0433 \u043e\u0431\u043d\u043e\u0432\u043b\u0451\u043d \u00b7 ' + results[0].value, 'ok');
-    });
+  if (_syncRunning) return;
+  silentUpdate();
 }
 
 /* ═══════════════════════════════════════════════════
