@@ -1056,6 +1056,7 @@ function getSubcatData(secId){
 }
 
 function getSectionCount(secId){
+  if(secId==='kits') return kitsData.length;
   var n=0;
   for(var i=0;i<allItems.length;i++) if(allItems[i].secId===secId) n++;
   return n;
@@ -1237,6 +1238,16 @@ function showScreen(id){
 
 function goSection(secId){
   currentSecId=secId; currentSubcat=''; currentItem=null;
+
+  /* Комплекты — особый экран */
+  if(secId==='kits'){
+    renderKitsScreen();
+    showScreen('s2');
+    navHistory=['s1','s2'];
+    updateHeader();
+    return;
+  }
+
   var data=getSubcatData(secId);
   if(!data.subcats.length){
     /* Нет подразделов — сразу в список */
