@@ -1369,7 +1369,6 @@ function setupEventDelegation(){
         if(action==='fb-select'){fbMobSelect(val);return;}
         if(action==='fb-clear'){fbMobClear();return;}
         if(action==='update-catalog'){mobUpdateFromGitHub();return;}
-        if(action==='close-panel'){closeLivePanel();return;}
         if(action==='toggle-kit'){toggleKit(parseInt(val));return;}
         if(action==='add-kit'){addKitToCart(parseInt(val));return;}
         if(action==='view-item-photo'){
@@ -1764,9 +1763,6 @@ var SHEET_MAP = {
   '\u041a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u044b':             {secId:'kits',   codeCol:3, nameCol:4, descCol:4, subcatCol:1}
 };
 
-var _ghTimer = null;
-var _ghStart  = 0;
-
 /* ═══════════════════════════════════════════════════
    МОДАЛЬНЫЕ ОКНА
 ═══════════════════════════════════════════════════ */
@@ -1786,100 +1782,19 @@ function closeModal(name) {
   if (el) el.classList.remove('show');
 }
 
-/* ═══════════════════════════════════════════════════
-   LIVE-ПАНЕЛЬ ПРОГРЕССА
-═══════════════════════════════════════════════════ */
-function showLivePanel(rows) {
-  var old = document.getElementById('mobLivePanel');
-  if (old) old.remove();
+/* ╔═══════════════════════════════════════════════════╗
+   ║  ПРОГРЕСС ОБНОВЛЕНИЯ В ШАПКЕ  — LOCKED, не менять ║
+   ╚═══════════════════════════════════════════════════╝ */
+var _ghDone  = 0;
+var _ghTotal = 0;
+var _ghTimer = null;
+var _ghStart = 0;
+function _updhdr(pct,msg){var el=document.getElementById('hdrTitleSub');if(!el)return;el.textContent=msg!==undefined?msg:('\u041e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435\u2026 '+pct+'% \u00b7 '+((Date.now()-_ghStart)/1000).toFixed(1)+'\u0441');}
+function _tickProg(){_ghDone++;var pct=_ghTotal?Math.round(_ghDone/_ghTotal*100):0;_updhdr(pct);}
+function _finishUpdate(ok,txt){clearInterval(_ghTimer);_ghTimer=null;var el=document.getElementById('hdrTitleSub');if(el)el.textContent=(ok?'\u2705 ':'\u26A0\uFE0F ')+txt;setTimeout(function(){updateHeader();},8000);}
+/* ─── конец LOCKED-блока ─────────────────────────── */
 
-  var panel = document.createElement('div');
-  panel.id = 'mobLivePanel';
-  panel.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#0f1f0f;color:#fff;border-radius:20px 20px 0 0;font-size:12px;font-weight:600;z-index:9999;box-shadow:0 -8px 32px rgba(0,0,0,.5);border-top:1px solid rgba(255,255,255,.08);transform:translateY(100%);transition:transform .35s cubic-bezier(.32,0,.2,1);max-height:70vh;overflow-y:auto;';
-
-  var hdr = document.createElement('div');
-  hdr.style.cssText = 'background:linear-gradient(135deg,#1a3a5c,#2d5a8a);padding:12px 16px 10px;display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:0;z-index:1;border-radius:20px 20px 0 0;';
-  hdr.innerHTML = '<div style="display:flex;align-items:center;gap:10px;"><span style="font-size:18px;">\u2601\uFE0F</span><div><div style="font-size:14px;font-weight:800;">\u041e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435 \u043a\u0430\u0442\u0430\u043b\u043e\u0433\u0430</div><div id="mob-timer" style="font-size:10px;color:rgba(255,255,255,.5);margin-top:1px;">0.0\u0441</div></div></div>'
-    + '<div style="display:flex;align-items:center;gap:10px;"><div style="width:90px;height:5px;background:rgba(255,255,255,.15);border-radius:3px;overflow:hidden;"><div id="mob-prog-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#4a90d9,#7ab8f5);border-radius:3px;transition:width .4s;"></div></div>'
-    + '<button id="mobPanelClose" data-action="close-panel" style="display:none;background:rgba(255,255,255,.1);border:none;color:#ccc;cursor:pointer;font-size:13px;width:26px;height:26px;border-radius:50%;">\u2715</button></div>';
-  panel.appendChild(hdr);
-
-  var list = document.createElement('div');
-  list.style.cssText = 'padding:10px 14px 16px;display:flex;flex-direction:column;gap:4px;';
-  for (var i = 0; i < rows.length; i++) {
-    var r = document.createElement('div');
-    r.id = rows[i].id;
-    r.style.cssText = 'display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:10px;transition:background .2s;';
-    r.innerHTML = '<span style="flex-shrink:0;font-size:15px;">' + rows[i].icon + '</span>'
-      + '<span style="flex:1;color:#ccc;font-size:12px;">' + rows[i].label + '</span>'
-      + '<span class="mob-row-badge" style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(255,255,255,.08);color:#888;">\u043e\u0436\u0438\u0434\u0430\u043d\u0438\u0435</span>';
-    list.appendChild(r);
-  }
-  panel.appendChild(list);
-  document.body.appendChild(panel);
-  setTimeout(function() { panel.style.transform = 'translateY(0)'; }, 50);
-  return panel;
-}
-
-function setRowState(rowId, state, detail) {
-  var row = document.getElementById(rowId);
-  if (!row) return;
-  var badge = row.querySelector('.mob-row-badge');
-  if (!badge) return;
-  var cfg = {
-    loading: {bg:'rgba(74,144,217,.3)',  color:'#7ab8f5', text:'\u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0430...',   rowBg:'rgba(74,144,217,.07)'},
-    ok:      {bg:'rgba(34,197,94,.3)',   color:'#86efac', text:detail||'\u2713',  rowBg:'rgba(34,197,94,.06)'},
-    error:   {bg:'rgba(239,68,68,.3)',   color:'#fca5a5', text:detail||'\u043e\u0448\u0438\u0431\u043a\u0430', rowBg:'rgba(239,68,68,.06)'},
-    wait:    {bg:'rgba(255,255,255,.08)',color:'#888',    text:'\u043e\u0436\u0438\u0434\u0430\u043d\u0438\u0435', rowBg:'transparent'}
-  };
-  var c = cfg[state] || cfg.wait;
-  badge.style.background = c.bg;
-  badge.style.color = c.color;
-  badge.textContent = c.text;
-  row.style.background = c.rowBg;
-  var panel = document.getElementById('mobLivePanel');
-  if (panel) {
-    var allRows = panel.querySelectorAll('[id^="mob-row-"]');
-    var done = 0;
-    for (var i = 0; i < allRows.length; i++) {
-      var b = allRows[i].querySelector('.mob-row-badge');
-      if (b && b.textContent !== '\u043e\u0436\u0438\u0434\u0430\u043d\u0438\u0435' && b.textContent !== '\u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0430...') done++;
-    }
-    var bar = document.getElementById('mob-prog-bar');
-    if (bar && allRows.length) bar.style.width = Math.round(done / allRows.length * 100) + '%';
-  }
-}
-
-function updateTimer() {
-  var el = document.getElementById('mob-timer');
-  if (el) el.textContent = ((Date.now() - _ghStart) / 1000).toFixed(1) + '\u0441';
-}
-
-function finishLivePanel(summaryText, success) {
-  clearInterval(_ghTimer); _ghTimer = null;
-  var bar = document.getElementById('mob-prog-bar');
-  if (bar) { bar.style.width = '100%'; bar.style.background = success ? '#22c55e' : '#f59e0b'; }
-  var panel = document.getElementById('mobLivePanel');
-  if (!panel) return;
-  var listDiv = panel.querySelector('div:nth-child(2)');
-  if (listDiv) {
-    var sum = document.createElement('div');
-    sum.style.cssText = 'margin-top:8px;padding:9px 12px;border-radius:10px;font-size:12px;font-weight:700;background:'
-      + (success ? 'rgba(34,197,94,.15)' : 'rgba(245,158,11,.15)') + ';color:' + (success ? '#86efac' : '#fbbf24') + ';border:1px solid rgba(255,255,255,.07);';
-    sum.textContent = (success ? '\u2705 ' : '\u26A0\uFE0F ') + summaryText;
-    listDiv.appendChild(sum);
-  }
-  var closeBtn = document.getElementById('mobPanelClose');
-  if (closeBtn) closeBtn.style.display = 'flex';
-  setTimeout(closeLivePanel, 9000);
-}
-
-function closeLivePanel() {
-  var p = document.getElementById('mobLivePanel');
-  if (!p) return;
-  p.style.transform = 'translateY(100%)';
-  setTimeout(function() { if (p.parentNode) p.remove(); }, 400);
-}
+/* (старые функции панели удалены) */
 
 /* ═══════════════════════════════════════════════════
    ЗАГРУЗКА XLSX
@@ -1892,11 +1807,11 @@ function loadXlsxLive() {
     })
     .then(function(buf) {
       var result = parseXlsxBuffer(buf);
-      setRowState('mob-row-xlsx', 'ok', result);
+      _tickProg();
       return result;
     })
     .catch(function(e) {
-      setRowState('mob-row-xlsx', 'error', e.message.slice(0, 28));
+      _tickProg();
       throw e;
     });
 }
@@ -2006,11 +1921,11 @@ function loadPhotoFolder(folder, targetMap, label, rowId) {
         else targetMap[baseCode].push(url);
         count++;
       }
-      setRowState(rowId, 'ok', count + ' \u0444\u043e\u0442\u043e');
+      _tickProg();
       return count;
     })
     .catch(function(e) {
-      setRowState(rowId, 'error', e.message.slice(0, 22));
+      _tickProg();
       return 0;
     });
 }
@@ -2035,33 +1950,22 @@ function applyPhotos() {
    ГЛАВНАЯ ФУНКЦИЯ ОБНОВЛЕНИЯ
 ═══════════════════════════════════════════════════ */
 function mobUpdateFromGitHub() {
-  closeLivePanel();
+  _ghDone  = 0;
+  _ghTotal = 8;   /* 1 xlsx + 7 папок фото */
   _ghStart = Date.now();
-  _ghTimer = setInterval(updateTimer, 200);
-
-  var rows = [
-    {id:'mob-row-xlsx',   icon:'\uD83D\uDCCA', label:'\u0421\u043f\u0438\u0441\u043e\u043a_\u043e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u044f_\u0424\u0418\u041d\u0410\u041b.xlsx'},
-    {id:'mob-row-oborud', icon:'\uD83C\uDFEA', label:'\u0422\u043e\u0440\u0433\u043e\u0432\u043e\u0435 \u043e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u0435'},
-    {id:'mob-row-reklam', icon:'\uD83C\uDFA8', label:'\u0420\u0435\u043a\u043b\u0430\u043c\u043d\u044b\u0435 \u043c\u0430\u0442\u0435\u0440\u0438\u0430\u043b\u044b'},
-    {id:'mob-row-svet',   icon:'\uD83D\uDCA1', label:'\u0421\u0432\u0435\u0442\u043e\u0432\u043e\u0435 \u043e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u0435'},
-    {id:'mob-row-slab',   icon:'\uD83D\uDCE1', label:'\u0421\u043b\u0430\u0431\u043e\u0442\u043e\u0447\u043d\u043e\u0435 \u043e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u0435'},
-    {id:'mob-row-uvelir', icon:'\uD83D\uDC8E', label:'\u042e\u0432\u0435\u043b\u0438\u0440\u043d\u043e\u0435 \u043e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u0435'},
-    {id:'mob-row-it',     icon:'\uD83D\uDCBB', label:'\u0418\u0422 \u043e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u0435'},
-    {id:'mob-row-compl',  icon:'\uD83D\uDCCB', label:'\u041a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u044b (\u0444\u043e\u0442\u043e)'}
-  ];
-
-  showLivePanel(rows);
-  for (var ri = 0; ri < rows.length; ri++) setRowState(rows[ri].id, 'loading', '');
+  clearInterval(_ghTimer);
+  _ghTimer = setInterval(function() { _updhdr(Math.round(_ghDone / _ghTotal * 100)); }, 300);
+  _updhdr(0);
 
   /* Параллельно: xlsx + 7 папок фото */
   var p1 = loadXlsxLive();
-  var p2 = loadPhotoFolder('Foto%20Oborud',    OBORUD_PHOTOS,  '', 'mob-row-oborud');
-  var p3 = loadPhotoFolder('Foto%20reklama',   REKLAM_PHOTOS,  '', 'mob-row-reklam');
-  var p4 = loadPhotoFolder('Foto%20Svet',      SVET_PHOTOS,    '', 'mob-row-svet');
-  var p5 = loadPhotoFolder('Foto%20slabotoch', SLAB_PHOTOS,    '', 'mob-row-slab');
-  var p6 = loadPhotoFolder('Foto%20Uvelir',    UVELIR_PHOTOS,  '', 'mob-row-uvelir');
-  var p7 = loadPhotoFolder('IT%20oborud',      IT_PHOTOS,      '', 'mob-row-it');
-  var p8 = loadPhotoFolder('Foto%20Complect',  COMPLECT_PHOTOS,'', 'mob-row-compl');
+  var p2 = loadPhotoFolder('Foto%20Oborud',    OBORUD_PHOTOS,  '');
+  var p3 = loadPhotoFolder('Foto%20reklama',   REKLAM_PHOTOS,  '');
+  var p4 = loadPhotoFolder('Foto%20Svet',      SVET_PHOTOS,    '');
+  var p5 = loadPhotoFolder('Foto%20slabotoch', SLAB_PHOTOS,    '');
+  var p6 = loadPhotoFolder('Foto%20Uvelir',    UVELIR_PHOTOS,  '');
+  var p7 = loadPhotoFolder('IT%20oborud',      IT_PHOTOS,      '');
+  var p8 = loadPhotoFolder('Foto%20Complect',  COMPLECT_PHOTOS,'');
 
   Promise.allSettled([p1, p2, p3, p4, p5, p6, p7, p8])
     .then(function(results) {
@@ -2076,16 +1980,14 @@ function mobUpdateFromGitHub() {
       for (var j = 0; j < results.length; j++) if (results[j].status === 'rejected') errors++;
 
       if (!xlsxOk) {
-        finishLivePanel('\u041e\u0448\u0438\u0431\u043a\u0430 \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0438 \u043a\u0430\u0442\u0430\u043b\u043e\u0433\u0430 \u00b7 ' + elapsed + '\u0441', false);
-        showToast('\u041e\u0448\u0438\u0431\u043a\u0430 \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0438', '');
+        _finishUpdate(false, '\u041e\u0448\u0438\u0431\u043a\u0430 \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0438 \u00b7 ' + elapsed + '\u0441');
         return;
       }
 
       applyPhotos();
       var summary = results[0].value + ' \u00b7 ' + totalPhotos.toLocaleString('ru') + ' \u0444\u043e\u0442\u043e \u00b7 ' + elapsed + '\u0441';
       if (errors) summary += ' \u00b7 \u26A0 ' + errors + ' \u043e\u0448\u0438\u0431\u043a\u0438';
-      finishLivePanel(summary, errors === 0);
-      showToast('\u041a\u0430\u0442\u0430\u043b\u043e\u0433 \u043e\u0431\u043d\u043e\u0432\u043b\u0451\u043d \u00b7 ' + results[0].value, 'ok');
+      _finishUpdate(true, summary);
     });
 }
 
