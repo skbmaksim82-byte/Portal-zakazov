@@ -314,22 +314,23 @@ body{font-family:'Inter',sans-serif;}
 .s4-scroll{flex:1;overflow-y:auto;scrollbar-width:none;background:#F4F4F4;}
 .s4-scroll::-webkit-scrollbar{display:none;}
 /* ══ S4 CAROUSEL ══ */
-.s4-photo{background:#fff;position:relative;flex-shrink:0;overflow:hidden;
-  border-bottom:1px solid var(--wb-border);}
-.s4-carousel{display:flex;width:100%;transition:transform .28s cubic-bezier(.4,0,.2,1);
+.s4-photo{background:#000;position:relative;flex-shrink:0;overflow:hidden;
+  width:100%;height:100vw;max-height:82vh;}
+.s4-carousel{display:flex;width:100%;height:100%;transition:transform .28s cubic-bezier(.4,0,.2,1);
   will-change:transform;}
-.s4-carousel-slide{min-width:100%;display:flex;align-items:center;justify-content:center;
-  background:#fff;}
+.s4-carousel-slide{min-width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  background:#000;}
 .s4-carousel-slide img{width:100%;height:100%;object-fit:contain;display:block;}
 .s4-photo-placeholder{width:140px;height:140px;background:linear-gradient(135deg,#f0e6ff,#e2cfff);
   border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:8px;border:1.5px solid #d8b8ff;}
 .s4-photo-emoji{font-size:54px;line-height:1;}
 .s4-photo-lbl{font-size:10px;color:#9966CC;font-weight:600;}
-.s4-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);
-  display:flex;gap:5px;z-index:2;}
-.s4-dot{width:6px;height:6px;border-radius:50%;background:rgba(160,0,240,.25);transition:all .2s;}
-.s4-dot.act{background:var(--wb-purple);width:16px;border-radius:3px;}
+.s4-dots{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);
+  display:flex;gap:6px;z-index:2;}
+.s4-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.4);
+  transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.4);}
+.s4-dot.act{background:#fff;width:20px;border-radius:4px;}
 .s4-info{background:#fff;padding:14px;border-bottom:1px solid var(--wb-border);}
 .s4-breadcrumb{display:flex;align-items:center;gap:5px;margin-bottom:8px;flex-wrap:wrap;}
 .s4-bc-sec{display:flex;align-items:center;gap:4px;background:var(--wb-purple-bg);
@@ -469,19 +470,26 @@ body{font-family:'Inter',sans-serif;}
 .kit-item-qty{font-size:11px;font-weight:700;color:var(--wb-purple);white-space:nowrap;flex-shrink:0;}
 .kit-add-all{margin:10px 14px;height:40px;border:none;border-radius:10px;background:var(--wb-purple);color:#fff;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;cursor:pointer;width:calc(100% - 28px);}
 /* PHOTO VIEWER */
-.photo-viewer{position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:10000;display:none;flex-direction:column;align-items:center;justify-content:center;}
+.photo-viewer{position:fixed;inset:0;background:#000;z-index:10000;display:none;flex-direction:column;}
 .photo-viewer.show{display:flex;}
 .photo-viewer-track{flex:1;width:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;}
-.photo-viewer-slides{display:flex;height:100%;transition:transform .28s cubic-bezier(.4,0,.2,1);}
-.photo-viewer-slide{min-width:100vw;height:100%;display:flex;align-items:center;justify-content:center;padding:0 12px;box-sizing:border-box;}
-.photo-viewer-slide img{max-width:100%;max-height:100%;object-fit:contain;border-radius:4px;}
-.photo-viewer-dots{display:flex;gap:6px;padding:12px 0 4px;justify-content:center;}
-.photo-viewer-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);transition:all .2s;}
-.photo-viewer-dot.act{background:#fff;width:16px;border-radius:3px;}
-.photo-viewer-info{padding:4px 16px 8px;text-align:center;}
+.photo-viewer-slides{display:flex;height:100%;width:100%;transition:transform .28s cubic-bezier(.4,0,.2,1);}
+.photo-viewer-slide{min-width:100vw;height:100%;display:flex;align-items:center;justify-content:center;padding:0;box-sizing:border-box;}
+.photo-viewer-slide img{width:100%;height:100%;object-fit:contain;}
+.photo-viewer-dots{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);
+  display:flex;gap:6px;z-index:3;}
+.photo-viewer-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.4);
+  transition:all .2s;box-shadow:0 1px 4px rgba(0,0,0,.6);}
+.photo-viewer-dot.act{background:#fff;width:20px;border-radius:4px;}
+.photo-viewer-info{padding:10px 16px 4px;text-align:center;background:#000;}
 .photo-viewer-code{color:rgba(255,255,255,.45);font-size:10px;font-family:'Courier New',monospace;}
-.photo-viewer-name{color:#fff;font-size:12px;font-weight:700;margin-top:2px;padding:0 20px;max-width:90vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.photo-viewer-close-btn{width:calc(100% - 32px);max-width:340px;height:46px;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.3);border-radius:14px;color:#fff;font-size:15px;font-weight:700;cursor:pointer;margin:8px 16px 20px;display:flex;align-items:center;justify-content:center;gap:8px;backdrop-filter:blur(6px);}
+.photo-viewer-name{color:#fff;font-size:13px;font-weight:700;margin-top:2px;padding:0 20px;
+  max-width:90vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:0 auto;}
+.photo-viewer-close-btn{width:calc(100% - 32px);max-width:360px;height:50px;
+  background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.3);border-radius:16px;
+  color:#fff;font-size:16px;font-weight:700;cursor:pointer;
+  margin:10px auto 28px;display:flex;align-items:center;justify-content:center;gap:8px;
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);flex-shrink:0;}
 .tag-sub{background:#EEF4FF;color:#2563EB;}
 .subcat-card--all{border-style:dashed;}
 </style>
@@ -817,8 +825,8 @@ body{font-family:'Inter',sans-serif;}
   <div class="photo-viewer" id="photoViewer">
     <div class="photo-viewer-track" id="pvTrack">
       <div class="photo-viewer-slides" id="pvSlides"></div>
+      <div class="photo-viewer-dots" id="pvDots"></div>
     </div>
-    <div class="photo-viewer-dots" id="pvDots"></div>
     <div class="photo-viewer-info">
       <div class="photo-viewer-code" id="photoViewerCode"></div>
       <div class="photo-viewer-name" id="photoViewerName"></div>
@@ -1523,20 +1531,16 @@ function buildS4Carousel(it){
   var ph = getEl('s4photo'), car = getEl('s4carousel'), dots = getEl('s4dots');
   if(!car||!dots||!ph) return;
 
-  /* высота: квадрат от ширины */
-  var w = ph.offsetWidth || window.innerWidth;
-  ph.style.height = w + 'px';
-
   if(!photos.length){
     /* заглушка */
-    car.innerHTML = '<div class="s4-carousel-slide" style="height:'+w+'px"><div class="s4-photo-placeholder"><div class="s4-photo-emoji">'+it.emoji+'</div><div class="s4-photo-lbl">Фото товара</div></div></div>';
+    car.innerHTML = '<div class="s4-carousel-slide"><div class="s4-photo-placeholder"><div class="s4-photo-emoji">'+it.emoji+'</div><div class="s4-photo-lbl">Фото товара</div></div></div>';
     dots.innerHTML = '';
     return;
   }
 
   var h='';
   for(var i=0;i<photos.length;i++){
-    h+='<div class="s4-carousel-slide" style="height:'+w+'px;cursor:zoom-in;" data-action="open-s4-photo" data-val="'+i+'">';
+    h+='<div class="s4-carousel-slide" style="cursor:zoom-in;" data-action="open-s4-photo" data-val="'+i+'">';
     h+='<img src="'+photos[i]+'" onerror="this.style.display=\'none\'" loading="lazy">';
     h+='</div>';
   }
