@@ -470,7 +470,7 @@ body{font-family:'Inter',sans-serif;}
 .kit-item-qty{font-size:11px;font-weight:700;color:var(--wb-purple);white-space:nowrap;flex-shrink:0;}
 .kit-add-all{margin:10px 14px;height:40px;border:none;border-radius:10px;background:var(--wb-purple);color:#fff;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;cursor:pointer;width:calc(100% - 28px);}
 /* PHOTO VIEWER */
-.photo-viewer{position:fixed;inset:0;background:#000;z-index:10000;display:none;flex-direction:column;}
+.photo-viewer{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:10000;display:none;flex-direction:column;}
 .photo-viewer.show{display:flex;}
 .photo-viewer-track{flex:1;width:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;}
 .photo-viewer-slides{display:flex;height:100%;width:100%;transition:transform .28s cubic-bezier(.4,0,.2,1);}
@@ -1307,6 +1307,9 @@ function openPhotoViewer(startIdx, photos, code, name){
   if(!photos||!photos.length)return;
   _pvPhotos = photos; _pvIdx = startIdx||0;
   var v=getEl('photoViewer');if(!v)return;
+  /* iOS fix: allow fixed to cover full screen */
+  document.body.style.overflow='';
+  document.documentElement.style.overflow='';
   /* slides */
   var slides=getEl('pvSlides'); if(!slides)return;
   var sh='';
@@ -1343,6 +1346,7 @@ function pvGo(dir){
 function closePhotoViewer(){
   var v=getEl('photoViewer');if(v)v.classList.remove('show');
   _pvPhotos=[]; _pvIdx=0;
+  document.body.style.overflow='hidden';
 }
 
 function setupEventDelegation(){
