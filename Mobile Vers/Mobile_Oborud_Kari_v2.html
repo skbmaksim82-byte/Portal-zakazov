@@ -1812,7 +1812,7 @@ var _ghDone  = 0;
 var _ghTotal = 0;
 var _ghTimer = null;
 var _ghStart = 0;
-function _updhdr(pct,msg){var el=document.getElementById('hdrTitleSub');if(!el)return;el.textContent=msg!==undefined?msg:('\u041e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435\u2026 '+pct+'% \u00b7 '+((Date.now()-_ghStart)/1000).toFixed(1)+'\u0441');}
+function _updhdr(pct,msg){var el=document.getElementById('hdrTitleSub');if(!el)return;el.textContent=msg!==undefined?msg:('\u041e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435\u2026 '+pct+'%');}
 function _tickProg(){_ghDone++;var pct=_ghTotal?Math.round(_ghDone/_ghTotal*100):0;_updhdr(pct);}
 function _finishUpdate(ok,txt){clearInterval(_ghTimer);_ghTimer=null;var el=document.getElementById('hdrTitleSub');if(el)el.textContent=(ok?'\u2705 ':'\u26A0\uFE0F ')+txt;setTimeout(function(){updateHeader();},8000);}
 /* ─── конец LOCKED-блока ─────────────────────────── */
@@ -1977,7 +1977,7 @@ function mobUpdateFromGitHub() {
   _ghTotal = 8;   /* 1 xlsx + 7 папок фото */
   _ghStart = Date.now();
   clearInterval(_ghTimer);
-  _ghTimer = setInterval(function() { _updhdr(Math.round(_ghDone / _ghTotal * 100)); }, 300);
+  _ghTimer = setInterval(function() { _updhdr(_ghTotal ? Math.round(_ghDone / _ghTotal * 100) : 0); }, 300);
   _updhdr(0);
 
   /* Параллельно: xlsx + 7 папок фото */
@@ -1993,7 +1993,6 @@ function mobUpdateFromGitHub() {
   Promise.allSettled([p1, p2, p3, p4, p5, p6, p7, p8])
     .then(function(results) {
       clearInterval(_ghTimer); _ghTimer = null;
-      var elapsed = ((Date.now() - _ghStart) / 1000).toFixed(1);
       var xlsxOk = results[0].status === 'fulfilled';
       var totalPhotos = 0;
       for (var i = 1; i < results.length; i++) {
@@ -2003,12 +2002,12 @@ function mobUpdateFromGitHub() {
       for (var j = 0; j < results.length; j++) if (results[j].status === 'rejected') errors++;
 
       if (!xlsxOk) {
-        _finishUpdate(false, '\u041e\u0448\u0438\u0431\u043a\u0430 \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0438 \u00b7 ' + elapsed + '\u0441');
+        _finishUpdate(false, '\u041e\u0448\u0438\u0431\u043a\u0430 \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0438');
         return;
       }
 
       applyPhotos();
-      var summary = results[0].value + ' \u00b7 ' + totalPhotos.toLocaleString('ru') + ' \u0444\u043e\u0442\u043e \u00b7 ' + elapsed + '\u0441';
+      var summary = results[0].value + ' \u00b7 ' + totalPhotos.toLocaleString('ru') + ' \u0444\u043e\u0442\u043e';
       if (errors) summary += ' \u00b7 \u26A0 ' + errors + ' \u043e\u0448\u0438\u0431\u043a\u0438';
       _finishUpdate(true, summary);
     });
@@ -2189,7 +2188,7 @@ function installPWA() {
       <img id="verLogoImg" src="" alt="Kari">
     </div>
     <div class="ver-app-name">Портал заказов<br>Kari</div>
-    <div class="ver-num" id="verNum">v2.7</div>
+    <div class="ver-num" id="verNum">v3.0</div>
     <div class="ver-build" id="verBuild">Сборка от 14.05.2025</div>
     <div class="ver-divider"></div>
     <div class="ver-info">Мобильный дашборд оборудования<br>для внутреннего использования</div>
