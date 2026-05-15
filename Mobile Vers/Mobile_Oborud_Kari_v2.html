@@ -460,29 +460,47 @@ body{font-family:'Inter',sans-serif;}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <style>
-/* KIT CARDS */
-.kit-grid{display:flex;flex-direction:column;gap:10px;padding:10px 14px 20px;}
-.kit-card{background:#fff;border-radius:16px;border:1.5px solid var(--wb-border);overflow:hidden;transition:border-color .2s;}
-.kit-card.open{border-color:var(--wb-purple);}
-.kit-card-header{display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;}
-.kit-card-photo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,#f0e6ff,#ead9ff);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;overflow:hidden;border:1px solid rgba(160,0,240,.1);}
+/* KIT CARDS — grid of 3×5cm cards */
+.kit-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(3cm,1fr));gap:10px;padding:10px 14px 20px;}
+.kit-card{
+  background:#fff;border-radius:14px;border:1.5px solid var(--wb-border);
+  overflow:hidden;transition:border-color .2s,box-shadow .2s;
+  display:flex;flex-direction:column;min-height:5cm;cursor:pointer;
+}
+.kit-card:active{transform:scale(.97);}
+.kit-card.open{border-color:var(--wb-purple);box-shadow:0 4px 16px rgba(160,0,240,.15);}
+.kit-card-photo{
+  width:100%;aspect-ratio:3/2.8;background:linear-gradient(135deg,#f0e6ff,#ead9ff);
+  display:flex;align-items:center;justify-content:center;font-size:40px;
+  overflow:hidden;flex-shrink:0;position:relative;
+}
 .kit-card-photo img{width:100%;height:100%;object-fit:cover;}
-.kit-card-info{flex:1;min-width:0;}
-.kit-card-name{font-size:13px;font-weight:800;color:var(--wb-text);line-height:1.3;}
-.kit-card-cnt{font-size:11px;color:var(--wb-text3);margin-top:2px;}
-.kit-card-chev{font-size:16px;color:var(--wb-text3);transition:transform .2s;flex-shrink:0;}
-.kit-card.open .kit-card-chev{transform:rotate(90deg);}
+.kit-card-badge{
+  position:absolute;top:6px;right:6px;background:rgba(160,0,240,.85);color:#fff;
+  font-size:9px;font-weight:800;padding:2px 6px;border-radius:8px;
+}
+.kit-card-info{padding:8px 8px 6px;flex:1;display:flex;flex-direction:column;gap:3px;min-height:0;}
+.kit-card-name{font-size:11px;font-weight:800;color:var(--wb-text);line-height:1.25;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.kit-card-cnt{font-size:9px;color:var(--wb-text3);font-weight:600;}
+.kit-card-desc{font-size:9px;color:var(--wb-text2);line-height:1.3;margin-top:auto;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+/* Kit detail (expanded body) */
 .kit-card-body{display:none;border-top:1px solid var(--wb-border);background:#fafafa;}
 .kit-card.open .kit-card-body{display:block;}
-.kit-item{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid var(--wb-border);}
+.kit-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid var(--wb-border);cursor:pointer;transition:background .12s;}
+.kit-item:active{background:var(--wb-purple-bg);}
 .kit-item:last-child{border-bottom:none;}
-.kit-item-thumb{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,#f0e6ff,#ead9ff);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;overflow:hidden;}
+.kit-item-thumb{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#f0e6ff,#ead9ff);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;overflow:hidden;}
 .kit-item-thumb img{width:100%;height:100%;object-fit:cover;}
 .kit-item-info{flex:1;min-width:0;}
-.kit-item-code{font-size:9px;font-family:'Courier New',monospace;color:var(--wb-text3);}
-.kit-item-name{font-size:11px;font-weight:600;color:var(--wb-text);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.kit-item-qty{font-size:11px;font-weight:700;color:var(--wb-purple);white-space:nowrap;flex-shrink:0;}
-.kit-add-all{margin:10px 14px;height:40px;border:none;border-radius:10px;background:var(--wb-purple);color:#fff;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;cursor:pointer;width:calc(100% - 28px);}
+.kit-item-code{font-size:8px;font-family:'Courier New',monospace;color:var(--wb-text3);}
+.kit-item-name{font-size:10px;font-weight:600;color:var(--wb-text);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.kit-item-compat{display:inline-block;font-size:8px;font-weight:700;padding:1px 5px;border-radius:10px;margin-top:2px;}
+.kit-item-compat.has{background:#E6F9F0;color:#00824A;}
+.kit-item-qty{font-size:10px;font-weight:700;color:var(--wb-purple);white-space:nowrap;flex-shrink:0;}
+.kit-item-arrow{font-size:12px;color:var(--wb-text3);flex-shrink:0;}
+.kit-add-all{margin:8px 10px;height:36px;border:none;border-radius:10px;background:var(--wb-purple);color:#fff;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;cursor:pointer;width:calc(100% - 20px);}
 /* PHOTO VIEWER */
 .photo-viewer{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:10000;display:none;flex-direction:column;}
 .photo-viewer.show{display:flex;}
@@ -938,6 +956,7 @@ function loadDemoData(){
       });
     }
   }
+  kitsData = KITS_LIST;
 }
 
 /* ════════════════════════════════════════════════════
@@ -1252,30 +1271,62 @@ function updateHeader(){
 /* ════════════ КОМПЛЕКТЫ ════════════ */
 var kitsData = [];
 
+function findKitPhoto(kitName){
+  var keys=Object.keys(COMPLECT_PHOTOS);
+  for(var i=0;i<keys.length;i++){
+    if(keys[i]===kitName) return COMPLECT_PHOTOS[keys[i]][0];
+  }
+  var short=kitName.replace(/^\u0421\u0442\u0435\u043b\u043b\u0430\u0436\s+/,'').replace(/^\u041a\u0430\u0441\u0441\u0430\s+/,'').replace(/^\u0417\u0430\u043a\u0430\u0441\u0441\u043e\u0432\u044b\u0439 \u043c\u043e\u0434\u0443\u043b\u044c\s+/,'');
+  for(var j=0;j<keys.length;j++){
+    if(keys[j]===short) return COMPLECT_PHOTOS[keys[j]][0];
+  }
+  for(var k=0;k<keys.length;k++){
+    if(keys[k].indexOf(kitName)>=0||kitName.indexOf(keys[k])>=0) return COMPLECT_PHOTOS[keys[k]][0];
+  }
+  return null;
+}
+
 function renderKitsScreen(){
   var el=getEl('subcatScreen'); if(!el)return;
   if(!kitsData.length){
     el.innerHTML='<div class="subcat-section-title">\uD83D\uDCCB \u041a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u044b</div><div class="empty-state"><div class="empty-icon">\uD83D\uDCCB</div><div class="empty-txt">\u041a\u0430\u0442\u0430\u043b\u043e\u0433 \u043d\u0435 \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043d</div></div>';
     return;
   }
-  var h='<div class="subcat-section-title">\uD83D\uDCCB \u041a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u044b</div><div class="kit-grid">';
+  var h='<div class="subcat-section-title">\uD83D\uDCCB \u041a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u044b \u00b7 '+kitsData.length+'</div><div class="kit-grid">';
   for(var i=0;i<kitsData.length;i++){
     var kit=kitsData[i];
-    var ph=kit.photo?('<img src="'+kit.photo+'" onerror="this.parentNode.textContent=\'\u{1F4CB}\'">'):'&#128203;';
-    h+='<div class="kit-card" id="kit-'+i+'">';
-    h+='<div class="kit-card-header" data-action="toggle-kit" data-val="'+i+'">';
-    h+='<div class="kit-card-photo">'+ph+'</div>';
-    h+='<div class="kit-card-info"><div class="kit-card-name">'+kit.name+'</div><div class="kit-card-cnt">'+kit.items.length+' \u043f\u043e\u0437\u0438\u0446\u0438\u0439</div></div>';
-    h+='<span class="kit-card-chev">&#8250;</span></div>';
+    var ph=kit.photo||findKitPhoto(kit.name);
+    var phHtml=ph?('<img src="'+ph+'" onerror="this.parentNode.textContent=\'\u{1F4CB}\'">'):'\uD83D\uDCCB';
+    var desc=kit.desc||'';
+    if(!desc&&kit.items.length){
+      var seen={},parts=[];
+      for(var d=0;d<kit.items.length&&parts.length<3;d++){
+        var short=kit.items[d].name.replace(/\s*\(.*?\)\s*/g,'').replace(/\s*\d+[\*x\u0445\u0425\u00d7].*/,'').trim().split(' ').slice(0,2).join(' ');
+        if(!seen[short]){seen[short]=1;parts.push(short);}
+      }
+      desc=parts.join(', ')+(kit.items.length>3?' \u0438 \u0434\u0440.':'');
+    }
+    h+='<div class="kit-card" id="kit-'+i+'" data-action="toggle-kit" data-val="'+i+'">';
+    h+='<div class="kit-card-photo">'+phHtml+'<div class="kit-card-badge">'+kit.items.length+' \u0448\u0442</div></div>';
+    h+='<div class="kit-card-info">';
+    h+='<div class="kit-card-name">'+kit.name+'</div>';
+    h+='<div class="kit-card-desc">'+desc+'</div>';
+    h+='</div>';
     h+='<div class="kit-card-body">';
     for(var j=0;j<kit.items.length;j++){
       var it=kit.items[j];
+      var itData=findItemByCode(it.code);
       var itPh=findPhotoByCode(it.code);
-      var thumb=itPh?('<img src="'+itPh+'" onerror="this.parentNode.textContent=\'&#128230;\'">'):'&#128230;';
-      var vAct=itPh?('data-action="view-item-photo" data-val="'+itPh+'" data-code="'+it.code+'" data-name="'+it.name.replace(/"/g,'&quot;')+'" style="cursor:zoom-in"'):'';
-      h+='<div class="kit-item"><div class="kit-item-thumb" '+vAct+'>'+thumb+'</div>';
-      h+='<div class="kit-item-info"><div class="kit-item-code">'+it.code+'</div><div class="kit-item-name">'+it.name+'</div></div>';
-      h+='<div class="kit-item-qty">'+it.qty+' \u0448\u0442</div></div>';
+      var thumb=itPh?('<img src="'+itPh+'" onerror="this.parentNode.textContent=\'\uD83D\udce6\'">'):'\uD83D\udce6';
+      var goAttr=itData?(' data-action="go-item" data-val="'+itData.id+'"'):'';
+      var compatCount=getCompatForCode(it.code).length;
+      var compatHtml=compatCount?'<div class="kit-item-compat has">\uD83D\udd17 '+compatCount+' \u0441\u043e\u0432\u043c.</div>':'';
+      h+='<div class="kit-item"'+goAttr+'>';
+      h+='<div class="kit-item-thumb">'+thumb+'</div>';
+      h+='<div class="kit-item-info"><div class="kit-item-code">'+it.code+'</div><div class="kit-item-name">'+it.name+'</div>'+compatHtml+'</div>';
+      h+='<div class="kit-item-qty">\u00d7'+it.qty+'</div>';
+      if(itData) h+='<div class="kit-item-arrow">\u203a</div>';
+      h+='</div>';
     }
     h+='<button class="kit-add-all" data-action="add-kit" data-val="'+i+'">\uD83D\uDED2 \u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u0432\u0435\u0441\u044c \u043a\u043e\u043c\u043f\u043b\u0435\u043a\u0442</button>';
     h+='</div></div>';
@@ -1310,8 +1361,12 @@ function findPhotoByCode(code){
 function applyKitsPhotos(){
   for(var i=0;i<kitsData.length;i++){
     var kit=kitsData[i];
-    if(!kit.photo&&kit.items.length){
-      for(var j=0;j<kit.items.length;j++){var ph=findPhotoByCode(kit.items[j].code);if(ph){kit.photo=ph;break;}}
+    if(!kit.photo){
+      var kph=findKitPhoto(kit.name);
+      if(kph){kit.photo=kph;}
+      else if(kit.items.length){
+        for(var j=0;j<kit.items.length;j++){var ph=findPhotoByCode(kit.items[j].code);if(ph){kit.photo=ph;break;}}
+      }
     }
   }
 }
@@ -1751,7 +1806,6 @@ loadDemoData();      /* Загружаем демо-данные, пока не�
 renderSections();
 updateHeader();
 setupEventDelegation();
-mobUpdateFromGitHub(); /* Автообновление сразу при старте */
 
 
 
@@ -1911,15 +1965,39 @@ function parseXlsxBuffer(buf) {
 
   if (totalRows < 5) throw new Error('\u041c\u0430\u043b\u043e \u0434\u0430\u043d\u043d\u044b\u0445 \u0432 \u0444\u0430\u0439\u043b\u0435');
 
+  /* Парсим комплекты из листа Комплекты */
+  var kitsSheet = wb.Sheets['Комплекты'];
+  if (kitsSheet) {
+    var kRows = LIB.utils.sheet_to_json(kitsSheet, {header:1, defval:''});
+    var newKits = [], curKit = null;
+    for (var kr = 0; kr < kRows.length; kr++) {
+      var kRow = kRows[kr];
+      var c1 = String(kRow[0]||'').trim();
+      var c4 = String(kRow[3]||'').trim();
+      var c5 = String(kRow[4]||'').trim();
+      var c6 = String(kRow[5]||'').trim();
+      if (c1 && /[^\wЀ-ӿ]/.test(c1.charAt(0)) && !c4 && !c5) {
+        if (curKit) newKits.push(curKit);
+        var kName = c1.replace(/^[^\wЀ-ӿ]+/,'').trim();
+        curKit = {name: kName, items: []};
+      } else if (c4 && c5 && curKit) {
+        curKit.items.push({code: c4, name: c5, qty: parseInt(c6)||1});
+      }
+    }
+    if (curKit) newKits.push(curKit);
+    if (newKits.length > 0) kitsData = newKits;
+  }
+  if (!kitsData.length) kitsData = KITS_LIST;
+
   /* Обновляем UI */
   renderSections();
   var cur = navHistory[navHistory.length - 1];
   if (cur === 's3') renderItems();
   if (cur === 's2' && currentSecId) renderSubcats(currentSecId);
+  if (cur === 's2' && currentSecId === 'kits') renderKitsScreen();
 
-  return totalRows.toLocaleString('ru') + ' \u043f\u043e\u0437.';
+  return totalRows.toLocaleString('ru') + ' поз.';
 }
-
 /* ═══════════════════════════════════════════════════
    ЗАГРУЗКА ФОТО
 ═══════════════════════════════════════════════════ */
@@ -2130,6 +2208,9 @@ function fbMobSend(){
   closeModal('Feedback');if(me)me.value='';fbMobClear();
   showToast('Outlook \u043e\u0442\u043a\u0440\u044b\u0442','ok');
 }
+
+/* \u0410\u0432\u0442\u043e\u043e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435 \u2014 \u043f\u043e\u0441\u043b\u0435 \u0438\u043d\u0438\u0446\u0438\u0430\u043b\u0438\u0437\u0430\u0446\u0438\u0438 \u0432\u0441\u0435\u0445 \u043a\u043e\u043d\u0441\u0442\u0430\u043d\u0442 \u0438 \u0444\u0443\u043d\u043a\u0446\u0438\u0439 */
+mobUpdateFromGitHub();
 </script>
 <script>
 
