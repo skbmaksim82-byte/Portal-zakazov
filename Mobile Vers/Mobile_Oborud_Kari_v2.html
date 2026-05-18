@@ -220,11 +220,11 @@ body{font-family:'Inter',sans-serif;}
   border:1px solid var(--wb-border);border-radius:20px;padding:4px 10px;
   font-size:11px;font-weight:600;color:var(--wb-text2);cursor:pointer;}
 
-.items-list{padding:10px 14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(3cm,1fr));gap:10px;}
+.items-list{padding:10px 14px;display:grid;grid-template-columns:repeat(auto-fill,3cm);gap:10px;justify-content:center;}
 .item-card{
   background:#fff;border-radius:16px;border:1.5px solid var(--wb-border);
   display:flex;flex-direction:column;overflow:hidden;
-  min-height:5cm;transition:border-color .15s;position:relative;cursor:pointer;
+  width:3cm;height:5cm;transition:border-color .15s;position:relative;cursor:pointer;
 }
 .item-card:active{transform:scale(.97);}
 .item-card.in-cart{border-color:var(--wb-purple);background:var(--wb-purple-bg);}
