@@ -730,6 +730,48 @@ body{font-family:'Inter',sans-serif;}
     </div>
   </div>
 
+  <!-- SCREEN 5: KIT DETAIL -->
+  <div class="screen" id="s5">
+    <div class="s4-scroll" id="s5scroll">
+      <div class="s4-photo" id="s5photo">
+        <div class="s4-carousel" id="s5carousel">
+          <div class="s4-carousel-slide">
+            <div class="s4-photo-placeholder">
+              <div class="s4-photo-emoji">📋</div>
+              <div class="s4-photo-lbl">Фото комплекта</div>
+            </div>
+          </div>
+        </div>
+        <div class="s4-dots" id="s5dots"></div>
+      </div>
+      <div class="s4-info">
+        <div class="s4-breadcrumb">
+          <div class="s4-bc-sec" data-action="go-back">
+            <div class="s4-bc-dot"></div>
+            <span>Комплекты</span>
+          </div>
+        </div>
+        <div class="s4-name" id="s5name">—</div>
+        <div id="s5desc" style="font-size:12px;color:var(--wb-text2);line-height:1.5;margin-top:6px;"></div>
+      </div>
+      <div class="s4-qty-cart" style="justify-content:center;">
+        <button class="s4-add" id="s5addAll" data-action="s5-add-kit">
+          <span>🛒</span><span id="s5addTxt">Добавить весь комплект</span>
+        </button>
+      </div>
+      <div class="s4-acc">
+        <div class="s4-acc-hdr" data-action="s5-toggle" data-val="items">
+          <div class="s4-acc-left">
+            <div class="s4-acc-icon" style="background:#FFF4E6;">📦</div>
+            <div><div class="s4-acc-title">Состав комплекта</div><div class="s4-acc-cnt" id="s5cnt-items">0 позиций</div></div>
+          </div>
+          <div class="s4-acc-chev open" id="s5chev-items">›</div>
+        </div>
+        <div class="s4-acc-body open" id="s5body-items"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- Global search results overlay -->
   <div class="global-results-wrap" id="globalResultsWrap">
     <div class="global-results-hdr">
@@ -1181,13 +1223,18 @@ function goSubcat(secId,subcat){
 function goBack(){
   if(navHistory.length<=1)return;
   var prev=navHistory[navHistory.length-2];
-  if(prev==='s3'){
+  if(prev==='s5'){
+    currentItem=null;
+    showScreen('s5');
+    navHistory=navHistory.slice(0,-1);
+  } else if(prev==='s3'){
     currentItem=null;
     showScreen('s3');
     navHistory=navHistory.slice(0,-1);
   } else if(prev==='s2'){
     currentItem=null; currentSubcat='';
-    renderSubcats(currentSecId);
+    if(currentSecId==='kits') renderKitsScreen();
+    else renderSubcats(currentSecId);
     showScreen('s2');
     navHistory=['s1','s2'];
   } else {
@@ -1254,6 +1301,15 @@ function updateHeader(){
     if(localSrch)localSrch.style.display='flex';
     if(localInput){localInput.placeholder='\u041f\u043e\u0438\u0441\u043a \u0432 '+subLabel;localInput.value='';}
     var slc3=getEl('searchLocalClear');if(slc3)slc3.classList.remove('show');
+  } else if(cur==='s5'){
+    if(backBtn)backBtn.classList.add('show');
+    var kit5=kitsData[_s5KitIdx];
+    var kname=kit5?kit5.name:'\u041a\u043e\u043c\u043f\u043b\u0435\u043a\u0442';
+    if(titleMain)titleMain.textContent=kname.length>28?kname.slice(0,28)+'...':kname;
+    if(titleSub)titleSub.textContent=(kit5?kit5.items.length:0)+' \u043f\u043e\u0437\u0438\u0446\u0438\u0439';
+    if(breadcrumb){breadcrumb.classList.add('show');breadcrumb.innerHTML='<span class="bc-item" data-action="reset-home">\u0413\u043b\u0430\u0432\u043d\u0430\u044f</span><span class="bc-sep">\u203a</span><span class="bc-item" data-action="go-back">\u041a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u044b</span><span class="bc-sep">\u203a</span><span class="bc-cur">'+kname+'</span>';}
+    if(localSrch)localSrch.style.display='none';
+    if(localInput)localInput.value='';
   } else {
     if(backBtn)backBtn.classList.add('show');
     var iname=currentItem?currentItem.name:'\u0422\u043e\u0432\u0430\u0440';
@@ -1311,33 +1367,124 @@ function renderKitsScreen(){
     h+='<div class="kit-card-info">';
     h+='<div class="kit-card-name">'+kit.name+'</div>';
     h+='<div class="kit-card-desc">'+desc+'</div>';
-    h+='</div>';
-    h+='<div class="kit-card-body">';
-    for(var j=0;j<kit.items.length;j++){
-      var it=kit.items[j];
-      var itData=findItemByCode(it.code);
-      var itPh=findPhotoByCode(it.code);
-      var thumb=itPh?('<img src="'+itPh+'" onerror="this.parentNode.textContent=\'\uD83D\udce6\'">'):'\uD83D\udce6';
-      var goAttr=itData?(' data-action="go-item" data-val="'+itData.id+'"'):'';
-      var compatCount=getCompatForCode(it.code).length;
-      var compatHtml=compatCount?'<div class="kit-item-compat has">\uD83D\udd17 '+compatCount+' \u0441\u043e\u0432\u043c.</div>':'';
-      h+='<div class="kit-item"'+goAttr+'>';
-      h+='<div class="kit-item-thumb">'+thumb+'</div>';
-      h+='<div class="kit-item-info"><div class="kit-item-code">'+it.code+'</div><div class="kit-item-name">'+it.name+'</div>'+compatHtml+'</div>';
-      h+='<div class="kit-item-qty">\u00d7'+it.qty+'</div>';
-      if(itData) h+='<div class="kit-item-arrow">\u203a</div>';
-      h+='</div>';
-    }
-    h+='<button class="kit-add-all" data-action="add-kit" data-val="'+i+'">\uD83D\uDED2 \u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u0432\u0435\u0441\u044c \u043a\u043e\u043c\u043f\u043b\u0435\u043a\u0442</button>';
     h+='</div></div>';
   }
   h+='</div>';
   el.innerHTML=h;
 }
 
-function toggleKit(idx){
-  var card=getEl('kit-'+idx);
-  if(card)card.classList.toggle('open');
+function toggleKit(idx){ goKit(idx); }
+
+var _s5Photos=[], _s5PhotoIdx=0, _s5KitIdx=-1;
+
+function goKit(idx){
+  var kit=kitsData[idx]; if(!kit) return;
+  _s5KitIdx=idx;
+
+  /* Name & desc */
+  var ne=getEl('s5name'); if(ne) ne.textContent=kit.name;
+  var de=getEl('s5desc');
+  if(de){
+    var seen={},parts=[];
+    for(var d=0;d<kit.items.length&&parts.length<4;d++){
+      var sh=kit.items[d].name.replace(/\s*\(.*?\)\s*/g,'').split(' ').slice(0,2).join(' ');
+      if(!seen[sh]){seen[sh]=1;parts.push(sh);}
+    }
+    de.textContent=parts.join(', ')+(kit.items.length>4?' и др.':'');
+  }
+  var cnt=getEl('s5cnt-items'); if(cnt) cnt.textContent=kit.items.length+' позиц'+(kit.items.length===1?'ия':kit.items.length<5?'ии':'ий');
+
+  /* Carousel photos */
+  _s5Photos=[];
+  var kitPh=findKitPhoto(kit.name);
+  if(kit.photo) _s5Photos.push(kit.photo);
+  if(kitPh && kitPh!==kit.photo) _s5Photos.push(kitPh);
+  var allKitPhotos = COMPLECT_PHOTOS[kit.name]||[];
+  var shortName = kit.name.replace(/^Стеллаж\s+/,'').replace(/^Касса\s+/,'').replace(/^Закассовый модуль\s+/,'');
+  var altPhotos = COMPLECT_PHOTOS[shortName]||[];
+  var photoSets = [allKitPhotos, altPhotos];
+  for(var ps=0;ps<photoSets.length;ps++){
+    for(var pi=0;pi<photoSets[ps].length;pi++){
+      if(_s5Photos.indexOf(photoSets[ps][pi])<0) _s5Photos.push(photoSets[ps][pi]);
+    }
+  }
+  _s5PhotoIdx=0;
+  var car=getEl('s5carousel');
+  if(car){
+    if(!_s5Photos.length){
+      car.innerHTML='<div class="s4-carousel-slide"><div class="s4-photo-placeholder"><div class="s4-photo-emoji">📋</div><div class="s4-photo-lbl">Фото комплекта</div></div></div>';
+    } else {
+      var ch='';
+      for(var i=0;i<_s5Photos.length;i++){
+        ch+='<div class="s4-carousel-slide" style="cursor:zoom-in;" data-action="open-s5-photo" data-val="'+i+'"><img src="'+_s5Photos[i]+'" loading="lazy"></div>';
+      }
+      car.innerHTML=ch;
+    }
+    car.style.transform='translateX(0)';
+  }
+  var dots=getEl('s5dots');
+  if(dots){
+    if(_s5Photos.length>1){
+      var dh='';for(var j=0;j<_s5Photos.length;j++) dh+='<div class="s4-dot'+(j===0?' act':'')+'"></div>';
+      dots.innerHTML=dh; dots.style.display='flex';
+    } else { dots.innerHTML=''; dots.style.display='none'; }
+  }
+  /* Touch swipe for carousel */
+  var s5p=getEl('s5photo'); var _s5tx=0;
+  if(s5p){
+    s5p.ontouchstart=function(e){_s5tx=e.touches[0].clientX;};
+    s5p.ontouchend=function(e){
+      var dx=e.changedTouches[0].clientX-_s5tx;
+      if(Math.abs(dx)>40) s5CarouselGo(dx<0?1:-1);
+    };
+  }
+
+  /* Items list */
+  var body=getEl('s5body-items');
+  if(body){
+    var h='';
+    for(var j=0;j<kit.items.length;j++){
+      var it=kit.items[j];
+      var itData=findItemByCode(it.code);
+      var itPh=findPhotoByCode(it.code);
+      var thumb=itPh?('<img src="'+itPh+'" onerror="this.parentNode.textContent=\'📦\'">'):'📦';
+      var goAttr=itData?(' data-action="go-item" data-val="'+itData.id+'"'):'';
+      var compatCount=getCompatForCode(it.code).length;
+      var compatHtml=compatCount?'<div class="kit-item-compat has">🔗 '+compatCount+' совм.</div>':'';
+      h+='<div class="kit-item"'+goAttr+'>';
+      h+='<div class="kit-item-thumb">'+thumb+'</div>';
+      h+='<div class="kit-item-info"><div class="kit-item-code">'+it.code+'</div><div class="kit-item-name">'+it.name+'</div>'+compatHtml+'</div>';
+      h+='<div class="kit-item-qty">×'+it.qty+'</div>';
+      if(itData) h+='<div class="kit-item-arrow">›</div>';
+      h+='</div>';
+    }
+    body.innerHTML=h;
+  }
+
+  /* Accordion open by default */
+  var bd=getEl('s5body-items'); var ch5=getEl('s5chev-items');
+  if(bd) bd.className='s4-acc-body open';
+  if(ch5) ch5.className='s4-acc-chev open';
+
+  showScreen('s5'); navHistory.push('s5');
+  var s5s=getEl('s5scroll'); if(s5s) s5s.scrollTop=0;
+  updateHeader();
+}
+
+function s5CarouselGo(dir){
+  var n=_s5Photos.length; if(!n) return;
+  _s5PhotoIdx=Math.max(0,Math.min(n-1,_s5PhotoIdx+dir));
+  var car=getEl('s5carousel'); if(car) car.style.transform='translateX(-'+(_s5PhotoIdx*100)+'%)';
+  var dts=(getEl('s5dots')||{}).querySelectorAll?getEl('s5dots').querySelectorAll('.s4-dot'):[];
+  for(var i=0;i<dts.length;i++) dts[i].classList.toggle('act',i===_s5PhotoIdx);
+}
+
+function s5addKit(){
+  if(_s5KitIdx<0) return;
+  addKitToCart(_s5KitIdx);
+  var btn=getEl('s5addAll'); if(btn) btn.classList.add('added');
+  var txt=getEl('s5addTxt'); if(txt) txt.textContent='Добавлено ✓';
+  setTimeout(function(){ if(btn)btn.classList.remove('added'); if(txt)txt.textContent='Добавить весь комплект'; },2000);
 }
 
 function addKitToCart(idx){
@@ -1458,7 +1605,6 @@ function setupEventDelegation(){
           openPhotoViewer(0,[singleUrl],code2,name2); return;
         }
         if(action==='open-s4-photo'){
-          /* из карусели s4: открыть lightbox с полным набором фото */
           var idx=parseInt(val)||0;
           if(currentItem){
             var ph2=currentItem.photos&&currentItem.photos.length?currentItem.photos:(currentItem.photo?[currentItem.photo]:[]);
@@ -1466,6 +1612,16 @@ function setupEventDelegation(){
           }
           return;
         }
+        if(action==='open-s5-photo'){
+          var idx5=parseInt(val)||0;
+          if(_s5Photos.length){
+            var kit5=kitsData[_s5KitIdx];
+            openPhotoViewer(idx5,_s5Photos,kit5?kit5.name:'','');
+          }
+          return;
+        }
+        if(action==='s5-toggle'){var b5=getEl('s5body-'+val);var c5=getEl('s5chev-'+val);if(b5)b5.classList.toggle('open');if(c5)c5.classList.toggle('open');return;}
+        if(action==='s5-add-kit'){s5addKit();return;}
         return;
       }
       t=t.parentNode;
