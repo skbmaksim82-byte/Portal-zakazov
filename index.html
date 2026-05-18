@@ -595,9 +595,8 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     </div>
     <!-- Шапка раздела/подраздела (показывается когда подраздел выбран) -->
     <div id="subcatBreadcrumb" style="display:none;align-items:center;gap:10px;padding:10px 20px;background:var(--surface2);border-bottom:1.5px solid var(--border);min-height:44px;">
-      <span id="subcatBcCatLink" style="cursor:pointer;font-size:18px;color:var(--text3);transition:color .15s;display:flex;align-items:center;" onclick="backToSubcatScreen()" title="Назад к подразделам">←</span>
       <div style="display:flex;align-items:baseline;gap:8px;flex:1;min-width:0;">
-        <span id="subcatBcCatName" style="font-size:15px;font-weight:700;color:var(--text2);white-space:nowrap;"></span>
+        <span id="subcatBcCatName" style="font-size:15px;font-weight:800;color:var(--text);white-space:nowrap;cursor:pointer;text-decoration:underline;text-decoration-color:var(--border2);text-underline-offset:3px;transition:color .15s,text-decoration-color .15s;" onclick="backToSubcatScreen()" onmouseenter="this.style.color='var(--btn-add)';this.style.textDecorationColor='var(--btn-add)'" onmouseleave="this.style.color='var(--text)';this.style.textDecorationColor='var(--border2)'" title="Назад к подразделам"></span>
         <span style="color:var(--text3);font-size:13px;">›</span>
         <span id="subcatBcCur" style="font-size:15px;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></span>
       </div>
