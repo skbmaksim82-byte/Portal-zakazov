@@ -1727,10 +1727,64 @@ function toggleCart(id){
   }
   updateCartBadge();
 }
+var STORES=[
+{n:'10462',e:'10462@kari.com'},{n:'10541',e:'10541@kari.com'},{n:'10919',e:'10919@kari.com'},
+{n:'10951',e:'10951@kari.com'},{n:'11117',e:'11117@kari.com'},{n:'11143',e:'11143@kari.com'},
+{n:'11340',e:'11340@kari.com'},{n:'11404',e:'11404@kari.com'},{n:'11422',e:'11422@kari.com'},
+{n:'11435',e:'11435@kari.com'},{n:'11455',e:'11455@kari.com'},{n:'11464',e:'11464@kari.com'},
+{n:'11490',e:'11490@kari.com'},{n:'11515',e:'11515@kari.com'},{n:'11525',e:'11525@kari.com'},
+{n:'11534',e:'11534@kari.com'},{n:'11557',e:'11557@kari.com'},{n:'11627',e:'11627@kari.com'},
+{n:'11639',e:'11639@kari.com'},{n:'11703',e:'11703@kari.com'},{n:'11729',e:'11729@kari.com'},
+{n:'11735',e:'11735@kari.com'},{n:'11823',e:'11823@kari.com'},{n:'11900',e:'11900@kari.com'},
+{n:'13020',e:'13020@kari.com'},{n:'13180',e:'13180@kari.com'},{n:'10027',e:'10027@kari.com'},
+{n:'11103',e:'11103@kari.com'},{n:'11418',e:'11418@kari.com'},{n:'11433',e:'11433@kari.com'},
+{n:'11472',e:'11472@kari.com'},{n:'11658',e:'11658@kari.com'},{n:'11708',e:'11708@kari.com'},
+{n:'11813',e:'11813@kari.com'},{n:'11839',e:'11839@kari.com'},{n:'11877',e:'11877@kari.com'},
+{n:'11063',e:'11063@kari.com'},{n:'11385',e:'11385@kari.com'},{n:'11501',e:'11501@kari.com'},
+{n:'11521',e:'11521@kari.com'},{n:'11605',e:'11605@kari.com'},{n:'11759',e:'11759@kari.com'},
+{n:'11828',e:'11828@kari.com'},{n:'11843',e:'11843@kari.com'},{n:'11855',e:'11855@kari.com'},
+{n:'11875',e:'11875@kari.com'},{n:'11906',e:'11906@kari.com'},{n:'11985',e:'11985@kari.com'},
+{n:'13076',e:'13076@kari.com'},{n:'13088',e:'13088@kari.com'},{n:'13187',e:'13187@kari.com'},
+{n:'13070',e:'13070@kari.com'},{n:'11829',e:'11829@kari.com'},{n:'10625',e:'10625@kari.com'},
+{n:'10949',e:'10949@kari.com'},{n:'11187',e:'11187@kari.com'},{n:'11341',e:'11341@kari.com'},
+{n:'11373',e:'11373@kari.com'},{n:'11374',e:'11374@kari.com'},{n:'11424',e:'11424@kari.com'},
+{n:'11437',e:'11437@kari.com'},{n:'11448',e:'11448@kari.com'},{n:'11495',e:'11495@kari.com'},
+{n:'11509',e:'11509@kari.com'},{n:'11571',e:'11571@kari.com'},{n:'11621',e:'11621@kari.com'},
+{n:'11731',e:'11731@kari.com'},{n:'11807',e:'11807@kari.com'},{n:'11836',e:'11836@kari.com'},
+{n:'11854',e:'11854@kari.com'},{n:'11986',e:'11986@kari.com'},{n:'11989',e:'11989@kari.com'},
+{n:'13017',e:'13017@kari.com'},{n:'13058',e:'13058@kari.com'},{n:'13173',e:'13173@kari.com'},
+{n:'10696',e:'10696@kari.com'},{n:'10777',e:'10777@kari.com'},{n:'11015',e:'11015@kari.com'},
+{n:'11352',e:'11352@kari.com'},{n:'11372',e:'11372@kari.com'},{n:'11439',e:'11439@kari.com'},
+{n:'11518',e:'11518@kari.com'},{n:'11523',e:'11523@kari.com'},{n:'11529',e:'11529@kari.com'},
+{n:'11567',e:'11567@kari.com'},{n:'11647',e:'11647@kari.com'},{n:'11760',e:'11760@kari.com'},
+{n:'11861',e:'11861@kari.com'},{n:'11898',e:'11898@kari.com'},{n:'11974',e:'11974@kari.com'},
+{n:'11990',e:'11990@kari.com'},{n:'11996',e:'11996@kari.com'},{n:'13013',e:'13013@kari.com'}
+];
+function initShopSelect(){
+  var sel=getEl('shopSelect');if(!sel)return;
+  STORES.sort(function(a,b){return a.n.localeCompare(b.n,'ru',{numeric:true});});
+  for(var i=0;i<STORES.length;i++){
+    var o=document.createElement('option');
+    o.value=STORES[i].n;o.textContent=STORES[i].n;
+    sel.appendChild(o);
+  }
+}
+function onShopChange(){
+  var sel=getEl('shopSelect');
+  var emailEl=getEl('cartEmail');
+  if(!sel||!emailEl)return;
+  var v=sel.value;
+  if(!v){emailEl.value='';return;}
+  for(var i=0;i<STORES.length;i++){
+    if(STORES[i].n===v){emailEl.value=STORES[i].e;return;}
+  }
+  emailEl.value='';
+}
 function updateCartBadge(){
   var cnt=Object.keys(cart).length;
   var b=getEl('cartBadge');if(b){b.style.display=cnt?'flex':'none';b.textContent=cnt;}
   var dt=getEl('drawerTitle');if(dt)dt.textContent='\uD83D\uDED2 \u041a\u043e\u0440\u0437\u0438\u043d\u0430'+(cnt?' ('+cnt+')':'');
+  var info=getEl('cartOrderInfo');if(info)info.textContent='\u041F\u043e\u0437\u0438\u0446\u0438\u0439 \u0432 \u0437\u0430\u043a\u0430\u0437\u0435: '+cnt;
 }
 function openCart(){getEl('overlay').classList.add('show');getEl('drawer').classList.add('show');renderCartDrawer();}
 function closeCart(){getEl('overlay').classList.remove('show');getEl('drawer').classList.remove('show');}
@@ -1750,10 +1804,28 @@ function renderCartDrawer(){
 }
 function rmCart(id){delete cart[id];updateCartBadge();renderCartDrawer();var ab=getEl('ab-'+id);if(ab){ab.textContent='+';ab.classList.remove('added');}var ic=getEl('ic-'+id);if(ic)ic.classList.remove('in-cart');}
 function sendOrder(){
-  showToast('\uD83D\uDCE8 \u0417\u0430\u044f\u0432\u043a\u0430 \u043e\u0442\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0430!','ok');
-  setTimeout(closeCart,700); cart={}; updateCartBadge();
-  var cur=navHistory[navHistory.length-1];
-  if(cur==='s3')renderItems();
+  var keys=Object.keys(cart);
+  if(!keys.length){showToast('\u041a\u043e\u0440\u0437\u0438\u043d\u0430 \u043f\u0443\u0441\u0442\u0430','');return;}
+  var shop=getEl('shopSelect').value;
+  if(!shop){showToast('\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043C\u0430\u0433\u0430\u0437\u0438\u043d','');return;}
+  var storeEmail=getEl('cartEmail').value||'';
+  var contact=getEl('cartContact').value.trim();
+  var phone=getEl('cartPhone').value.trim();
+  var comment=getEl('cartComment').value.trim();
+  var subj='\u0417\u0430\u043a\u0430\u0437 \u043e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u044f \u2014 \u043C\u0430\u0433\u0430\u0437\u0438\u043d '+shop;
+  var body='\u0417\u0430\u043a\u0430\u0437 \u043e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u044f\n';
+  body+='\u041C\u0430\u0433\u0430\u0437\u0438\u043d: '+shop+'\n';
+  body+='Email \u043C\u0430\u0433\u0430\u0437\u0438\u043d\u0430: '+storeEmail+'\n';
+  if(contact)body+='\u041a\u043e\u043d\u0442\u0430\u043a\u0442\u043d\u043e\u0435 \u043b\u0438\u0446\u043e: '+contact+'\n';
+  if(phone)body+='\u0422\u0435\u043b\u0435\u0444\u043e\u043d: '+phone+'\n';
+  body+='\n\u041F\u043e\u0437\u0438\u0446\u0438\u0438 \u0437\u0430\u043a\u0430\u0437\u0430:\n';
+  for(var i=0;i<keys.length;i++){
+    var it=cart[keys[i]];
+    body+=(i+1)+'. '+it.name+' ('+it.code+') \u2014 '+it.qty+' \u0448\u0442.\n';
+  }
+  if(comment)body+='\n\u041a\u043e\u043C\u043C\u0435\u043d\u0442\u0430\u0440\u0438\u0439: '+comment+'\n';
+  var mailto='mailto:m.skiba@kari.com?cc='+encodeURIComponent(storeEmail)+'&subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
+  window.location.href=mailto;
 }
 
 /* ════════════════════════════════════════════════════
@@ -2014,6 +2086,7 @@ loadDemoData();      /* Загружаем демо-данные, пока не�
 renderSections();
 updateHeader();
 setupEventDelegation();
+initShopSelect();
 
 
 
