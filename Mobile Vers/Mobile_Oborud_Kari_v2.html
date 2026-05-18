@@ -1327,19 +1327,43 @@ function updateHeader(){
 /* ════════════ КОМПЛЕКТЫ ════════════ */
 var kitsData = [];
 
-function findKitPhoto(kitName){
+function _normKitName(s){
+  return s.replace(/[\u0441\u0421]/g,function(c){return c==='\u0441'?'c':c==='\u0421'?'C':c;})
+          .replace(/[\u0430\u0410]/g,function(c){return c==='\u0430'?'a':c==='\u0410'?'A':c;})
+          .replace(/[\u0435\u0415]/g,function(c){return c==='\u0435'?'e':c==='\u0415'?'E':c;})
+          .replace(/[\u043e\u041e]/g,function(c){return c==='\u043e'?'o':c==='\u041e'?'O':c;})
+          .replace(/[\u0440\u0420]/g,function(c){return c==='\u0440'?'p':c==='\u0420'?'P':c;})
+          .replace(/[\u0445\u0425]/g,function(c){return c==='\u0445'?'x':c==='\u0425'?'X':c;})
+          .toLowerCase().trim();
+}
+
+function findKitPhotos(kitName){
   var keys=Object.keys(COMPLECT_PHOTOS);
-  for(var i=0;i<keys.length;i++){
-    if(keys[i]===kitName) return COMPLECT_PHOTOS[keys[i]][0];
-  }
+  var norm=_normKitName(kitName);
   var short=kitName.replace(/^\u0421\u0442\u0435\u043b\u043b\u0430\u0436\s+/,'').replace(/^\u041a\u0430\u0441\u0441\u0430\s+/,'').replace(/^\u0417\u0430\u043a\u0430\u0441\u0441\u043e\u0432\u044b\u0439 \u043c\u043e\u0434\u0443\u043b\u044c\s+/,'');
+  var normShort=_normKitName(short);
+  var result=[];
+  for(var i=0;i<keys.length;i++){
+    var nk=_normKitName(keys[i]);
+    if(nk===norm||nk===normShort){
+      var arr=COMPLECT_PHOTOS[keys[i]];
+      for(var a=0;a<arr.length;a++){if(result.indexOf(arr[a])<0)result.push(arr[a]);}
+    }
+  }
+  if(result.length) return result;
   for(var j=0;j<keys.length;j++){
-    if(keys[j]===short) return COMPLECT_PHOTOS[keys[j]][0];
+    var nk2=_normKitName(keys[j]);
+    if(nk2===norm||norm.indexOf(nk2)===0&&/\d$/.test(nk2)){
+      var arr2=COMPLECT_PHOTOS[keys[j]];
+      for(var b=0;b<arr2.length;b++){if(result.indexOf(arr2[b])<0)result.push(arr2[b]);}
+    }
   }
-  for(var k=0;k<keys.length;k++){
-    if(keys[k].indexOf(kitName)>=0||kitName.indexOf(keys[k])>=0) return COMPLECT_PHOTOS[keys[k]][0];
-  }
-  return null;
+  return result;
+}
+
+function findKitPhoto(kitName){
+  var arr=findKitPhotos(kitName);
+  return arr.length?arr[0]:null;
 }
 
 function renderKitsScreen(){
@@ -1394,20 +1418,8 @@ function goKit(idx){
   }
   var cnt=getEl('s5cnt-items'); if(cnt) cnt.textContent=kit.items.length+' позиц'+(kit.items.length===1?'ия':kit.items.length<5?'ии':'ий');
 
-  /* Carousel photos */
-  _s5Photos=[];
-  var kitPh=findKitPhoto(kit.name);
-  if(kit.photo) _s5Photos.push(kit.photo);
-  if(kitPh && kitPh!==kit.photo) _s5Photos.push(kitPh);
-  var allKitPhotos = COMPLECT_PHOTOS[kit.name]||[];
-  var shortName = kit.name.replace(/^Стеллаж\s+/,'').replace(/^Касса\s+/,'').replace(/^Закассовый модуль\s+/,'');
-  var altPhotos = COMPLECT_PHOTOS[shortName]||[];
-  var photoSets = [allKitPhotos, altPhotos];
-  for(var ps=0;ps<photoSets.length;ps++){
-    for(var pi=0;pi<photoSets[ps].length;pi++){
-      if(_s5Photos.indexOf(photoSets[ps][pi])<0) _s5Photos.push(photoSets[ps][pi]);
-    }
-  }
+  /* Carousel photos — берём из kit.photos (заполняется в applyKitsPhotos) или ищем */
+  _s5Photos = (kit.photos && kit.photos.length) ? kit.photos.slice() : findKitPhotos(kit.name);
   _s5PhotoIdx=0;
   var car=getEl('s5carousel');
   if(car){
@@ -1508,12 +1520,13 @@ function findPhotoByCode(code){
 function applyKitsPhotos(){
   for(var i=0;i<kitsData.length;i++){
     var kit=kitsData[i];
-    if(!kit.photo){
-      var kph=findKitPhoto(kit.name);
-      if(kph){kit.photo=kph;}
-      else if(kit.items.length){
-        for(var j=0;j<kit.items.length;j++){var ph=findPhotoByCode(kit.items[j].code);if(ph){kit.photo=ph;break;}}
-      }
+    var arr=findKitPhotos(kit.name);
+    if(arr.length){
+      kit.photos=arr;
+      kit.photo=arr[0];
+    } else {
+      kit.photos=[];
+      kit.photo=null;
     }
   }
 }
@@ -2157,32 +2170,71 @@ function parseXlsxBuffer(buf) {
 /* ═══════════════════════════════════════════════════
    ЗАГРУЗКА ФОТО
 ═══════════════════════════════════════════════════ */
-function loadPhotoFolder(folder, targetMap, label, rowId) {
-  return fetch(GITHUB_API + folder, {cache: 'no-cache'})
+function _fillPhotoMap(targetMap, folder, treeFiles) {
+  var keys = Object.keys(targetMap);
+  for (var ki = 0; ki < keys.length; ki++) delete targetMap[keys[ki]];
+  var count = 0;
+  for (var fi = 0; fi < treeFiles.length; fi++) {
+    var path = treeFiles[fi];
+    if (path.indexOf(folder + '/') !== 0) continue;
+    var fname = path.substring(folder.length + 1);
+    if (fname.indexOf('/') >= 0) continue;
+    if (!/\.(png|jpg|jpeg|gif|webp)$/i.test(fname)) continue;
+    var nameNoExt = fname.replace(/\.[^.]+$/, '');
+    var baseCode  = nameNoExt.replace(/_\d+$/, '');
+    var url = GITHUB_RAW + path;
+    if (!targetMap[baseCode]) targetMap[baseCode] = [];
+    if (nameNoExt === baseCode) targetMap[baseCode].unshift(url);
+    else targetMap[baseCode].push(url);
+    count++;
+  }
+  return count;
+}
+
+function _processTreePaths(paths) {
+  var folders = [
+    ['Foto Oborud',    OBORUD_PHOTOS],
+    ['Foto reklama',   REKLAM_PHOTOS],
+    ['Foto Svet',      SVET_PHOTOS],
+    ['Foto slabotoch', SLAB_PHOTOS],
+    ['Foto Uvelir',    UVELIR_PHOTOS],
+    ['IT oborud',      IT_PHOTOS],
+    ['Foto Complect',  COMPLECT_PHOTOS]
+  ];
+  var totalPhotos = 0;
+  for (var f = 0; f < folders.length; f++) {
+    totalPhotos += _fillPhotoMap(folders[f][1], folders[f][0], paths);
+    _tickProg();
+  }
+  return totalPhotos;
+}
+
+function loadAllPhotos() {
+  var TREE_URL = 'https://api.github.com/repos/skbmaksim82-byte/Portal-zakazov/git/trees/main?recursive=1';
+  var CACHE_KEY = 'mob_photo_tree';
+  var CACHE_TTL = 3600000;
+  return fetch(TREE_URL, {cache: 'no-cache'})
     .then(function(r) {
       if (!r.ok) throw new Error('HTTP ' + r.status);
       return r.json();
     })
-    .then(function(files) {
-      var keys = Object.keys(targetMap);
-      for (var ki = 0; ki < keys.length; ki++) delete targetMap[keys[ki]];
-      var count = 0;
-      for (var fi = 0; fi < files.length; fi++) {
-        var f = files[fi];
-        if (!/\.(png|jpg|jpeg|gif|webp)$/i.test(f.name)) continue;
-        var nameNoExt = f.name.replace(/\.[^.]+$/, '');
-        var baseCode  = nameNoExt.replace(/_\d+$/, '');
-        var url = f.download_url || (GITHUB_RAW + folder.replace(/%20/g, ' ') + '/' + f.name);
-        if (!targetMap[baseCode]) targetMap[baseCode] = [];
-        if (nameNoExt === baseCode) targetMap[baseCode].unshift(url);
-        else targetMap[baseCode].push(url);
-        count++;
+    .then(function(data) {
+      var paths = [];
+      var tree = data.tree || [];
+      for (var i = 0; i < tree.length; i++) {
+        if (tree[i].type === 'blob') paths.push(tree[i].path);
       }
-      _tickProg();
-      return count;
+      try { localStorage.setItem(CACHE_KEY, JSON.stringify({ts: Date.now(), paths: paths})); } catch(e){}
+      return _processTreePaths(paths);
     })
     .catch(function(e) {
-      _tickProg();
+      try {
+        var cached = JSON.parse(localStorage.getItem(CACHE_KEY));
+        if (cached && cached.paths && cached.paths.length) {
+          return _processTreePaths(cached.paths);
+        }
+      } catch(ex){}
+      for (var t = 0; t < 7; t++) _tickProg();
       return 0;
     });
 }
@@ -2201,6 +2253,7 @@ function applyPhotos() {
   if (cur === 's3') renderItems();
   applyKitsPhotos();
   if (cur === 's2' && currentSecId === 'kits') renderKitsScreen();
+  if (cur === 's5' && _s5KitIdx >= 0) goKit(_s5KitIdx);
 }
 
 /* ═══════════════════════════════════════════════════
@@ -2208,30 +2261,21 @@ function applyPhotos() {
 ═══════════════════════════════════════════════════ */
 function mobUpdateFromGitHub() {
   _ghDone  = 0;
-  _ghTotal = 8;   /* 1 xlsx + 7 папок фото */
+  _ghTotal = 8;   /* 1 xlsx + 7 папок фото (прогресс) */
   _ghStart = Date.now();
   clearInterval(_ghTimer);
   _ghTimer = setInterval(function() { _updhdr(_ghTotal ? Math.round(_ghDone / _ghTotal * 100) : 0); }, 300);
   _updhdr(0);
 
-  /* Параллельно: xlsx + 7 папок фото */
+  /* Параллельно: xlsx + все фото (1 запрос через Trees API) */
   var p1 = loadXlsxLive();
-  var p2 = loadPhotoFolder('Foto%20Oborud',    OBORUD_PHOTOS,  '');
-  var p3 = loadPhotoFolder('Foto%20reklama',   REKLAM_PHOTOS,  '');
-  var p4 = loadPhotoFolder('Foto%20Svet',      SVET_PHOTOS,    '');
-  var p5 = loadPhotoFolder('Foto%20slabotoch', SLAB_PHOTOS,    '');
-  var p6 = loadPhotoFolder('Foto%20Uvelir',    UVELIR_PHOTOS,  '');
-  var p7 = loadPhotoFolder('IT%20oborud',      IT_PHOTOS,      '');
-  var p8 = loadPhotoFolder('Foto%20Complect',  COMPLECT_PHOTOS,'');
+  var p2 = loadAllPhotos();
 
-  Promise.allSettled([p1, p2, p3, p4, p5, p6, p7, p8])
+  Promise.allSettled([p1, p2])
     .then(function(results) {
       clearInterval(_ghTimer); _ghTimer = null;
       var xlsxOk = results[0].status === 'fulfilled';
-      var totalPhotos = 0;
-      for (var i = 1; i < results.length; i++) {
-        if (results[i].status === 'fulfilled') totalPhotos += (results[i].value || 0);
-      }
+      var totalPhotos = (results[1].status === 'fulfilled') ? (results[1].value || 0) : 0;
       var errors = 0;
       for (var j = 0; j < results.length; j++) if (results[j].status === 'rejected') errors++;
 
