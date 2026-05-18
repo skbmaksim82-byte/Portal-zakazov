@@ -283,18 +283,34 @@ body{font-family:'Inter',sans-serif;}
 .ci-code{font-size:9px;color:var(--wb-text3);font-family:'Courier New',monospace;}
 .ci-qty{font-size:12px;font-weight:800;color:var(--wb-purple);white-space:nowrap;}
 .ci-rm{width:22px;height:22px;border:none;background:none;cursor:pointer;font-size:14px;color:var(--wb-text3);}
-.drawer-footer{padding:12px 16px;border-top:1px solid var(--wb-border);}
-.dl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--wb-text3);margin-bottom:6px;}
+.drawer-footer{padding:12px 16px;border-top:1px solid var(--wb-border);display:flex;flex-direction:column;gap:8px;}
+.cart-order-info{font-size:13px;font-weight:700;color:var(--wb-text);padding:2px 0;}
+.dl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--wb-text3);margin-bottom:4px;}
 .shop-sel{width:100%;padding:10px 12px;border:1.5px solid var(--wb-border);border-radius:12px;
   font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--wb-text);
-  background:#fff;outline:none;margin-bottom:10px;appearance:none;
+  background:#fff;outline:none;appearance:none;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath fill='%23AAA' d='M0 0l6 8 6-8z'/%3E%3C/svg%3E");
   background-repeat:no-repeat;background-position:right 12px center;}
+.cart-email{width:100%;padding:10px 12px;border:1.5px solid var(--wb-border);border-radius:12px;
+  font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--wb-text3);
+  background:var(--wb-gray);outline:none;box-sizing:border-box;}
+.cart-row-split{display:flex;gap:8px;}
+.cart-row-split .cart-input{flex:1;min-width:0;}
+.cart-input{width:100%;padding:10px 12px;border:1.5px solid var(--wb-border);border-radius:12px;
+  font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--wb-text);
+  background:#fff;outline:none;box-sizing:border-box;}
+.cart-input:focus{border-color:var(--wb-purple);}
+.cart-input::placeholder{color:var(--wb-text3);font-weight:500;}
+.cart-comment{width:100%;padding:10px 12px;border:1.5px solid var(--wb-border);border-radius:12px;
+  font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--wb-text);
+  background:#fff;outline:none;resize:none;min-height:44px;box-sizing:border-box;}
+.cart-comment:focus{border-color:var(--wb-purple);}
+.cart-comment::placeholder{color:var(--wb-text3);font-weight:500;}
 .send-btn{width:100%;height:48px;border:none;border-radius:14px;cursor:pointer;
-  background:linear-gradient(135deg,var(--wb-purple-dark),var(--wb-purple));
-  color:#fff;font-family:'Inter',sans-serif;font-size:15px;font-weight:800;
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  box-shadow:0 6px 20px rgba(160,0,240,.4);transition:all .2s;}
+  background:linear-gradient(135deg,#1b8a2e,#27ae3f);
+  color:#fff;font-family:'Inter',sans-serif;font-size:13px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;gap:8px;text-align:center;
+  box-shadow:0 6px 20px rgba(39,174,63,.4);transition:all .2s;line-height:1.2;padding:8px 12px;}
 .send-btn:active{transform:scale(.97);}
 
 
@@ -763,16 +779,17 @@ body{font-family:'Inter',sans-serif;}
     </div>
     <div class="drawer-scroll" id="drawerScroll"></div>
     <div class="drawer-footer">
-      <div class="dl">Магазин / Объект</div>
-      <select class="shop-sel">
-        <option>— Выберите магазин —</option>
-        <option>Москва · ТЦ Европейский</option>
-        <option>Москва · ТЦ Авиапарк</option>
-        <option>Москва · ТЦ Мега Химки</option>
-        <option>СПб · ТЦ Галерея</option>
-        <option>Склад ЦС</option>
+      <div class="cart-order-info" id="cartOrderInfo">Позиций в заказе: 0</div>
+      <select class="shop-sel" id="shopSelect" onchange="onShopChange()">
+        <option value="">— Выберите номер магазина —</option>
       </select>
-      <button class="send-btn" onclick="sendOrder()">📨 Отправить заявку</button>
+      <input class="cart-email" id="cartEmail" readonly placeholder="Email магазина">
+      <div class="cart-row-split">
+        <input class="cart-input" id="cartContact" placeholder="Контактное лицо">
+        <input class="cart-input" id="cartPhone" type="tel" placeholder="Телефон">
+      </div>
+      <textarea class="cart-comment" id="cartComment" rows="2" placeholder="Комментарий к заказу"></textarea>
+      <button class="send-btn" onclick="sendOrder()">ОТПРАВИТЬ ЗАКАЗ АДМИНИСТРАТИВНОМУ ДИРЕКТОРУ</button>
     </div>
   </div>
 
