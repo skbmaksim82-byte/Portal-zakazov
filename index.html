@@ -587,15 +587,21 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     </div>
     <!-- Экран выбора подраздела -->
     <div id="subcatScreen" style="display:none;flex:1;overflow-y:auto;padding:24px 28px;">
-      <div id="subcatScreenTitle" style="font-size:13px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:20px;">Выберите подраздел</div>
+      <div id="subcatScreenTitle" style="display:flex;align-items:baseline;gap:12px;margin-bottom:20px;">
+        <span id="subcatScreenName" style="font-size:18px;font-weight:800;color:var(--text);letter-spacing:-.2px;"></span>
+        <span id="subcatScreenCount" style="font-size:13px;font-weight:600;color:var(--text3);"></span>
+      </div>
       <div id="subcatGrid" style="display:flex;flex-wrap:wrap;gap:14px;"></div>
     </div>
-    <!-- Хлебная крошка: Раздел → Подраздел (показывается когда подраздел выбран) -->
-    <div id="subcatBreadcrumb">
-      <span id="subcatBcCatLink" class="subcat-bc-link" onclick="backToSubcatScreen()">←</span>
-      <span class="subcat-bc-sep">›</span>
-      <span id="subcatBcCur" class="subcat-bc-cur"></span>
-      <span style="margin-left:auto;font-size:11px;color:var(--text3);" id="subcatBcCount"></span>
+    <!-- Шапка раздела/подраздела (показывается когда подраздел выбран) -->
+    <div id="subcatBreadcrumb" style="display:none;align-items:center;gap:10px;padding:10px 20px;background:var(--surface2);border-bottom:1.5px solid var(--border);min-height:44px;">
+      <span id="subcatBcCatLink" style="cursor:pointer;font-size:18px;color:var(--text3);transition:color .15s;display:flex;align-items:center;" onclick="backToSubcatScreen()" title="Назад к подразделам">←</span>
+      <div style="display:flex;align-items:baseline;gap:8px;flex:1;min-width:0;">
+        <span id="subcatBcCatName" style="font-size:15px;font-weight:700;color:var(--text2);white-space:nowrap;"></span>
+        <span style="color:var(--text3);font-size:13px;">›</span>
+        <span id="subcatBcCur" style="font-size:15px;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></span>
+      </div>
+      <span id="subcatBcCount" style="font-size:12px;font-weight:600;color:var(--text3);white-space:nowrap;margin-left:auto;"></span>
     </div>
     <div class="table-wrap" id="tableWrap">
       <div class="product-grid" id="tableBody"></div>
@@ -2246,6 +2252,14 @@ document.addEventListener('DOMContentLoaded', function(){
 
 // ═══ ПОДРАЗДЕЛЫ ═══
 var currentCatForSubcat = ''; // запоминаем раздел для возврата
+var catDisplayNames = {
+  'light':'Световое оборудование','tv':'Слаботочное оборудование',
+  'Торговое оборудование':'Торговое оборудование','Ювелирное оборудование':'Ювелирное оборудование',
+  'Рекламные материалы':'Рекламные материалы','Канцелярия':'Канцелярия',
+  'ИТ оборудование':'ИТ оборудование','karikids':'Кари Кидс',
+  'kits':'Комплекты','nlist':'Загрузка номенклатур'
+};
+function getCatDisplayName(cat){ return catDisplayNames[cat] || cat; }
 
 function getSubcatData(cat){
   var subcats = [];
@@ -2348,15 +2362,15 @@ function selectSubcatFromScreen(sub){
   var tw = document.getElementById('tableWrap');
   if(tw) tw.style.display = '';
 
-  // Хлебная крошка
+  // Шапка раздела/подраздела
   var bc = document.getElementById('subcatBreadcrumb');
-  var bcCat = document.getElementById('subcatBcCatLink');
+  var bcCatName = document.getElementById('subcatBcCatName');
   var bcCur = document.getElementById('subcatBcCur');
   var bcCount = document.getElementById('subcatBcCount');
-  if(bc && bcCat && bcCur){
-    bcCat.textContent = '← ' + currentCatForSubcat;
+  if(bc && bcCatName && bcCur){
+    bcCatName.textContent = getCatDisplayName(currentCatForSubcat);
     bcCur.textContent = sub || 'Все позиции';
-    bc.className = 'subcatBreadcrumb show';
+    bc.style.display = 'flex';
     if(bcCount) bcCount.textContent = '';
   }
 
@@ -2386,7 +2400,7 @@ function backToSubcatScreen(){
   currentLightSubcat = '';
   currentTvSubcat = '';
   var bc = document.getElementById('subcatBreadcrumb');
-  if(bc) bc.className = 'subcatBreadcrumb';
+  if(bc) bc.style.display = 'none';
   // Скрываем и таблицу и специальные панели
   var tw = document.getElementById('tableWrap');
   if(tw) tw.style.display = 'none';
