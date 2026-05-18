@@ -9,7 +9,8 @@
 <meta name="apple-mobile-web-app-title" content="Каталог оборудования Kari">
 <meta name="description" content="Каталог оборудования Kari">
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/png" href="https://raw.githubusercontent.com/skbmaksim82-byte/Portal-zakazov/main/Logo%20Kari%20Mobile.png">
+<link rel="apple-touch-icon" href="https://raw.githubusercontent.com/skbmaksim82-byte/Portal-zakazov/main/Logo%20Kari%20Mobile.png">
 <title>Каталог оборудования Kari</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -420,12 +421,8 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 <div class="header">
   <div class="header-particles" id="hdrParticles"></div>
   <div class="logo">
-    <div class="logo-icon" id="logoIcon" onclick="document.getElementById('authorsOverlay').classList.add('show')" title="О проекте">
-      <div class="box-icon">
-        <div class="box-lid"></div>
-        <div class="box-body"></div>
-        <div class="box-star"></div>
-      </div>
+    <div class="logo-icon" id="logoIcon" onclick="document.getElementById('authorsOverlay').classList.add('show')" title="О проекте" style="background:none;box-shadow:none;border:none;">
+      <img src="https://raw.githubusercontent.com/skbmaksim82-byte/Portal-zakazov/main/Logo%20Kari%20Mobile.png" alt="Kari" style="width:40px;height:40px;object-fit:contain;border-radius:10px;">
     </div>
     <div>
       <div style="display:flex;align-items:center;gap:8px;">
@@ -601,13 +598,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
       <span style="margin-left:auto;font-size:11px;color:var(--text3);" id="subcatBcCount"></span>
     </div>
     <div class="table-wrap" id="tableWrap">
-      <table>
-        <thead><tr>
-          <th class="th-img">Фото</th><th class="th-code">Код</th><th style="width:8cm;">Наименование</th><th style="text-align:center">Краткое описание</th><th style="width:5cm;text-align:center;">Раздел</th>
-          <th class="th-qty">Количество</th><th class="th-action">В корзину</th>
-        </tr></thead>
-        <tbody id="tableBody"></tbody>
-      </table>
+      <div class="product-grid" id="tableBody"></div>
     </div>
   </div>
 
@@ -635,16 +626,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
       </div>
       <div class="light-body">
         <div class="light-table-wrap" id="lightTableWrap">
-          <table>
-            <thead><tr>
-              <th class="th-img">Фото</th>
-              <th class="th-code">Код</th>
-              <th>Наименование</th>
-              <th class="th-qty">Количество</th>
-              <th class="th-action">В корзину</th>
-            </tr></thead>
-            <tbody id="lightBody"></tbody>
-          </table>
+          <div class="product-grid" id="lightBody"></div>
         </div>
 
       </div>
@@ -672,24 +654,14 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
       <div class="results-info" id="kitsResultsInfo">—</div>
     </div>
     <div class="table-wrap" id="kitsTableWrap">
-      <table>
-        <thead><tr>
-          <th style="width:60px"></th>
-          <th class="th-code">Код</th>
-          <th>Наименование комплекта</th>
-          <th style="text-align:center">Краткое описание</th>
-          <th class="th-qty">Кол-во</th>
-          <th class="th-action">В корзину</th>
-        </tr></thead>
-        <tbody id="kitsTableBody">
-          <tr><td colspan="5" style="text-align:center;padding:60px 20px;color:var(--text3);font-size:14px;font-weight:600;">
-            📦 Загрузите Excel-файл с комплектами<br>
-            <span style="font-size:12px;font-weight:400;margin-top:8px;display:block;">
-              Колонки: A — Код · B — Название · C — Описание · D — Код товара · E — Наименование · F — Кол-во
-            </span>
-          </td></tr>
-        </tbody>
-      </table>
+      <div class="product-grid" id="kitsTableBody">
+        <div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text3);font-size:14px;font-weight:600;">
+          📦 Загрузите Excel-файл с комплектами<br>
+          <span style="font-size:12px;font-weight:400;margin-top:8px;display:block;">
+            Колонки: A — Код · B — Название · C — Описание · D — Код товара · E — Наименование · F — Кол-во
+          </span>
+        </div>
+      </div>
     </div>
   </div>
   <!-- ═══ TV PANEL ═══ -->
@@ -716,17 +688,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
       </div>
       <div class="light-body">
         <div class="light-table-wrap" id="tvTableWrap">
-          <table>
-            <thead><tr>
-              <th class="th-img">Фото</th>
-              <th class="th-code">Код</th>
-              <th>Наименование</th>
-              <th style="min-width:180px;text-align:center">Краткое описание</th>
-              <th class="th-qty">Кол-во</th>
-              <th class="th-action">В корзину</th>
-            </tr></thead>
-            <tbody id="tvBody"></tbody>
-          </table>
+          <div class="product-grid" id="tvBody"></div>
         </div>
       </div>
     </div>
@@ -4055,58 +4017,62 @@ function addKitDetailToCart(){
 }
 
 function renderKitsTable(){
-  var tbody = document.getElementById('kitsTableBody');
-  tbody.innerHTML = '';
+  var grid = document.getElementById('kitsTableBody');
+  grid.innerHTML = '';
   if(!kitsFiltered.length){
-    var tr = document.createElement('tr');
-    tr.innerHTML = '<td colspan="5" style="text-align:center;padding:40px;color:var(--text3);font-size:14px">🔍 Ничего не найдено</td>';
-    tbody.appendChild(tr);
+    var em = document.createElement('div');
+    em.style.cssText = 'width:100%;text-align:center;padding:40px;color:var(--text3);font-size:14px';
+    em.textContent = '🔍 Ничего не найдено';
+    grid.appendChild(em);
     return;
   }
   kitsFiltered.forEach(function(kit){
-    var tr = document.createElement('tr');
     var inCart = !!cart['KIT_'+kit.id];
-    tr.className = inCart ? 'in-cart' : '';
+    var tile = document.createElement('div');
+    tile.className = 'product-tile' + (inCart ? ' in-cart' : '');
+    tile.title = kit.name;
+    (function(id){ tile.onclick = function(e){
+      if(e.target.closest('.qty-wrap') || e.target.closest('.add-btn')) return;
+      openKitDetail(id);
+    }; })(kit.id);
+
+    if(kit.image){
+      var timg = document.createElement('img'); timg.className = 'product-tile-photo'; timg.src = kit.image; timg.loading = 'lazy';
+      timg.onerror = function(){ this.outerHTML = '<div class="product-tile-photo-placeholder">📦</div>'; };
+      tile.appendChild(timg);
+    } else {
+      var ph = document.createElement('div'); ph.className = 'product-tile-photo-placeholder'; ph.textContent = '📦';
+      tile.appendChild(ph);
+    }
+
+    var body = document.createElement('div'); body.className = 'product-tile-body';
+    var code = document.createElement('div'); code.className = 'product-tile-code'; code.textContent = kit.id;
+    var name = document.createElement('div'); name.className = 'product-tile-name'; name.textContent = kit.name;
+    body.appendChild(code); body.appendChild(name);
+    if(kit.desc){
+      var sh = document.createElement('div'); sh.className = 'product-tile-short';
+      sh.textContent = kit.desc + ' (' + kit.items.length + ' поз.)';
+      body.appendChild(sh);
+    }
+
+    var bot = document.createElement('div'); bot.className = 'product-tile-bottom';
+    var wrap = document.createElement('div'); wrap.className = 'qty-wrap';
+    var qm = document.createElement('button'); qm.className = 'qty-btn'; qm.textContent = '−';
+    (function(id){ qm.onclick = function(e){ e.stopPropagation(); adjustKitQty(id, -1); }; })(kit.id);
+    var qi = document.createElement('input'); qi.className = 'qty-input'; qi.id = 'kqty-' + kit.id;
+    qi.type = 'number'; qi.value = '1'; qi.min = '1'; qi.max = '99';
+    qi.onclick = function(e){ e.stopPropagation(); };
+    var qp = document.createElement('button'); qp.className = 'qty-btn'; qp.textContent = '+';
+    (function(id){ qp.onclick = function(e){ e.stopPropagation(); adjustKitQty(id, 1); }; })(kit.id);
+    wrap.appendChild(qm); wrap.appendChild(qi); wrap.appendChild(qp);
     var btn = document.createElement('button');
     btn.className = 'add-btn' + (inCart ? ' added' : '');
-    btn.id = 'kadd-' + kit.id;
-    btn.textContent = inCart ? '✓' : '+';
-    btn.onclick = (function(id){ return function(){ togKitCart(id); }; })(kit.id);
-    var qm = document.createElement('button'); qm.className='qty-btn'; qm.textContent='−';
-    qm.onclick = (function(id){ return function(){ adjustKitQty(id,-1); }; })(kit.id);
-    var qp = document.createElement('button'); qp.className='qty-btn'; qp.textContent='+';
-    qp.onclick = (function(id){ return function(){ adjustKitQty(id,1); }; })(kit.id);
-    var qi = document.createElement('input'); qi.className='qty-input'; qi.id='kqty-'+kit.id;
-    qi.type='number'; qi.value='1'; qi.min='1'; qi.max='99';
-    var qw = document.createElement('div'); qw.className='qty-wrap';
-    qw.appendChild(qm); qw.appendChild(qi); qw.appendChild(qp);
-    // Thumbnail cell
-    var tdImg = document.createElement('td'); tdImg.style.cssText='width:60px;padding:5px 8px;';
-    if(kit.image){
-      var timg = document.createElement('img');
-      timg.src = kit.image; timg.title = 'Нажмите для просмотра';
-      timg.style.cssText='width:52px;height:40px;object-fit:contain;border-radius:7px;cursor:pointer;border:1.5px solid #ddd4ff;background:#faf8ff;';
-      timg.onclick=(function(id){return function(){openKitDetail(id);};})(kit.id);
-      tdImg.appendChild(timg);
-    } else {
-      var ph=document.createElement('div');
-      ph.style.cssText='width:52px;height:40px;background:#f0ecff;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;border:1.5px dashed #c4b0ff;';
-      ph.textContent='📦'; ph.onclick=(function(id){return function(){openKitDetail(id);};})(kit.id);
-      tdImg.appendChild(ph);
-    }
-    var td1 = document.createElement('td'); td1.className='td-code';
-    var sp1=document.createElement('span'); sp1.textContent=kit.id;
-    sp1.style.cssText='cursor:pointer;color:#6b48c8;text-decoration:underline dotted;';
-    sp1.onclick=(function(id){return function(){openKitDetail(id);};})(kit.id); td1.appendChild(sp1);
-    var td2 = document.createElement('td'); td2.style.fontWeight='600';
-    var sp2=document.createElement('span'); sp2.textContent=kit.name; sp2.style.cursor='pointer';
-    sp2.onclick=(function(id){return function(){openKitDetail(id);};})(kit.id); td2.appendChild(sp2);
-    var td3 = document.createElement('td'); td3.style.cssText='color:var(--text2);font-size:12px;text-align:center';
-    td3.innerHTML = escHtml(kit.desc||'') + ' <span style="color:var(--text3);font-size:11px">('+kit.items.length+' поз.)</span>';
-    var td4 = document.createElement('td'); td4.className='td-qty'; td4.appendChild(qw);
-    var td5 = document.createElement('td'); td5.className='td-action'; td5.appendChild(btn);
-    tr.appendChild(tdImg); tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3); tr.appendChild(td4); tr.appendChild(td5);
-    tbody.appendChild(tr);
+    btn.id = 'kadd-' + kit.id; btn.textContent = inCart ? '✓' : '+';
+    (function(id){ btn.onclick = function(e){ e.stopPropagation(); togKitCart(id); }; })(kit.id);
+    bot.appendChild(wrap); bot.appendChild(btn);
+    body.appendChild(bot);
+    tile.appendChild(body);
+    grid.appendChild(tile);
   });
 }
 
