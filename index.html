@@ -762,9 +762,23 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <button onclick="closeKitDetail()" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:30px;height:30px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:900;">✕</button>
   </div>
   <div style="display:flex;gap:0;max-height:68vh;overflow:hidden;">
-    <!-- Left: image -->
-    <div style="width:280px;flex-shrink:0;background:#f5f1ff;display:flex;align-items:center;justify-content:center;padding:16px;border-right:1px solid #ddd4ff;">
-      <img id="kdm-img" src="" alt="Стеллаж" style="max-width:100%;max-height:340px;object-fit:contain;border-radius:10px;display:none;">
+    <!-- Left: image gallery -->
+    <div style="width:280px;flex-shrink:0;background:#f5f1ff;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:16px 12px 10px;border-right:1px solid #ddd4ff;gap:8px;">
+      <div style="flex:1;display:flex;align-items:center;justify-content:center;width:100%;">
+        <img id="kdm-img" src="" alt="Комплект" style="max-width:100%;max-height:290px;object-fit:contain;border-radius:10px;display:none;cursor:zoom-in;" title="Нажмите для увеличения">
+        <div id="kdm-no-img" style="text-align:center;color:#7c5cbf;font-size:13px;">
+          <div style="font-size:40px;margin-bottom:8px;">📦</div>
+          Фото недоступно
+        </div>
+      </div>
+      <div id="kdm-gallery-nav" style="display:none;width:100%;flex-direction:column;align-items:center;gap:6px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <button onclick="kdmGalleryStep(-1)" style="width:28px;height:28px;border:none;border-radius:50%;background:#e0d4ff;color:#6b48c8;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:900;" onmouseover="this.style.background='#d0c0f0'" onmouseout="this.style.background='#e0d4ff'">‹</button>
+          <span id="kdm-gallery-counter" style="font-size:12px;font-weight:700;color:#7c5cbf;min-width:36px;text-align:center;">1 / 1</span>
+          <button onclick="kdmGalleryStep(1)" style="width:28px;height:28px;border:none;border-radius:50%;background:#e0d4ff;color:#6b48c8;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:900;" onmouseover="this.style.background='#d0c0f0'" onmouseout="this.style.background='#e0d4ff'">›</button>
+        </div>
+        <div id="kdm-gallery-dots" style="display:flex;gap:5px;align-items:center;flex-wrap:wrap;justify-content:center;max-width:220px;"></div>
+      </div>
     </div>
     <!-- Right: table -->
     <div style="flex:1;overflow-y:auto;padding:0;">
@@ -1258,19 +1272,25 @@ function getImgUrl(item) {
   return all.length ? all[0] : null;
 }
 
-var COMPLECT_PHOTOS = {}; // название комплекта → URL (Foto complect)
+var COMPLECT_PHOTOS = {}; // название комплекта → [URL, URL, …] (Foto complect)
 
-// Получить URL картинки для комплекта (схемы сборки)
+// Получить URL первой картинки для комплекта
 function getKitImgUrl(kit) {
   if (kit.image && kit.image.indexOf('http') === 0) return kit.image;
-  if (kit.image && kit.image.indexOf('data:') === 0) return kit.image; // base64 fallback
-  // GitHub: Foto complect — файл называется по имени комплекта
-  if (kit.name && COMPLECT_PHOTOS[kit.name]) return COMPLECT_PHOTOS[kit.name];
-  if (kit.id   && COMPLECT_PHOTOS[kit.id])   return COMPLECT_PHOTOS[kit.id];
+  if (kit.image && kit.image.indexOf('data:') === 0) return kit.image;
+  var urls = getKitAllImgUrls(kit);
+  if (urls.length) return urls[0];
   if (GDRIVE_BASE_URL && kit.id) {
     return GDRIVE_BASE_URL + encodeURIComponent(kit.id) + '.' + GDRIVE_EXT;
   }
   return null;
+}
+
+function getKitAllImgUrls(kit) {
+  var name = kit.name || '';
+  var id   = kit.id   || '';
+  var arr  = COMPLECT_PHOTOS[name] || COMPLECT_PHOTOS[name.trim()] || COMPLECT_PHOTOS[name.toLowerCase()] || COMPLECT_PHOTOS[id] || COMPLECT_PHOTOS[id.toLowerCase()] || [];
+  return arr;
 }
 
 var EMBEDDED_CATALOG = {};
@@ -3176,10 +3196,10 @@ function updateFromGitHub(){
           if(itUrl) it.photo = itUrl;
         }
       });
-      // Применяем фото к комплектам по имени
+      // Применяем первое фото к комплектам по имени
       allKits.forEach(function(kit){
-        var url = COMPLECT_PHOTOS[kit.name] || COMPLECT_PHOTOS[kit.id] || null;
-        if(url) kit.image = url;
+        var urls = getKitAllImgUrls(kit);
+        if(urls.length) kit.image = urls[0];
       });
       // Перерисовываем комплекты если открыты
       if(currentTab === 'kits') renderKitsTable();
@@ -3293,19 +3313,21 @@ function loadComplectPhotos(){
       return r.json();
     })
     .then(function(files){
-      // Очищаем кэш
       Object.keys(COMPLECT_PHOTOS).forEach(function(k){ delete COMPLECT_PHOTOS[k]; });
       var count = 0;
+      // Сортируем файлы чтобы базовое фото шло перед _1, _2 и т.д.
+      files.sort(function(a,b){ return a.name.localeCompare(b.name); });
       files.forEach(function(f){
         if(!/\.(png|jpg|jpeg|gif|webp|svg)$/i.test(f.name)) return;
-        // Ключ = имя файла без расширения (название комплекта)
-        var kitName = f.name.replace(/\.[^.]+$/, '');
-        // URL берём из download_url — GitHub сам кодирует кириллику
+        var rawName = f.name.replace(/\.[^.]+$/, '');
         var url = f.download_url || (GITHUB_RAW + 'Foto%20Complect/' + encodeURIComponent(f.name));
-        // Сохраняем по оригинальному имени, trim и нижнему регистру
-        COMPLECT_PHOTOS[kitName]               = url;
-        COMPLECT_PHOTOS[kitName.trim()]        = url;
-        COMPLECT_PHOTOS[kitName.toLowerCase()] = url;
+        // Базовое имя комплекта: убираем суффикс _1, _2, _3 …
+        var baseName = rawName.replace(/_\d+$/, '');
+        // Добавляем URL в массив по всем вариантам ключа
+        [baseName, baseName.trim(), baseName.toLowerCase()].forEach(function(key){
+          if(!COMPLECT_PHOTOS[key]) COMPLECT_PHOTOS[key] = [];
+          COMPLECT_PHOTOS[key].push(url);
+        });
         count++;
       });
       return count;
@@ -3883,8 +3905,8 @@ function parseKitsRows(rows){
     if(imgMap[k.id] !== undefined) k.image = imgMap[k.id];
     // Применяем фото из GitHub-кэша Foto complect (если уже загружены)
     if(!k.image){
-      var cu = COMPLECT_PHOTOS[k.name] || COMPLECT_PHOTOS[k.name && k.name.toLowerCase()] || COMPLECT_PHOTOS[k.id] || null;
-      if(cu) k.image = cu;
+      var cu = getKitAllImgUrls(k);
+      if(cu.length) k.image = cu[0];
     }
     return k;
   });
@@ -3960,24 +3982,75 @@ function initKitsPreload(){
   }
 }
 
+// ═══ KIT DETAIL GALLERY ═══
+var kdmGalleryUrls = [];
+var kdmGalleryIdx  = 0;
+var kdmGalleryCaption = '';
+
+function kdmGalleryInit(urls, caption){
+  kdmGalleryUrls = urls || [];
+  kdmGalleryIdx  = 0;
+  kdmGalleryCaption = caption || '';
+  var img   = document.getElementById('kdm-img');
+  var noImg = document.getElementById('kdm-no-img');
+  var nav   = document.getElementById('kdm-gallery-nav');
+  if(kdmGalleryUrls.length === 0){
+    img.style.display = 'none';
+    img.onclick = null;
+    if(noImg) noImg.style.display = '';
+    if(nav)   nav.style.display   = 'none';
+    return;
+  }
+  if(noImg) noImg.style.display = 'none';
+  img.src = kdmGalleryUrls[0];
+  img.style.display = 'block';
+  img.onerror = function(){ this.style.display='none'; if(noImg) noImg.style.display=''; };
+  img.onclick = function(){ openLightbox(kdmGalleryUrls[kdmGalleryIdx], kdmGalleryCaption); };
+  if(kdmGalleryUrls.length > 1){
+    nav.style.display = 'flex';
+    kdmGalleryUpdateNav();
+  } else {
+    nav.style.display = 'none';
+  }
+}
+
+function kdmGalleryStep(dir){
+  if(!kdmGalleryUrls.length) return;
+  kdmGalleryIdx = (kdmGalleryIdx + dir + kdmGalleryUrls.length) % kdmGalleryUrls.length;
+  var img = document.getElementById('kdm-img');
+  img.src = kdmGalleryUrls[kdmGalleryIdx];
+  img.style.display = 'block';
+  var noImg = document.getElementById('kdm-no-img');
+  if(noImg) noImg.style.display = 'none';
+  img.onclick = function(){ openLightbox(kdmGalleryUrls[kdmGalleryIdx], kdmGalleryCaption); };
+  kdmGalleryUpdateNav();
+}
+
+function kdmGalleryUpdateNav(){
+  var counter = document.getElementById('kdm-gallery-counter');
+  if(counter) counter.textContent = (kdmGalleryIdx+1) + ' / ' + kdmGalleryUrls.length;
+  var dotsWrap = document.getElementById('kdm-gallery-dots');
+  if(dotsWrap){
+    dotsWrap.innerHTML = '';
+    for(var i=0;i<kdmGalleryUrls.length;i++){
+      var dot = document.createElement('div');
+      dot.style.cssText = 'width:8px;height:8px;border-radius:50%;cursor:pointer;transition:all .15s;'
+        + (i===kdmGalleryIdx ? 'background:#6b48c8;transform:scale(1.3);' : 'background:#c4b0ff;');
+      (function(idx){ dot.onclick = function(){ kdmGalleryIdx=idx; kdmGalleryStep(0); }; })(i);
+      dotsWrap.appendChild(dot);
+    }
+  }
+}
+
 function openKitDetail(kitId){
   var kit = allKits.find(function(k){ return k.id === kitId; });
   if(!kit) return;
   document.getElementById('kdm-title').textContent = kit.name;
   document.getElementById('kdm-desc').textContent = kit.desc || '';
-  var img = document.getElementById('kdm-img');
-  var kitUrl = getKitImgUrl(kit);
-  if(kitUrl){
-    img.src = kitUrl;
-    img.style.display='block';
-    img.style.cursor='zoom-in';
-    img.title='Нажмите для увеличения';
-    img.onerror = function(){ this.style.display='none'; };
-    img.onclick = function(){ openLightbox(kitUrl, kit.name); };
-  } else {
-    img.style.display='none';
-    img.onclick = null;
-  }
+  // Галерея комплекта
+  var allUrls = getKitAllImgUrls(kit);
+  if(!allUrls.length && kit.image) allUrls = [kit.image];
+  kdmGalleryInit(allUrls, kit.name);
   var tbody = document.getElementById('kdm-tbody');
   tbody.innerHTML = '';
   kit.items.forEach(function(it, i){
@@ -4042,6 +4115,8 @@ function renderKitsTable(){
     var inCart = !!cart['KIT_'+kit.id];
     var tile = document.createElement('div');
     tile.className = 'product-tile' + (inCart ? ' in-cart' : '');
+    tile.style.height = 'auto';
+    tile.style.minHeight = '7cm';
     tile.title = kit.name;
     (function(id){ tile.onclick = function(e){
       if(e.target.closest('.qty-wrap') || e.target.closest('.add-btn')) return;
@@ -4059,10 +4134,12 @@ function renderKitsTable(){
 
     var body = document.createElement('div'); body.className = 'product-tile-body';
     var name = document.createElement('div'); name.className = 'product-tile-name'; name.textContent = kit.name;
+    name.style.cssText = '-webkit-line-clamp:unset;overflow:visible;';
     body.appendChild(name);
     if(kit.desc){
       var sh = document.createElement('div'); sh.className = 'product-tile-short';
       sh.textContent = kit.desc + ' (' + kit.items.length + ' поз.)';
+      sh.style.cssText = 'white-space:normal;overflow:visible;text-overflow:unset;line-height:1.3;';
       body.appendChild(sh);
     }
 
