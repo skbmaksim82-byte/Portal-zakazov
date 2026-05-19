@@ -236,13 +236,17 @@ body{font-family:'Inter',sans-serif;}
 }
 .item-thumb img{width:100%;height:100%;object-fit:contain;}
 .item-info{flex:1;min-width:0;padding:8px 8px 4px;display:flex;flex-direction:column;gap:2px;}
-.item-code{font-size:8px;font-family:'Courier New',monospace;color:var(--wb-text3);letter-spacing:.3px;}
+.item-code{font-size:12.5px;font-weight:700;font-family:'Courier New',monospace;color:var(--wb-purple);letter-spacing:.3px;}
 .item-name{font-size:12.5px;font-weight:800;color:var(--wb-text);line-height:1.25;
   word-break:break-word;overflow-wrap:break-word;}
-.item-tags{display:flex;gap:3px;flex-wrap:wrap;margin-top:auto;}
+.item-tags{display:flex;flex-direction:column;gap:4px;margin-top:auto;}
 .tag{padding:2px 6px;border-radius:20px;font-size:8px;font-weight:700;}
 .tag-cat{background:var(--wb-purple-bg);color:var(--wb-purple);}
 .tag-stock{background:var(--wb-green-bg);color:#00824A;}
+.item-link-btn{width:100%;padding:5px 0;border-radius:20px;font-size:10px;font-weight:700;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;}
+.item-link-btn:active{opacity:.7;}
+.item-link-btn.analogs-btn{background:#EEF4FF;color:#1A4FBB;}
+.item-link-btn.compat-btn{background:#E6F9F0;color:#00824A;}
 .item-right{display:flex;align-items:center;justify-content:center;gap:4px;padding:4px 8px 8px;flex-shrink:0;}
 .qty-row{display:flex;align-items:center;}
 .q-btn{width:22px;height:22px;border:none;cursor:pointer;font-size:13px;font-weight:700;
@@ -1164,9 +1168,11 @@ function renderItems(){
     h+='<div class="item-info">';
     h+='<div class="item-code">'+it.code+'</div>';
     h+='<div class="item-name" data-action="go-item" data-val="'+it.id+'">'+it.name+'</div>';
+    var anCnt=getAnalogsForCode(it.code).length;
+    var cmCnt=getCompatForCode(it.code).length;
     h+='<div class="item-tags">';
-    if(sec)h+='<span class="tag tag-cat">'+sec.name+'</span>';
-    if(it.subcat)h+=' <span class="tag tag-sub">'+it.subcat+'</span>';
+    if(anCnt)h+='<button class="item-link-btn analogs-btn" data-action="go-item-tab" data-val="'+it.id+'" data-tab="analogs">🔄 '+anCnt+'</button>';
+    if(cmCnt)h+='<button class="item-link-btn compat-btn" data-action="go-item-tab" data-val="'+it.id+'" data-tab="compat">🔗 '+cmCnt+'</button>';
     h+='</div></div>';
     h+='<div class="item-right"><div class="qty-row">';
     h+='<button class="q-btn q-minus" data-action="q-minus" data-val="'+it.id+'">-</button>';
@@ -1581,6 +1587,7 @@ function setupEventDelegation(){
         if(action==='go-section'){goSection(val);return;}
         if(action==='go-subcat'){goSubcat(val, subcat===null?'':subcat);return;}
         if(action==='go-item'){goItem(val);return;}
+        if(action==='go-item-tab'){goItem(val);setTimeout(function(){var tb=el.getAttribute('data-tab');if(tb){var a=getEl('s4acc-'+tb);if(a){a.style.display='';var b=getEl('s4body-'+tb);var c=getEl('s4chev-'+tb);if(b)b.style.display='block';if(c)c.textContent='⌄';if(a.scrollIntoView)a.scrollIntoView({behavior:'smooth'});}}},150);return;}
         if(action==='toggle-cart'){toggleCart(val);return;}
         if(action==='q-minus'){qChange(val,-1);return;}
         if(action==='q-plus'){qChange(val,1);return;}
