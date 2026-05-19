@@ -2302,6 +2302,7 @@ function parseXlsxBuffer(buf) {
 
   /* Сбрасываем allItems — плоский массив как в десктопе */
   allItems = [];
+  var seenCodes = {};
 
   var totalRows = 0;
   var SKIP_CODES = {'\u041a\u043e\u0434 \u043d\u043e\u043c\u0435\u043d\u043a\u043b\u0430\u0442\u0443\u0440\u044b':1, '\u041d\u041c\u041a (\u041a\u043e\u0434)':1, '\u0410\u0440\u0442\u0438\u043a\u0443\u043b':1};
@@ -2344,6 +2345,9 @@ function parseXlsxBuffer(buf) {
       var name = String(row[nameCol] || '').trim();
       if (!code || !name) continue;
       if (SKIP_CODES[code]) continue;
+      var dedupKey = code + '||' + name;
+      if (seenCodes[dedupKey]) continue;
+      seenCodes[dedupKey] = 1;
 
       var subcat = String(row[subcatCol] || '').trim();
       var desc   = String(row[descCol]   || '').trim();
