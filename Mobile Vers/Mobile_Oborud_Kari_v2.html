@@ -220,11 +220,11 @@ body{font-family:'Inter',sans-serif;}
   border:1px solid var(--wb-border);border-radius:20px;padding:4px 10px;
   font-size:11px;font-weight:600;color:var(--wb-text2);cursor:pointer;}
 
-.items-list{padding:12px;display:flex;flex-wrap:wrap;justify-content:center;gap:12px;}
+.items-list{padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .item-card{
   background:#fff;border-radius:16px;border:1.5px solid var(--wb-border);
   display:flex;flex-direction:column;overflow:hidden;
-  width:42vw;min-width:150px;max-width:200px;height:calc(42vw * 5 / 3);min-height:250px;max-height:333px;transition:border-color .15s;position:relative;cursor:pointer;flex-shrink:0;
+  transition:border-color .15s;position:relative;cursor:pointer;
 }
 .item-card:active{transform:scale(.97);}
 .item-card.in-cart{border-color:var(--wb-purple);background:var(--wb-purple-bg);}
@@ -480,11 +480,11 @@ body{font-family:'Inter',sans-serif;}
 
 <style>
 /* KIT CARDS — grid of 3×5cm cards */
-.kit-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;padding:12px;}
+.kit-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px;}
 .kit-card{
   background:#fff;border-radius:14px;border:1.5px solid var(--wb-border);
   overflow:hidden;transition:border-color .2s,box-shadow .2s;
-  display:flex;flex-direction:column;width:42vw;min-width:150px;max-width:200px;height:calc(42vw * 5 / 3);min-height:250px;max-height:333px;cursor:pointer;flex-shrink:0;
+  display:flex;flex-direction:column;cursor:pointer;
 }
 .kit-card:active{transform:scale(.97);}
 .kit-card.open{border-color:var(--wb-purple);box-shadow:0 4px 16px rgba(160,0,240,.15);}
