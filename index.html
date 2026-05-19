@@ -1289,7 +1289,11 @@ function getKitImgUrl(kit) {
 function getKitAllImgUrls(kit) {
   var name = kit.name || '';
   var id   = kit.id   || '';
-  var arr  = COMPLECT_PHOTOS[name] || COMPLECT_PHOTOS[name.trim()] || COMPLECT_PHOTOS[name.toLowerCase()] || COMPLECT_PHOTOS[id] || COMPLECT_PHOTOS[id.toLowerCase()] || [];
+  var normName = name.trim().toLowerCase().replace(/\s+/g, ' ');
+  var normId   = id.trim().toLowerCase().replace(/\s+/g, ' ');
+  var arr  = COMPLECT_PHOTOS[name] || COMPLECT_PHOTOS[name.trim()] || COMPLECT_PHOTOS[name.toLowerCase()] || COMPLECT_PHOTOS[normName]
+          || COMPLECT_PHOTOS[id]   || COMPLECT_PHOTOS[id.trim()]   || COMPLECT_PHOTOS[id.toLowerCase()]   || COMPLECT_PHOTOS[normId]
+          || [];
   return arr;
 }
 
@@ -3316,19 +3320,36 @@ function loadComplectPhotos(){
       Object.keys(COMPLECT_PHOTOS).forEach(function(k){ delete COMPLECT_PHOTOS[k]; });
       var count = 0;
       // Сортируем файлы чтобы базовое фото шло перед _1, _2 и т.д.
-      files.sort(function(a,b){ return a.name.localeCompare(b.name); });
+      // Сначала собираем все файлы по базовому имени
+      var grouped = {};
       files.forEach(function(f){
         if(!/\.(png|jpg|jpeg|gif|webp|svg)$/i.test(f.name)) return;
         var rawName = f.name.replace(/\.[^.]+$/, '');
         var url = f.download_url || (GITHUB_RAW + 'Foto%20Complect/' + encodeURIComponent(f.name));
-        // Базовое имя комплекта: убираем суффикс _1, _2, _3 …
         var baseName = rawName.replace(/_\d+$/, '');
-        // Добавляем URL в массив по всем вариантам ключа
-        [baseName, baseName.trim(), baseName.toLowerCase()].forEach(function(key){
-          if(!COMPLECT_PHOTOS[key]) COMPLECT_PHOTOS[key] = [];
-          COMPLECT_PHOTOS[key].push(url);
-        });
+        var isBase = (rawName === baseName);
+        if(!grouped[baseName]) grouped[baseName] = { base: null, extra: [] };
+        if(isBase) grouped[baseName].base = url;
+        else grouped[baseName].extra.push({ name: rawName, url: url });
         count++;
+      });
+      // Формируем массивы: сначала базовое фото, потом _1, _2… отсортированные
+      Object.keys(grouped).forEach(function(baseName){
+        var g = grouped[baseName];
+        g.extra.sort(function(a,b){ return a.name.localeCompare(b.name); });
+        var urls = [];
+        if(g.base) urls.push(g.base);
+        g.extra.forEach(function(e){ urls.push(e.url); });
+        // Сохраняем по уникальным ключам (оригинал, trim, lowercase, нормализованный)
+        var norm = baseName.trim().toLowerCase().replace(/\s+/g, ' ');
+        var keys = {};
+        keys[baseName] = true;
+        keys[baseName.trim()] = true;
+        keys[baseName.toLowerCase()] = true;
+        keys[norm] = true;
+        Object.keys(keys).forEach(function(key){
+          COMPLECT_PHOTOS[key] = urls;
+        });
       });
       return count;
     });
