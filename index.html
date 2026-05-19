@@ -4058,9 +4058,8 @@ function renderKitsTable(){
     }
 
     var body = document.createElement('div'); body.className = 'product-tile-body';
-    var code = document.createElement('div'); code.className = 'product-tile-code'; code.textContent = kit.id;
     var name = document.createElement('div'); name.className = 'product-tile-name'; name.textContent = kit.name;
-    body.appendChild(code); body.appendChild(name);
+    body.appendChild(name);
     if(kit.desc){
       var sh = document.createElement('div'); sh.className = 'product-tile-short';
       sh.textContent = kit.desc + ' (' + kit.items.length + ' поз.)';
