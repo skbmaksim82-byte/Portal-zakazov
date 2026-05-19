@@ -489,7 +489,7 @@ body{font-family:'Inter',sans-serif;}
 .kit-card:active{transform:scale(.97);}
 .kit-card.open{border-color:var(--wb-purple);box-shadow:0 4px 16px rgba(160,0,240,.15);}
 .kit-card-photo{
-  width:100%;aspect-ratio:3/2.8;background:linear-gradient(135deg,#f0e6ff,#ead9ff);
+  width:100%;aspect-ratio:3/3.5;background:linear-gradient(135deg,#f0e6ff,#ead9ff);
   display:flex;align-items:center;justify-content:center;font-size:40px;
   overflow:hidden;flex-shrink:0;position:relative;
 }
@@ -498,7 +498,7 @@ body{font-family:'Inter',sans-serif;}
   position:absolute;top:6px;right:6px;background:rgba(160,0,240,.85);color:#fff;
   font-size:9px;font-weight:800;padding:2px 6px;border-radius:8px;
 }
-.kit-card-info{padding:8px 8px 6px;flex:1;display:flex;flex-direction:column;gap:3px;min-height:0;}
+.kit-card-info{padding:6px 8px 4px;flex:0 0 auto;display:flex;flex-direction:column;gap:2px;min-height:0;}
 .kit-card-name{font-size:12.5px;font-weight:800;color:var(--wb-text);line-height:1.25;
   word-break:break-word;overflow-wrap:break-word;}
 .kit-card-cnt{font-size:9px;color:var(--wb-text3);font-weight:600;}
@@ -1371,14 +1371,6 @@ function renderKitsScreen(){
     var ph=kit.photo||findKitPhoto(kit.name);
     var phHtml=ph?('<img src="'+ph+'" onerror="this.parentNode.textContent=\'\u{1F4CB}\'">'):'\uD83D\uDCCB';
     var desc=kit.desc||'';
-    if(!desc&&kit.items.length){
-      var seen={},parts=[];
-      for(var d=0;d<kit.items.length&&parts.length<3;d++){
-        var short=kit.items[d].name.replace(/\s*\(.*?\)\s*/g,'').replace(/\s*\d+[\*x\u0445\u0425\u00d7].*/,'').trim().split(' ').slice(0,2).join(' ');
-        if(!seen[short]){seen[short]=1;parts.push(short);}
-      }
-      desc=parts.join(', ')+(kit.items.length>3?' \u0438 \u0434\u0440.':'');
-    }
     h+='<div class="kit-card" id="kit-'+i+'" data-action="toggle-kit" data-val="'+i+'">';
     h+='<div class="kit-card-photo">'+phHtml+'<div class="kit-card-badge">'+kit.items.length+' \u0448\u0442</div></div>';
     h+='<div class="kit-card-info">';
@@ -2265,14 +2257,16 @@ function parseXlsxBuffer(buf) {
     for (var kr = 0; kr < kRows.length; kr++) {
       var kRow = kRows[kr];
       var c1 = String(kRow[0]||'').trim();
+      var c3 = String(kRow[2]||'').trim();
       var c4 = String(kRow[3]||'').trim();
       var c5 = String(kRow[4]||'').trim();
       var c6 = String(kRow[5]||'').trim();
       if (c1 && /[^\wЀ-ӿ]/.test(c1.charAt(0)) && !c4 && !c5) {
         if (curKit) newKits.push(curKit);
         var kName = c1.replace(/^[^\wЀ-ӿ]+/,'').trim();
-        curKit = {name: kName, items: []};
+        curKit = {name: kName, desc: '', items: []};
       } else if (c4 && c5 && curKit) {
+        if (!curKit.desc && c3) curKit.desc = c3;
         curKit.items.push({code: c4, name: c5, qty: parseInt(c6)||1});
       }
     }
