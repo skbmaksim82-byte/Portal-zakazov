@@ -5417,4 +5417,82 @@ document.addEventListener('DOMContentLoaded', function(){
 <script>
 // ═══ PWA Service Worker ═══
 if('serviceWorker' in navigator){
-  window.addEventListener('load', functi
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('./sw.js').then(function(reg){
+      console.log('[SW] registered, scope:', reg.scope);
+    }).catch(function(err){
+      console.log('[SW] registration failed:', err);
+    });
+  });
+}
+
+// ═══ PWA Install Prompt ═══
+var deferredInstallPrompt = null;
+
+window.addEventListener('beforeinstallprompt', function(e){
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  showInstallBanner();
+});
+
+function showInstallBanner(){
+  if(document.getElementById('pwa-install-banner')) return;
+  var banner = document.createElement('div');
+  banner.id = 'pwa-install-banner';
+  banner.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:9999;background:linear-gradient(135deg,#2a4a7f,#4a7fc1);color:#fff;padding:16px 20px;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.25);display:flex;align-items:center;gap:14px;font-family:Nunito,sans-serif;max-width:420px;animation:pwaSlideIn .4s ease;';
+  banner.innerHTML =
+    '<div style="font-size:36px;flex-shrink:0;">📦</div>' +
+    '<div style="flex:1;min-width:0;">' +
+      '<div style="font-size:15px;font-weight:800;margin-bottom:4px;">Установить приложение</div>' +
+      '<div style="font-size:12px;opacity:.85;line-height:1.4;">Каталог оборудования Kari будет работать как обычное приложение на вашем компьютере</div>' +
+    '</div>' +
+    '<div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;">' +
+      '<button id="pwa-install-btn" style="background:#fff;color:#2a4a7f;border:none;border-radius:8px;padding:8px 18px;font-size:13px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;transition:all .15s;white-space:nowrap;">Установить</button>' +
+      '<button id="pwa-dismiss-btn" style="background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:8px;padding:6px 18px;font-size:11px;font-weight:600;cursor:pointer;font-family:Nunito,sans-serif;transition:all .15s;">Не сейчас</button>' +
+    '</div>';
+  document.body.appendChild(banner);
+
+  document.getElementById('pwa-install-btn').onclick = function(){
+    if(!deferredInstallPrompt) return;
+    deferredInstallPrompt.prompt();
+    deferredInstallPrompt.userChoice.then(function(result){
+      console.log('[PWA] install choice:', result.outcome);
+      deferredInstallPrompt = null;
+      hideInstallBanner();
+    });
+  };
+  document.getElementById('pwa-dismiss-btn').onclick = function(){
+    hideInstallBanner();
+    // Запомним отказ на 7 дней
+    try { localStorage.setItem('pwa-dismiss-ts', Date.now()); } catch(e){}
+  };
+
+  // Не показываем если недавно отклонили
+  try {
+    var ts = parseInt(localStorage.getItem('pwa-dismiss-ts'));
+    if(ts && Date.now() - ts < 7*24*60*60*1000){
+      banner.style.display = 'none';
+    }
+  } catch(e){}
+}
+
+function hideInstallBanner(){
+  var b = document.getElementById('pwa-install-banner');
+  if(b) b.remove();
+}
+
+window.addEventListener('appinstalled', function(){
+  console.log('[PWA] app installed');
+  hideInstallBanner();
+  deferredInstallPrompt = null;
+});
+</script>
+
+<style>
+@keyframes pwaSlideIn {
+  from { transform: translateY(80px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+</style>
+</body>
+</html>
