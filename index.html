@@ -1299,6 +1299,7 @@ var OBORUD_PHOTOS = {}; // код → URL (Foto Oborud — основной ка
 var REKLAM_PHOTOS = {}; // код → URL (Foto Reklama — рекламные материалы)
 var UVELIR_PHOTOS = {}; // код → URL (Foto Uvelir — ювелирное оборудование)
 var IT_PHOTOS = {};     // код → URL (IT oborud — ИТ оборудование)
+var CANCEL_PHOTOS = {}; // код → URL (Foto Cancel — канцелярия)
 
 function getImgUrl(item) {
   var all = getAllImgUrls(item);
@@ -3359,9 +3360,10 @@ function updateFromGitHub(){
   var p6 = loadGitHubPhotos('Foto%20reklama',  REKLAM_PHOTOS,   'Foto reklama');
   var p7 = loadGitHubPhotos('Foto%20Uvelir',   UVELIR_PHOTOS,   'Foto Uvelir');
   var p8 = loadGitHubPhotos('IT%20oborud',     IT_PHOTOS,       'IT oborud');
+  var p9 = loadGitHubPhotos('Foto%20Cancel',  CANCEL_PHOTOS,   'Foto Cancel');
 
   // Используем allSettled — ошибка одной папки с фото не блокирует загрузку xlsx и каталога
-  Promise.allSettled([p1, p2, p3, p4, p5, p6, p7, p8])
+  Promise.allSettled([p1, p2, p3, p4, p5, p6, p7, p8, p9])
     .then(function(results){
       // Извлекаем значения — fulfilled даёт value, rejected даёт null + собираем ошибки
       function val(r, fallback){ return r.status === 'fulfilled' ? r.value : fallback; }
@@ -3373,6 +3375,7 @@ function updateFromGitHub(){
       var reklamCnt    = val(results[5], 0);
       var uvelirCnt    = val(results[6], 0);
       var itCnt        = val(results[7], 0);
+      var cancelCnt    = val(results[8], 0);
 
       // Если xlsx не загрузился — это критическая ошибка, сообщаем и выходим
       if(xlsxResult.status === 'rejected'){
@@ -3417,6 +3420,13 @@ function updateFromGitHub(){
         var urls = getKitAllImgUrls(kit);
         if(urls.length) kit.image = urls[0];
       });
+      // Применяем фото к канцелярии
+      allItems.forEach(function(it){
+        if(it.cat==='Канцелярия'){
+          var url = photoByCode(it.code, CANCEL_PHOTOS);
+          if(url) it.photo = url;
+        }
+      });
       // Перерисовываем комплекты если открыты
       if(currentTab === 'kits') renderKitsTable();
 
@@ -3435,10 +3445,11 @@ function updateFromGitHub(){
       lines.push({ ok: slabCnt > 0,     icon: '📺', text: 'Слаботочное: ' + slabCnt + ' фото' });
       lines.push({ ok: uvelirCnt > 0,   icon: '💎', text: 'Ювелирное: ' + uvelirCnt + ' фото' });
       lines.push({ ok: itCnt > 0,       icon: '💻', text: 'ИТ оборудование: ' + itCnt + ' фото' });
-      // results: 0=Svet,1=Slab,2=xlsx,3=Oborud,4=Complect,5=Reklam,6=Uvelir,7=IT
-      [results[0], results[1], results[3], results[4], results[5], results[6], results[7]].forEach(function(r, i){
+      lines.push({ ok: cancelCnt > 0,   icon: '📎', text: 'Канцелярия: ' + cancelCnt + ' фото' });
+      // results: 0=Svet,1=Slab,2=xlsx,3=Oborud,4=Complect,5=Reklam,6=Uvelir,7=IT,8=Cancel
+      [results[0], results[1], results[3], results[4], results[5], results[6], results[7], results[8]].forEach(function(r, i){
         if(r.status === 'rejected'){
-          var labels = ['Foto Svet','Foto slabotoch','Foto Oborud','Foto Complect','Foto reklama','Foto Uvelir','IT oborud'];
+          var labels = ['Foto Svet','Foto slabotoch','Foto Oborud','Foto Complect','Foto reklama','Foto Uvelir','IT oborud','Foto Cancel'];
           lines.push({ ok: false, icon: '⚠️', text: labels[i] + ': ' + r.reason.message });
         }
       });
@@ -3481,7 +3492,8 @@ function getAllImgUrls(item){
   var rk = photosByCode(item.code, REKLAM_PHOTOS);
   var uv = photosByCode(item.code, UVELIR_PHOTOS);
   var it = photosByCode(item.code, IT_PHOTOS);
-  urls = urls.concat(sv).concat(sl).concat(ob).concat(rk).concat(uv).concat(it);
+  var cn = photosByCode(item.code, CANCEL_PHOTOS);
+  urls = urls.concat(sv).concat(sl).concat(ob).concat(rk).concat(uv).concat(it).concat(cn);
   // Фото из Excel / поля photo/thumb (если ещё не в списке)
   var ex = item.photo && item.photo.indexOf('http')===0 ? item.photo : (item.thumb && item.thumb.indexOf('http')===0 ? item.thumb : null);
   if(ex && urls.indexOf(ex)<0) urls.unshift(ex);
@@ -5218,6 +5230,7 @@ var PHOTO_FOLDERS = [
   { label: '📺 Слаботочное оборудование',  folder: 'Foto slabotoch' },
   { label: '💎 Ювелирное оборудование',    folder: 'Foto Uvelir'    },
   { label: '💻 ИТ оборудование',           folder: 'IT oborud'      },
+  { label: '📎 Канцелярия',               folder: 'Foto Cancel'    },
   { label: '📦 Комплекты',                 folder: 'Foto Complect'  },
 ];
 
