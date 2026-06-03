@@ -1106,7 +1106,6 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
       <input type="text" class="form-input" id="orderComment" placeholder="Срочная поставка…">
     </div></div>
     <input type="hidden" id="shopName">
-    <button class="send-btn" onclick="sendOrder()"><span class="lottie-icon" id="lottie-send-order" style="width:18px;height:18px;"></span> Отправить заявку на склад</button>
     <button class="send-btn" onclick="sendToAdminDir()" style="background:linear-gradient(135deg,#5a3a9a,#7a52c8);box-shadow:0 4px 14px rgba(116,88,184,.35);margin-top:6px;"><span class="lottie-icon" id="lottie-send-admin" style="width:18px;height:18px;"></span> Отправить административному директору</button>
   </div>
 </div>
@@ -3758,6 +3757,20 @@ function togLight(item){
   var btn=document.getElementById("lab-"+item.code),row=document.getElementById("lrow-"+CSS.escape(item.code));
   if(btn){btn.classList.toggle("added",!!cart[key]);btn.textContent=cart[key]?"✓":"+";}
   if(row){row.classList.toggle("in-cart",!!cart[key]);}
+  updCart();
+}
+
+function togTv(code){
+  var key='TV:'+code;
+  if(cart[key]){delete cart[key];}
+  else{
+    var it=tvAll.find(function(i){return i.code===code;});if(!it)return;
+    var inp=document.getElementById("tvqty-"+code);
+    cart[key]={item:Object.assign({},it,{cat:'Слаботочное оборудование'}),qty:inp?Math.max(1,parseInt(inp.value)||1):1,code:code};
+  }
+  var btn=document.getElementById("tvab-"+code),tile=document.getElementById("tvrow-"+CSS.escape(code));
+  if(btn){btn.classList.toggle("added",!!cart[key]);btn.textContent=cart[key]?"✓":"+";}
+  if(tile){tile.classList.toggle("in-cart",!!cart[key]);}
   updCart();
 }
 
