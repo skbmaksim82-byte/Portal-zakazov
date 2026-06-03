@@ -1607,15 +1607,15 @@ function renderTvPage(){
     var ab = document.createElement('button');
     ab.className = 'add-btn' + (inC ? ' added' : '');
     ab.id = 'tvab-' + it.code; ab.textContent = inC ? '✓' : '+';
-    (function(item, tileEl){
-      ab.onclick = function(e){
+    (function(item, tileEl, btn){
+      btn.onclick = function(e){
         e.stopPropagation();
         var key = 'TV:' + item.code;
-        if(cart[key]){ delete cart[key]; ab.className='add-btn'; ab.textContent='+'; tileEl.classList.remove('in-cart'); }
-        else { var q=parseInt(document.getElementById('tvqty-'+item.code).value)||1; var ci=Object.assign({},item,{cat:'Слаботочное оборудование'}); cart[key]={item:ci,qty:q,code:item.code}; ab.className='add-btn added'; ab.textContent='✓'; tileEl.classList.add('in-cart'); }
+        if(cart[key]){ delete cart[key]; btn.className='add-btn'; btn.textContent='+'; tileEl.classList.remove('in-cart'); }
+        else { var q=parseInt(document.getElementById('tvqty-'+item.code).value)||1; var ci=Object.assign({},item,{cat:'Слаботочное оборудование'}); cart[key]={item:ci,qty:q,code:item.code}; btn.className='add-btn added'; btn.textContent='✓'; tileEl.classList.add('in-cart'); }
         updCart();
       };
-    })(it, tile);
+    })(it, tile, ab);
     bot.appendChild(wrap); bot.appendChild(ab);
     body.appendChild(bot);
     tile.appendChild(body);
