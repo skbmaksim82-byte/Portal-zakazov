@@ -1341,12 +1341,13 @@ var CAT_COLORS={
   "Строительные материалы":"#3a9068","Канцелярия":"#7458b8",
   "Ювелирное оборудование":"#b84580","Материалы для оборудования":"#c05a2a",
   "ИТ оборудование":"#0e6ba8",
+  "Слаботочное оборудование":"#5a8a3a",
   "Неизвестное оборудование":"#7a7e90"
 };
 var CAT_ICONS={
   "Торговое оборудование":"🏪","Рекламные материалы":"📢","Строительные материалы":"🏗️",
   "Канцелярия":"📎","Ювелирное оборудование":"💎","Материалы для оборудования":"⚙️",
-  "ИТ оборудование":"💻","Неизвестное оборудование":"❓"
+  "ИТ оборудование":"💻","Слаботочное оборудование":"📺","Неизвестное оборудование":"❓"
 };
 var CAT_ORDER=["Торговое оборудование","Рекламные материалы","Строительные материалы","Канцелярия","Ювелирное оборудование","Материалы для оборудования","ИТ оборудование","Неизвестное оборудование"];
 var GRP_T=["MaterTO","MaterSHOP","MaterTula","MaterSORT","Materials"];
@@ -1612,7 +1613,7 @@ function renderTvPage(){
         e.stopPropagation();
         var key = 'TV:' + item.code;
         if(cart[key]){ delete cart[key]; ab.className='add-btn'; ab.textContent='+'; tileEl.classList.remove('in-cart'); }
-        else { var q=parseInt(document.getElementById('tvqty-'+item.code).value)||1; cart[key]={item:item,qty:q,code:item.code}; ab.className='add-btn added'; ab.textContent='✓'; tileEl.classList.add('in-cart'); }
+        else { var q=parseInt(document.getElementById('tvqty-'+item.code).value)||1; var ci=Object.assign({},item,{cat:'Слаботочное оборудование'}); cart[key]={item:ci,qty:q,code:item.code}; ab.className='add-btn added'; ab.textContent='✓'; tileEl.classList.add('in-cart'); }
         updCart();
       };
     })(it, tile);
@@ -3896,7 +3897,7 @@ function updCart(){
     var ci=document.createElement("div");ci.className="cart-item-code";ci.textContent=item.code;
     var inf=document.createElement("div");inf.className="cart-item-info";inf.appendChild(ni);inf.appendChild(ci);
     var cat=document.createElement("span");cat.className="cart-item-cat";cat.style.color=col;
-    cat.textContent=item.cat.toString().split(" ")[0];
+    cat.textContent=(item.cat||'').toString().split(" ")[0];
     // Контрол количества
     var qwrap=document.createElement("div");qwrap.className="cart-qty-wrap";
     var qbm=document.createElement("button");qbm.className="cart-qty-btn";qbm.textContent="−";
@@ -3910,7 +3911,7 @@ function updCart(){
       qinp.onblur=function(){ var v=Math.max(1,parseInt(this.value)||1); qinp.value=v; if(cart[cc]){cart[cc].qty=v;} updCart(); };
     })(code);
     var rm=document.createElement("button");rm.className="cart-remove";rm.title="Убрать";rm.textContent="✕";
-    (function(cc,isLight){rm.onclick=function(){if(isLight){togLight({code:cc.slice(2),thumb:'',img:''});}else{tog(cc);}};})(code,code.startsWith('L:'));
+    (function(cc,isLight,isTv){rm.onclick=function(){if(isLight){togLight({code:cc.slice(2),thumb:'',img:''});}else if(isTv){togTv(cc.slice(3));}else{tog(cc);}};})(code,code.startsWith('L:'),code.startsWith('TV:'));
     d.appendChild(inf);d.appendChild(cat);d.appendChild(qwrap);d.appendChild(rm);
     c.appendChild(d);
   });
