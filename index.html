@@ -1430,6 +1430,7 @@ function showKitsPanel(){
 // ═══ SHOPS ═══
 function initShopSelect(){
   var sel=document.getElementById("shopSelect");
+  SHOPS_DATA.sort(function(a,b){ return a.num.localeCompare(b.num, undefined, {numeric:true}); });
   SHOPS_DATA.forEach(function(s){
     var opt=document.createElement("option");
     opt.value=s.num;opt.textContent="№ "+s.num;opt.dataset.email=s.email;
