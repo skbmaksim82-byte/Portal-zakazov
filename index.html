@@ -1263,6 +1263,42 @@ function onSlabotCatFilter(){
   applyTvFilters();
 }
 
+// ═══ PARSE SHOPS FROM XLSX ═══
+function parseShopsRows(rows){
+  if(!rows || rows.length < 2) return;
+  var hRow = rows[0].map(function(c){ return String(c||'').trim().toLowerCase(); });
+  var iNum   = hRow.findIndex(function(c){ return c.indexOf('номер')>=0 || c.indexOf('магазин')>=0; });
+  var iEmail = hRow.findIndex(function(c){ return c.indexOf('email')>=0 || c.indexOf('почт')>=0; });
+  if(iNum<0) iNum=0; if(iEmail<0) iEmail=1;
+  var list = [];
+  for(var i=1; i<rows.length; i++){
+    var num = String(rows[i][iNum]||'').trim();
+    if(!num) continue;
+    var email = String(rows[i][iEmail]||'').trim();
+    if(!email) email = num + '@kari.com';
+    list.push({num:num, email:email});
+  }
+  if(list.length > 0){
+    SHOPS_DATA = list;
+    // Пересоздаём выпадающий список
+    var sel = document.getElementById('shopSelect');
+    if(sel){
+      // Сохраняем текущий выбор
+      var prev = sel.value;
+      sel.innerHTML = '<option value="0">— Выберите номер магазина —</option>';
+      SHOPS_DATA.sort(function(a,b){ return a.num.localeCompare(b.num, undefined, {numeric:true}); });
+      SHOPS_DATA.forEach(function(s){
+        var opt = document.createElement('option');
+        opt.value = s.num; opt.textContent = '№ ' + s.num; opt.dataset.email = s.email;
+        sel.appendChild(opt);
+      });
+      // Восстанавливаем выбор если был
+      if(prev && prev !== '0') sel.value = prev;
+    }
+    console.log('[Магазины] загружено из XLSX:', list.length, 'магазинов');
+  }
+}
+
 // ═══ TV DATA ═══
 var TV_ITEMS = []; // заполняется из Excel при загрузке
 var tvAll = [], tvFiltered = [], tvRendered = 0, tvRendering = false;
@@ -3602,7 +3638,8 @@ function loadGitHubXlsx(){
         'Комплекты':'__kits__',
         'Таблица совместимости':'__compat__',
         'Таблица совместимости ':'__compat__',
-        'Слаботочное оборудование':'__slabot__'
+        'Слаботочное оборудование':'__slabot__',
+        'Магазины':'__shops__'
       };
       var obj = {}; CAT_ORDER.forEach(function(c){ obj[c]=[]; });
       obj['Световое оборудование'] = [];
@@ -3617,6 +3654,7 @@ function loadGitHubXlsx(){
         if(catKey === '__kits__'){ parseKitsRows(XLSX.utils.sheet_to_json(wb.Sheets[sName],{header:1,defval:''})); return; }
         if(catKey === '__compat__'){ parseCompatRows(XLSX.utils.sheet_to_json(wb.Sheets[sName],{header:1,defval:''})); return; }
         if(catKey === '__slabot__'){ parseSlabotRows(XLSX.utils.sheet_to_json(wb.Sheets[sName],{header:1,defval:''})); return; }
+        if(catKey === '__shops__'){ parseShopsRows(XLSX.utils.sheet_to_json(wb.Sheets[sName],{header:1,defval:''})); return; }
         var rows = XLSX.utils.sheet_to_json(wb.Sheets[sName],{header:1,defval:''});
         var parsed = parseRowsForCat(rows, catKey);
         if(!obj[catKey]) obj[catKey] = [];
@@ -4146,6 +4184,7 @@ function handleKitsFile(file){
 function parseKitsRows(rows){
   var start = (rows[0] && String(rows[0][0]).toLowerCase().indexOf('код') >= 0) ? 1 : 0;
   var map = {};
+  var sectionName = ''; // название из строки-разделителя с 📦
   for(var i = start; i < rows.length; i++){
     var r = rows[i];
     var id    = String(r[0]||'').trim();
@@ -4154,8 +4193,18 @@ function parseKitsRows(rows){
     var iCode = String(r[3]||'').trim();
     var iName = String(r[4]||'').trim();
     var iQty  = parseInt(r[5]) || 1;
+    // Строка-разделитель: есть id (с 📦), но нет данных в остальных столбцах
+    if(id && !name && !iCode){
+      sectionName = id.replace(/^📦\s*/,'').trim();
+      continue;
+    }
     if(!id || !name) continue;
-    if(!map[id]) map[id] = {id:id, name:name, desc:desc, items:[]};
+    if(!map[id]){
+      // Используем название из строки-разделителя с 📦 если оно есть, иначе из столбца name
+      var displayName = sectionName || name;
+      map[id] = {id:id, name:displayName, desc:desc, items:[]};
+      sectionName = ''; // сбрасываем после использования
+    }
     if(iCode) map[id].items.push({code:iCode, name:iName, qty:iQty});
   }
   // Переносим image-поле из KITS_PRELOAD (base64 или null — URL строится через getKitImgUrl)
