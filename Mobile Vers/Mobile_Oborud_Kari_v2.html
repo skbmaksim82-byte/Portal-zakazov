@@ -547,7 +547,7 @@ body{font-family:'Inter',sans-serif;}
 .kit-item-arrow{font-size:12px;color:var(--wb-text3);flex-shrink:0;}
 .kit-add-all{margin:8px 10px;height:36px;border:none;border-radius:10px;background:var(--wb-purple);color:#fff;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;cursor:pointer;width:calc(100% - 20px);}
 /* PHOTO VIEWER */
-.photo-viewer{position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%;background:#000;z-index:10000;display:none;flex-direction:column;overflow:hidden;touch-action:none;overscroll-behavior:none;}
+.photo-viewer{position:fixed;inset:0;background:#000;z-index:10000;display:none;flex-direction:column;overflow:hidden;touch-action:none;overscroll-behavior:none;}
 .photo-viewer.show{display:flex;}
 .photo-viewer-track{flex:1;width:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;}
 .photo-viewer-slides{display:flex;height:100%;width:100%;transition:transform .28s cubic-bezier(.4,0,.2,1);}
@@ -1612,6 +1612,8 @@ function openPhotoViewer(startIdx, photos, code, name){
   var v=getEl('photoViewer');if(!v)return;
   document.body.style.overflow='hidden';
   document.documentElement.style.overflow='hidden';
+  document.body.style.background='#000';
+  document.documentElement.style.background='#000';
   var slides=getEl('pvSlides'); if(!slides)return;
   var sh='';
   for(var i=0;i<photos.length;i++){
@@ -1678,6 +1680,8 @@ function closePhotoViewer(){
   var v=getEl('photoViewer');if(v)v.classList.remove('show');
   _pvPhotos=[]; _pvIdx=0;
   document.body.style.overflow='hidden';
+  document.body.style.background='#fff';
+  document.documentElement.style.background='#fff';
 }
 
 /* ═══ CARD MINI-CAROUSEL (swipe in item/kit cards) ═══ */
