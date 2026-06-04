@@ -62,13 +62,13 @@ body{font-family:'Inter',sans-serif;}
   background:var(--wb-purple);border-radius:6px;flex-shrink:0;
 }
 .hdr-back-arrow svg{width:10px;height:10px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
-.hdr-logo{display:flex;align-items:center;gap:7px;flex-shrink:0;}
+.hdr-logo{display:flex;align-items:center;gap:7px;flex-shrink:1;min-width:0;overflow:hidden;}
 .hdr-logo-box{width:30px;height:30px;background:linear-gradient(135deg,var(--wb-purple-dark),var(--wb-purple-light));
   border-radius:9px;display:flex;align-items:center;justify-content:center;
   box-shadow:0 3px 10px rgba(160,0,240,.35);}
 .hdr-logo-box span{font-size:13px;font-weight:900;color:#fff;}
-.hdr-title{display:flex;flex-direction:column;}
-.hdr-title-main{font-size:13px;font-weight:800;color:var(--wb-text);line-height:1.2;}
+.hdr-title{display:flex;flex-direction:column;min-width:0;overflow:hidden;}
+.hdr-title-main{font-size:13px;font-weight:800;color:var(--wb-text);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .hdr-title-sub{font-size:10px;color:var(--wb-text3);font-weight:500;}
 /* Version overlay */
 .ver-overlay{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--wb-bg);opacity:0;pointer-events:none;transition:opacity .25s;}
@@ -86,9 +86,9 @@ body{font-family:'Inter',sans-serif;}
 .hdr-logo-box{cursor:pointer;-webkit-tap-highlight-color:transparent;}
 .hdr-spacer{flex:1;}
 .hdr-cart-btn{
-  position:relative;width:38px;height:38px;border-radius:12px;background:var(--wb-purple-bg);
+  position:relative;width:38px;height:38px;min-width:38px;border-radius:12px;background:var(--wb-purple-bg);
   border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;
-  transition:background .15s;
+  transition:background .15s;flex-shrink:0;
 }
 .hdr-cart-btn:active{background:var(--wb-purple-bg2);}
 .hdr-cart-badge{
@@ -547,7 +547,7 @@ body{font-family:'Inter',sans-serif;}
 .kit-item-arrow{font-size:12px;color:var(--wb-text3);flex-shrink:0;}
 .kit-add-all{margin:8px 10px;height:36px;border:none;border-radius:10px;background:var(--wb-purple);color:#fff;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;cursor:pointer;width:calc(100% - 20px);}
 /* PHOTO VIEWER */
-.photo-viewer{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:10000;display:none;flex-direction:column;}
+.photo-viewer{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:10000;display:none;flex-direction:column;overflow:hidden;touch-action:pan-x;overscroll-behavior:none;}
 .photo-viewer.show{display:flex;}
 .photo-viewer-track{flex:1;width:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;}
 .photo-viewer-slides{display:flex;height:100%;width:100%;transition:transform .28s cubic-bezier(.4,0,.2,1);}
@@ -565,8 +565,11 @@ body{font-family:'Inter',sans-serif;}
 .photo-viewer-close-btn{width:calc(100% - 32px);max-width:360px;height:50px;
   background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.3);border-radius:16px;
   color:#fff;font-size:16px;font-weight:700;cursor:pointer;
-  margin:10px auto 28px;display:flex;align-items:center;justify-content:center;gap:8px;
+  margin:10px auto max(8px, env(safe-area-inset-bottom, 8px));display:flex;align-items:center;justify-content:center;gap:8px;
   backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);flex-shrink:0;}
+.clear-cart-btn{width:100%;height:40px;border-radius:12px;background:none;border:1.5px solid var(--wb-pink);
+  color:var(--wb-pink);font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;}
+.clear-cart-btn:active{background:var(--wb-pink);color:#fff;}
 .tag-sub{background:#EEF4FF;color:#2563EB;}
 .subcat-card--all{border-style:dashed;}
 </style>
@@ -805,7 +808,10 @@ body{font-family:'Inter',sans-serif;}
     <div class="drawer-handle"></div>
     <div class="drawer-hdr">
       <div class="drawer-hdr-title" id="drawerTitle">🛒 Корзина</div>
-      <button class="drawer-close" onclick="closeCart()">✕</button>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button class="clear-cart-btn" id="clearCartBtn" style="width:auto;padding:0 12px;height:28px;font-size:11px;display:none;" onclick="clearCart()">🗑 Очистить</button>
+        <button class="drawer-close" onclick="closeCart()">✕</button>
+      </div>
     </div>
     <div class="drawer-scroll" id="drawerScroll"></div>
     <div class="drawer-footer">
@@ -1583,9 +1589,8 @@ function openPhotoViewer(startIdx, photos, code, name){
   if(!photos||!photos.length)return;
   _pvPhotos = photos; _pvIdx = startIdx||0;
   var v=getEl('photoViewer');if(!v)return;
-  /* iOS fix: allow fixed to cover full screen */
-  document.body.style.overflow='';
-  document.documentElement.style.overflow='';
+  document.body.style.overflow='hidden';
+  document.documentElement.style.overflow='hidden';
   /* slides */
   var slides=getEl('pvSlides'); if(!slides)return;
   var sh='';
@@ -1605,6 +1610,7 @@ function openPhotoViewer(startIdx, photos, code, name){
   var trk=getEl('pvTrack');
   if(trk){
     trk.ontouchstart=function(e){_pvTouchX=e.touches[0].clientX;};
+    trk.ontouchmove=function(e){e.preventDefault();};
     trk.ontouchend=function(e){
       var dx=e.changedTouches[0].clientX-_pvTouchX;
       if(Math.abs(dx)>40) pvGo(dx<0?1:-1);
@@ -1903,6 +1909,7 @@ function closeCart(){getEl('overlay').classList.remove('show');getEl('drawer').c
 function renderCartDrawer(){
   var sc=getEl('drawerScroll');if(!sc)return;
   var keys=Object.keys(cart);
+  var clrBtn=getEl('clearCartBtn');if(clrBtn)clrBtn.style.display=keys.length?'block':'none';
   if(!keys.length){sc.innerHTML='<div class="empty-state"><div class="empty-icon">\uD83D\uDED2</div><div class="empty-txt">\u041a\u043e\u0440\u0437\u0438\u043d\u0430 \u043f\u0443\u0441\u0442\u0430</div></div>';return;}
   var h='';
   for(var i=0;i<keys.length;i++){
@@ -1915,6 +1922,7 @@ function renderCartDrawer(){
   sc.innerHTML=h;
 }
 function rmCart(id){delete cart[id];updateCartBadge();renderCartDrawer();var ab=getEl('ab-'+id);if(ab){ab.textContent='+';ab.classList.remove('added');}var ic=getEl('ic-'+id);if(ic)ic.classList.remove('in-cart');}
+function clearCart(){var keys=Object.keys(cart);for(var i=0;i<keys.length;i++){var ab=getEl('ab-'+keys[i]);if(ab){ab.textContent='+';ab.classList.remove('added');}var ic=getEl('ic-'+keys[i]);if(ic)ic.classList.remove('in-cart');}cart={};updateCartBadge();renderCartDrawer();}
 function sendOrder(){
   var keys=Object.keys(cart);
   if(!keys.length){showToast('\u041a\u043e\u0440\u0437\u0438\u043d\u0430 \u043f\u0443\u0441\u0442\u0430','');return;}
@@ -2225,6 +2233,7 @@ var SLAB_PHOTOS     = {};
 var UVELIR_PHOTOS   = {};
 var IT_PHOTOS       = {};
 var COMPLECT_PHOTOS = {};
+var CANCEL_PHOTOS   = {};
 
 /* Маппинг листов xlsx -> раздел.
    codeCol/nameCol/descCol/subcatCol — индексы колонок (0-based)
@@ -2437,7 +2446,8 @@ function _processTreePaths(paths) {
     ['Foto slabotoch', SLAB_PHOTOS],
     ['Foto Uvelir',    UVELIR_PHOTOS],
     ['IT oborud',      IT_PHOTOS],
-    ['Foto Complect',  COMPLECT_PHOTOS]
+    ['Foto Complect',  COMPLECT_PHOTOS],
+    ['Foto Cancel',    CANCEL_PHOTOS]
   ];
   var totalPhotos = 0;
   for (var f = 0; f < folders.length; f++) {
@@ -2472,13 +2482,13 @@ function loadAllPhotos() {
           return _processTreePaths(cached.paths);
         }
       } catch(ex){}
-      for (var t = 0; t < 7; t++) _tickProg();
+      for (var t = 0; t < 8; t++) _tickProg();
       return 0;
     });
 }
 
 function applyPhotos() {
-  var maps = [OBORUD_PHOTOS, REKLAM_PHOTOS, SVET_PHOTOS, SLAB_PHOTOS, UVELIR_PHOTOS, IT_PHOTOS, COMPLECT_PHOTOS];
+  var maps = [OBORUD_PHOTOS, REKLAM_PHOTOS, SVET_PHOTOS, SLAB_PHOTOS, UVELIR_PHOTOS, IT_PHOTOS, COMPLECT_PHOTOS, CANCEL_PHOTOS];
   for (var i = 0; i < allItems.length; i++) {
     var it = allItems[i];
     if (!it.code) continue;
@@ -2499,7 +2509,7 @@ function applyPhotos() {
 ═══════════════════════════════════════════════════ */
 function mobUpdateFromGitHub() {
   _ghDone  = 0;
-  _ghTotal = 8;   /* 1 xlsx + 7 папок фото (прогресс) */
+  _ghTotal = 9;   /* 1 xlsx + 8 папок фото (прогресс) */
   _ghStart = Date.now();
   clearInterval(_ghTimer);
   _ghTimer = setInterval(function() { _updhdr(_ghTotal ? Math.round(_ghDone / _ghTotal * 100) : 0); }, 300);
