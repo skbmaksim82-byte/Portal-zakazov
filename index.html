@@ -30,13 +30,13 @@
   --shadow-lg:0 8px 32px rgba(0,0,0,.16);--shadow-xl:0 16px 48px rgba(0,0,0,.20);
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh;overflow-x:hidden;}
+body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;height:100vh;overflow-x:hidden;display:flex;flex-direction:column;}
 
 /* ── HEADER ── */
 .header{background:linear-gradient(135deg,#5a6080 0%,#6e7599 40%,#5c6d80 100%);border-bottom:none;
   box-shadow:0 4px 20px rgba(0,0,0,.18);
   padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:64px;
-  position:sticky;top:0;z-index:100;overflow:hidden;}
+  position:sticky;top:0;z-index:100;overflow:hidden;flex-shrink:0;}
 .header::before{content:'';position:absolute;inset:0;
   background:radial-gradient(ellipse 600px 120px at 20% 50%,rgba(74,127,193,.12),transparent),
              radial-gradient(ellipse 400px 100px at 80% 50%,rgba(116,88,184,.10),transparent);
@@ -125,9 +125,31 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-
 @keyframes slideUp{from{opacity:0;transform:translateX(-50%) translateY(20px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
 
 /* ── LAYOUT ── */
-.layout{display:flex;height:calc(100vh - 62px);}
+.layout{display:flex;flex:1;min-height:0;}
 .sidebar{width:240px;min-width:240px;background:var(--surface2);border-right:1px solid var(--border);
   box-shadow:2px 0 8px rgba(0,0,0,.05);padding:18px 0;overflow-y:auto;display:flex;flex-direction:column;gap:2px;}
+
+/* ── ГОРИЗОНТАЛЬНАЯ ПАНЕЛЬ РАЗДЕЛОВ (2 строки) ── */
+.cat-topbar{background:var(--surface2);border-bottom:1px solid var(--border);
+  box-shadow:0 2px 8px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:4px;
+  padding:6px 14px;position:relative;z-index:90;flex-shrink:0;}
+.cat-topbar .topbar-row{display:flex;align-items:center;gap:2px;overflow-x:auto;overflow-y:hidden;white-space:nowrap;}
+.cat-topbar .topbar-row::-webkit-scrollbar{height:4px;}
+.cat-topbar .cat-btn{width:auto;flex-shrink:0;padding:7px 12px;border-radius:9px;font-size:12.5px;}
+.cat-topbar .cat-btn.active::before{left:8px;right:8px;top:auto;bottom:0;width:auto;height:3px;
+  border-radius:3px 3px 0 0;box-shadow:0 -2px 8px var(--cat-color,#4a7fc1);}
+.cat-topbar .cat-count{margin-left:6px;}
+.cat-topbar .topbar-divider{width:1px;height:22px;background:var(--border);margin:0 6px;flex-shrink:0;}
+
+/* ── КНОПКИ ПОДРАЗДЕЛОВ В САЙДБАРЕ ── */
+.subcat-side-btn{display:flex;align-items:center;gap:9px;padding:9px 16px;cursor:pointer;border:none;
+  background:transparent;color:var(--text2);font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;
+  text-align:left;width:100%;transition:all .15s;position:relative;}
+.subcat-side-btn:hover{background:var(--surface3);color:var(--text);}
+.subcat-side-btn.active{background:var(--surface3);color:var(--text);font-weight:700;}
+.subcat-side-btn.active::before{content:'';position:absolute;left:0;top:5px;bottom:5px;width:4px;
+  border-radius:0 3px 3px 0;background:var(--cat-color,#4a7fc1);box-shadow:2px 0 8px var(--cat-color,#4a7fc1);}
+.subcat-side-btn .cat-label{white-space:normal;line-height:1.25;}
 .sidebar-title{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
   color:var(--text3);padding:0 18px 12px;}
 .cat-btn{display:flex;align-items:center;gap:9px;padding:9px 16px;cursor:pointer;border:none;
@@ -440,7 +462,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <div>
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="logo-text">Каталог оборудования Kari</div>
-        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.58</div>
+        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.61</div>
       </div>
       <div class="logo-sub" id="catalogInfo">Загрузка…</div>
     </div>
@@ -504,7 +526,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <ul class="authors-list" id="authorsList">
       <li><span>👤</span> —</li>
     </ul>
-    <div style="font-size:11px;color:var(--text3);margin-bottom:16px;">Версия <span id="modalAppVersion">1.58</span> · 2026</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:16px;">Версия <span id="modalAppVersion">1.61</span> · 2026</div>
     <button onclick="document.getElementById('authorsOverlay').classList.remove('show')"
       style="background:linear-gradient(135deg,#4a7fc1,#7458b8);color:#fff;border:none;border-radius:10px;
       padding:10px 28px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;
@@ -512,67 +534,81 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
   </div>
 </div>
 
+<!-- ═══════════════ ГОРИЗОНТАЛЬНАЯ ПАНЕЛЬ РАЗДЕЛОВ ═══════════════ -->
+<div class="cat-topbar" id="catTopbar">
+
+<!-- ── Строка 1 ── -->
+<div class="topbar-row">
+
+  <!-- Все категории -->
+  <button class="cat-btn active" onclick="selectCat('all')" id="btn-all" style="--cat-color:#4a7fc1">
+    <span class="cat-icon lottie-icon" id="lottie-cat-all" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Все категории</span><span class="cat-count" id="cnt-all">0</span>
+  </button>
+
+  <div class="topbar-divider"></div>
+
+  <!-- Торговое оборудование -->
+  <button class="cat-btn" onclick="selectCat('Торговое оборудование')" id="btn-Торговое оборудование" style="--cat-color:#4a7fc1">
+    <span class="cat-icon lottie-icon" id="lottie-cat-torg" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Торговое оборудование</span><span class="cat-count" id="cnt-Торговое оборудование">0</span>
+  </button>
+
+  <!-- Ювелирное оборудование -->
+  <button class="cat-btn" onclick="selectCat('Ювелирное оборудование')" id="btn-Ювелирное оборудование" style="--cat-color:#b84580">
+    <span class="cat-icon lottie-icon" id="lottie-cat-uvelir" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Ювелирное оборудование</span><span class="cat-count" id="cnt-Ювелирное оборудование">0</span>
+  </button>
+
+  <!-- Кари Кидс -->
+  <button class="cat-btn" onclick="selectCat('karikids')" id="btn-karikids" style="--cat-color:#c0392b">
+    <span class="cat-icon lottie-icon" id="lottie-cat-kids" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Кари Кидс</span><span class="cat-count" id="cnt-karikids">0</span>
+  </button>
+
+  <!-- Рекламные материалы -->
+  <button class="cat-btn" onclick="selectCat('Рекламные материалы')" id="btn-Рекламные материалы" style="--cat-color:#c07a2a">
+    <span class="cat-icon lottie-icon" id="lottie-cat-reklam" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Рекламные материалы</span><span class="cat-count" id="cnt-Рекламные материалы">0</span>
+  </button>
+
+  <!-- Канцелярия -->
+  <button class="cat-btn" onclick="selectCat('Канцелярия')" id="btn-Канцелярия" style="--cat-color:#7458b8">
+    <span class="cat-icon lottie-icon" id="lottie-cat-kanc" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Канцелярия</span><span class="cat-count" id="cnt-Канцелярия">0</span>
+  </button>
+
+</div>
+
+<!-- ── Строка 2 ── -->
+<div class="topbar-row">
+
+  <!-- Световое оборудование -->
+  <button class="cat-btn" onclick="selectCat('light')" id="btn-light" style="--cat-color:#e07a20">
+    <span class="cat-icon lottie-icon" id="lottie-cat-light" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Световое оборудование</span><span class="cat-count" id="cnt-light">0</span>
+  </button>
+
+  <!-- Слаботочное оборудование -->
+  <button class="cat-btn" onclick="selectCat('tv')" id="btn-tv" style="--cat-color:#0e7490">
+    <span class="cat-icon lottie-icon" id="lottie-cat-tv" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Слаботочное оборудование</span><span class="cat-count" id="cnt-tv">0</span>
+  </button>
+
+  <!-- ИТ оборудование -->
+  <button class="cat-btn" onclick="selectCat('ИТ оборудование')" id="btn-ИТ оборудование" style="--cat-color:#0e6ba8">
+    <span class="cat-icon lottie-icon" id="lottie-cat-it" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">ИТ оборудование</span><span class="cat-count" id="cnt-ИТ оборудование">0</span>
+  </button>
+
+  <div class="topbar-divider" id="kits-divider"></div>
+
+  <!-- Комплекты -->
+  <button class="cat-btn" onclick="selectCat('kits')" id="btn-kits" style="--cat-color:#6b48c8">
+    <span class="cat-icon lottie-icon" id="lottie-cat-kits" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Комплекты</span><span class="cat-count" id="cnt-kits">0</span>
+  </button>
+
+</div>
+
+</div>
+
 <!-- ═══════════════ CATALOG SECTION ═══════════════ -->
 <div id="catalogSection" class="layout">
-  <div class="sidebar" id="catalogSidebar">
-    <div class="sidebar-title">Разделы каталога</div>
-
-    <!-- Все категории -->
-    <button class="cat-btn active" onclick="selectCat('all')" id="btn-all" style="--cat-color:#4a7fc1">
-      <span class="cat-icon lottie-icon" id="lottie-cat-all" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Все категории</span><span class="cat-count" id="cnt-all">0</span>
-    </button>
-
-    <div class="sidebar-divider"></div>
-
-    <!-- Торговое оборудование -->
-    <button class="cat-btn" onclick="selectCat('Торговое оборудование')" id="btn-Торговое оборудование" style="--cat-color:#4a7fc1">
-      <span class="cat-icon lottie-icon" id="lottie-cat-torg" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Торговое оборудование</span><span class="cat-count" id="cnt-Торговое оборудование">0</span>
-    </button>
-
-    <!-- Ювелирное оборудование -->
-    <button class="cat-btn" onclick="selectCat('Ювелирное оборудование')" id="btn-Ювелирное оборудование" style="--cat-color:#b84580">
-      <span class="cat-icon lottie-icon" id="lottie-cat-uvelir" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Ювелирное оборудование</span><span class="cat-count" id="cnt-Ювелирное оборудование">0</span>
-    </button>
-
-    <!-- Кари Кидс -->
-    <button class="cat-btn" onclick="selectCat('karikids')" id="btn-karikids" style="--cat-color:#c0392b">
-      <span class="cat-icon lottie-icon" id="lottie-cat-kids" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Кари Кидс</span><span class="cat-count" id="cnt-karikids">0</span>
-    </button>
-
-    <!-- Рекламные материалы -->
-    <button class="cat-btn" onclick="selectCat('Рекламные материалы')" id="btn-Рекламные материалы" style="--cat-color:#c07a2a">
-      <span class="cat-icon lottie-icon" id="lottie-cat-reklam" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Рекламные материалы</span><span class="cat-count" id="cnt-Рекламные материалы">0</span>
-    </button>
-
-    <!-- Канцелярия -->
-    <button class="cat-btn" onclick="selectCat('Канцелярия')" id="btn-Канцелярия" style="--cat-color:#7458b8">
-      <span class="cat-icon lottie-icon" id="lottie-cat-kanc" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Канцелярия</span><span class="cat-count" id="cnt-Канцелярия">0</span>
-    </button>
-
-    <div class="sidebar-divider" id="light-divider"></div>
-
-    <!-- Световое оборудование -->
-    <button class="cat-btn" onclick="selectCat('light')" id="btn-light" style="--cat-color:#e07a20">
-      <span class="cat-icon lottie-icon" id="lottie-cat-light" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Световое оборудование</span><span class="cat-count" id="cnt-light">0</span>
-    </button>
-
-    <!-- Слаботочное оборудование -->
-    <button class="cat-btn" onclick="selectCat('tv')" id="btn-tv" style="--cat-color:#0e7490">
-      <span class="cat-icon lottie-icon" id="lottie-cat-tv" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Слаботочное оборудование</span><span class="cat-count" id="cnt-tv">0</span>
-    </button>
-
-    <!-- ИТ оборудование -->
-    <button class="cat-btn" onclick="selectCat('ИТ оборудование')" id="btn-ИТ оборудование" style="--cat-color:#0e6ba8">
-      <span class="cat-icon lottie-icon" id="lottie-cat-it" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">ИТ оборудование</span><span class="cat-count" id="cnt-ИТ оборудование">0</span>
-    </button>
-
-    <div class="sidebar-divider" id="kits-divider"></div>
-
-    <!-- Комплекты -->
-    <button class="cat-btn" onclick="selectCat('kits')" id="btn-kits" style="--cat-color:#6b48c8">
-      <span class="cat-icon lottie-icon" id="lottie-cat-kits" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Комплекты</span><span class="cat-count" id="cnt-kits">0</span>
-    </button>
-
+  <!-- Столбец подразделов выбранного раздела (показывается только когда у раздела есть подразделы) -->
+  <div class="sidebar" id="catalogSidebar" style="display:none;">
+    <div class="sidebar-title" id="subcatSidebarTitle">Подразделы</div>
+    <div id="subcatSidebarList" style="display:flex;flex-direction:column;gap:2px;"></div>
   </div>
 
   <!-- Main catalog table -->
@@ -1127,7 +1163,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ═══ ВЕРСИЯ ПРИЛОЖЕНИЯ ═══
-var APP_VERSION = '1.58';
+var APP_VERSION = '1.61';
 // При каждом обновлении index.html — менять только эту строку (1.17, 1.18 и т.д.)
 (function(){
   var el = document.getElementById('appVersionBadge');
@@ -2488,9 +2524,54 @@ function getSubcatData(cat){
   return {subcats:subcats, counts:counts, total:totalCat};
 }
 
+// ═══ ПОДРАЗДЕЛЫ В ЛЕВОМ СТОЛБЦЕ (сайдбар) ═══
+function renderSubcatSidebar(cat, data){
+  var sb = document.getElementById('catalogSidebar');
+  var list = document.getElementById('subcatSidebarList');
+  var title = document.getElementById('subcatSidebarTitle');
+  if(!sb || !list) return;
+  if(!data) data = getSubcatData(cat);
+  if(!data.subcats.length){ sb.style.display='none'; list.innerHTML=''; return; }
+  sb.style.display = 'flex';
+  if(title) title.textContent = 'Подразделы · ' + getCatDisplayName(cat);
+  list.innerHTML = '';
+  // «Все позиции»
+  var bAll = document.createElement('button');
+  bAll.className = 'subcat-side-btn';
+  bAll.dataset.sub = '';
+  bAll.innerHTML = '<span class="cat-label">Все позиции</span><span class="cat-count">' + data.total.toLocaleString('ru') + '</span>';
+  bAll.onclick = function(){ selectSubcatFromScreen(''); };
+  list.appendChild(bAll);
+  // Подразделы
+  data.subcats.forEach(function(s){
+    var b = document.createElement('button');
+    b.className = 'subcat-side-btn';
+    b.dataset.sub = s;
+    b.innerHTML = '<span class="cat-label">' + s + '</span><span class="cat-count">' + (data.counts[s]||0).toLocaleString('ru') + '</span>';
+    b.onclick = (function(sub){ return function(){ selectSubcatFromScreen(sub); }; })(s);
+    list.appendChild(b);
+  });
+}
+
+function updateSubcatSidebarActive(sub){
+  var list = document.getElementById('subcatSidebarList');
+  if(!list) return;
+  list.querySelectorAll('.subcat-side-btn').forEach(function(b){
+    b.classList.toggle('active', b.dataset.sub === sub);
+  });
+}
+
+function hideSubcatSidebar(){
+  var sb = document.getElementById('catalogSidebar');
+  if(sb) sb.style.display = 'none';
+}
+
 function showSubcatScreen(cat){
   currentCatForSubcat = cat;
   var data = getSubcatData(cat);
+
+  // Подразделы — в левый столбец (где раньше были разделы)
+  renderSubcatSidebar(cat, data);
 
   // Нет подразделов — сразу показываем нативную панель
   if(!data.subcats.length){
@@ -2503,64 +2584,15 @@ function showSubcatScreen(cat){
     return;
   }
 
-  var screen = document.getElementById('subcatScreen');
-  var grid = document.getElementById('subcatGrid');
-  var title = document.getElementById('subcatScreenTitle');
-  if(!screen) return;
-
-  // Заголовок
-  title.textContent = cat;
-
-  // Строим карточки
-  grid.innerHTML = '';
-
-  // Карточка "Все позиции"
-  var cardAll = document.createElement('div');
-  // Карточка "Все позиции"
-  var cardAll = document.createElement('div');
-  cardAll.className = 'subcat-card all-card';
-  cardAll.innerHTML =
-    '<div class="subcat-card-photo-wrap" style="display:flex;align-items:center;justify-content:center;">'    +'<span style="font-size:42px;opacity:.2;">≡</span>'    +'</div>'    +'<div class="subcat-card-body">'      +'<div class="subcat-card-cnt" style="color:var(--text3);">' + data.total.toLocaleString('ru') + '</div>'      +'<div class="subcat-card-name" style="color:var(--text3);">Все позиции</div>'    +'</div>';
-  cardAll.onclick = function(){ selectSubcatFromScreen(''); };
-  grid.appendChild(cardAll);
-
-  // Карточки подразделов
-  var pool = (cat==='light') ? lightAll : (cat==='tv') ? tvAll : allItems;
-  data.subcats.forEach(function(s){
-    var card = document.createElement('div');
-    // Ищем первый товар в подразделе с фото
-    var previewItem = null;
-    for(var pi=0; pi<pool.length; pi++){
-      var pIt = pool[pi];
-      var inCat = (cat==='light'||cat==='tv') ? true : (pIt.cat===cat);
-      if(inCat && (pIt.subcat||'')===s && getImgUrl(pIt)){
-        previewItem = pIt; break;
-      }
-    }
-    var photoUrl = previewItem ? getImgUrl(previewItem) : null;
-    card.className = 'subcat-card';
-    if(photoUrl){
-      card.innerHTML =
-        '<div class="subcat-card-photo-wrap">'        +'<img class="subcat-card-photo" src="'+photoUrl+'" alt="" loading="lazy">'        +'</div>'        +'<div class="subcat-card-body">'          +'<div class="subcat-card-cnt">'+(data.counts[s]||0).toLocaleString('ru')+'</div>'          +'<div class="subcat-card-name">'+s+'</div>'        +'</div>';
-    } else {
-      card.innerHTML =
-        '<div class="subcat-card-photo-wrap" style="display:flex;align-items:center;justify-content:center;">'          +'<span style="font-size:48px;opacity:.15;">📦</span>'        +'</div>'        +'<div class="subcat-card-body">'          +'<div class="subcat-card-cnt">'+(data.counts[s]||0).toLocaleString('ru')+'</div>'          +'<div class="subcat-card-name">'+s+'</div>'        +'</div>';
-    }
-    card.onclick = (function(sub){ return function(){ selectSubcatFromScreen(sub); }; })(s);
-    grid.appendChild(card);
-  });
-
-  // Показываем экран, скрываем таблицу и хлебную крошку
-  screen.style.display = 'flex';
-  screen.style.flexDirection = 'column';
-  var tw = document.getElementById('tableWrap');
-  if(tw) tw.style.display = 'none';
-  var bc = document.getElementById('subcatBreadcrumb');
-  if(bc) bc.className = 'subcatBreadcrumb'; // скрыть
+  // Сразу показываем все карточки раздела; подразделы выбираются в левом столбце
+  selectSubcatFromScreen('');
 }
 
 function selectSubcatFromScreen(sub){
   currentSubcat = sub;
+
+  // Подсвечиваем активный подраздел в левом столбце
+  updateSubcatSidebarActive(sub);
 
   // Скрываем экран подразделов
   var screen = document.getElementById('subcatScreen');
@@ -2628,6 +2660,7 @@ function hideSubcatScreen(){
   if(tw) tw.style.display = '';
   currentSubcat = '';
   currentCatForSubcat = '';
+  hideSubcatSidebar();
 }
 
 function selectCat(c){
