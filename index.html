@@ -466,7 +466,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <div>
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="logo-text">Каталог оборудования Kari</div>
-        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.66</div>
+        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.67</div>
       </div>
       <div class="logo-sub" id="catalogInfo">Загрузка…</div>
     </div>
@@ -530,7 +530,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <ul class="authors-list" id="authorsList">
       <li><span>👤</span> —</li>
     </ul>
-    <div style="font-size:11px;color:var(--text3);margin-bottom:16px;">Версия <span id="modalAppVersion">1.66</span> · 2026</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:16px;">Версия <span id="modalAppVersion">1.67</span> · 2026</div>
     <button onclick="document.getElementById('authorsOverlay').classList.remove('show')"
       style="background:linear-gradient(135deg,#4a7fc1,#7458b8);color:#fff;border:none;border-radius:10px;
       padding:10px 28px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;
@@ -578,6 +578,12 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
   <!-- Столбец подразделов выбранного раздела (показывается только когда у раздела есть подразделы) -->
   <div class="sidebar" id="catalogSidebar" style="display:none;">
     <div class="sidebar-title" id="subcatSidebarTitle">Подразделы</div>
+    <div style="position:relative;padding:0 10px 8px;">
+      <span style="position:absolute;left:19px;top:50%;transform:translateY(calc(-50% - 4px));font-size:11px;pointer-events:none;opacity:.7;">🔍</span>
+      <input type="text" id="subcatSideSearch" placeholder="Поиск подраздела…" oninput="filterSubcatSidebar()"
+        style="width:100%;background:var(--surface3);border:1.5px solid var(--border);border-radius:8px;padding:6px 10px 6px 28px;color:var(--text);font-family:'Nunito',sans-serif;font-size:12px;font-weight:500;outline:none;transition:border-color .2s;"
+        onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+    </div>
     <div id="subcatSidebarList" style="display:flex;flex-direction:column;gap:2px;"></div>
   </div>
 
@@ -724,6 +730,13 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
         <span style="font-size:16px;flex-shrink:0;">📋</span>
         <span style="font-size:13px;font-weight:700;color:var(--text2);white-space:nowrap;">Загрузка номенклатур</span>
         <span class="results-info" id="nlistInfo" style="margin-left:4px;">—</span>
+      </div>
+      <div class="search-wrap" style="max-width:340px;min-width:180px;">
+        <span style="position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:13px;pointer-events:none;">🔍</span>
+        <input type="text" class="search-input" id="nlistSearch" placeholder="Поиск по загруженному списку…" oninput="onNlistSearch();updateSearchClear('nlistSearch','nlistSearchClear')">
+        <button class="search-clear" id="nlistSearchClear" onclick="clearSearch('nlist')" title="Очистить поиск">
+          <svg viewBox="0 0 10 10"><path d="M1 1l8 8M9 1l-8 8" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
       </div>
       <input type="file" id="nlistFileInput" accept=".xlsx,.xls" style="display:none">
       <button onclick="document.getElementById('nlistFileInput').click()"
@@ -1141,7 +1154,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ═══ ВЕРСИЯ ПРИЛОЖЕНИЯ ═══
-var APP_VERSION = '1.66';
+var APP_VERSION = '1.67';
 // При каждом обновлении index.html — менять только эту строку (1.17, 1.18 и т.д.)
 (function(){
   var el = document.getElementById('appVersionBadge');
@@ -2530,6 +2543,8 @@ function renderSubcatSidebar(cat, data){
   if(!data.subcats.length){ sb.style.display='none'; list.innerHTML=''; return; }
   sb.style.display = 'flex';
   if(title) title.textContent = 'Подразделы · ' + getCatDisplayName(cat);
+  var ssInp = document.getElementById('subcatSideSearch');
+  if(ssInp) ssInp.value = '';
   list.innerHTML = '';
   // «Все позиции»
   var bAll = document.createElement('button');
@@ -2546,6 +2561,18 @@ function renderSubcatSidebar(cat, data){
     b.innerHTML = '<span class="cat-label">' + s + '</span><span class="cat-count">' + (data.counts[s]||0).toLocaleString('ru') + '</span>';
     b.onclick = (function(sub){ return function(){ selectSubcatFromScreen(sub); }; })(s);
     list.appendChild(b);
+  });
+}
+
+function filterSubcatSidebar(){
+  var inp = document.getElementById('subcatSideSearch');
+  var list = document.getElementById('subcatSidebarList');
+  if(!inp || !list) return;
+  var q = inp.value.trim().toLowerCase();
+  list.querySelectorAll('.subcat-side-btn').forEach(function(b){
+    // «Все позиции» (пустой dataset.sub) показываем всегда
+    if(!b.dataset.sub){ b.style.display = ''; return; }
+    b.style.display = (!q || b.dataset.sub.toLowerCase().indexOf(q) >= 0) ? '' : 'none';
   });
 }
 
@@ -2744,6 +2771,11 @@ function clearSearch(panel){
     document.getElementById('tvSearchClear').style.display = 'none';
     tvSearch = '';
     applyTvFilters();
+  } else if(panel === 'nlist'){
+    document.getElementById('nlistSearch').value = '';
+    document.getElementById('nlistSearchClear').style.display = 'none';
+    nlistQuery = '';
+    renderNlist();
   }
 }
 
@@ -4627,7 +4659,7 @@ function exportToExcel(section){
     var q = document.getElementById('tvSearch').value.trim();
     filename = 'Слаботочное' + (q ? '_'+q : '') + '.xlsx';
   } else if(section==='nlist'){
-    data = nlistItems;
+    data = nlistVisible();
     headers = ['Код','Наименование','Краткое описание','Раздел'];
     sheetName = 'Номенклатуры';
     filename = 'Номенклатуры.xlsx';
@@ -5009,6 +5041,25 @@ var nlistItems = []; // массив найденных позиций
 
 // Сортировка списка номенклатур: {key: 'code'|'name'|'short'|'cat'|null, dir: 1|-1}
 var nlistSort = {key: null, dir: 1};
+// Поисковый запрос по загруженному списку
+var nlistQuery = '';
+
+function onNlistSearch(){
+  var inp = document.getElementById('nlistSearch');
+  nlistQuery = inp ? inp.value.trim().toLowerCase() : '';
+  renderNlist();
+}
+
+// Позиции, видимые с учётом поиска (в текущем порядке сортировки)
+function nlistVisible(){
+  if(!nlistQuery) return nlistItems;
+  return nlistItems.filter(function(it){
+    return (it.code||'').toLowerCase().indexOf(nlistQuery) >= 0
+        || (it.name||'').toLowerCase().indexOf(nlistQuery) >= 0
+        || (it.short||'').toLowerCase().indexOf(nlistQuery) >= 0
+        || nlistCatName(it).toLowerCase().indexOf(nlistQuery) >= 0;
+  });
+}
 
 function nlistCatName(it){
   if(!it._found || !it.cat) return '';
@@ -5044,6 +5095,11 @@ function sortNlist(key){
 function clearNlist(){
   nlistItems = [];
   nlistSort = {key: null, dir: 1};
+  nlistQuery = '';
+  var si = document.getElementById('nlistSearch');
+  if(si) si.value = '';
+  var sc = document.getElementById('nlistSearchClear');
+  if(sc) sc.style.display = 'none';
   _nsortArrows();
   renderNlist();
   document.getElementById('cnt-nlist').textContent = '0';
@@ -5066,10 +5122,13 @@ function renderNlist(){
 
   drop.style.display  = 'none';
   table.style.display = '';
-  info.textContent    = nlistItems.length + ' позиций';
+  var visible = nlistVisible();
+  info.textContent = nlistQuery
+    ? (visible.length + ' из ' + nlistItems.length + ' позиций')
+    : (nlistItems.length + ' позиций');
 
   var frag = document.createDocumentFragment();
-  nlistItems.forEach(function(it){
+  visible.forEach(function(it){
     var found = it._found; // true = найден в каталоге
     var tr = document.createElement('tr');
     tr.style.opacity = found ? '1' : '.45';
