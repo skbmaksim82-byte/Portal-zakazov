@@ -731,6 +731,12 @@ body{font-family:'Inter',sans-serif;color:var(--wb-text);}
         <div class="items-count">Найдено: <strong id="itemCount">0</strong></div>
         <div class="sort-pill" id="sortPill" onclick="cycleSort()">⇅ По названию</div>
       </div>
+      <div id="nlistToolbar" style="display:none;flex-direction:column;align-items:stretch;gap:8px;padding:10px 14px;border-bottom:1px solid var(--wb-border);background:var(--wb-surface);">
+        <button class="act-btn photo" style="width:100%;justify-content:center;" onclick="document.getElementById('nlist-file-input').click()">📤 Добавить файл</button>
+        <input type="file" id="nlist-file-input" accept=".xlsx,.xls,.csv" style="display:none" onchange="nlistParseFile(this.files[0]); this.value='';">
+        <div id="nlistFilesList" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+        <div id="nlist-error" style="font-size:11px;font-weight:700;color:#E24B4A;"></div>
+      </div>
       <div class="items-list" id="itemsList"></div>
     </div>
   </div>
@@ -1422,6 +1428,13 @@ function goSection(secId){
     updateHeader();
     return;
   }
+  if(secId==='nlist'){
+    renderItems();
+    showScreen('s3');
+    navHistory=['s1','s3'];
+    updateHeader();
+    return;
+  }
   renderSubcats(secId);
   /* renderSubcats сама вызовет goSubcat если нет подразделов */
   if(getEl('subcatScreen')&&getEl('subcatScreen').innerHTML.indexOf('subcat-grid')>=0){
@@ -1448,7 +1461,7 @@ function goBack(){
     navHistory=navHistory.slice(0,-1);
   } else if(prev==='s3'){
     currentItem=null;
-    if(currentSecId==='favs') renderItems();
+    if(currentSecId==='favs'||currentSecId==='nlist') renderItems();
     showScreen('s3');
     navHistory=navHistory.slice(0,-1);
   } else if(prev==='s2'){
@@ -1510,7 +1523,7 @@ function updateHeader(){
     var slc2=getEl('searchLocalClear');if(slc2)slc2.classList.remove('show');
   } else if(cur==='s3'){
     if(backBtn)backBtn.classList.add('show');
-    var isFavScreen = currentSecId==='favs';
+    var isFavScreen = currentSecId==='favs' || currentSecId==='nlist';
     var subLabel=isFavScreen?'':(currentSubcat||'\u0412\u0441\u0435 \u043f\u043e\u0437\u0438\u0446\u0438\u0438');
     if(titleMain)titleMain.textContent=isFavScreen?(sec?sec.name:'\u2B50 \u0418\u0437\u0431\u0440\u0430\u043d\u043d\u043e\u0435'):subLabel;
     var cnt3=getFilteredItems().length;
@@ -1545,6 +1558,7 @@ function updateHeader(){
     if(localSrch)localSrch.style.display='none';
     if(localInput)localInput.value='';
   }
+  renderNlistToolbar();
 }
 
 /* ════════════════════════════════════════════════════
@@ -2483,12 +2497,153 @@ function updateClock(){
 setInterval(updateClock,10000);updateClock();
 
 /* ════════════════════════════════════════════════════
+   ЗАГРУЗКА НОМЕНКЛАТУР (раздел «Загрузка номенклатур»)
+   Пользователь добавляет xlsx/csv файл — из него парсятся
+   позиции (код + наименование) и показываются списком,
+   как в обычном разделе каталога.
+════════════════════════════════════════════════════ */
+var nlistItems = [];   /* позиции, загруженные из файлов пользователя */
+var nlistFiles = [];   /* [{id, name, count, ts}] — список добавленных файлов */
+
+function saveNlistToStorage(){
+  try{
+    localStorage.setItem('kariNlistItems', JSON.stringify(nlistItems));
+    localStorage.setItem('kariNlistFiles', JSON.stringify(nlistFiles));
+  }catch(e){}
+}
+function loadNlistFromStorage(){
+  try{
+    var ri = localStorage.getItem('kariNlistItems');
+    nlistItems = ri ? (JSON.parse(ri)||[]) : [];
+    var rf = localStorage.getItem('kariNlistFiles');
+    nlistFiles = rf ? (JSON.parse(rf)||[]) : [];
+  }catch(e){ nlistItems=[]; nlistFiles=[]; }
+}
+/* Добавляет сохранённые позиции nlist в общий allItems (вызывать после каждой пересборки allItems) */
+function injectNlistItems(){
+  var kept=[];
+  for(var i=0;i<allItems.length;i++) if(allItems[i].secId!=='nlist') kept.push(allItems[i]);
+  for(var j=0;j<nlistItems.length;j++) kept.push(nlistItems[j]);
+  allItems = kept;
+}
+function nlistEsc(s){
+  return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function renderNlistToolbar(){
+  var wrap=getEl('nlistToolbar'); if(!wrap) return;
+  wrap.style.display = (currentSecId==='nlist') ? 'flex' : 'none';
+  if(currentSecId!=='nlist') return;
+  var list=getEl('nlistFilesList'); if(list){
+    var h='';
+    for(var i=0;i<nlistFiles.length;i++){
+      var f=nlistFiles[i];
+      h+='<span style="display:inline-flex;align-items:center;gap:6px;background:#F7F7F7;border:1px solid var(--wb-border);border-radius:20px;padding:5px 6px 5px 12px;font-size:11px;font-weight:600;color:#6B6B6B;">';
+      h+=nlistEsc(f.name)+' · '+(f.count||0).toLocaleString('ru')+' поз.';
+      h+='<button onclick="nlistRemoveFile('+i+')" style="background:#E24B4A;border:none;color:#fff;width:18px;height:18px;border-radius:50%;font-size:9px;cursor:pointer;line-height:1;">✕</button>';
+      h+='</span>';
+    }
+    list.innerHTML=h;
+  }
+}
+function nlistParseFile(file){
+  if(!file) return;
+  var errEl=getEl('nlist-error');
+  if(errEl) errEl.textContent='Читаю файл…';
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    try{
+      var LIB=window.XLSX;
+      if(!LIB) throw new Error('Не удалось загрузить модуль чтения файлов');
+      var wb = /\.csv$/i.test(file.name)
+        ? LIB.read(ev.target.result, {type:'string'})
+        : LIB.read(new Uint8Array(ev.target.result), {type:'array'});
+      var baseName = file.name.replace(/\.[^.]+$/, '');
+      var seen={};
+      for(var s=0;s<nlistItems.length;s++) seen[nlistItems[s].code+'||'+nlistItems[s].name]=1;
+      var fileId = 'f'+Date.now()+'-'+Math.floor(Math.random()*100000);
+      var newRows=[];
+      for(var si=0; si<wb.SheetNames.length; si++){
+        var sName=wb.SheetNames[si];
+        var rows=LIB.utils.sheet_to_json(wb.Sheets[sName], {header:1, defval:''});
+        if(rows.length<2) continue;
+        var hdr=rows[0];
+        var codeCol=0, nameCol=-1, subcatCol=-1, descCol=-1;
+        for(var hi=0; hi<hdr.length; hi++){
+          var h=String(hdr[hi]||'').trim().toLowerCase();
+          if(h.indexOf('код')>=0 && h.indexOf('ном')>=0) codeCol=hi;
+          else if(h==='артикул') codeCol=hi;
+          else if(h.indexOf('наимен')>=0 || h.indexOf('назв')>=0) nameCol=hi;
+          else if(h.indexOf('подраздел')>=0) subcatCol=hi;
+          else if(h.indexOf('описан')>=0 || h.indexOf('примеч')>=0) descCol=hi;
+        }
+        /* Если колонка наименования не найдена по заголовку, но колонок ≥2 — как раньше берём вторую */
+        if(nameCol<0 && hdr.length>1){
+          var guessCol = (codeCol===1) ? 0 : 1;
+          if(guessCol<hdr.length && guessCol!==codeCol) nameCol=guessCol;
+        }
+        var subcatLabel = wb.SheetNames.length>1 ? (baseName+' — '+sName) : baseName;
+        for(var ri=1; ri<rows.length; ri++){
+          var row=rows[ri];
+          var code=String(row[codeCol]||'').trim();
+          if(!code) continue;
+          var name = nameCol>=0 ? String(row[nameCol]||'').trim() : '';
+          if(!name) name = code;  /* в файле может быть только код номенклатуры */
+          var key=code+'||'+name;
+          if(seen[key]) continue;
+          seen[key]=1;
+          var subcat=(subcatCol>=0 && String(row[subcatCol]||'').trim()) || subcatLabel;
+          var desc = descCol>=0 ? String(row[descCol]||'').trim() : '';
+          newRows.push({
+            id:'nlist-'+fileId+'-'+ri,
+            code:code, name:name, desc:desc,
+            secId:'nlist', subcat:subcat,
+            emoji:'📤', photo:null, fileId:fileId
+          });
+        }
+      }
+      if(!newRows.length) throw new Error('В файле не найдено позиций. Нужна колонка «Код номенклатуры»');
+      nlistItems = nlistItems.concat(newRows);
+      nlistFiles.push({id:fileId, name:file.name, count:newRows.length, ts:Date.now()});
+      saveNlistToStorage();
+      injectNlistItems();
+      renderSections();
+      renderItems();
+      renderNlistToolbar();
+      updateHeader();
+      if(errEl) errEl.textContent='';
+      showToast(newRows.length.toLocaleString('ru')+' поз. добавлено из файла','ok');
+    }catch(err){
+      var msg = (err && err.message) ? err.message : 'Не удалось прочитать файл';
+      if(errEl) errEl.textContent=msg; else alert(msg);
+    }
+  };
+  reader.onerror=function(){ if(errEl) errEl.textContent='Ошибка чтения файла'; };
+  if(/\.csv$/i.test(file.name)) reader.readAsText(file, 'utf-8');
+  else reader.readAsArrayBuffer(file);
+}
+function nlistRemoveFile(idx){
+  idx=parseInt(idx,10);
+  if(isNaN(idx) || !nlistFiles[idx]) return;
+  var fid=nlistFiles[idx].id;
+  nlistFiles.splice(idx,1);
+  nlistItems = nlistItems.filter(function(it){ return it.fileId!==fid; });
+  saveNlistToStorage();
+  injectNlistItems();
+  renderSections();
+  renderItems();
+  renderNlistToolbar();
+  updateHeader();
+}
+
+/* ════════════════════════════════════════════════════
    INIT
 ════════════════════════════════════════════════════ */
 initTheme();  /* применяем тему до первой отрисовки, чтобы избежать мигания светлой темой */
+loadNlistFromStorage();  /* до renderSections(), чтобы позиции из загруженных файлов сразу учитывались */
 loadFavoritesFromStorage();  /* до renderSections(), иначе счётчик "Избранное" на s1 будет 0 */
 navHistory=['s1'];
 loadDemoData();      /* Загружаем демо-данные, пока нет xlsx */
+injectNlistItems();  /* восстанавливаем позиции из ранее загруженных файлов */
 renderSections();
 updateHeader();
 setupEventDelegation();
@@ -2698,6 +2853,9 @@ function parseXlsxBuffer(buf) {
     if (newKits.length > 0) kitsData = newKits;
   }
   if (!kitsData.length) kitsData = KITS_LIST;
+
+  /* Пере-накладываем позиции, загруженные пользователем в разделе «Загрузка номенклатур» */
+  injectNlistItems();
 
   /* Обновляем UI */
   renderSections();
