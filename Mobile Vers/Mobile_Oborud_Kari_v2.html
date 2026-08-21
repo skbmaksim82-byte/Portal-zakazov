@@ -732,7 +732,10 @@ body{font-family:'Inter',sans-serif;color:var(--wb-text);}
         <div class="sort-pill" id="sortPill" onclick="cycleSort()">⇅ По названию</div>
       </div>
       <div id="nlistToolbar" style="display:none;flex-direction:column;align-items:stretch;gap:8px;padding:10px 14px;border-bottom:1px solid var(--wb-border);background:var(--wb-surface);">
-        <button class="act-btn photo" style="width:100%;justify-content:center;" onclick="document.getElementById('nlist-file-input').click()">📤 Добавить файл</button>
+        <select class="shop-sel" id="nlist-shop-select">
+          <option value="">— Выберите номер магазина —</option>
+        </select>
+        <button class="act-btn photo" style="width:100%;justify-content:center;" onclick="nlistTriggerFileSelect()">📤 Добавить файл</button>
         <input type="file" id="nlist-file-input" accept=".xlsx,.xls,.csv" style="display:none" onchange="nlistParseFile(this.files[0]); this.value='';">
         <div id="nlistFilesList" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
         <div id="nlist-error" style="font-size:11px;font-weight:700;color:#E24B4A;"></div>
@@ -1351,7 +1354,11 @@ function renderItems(){
   var cnt=getEl('itemCount'); if(cnt)cnt.textContent=items.length.toLocaleString('ru');
   var list=getEl('itemsList'); if(!list)return;
   if(!items.length){
-    list.innerHTML='<div class="empty-state"><div class="empty-icon">\uD83D\uDD0D</div><div class="empty-txt">\u041d\u0438\u0447\u0435\u0433\u043e \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e</div></div>';
+    if(currentSecId==='nlist' && !nlistItems.length){
+      list.innerHTML='<div class="empty-state"><div class="empty-icon">\uD83D\udce4</div><div class="empty-txt">\u0424\u0430\u0439\u043b \u043f\u043e\u043a\u0430 \u043d\u0435 \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043d</div></div>';
+    } else {
+      list.innerHTML='<div class="empty-state"><div class="empty-icon">\uD83D\uDD0D</div><div class="empty-txt">\u041d\u0438\u0447\u0435\u0433\u043e \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e</div></div>';
+    }
     return;
   }
   var h='';
@@ -2139,6 +2146,14 @@ function initShopSelect(){
     sel.appendChild(o);
   }
 }
+function initNlistShopSelect(){
+  var sel=getEl('nlist-shop-select'); if(!sel) return;
+  for(var i=0;i<STORES.length;i++){
+    var o=document.createElement('option');
+    o.value=STORES[i].n; o.textContent=STORES[i].n;
+    sel.appendChild(o);
+  }
+}
 function onShopChange(){
   var sel=getEl('shopSelect');
   var emailEl=getEl('cartEmail');
@@ -2538,16 +2553,32 @@ function renderNlistToolbar(){
     for(var i=0;i<nlistFiles.length;i++){
       var f=nlistFiles[i];
       h+='<span style="display:inline-flex;align-items:center;gap:6px;background:#F7F7F7;border:1px solid var(--wb-border);border-radius:20px;padding:5px 6px 5px 12px;font-size:11px;font-weight:600;color:#6B6B6B;">';
-      h+=nlistEsc(f.name)+' · '+(f.count||0).toLocaleString('ru')+' поз.';
+      h+='🏪 '+nlistEsc(f.shop||'—')+' · '+nlistEsc(f.name)+' · '+(f.count||0).toLocaleString('ru')+' поз.';
       h+='<button onclick="nlistRemoveFile('+i+')" style="background:#E24B4A;border:none;color:#fff;width:18px;height:18px;border-radius:50%;font-size:9px;cursor:pointer;line-height:1;">✕</button>';
       h+='</span>';
     }
     list.innerHTML=h;
   }
 }
+function nlistTriggerFileSelect(){
+  var shopSel=getEl('nlist-shop-select');
+  var errEl=getEl('nlist-error');
+  if(!shopSel || !shopSel.value){
+    if(errEl) errEl.textContent='Сначала укажите номер магазина';
+    if(shopSel) shopSel.focus();
+    return;
+  }
+  if(errEl) errEl.textContent='';
+  getEl('nlist-file-input').click();
+}
 function nlistParseFile(file){
   if(!file) return;
   var errEl=getEl('nlist-error');
+  var shopVal=(getEl('nlist-shop-select')||{}).value||'';
+  if(!shopVal){
+    if(errEl) errEl.textContent='Сначала укажите номер магазина';
+    return;
+  }
   if(errEl) errEl.textContent='Читаю файл…';
   var reader=new FileReader();
   reader.onload=function(ev){
@@ -2597,13 +2628,13 @@ function nlistParseFile(file){
             id:'nlist-'+fileId+'-'+ri,
             code:code, name:name, desc:desc,
             secId:'nlist', subcat:subcat,
-            emoji:'📤', photo:null, fileId:fileId
+            emoji:'📤', photo:null, fileId:fileId, shop:shopVal
           });
         }
       }
       if(!newRows.length) throw new Error('В файле не найдено позиций. Нужна колонка «Код номенклатуры»');
       nlistItems = nlistItems.concat(newRows);
-      nlistFiles.push({id:fileId, name:file.name, count:newRows.length, ts:Date.now()});
+      nlistFiles.push({id:fileId, name:file.name, count:newRows.length, ts:Date.now(), shop:shopVal});
       saveNlistToStorage();
       injectNlistItems();
       renderSections();
@@ -2648,6 +2679,7 @@ renderSections();
 updateHeader();
 setupEventDelegation();
 initShopSelect();
+initNlistShopSelect();
 loadCartFromStorage();
 updateCartBadge();
 initSortPill();
