@@ -6,6 +6,21 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<script>
+(function(){
+  function setAppHeight(){
+    var h=(window.visualViewport&&window.visualViewport.height)||window.innerHeight||document.documentElement.clientHeight;
+    document.documentElement.style.setProperty('--app-height', h+'px');
+  }
+  setAppHeight();
+  window.addEventListener('resize',setAppHeight);
+  window.addEventListener('orientationchange',setAppHeight);
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('resize',setAppHeight);
+    window.visualViewport.addEventListener('scroll',setAppHeight);
+  }
+})();
+</script>
 <title>Mobile Oborud Kari v2</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -47,12 +62,12 @@ html[data-theme="dark"]{
   --wb-skeleton2:#303038;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html{height:100%;height:-webkit-fill-available;height:100dvh;}body{height:100%;height:-webkit-fill-available;height:100dvh;overflow:hidden;background:linear-gradient(160deg,#7B00C0,#A000F0 55%,#BE4FFF);}
+html{height:100%;height:-webkit-fill-available;height:100dvh;height:var(--app-height,100dvh);background:linear-gradient(160deg,#7B00C0,#A000F0 55%,#BE4FFF);overflow:hidden;}body{height:100%;height:-webkit-fill-available;height:100dvh;height:var(--app-height,100dvh);overflow:hidden;background:linear-gradient(160deg,#7B00C0,#A000F0 55%,#BE4FFF);}
 body{font-family:'Inter',sans-serif;color:var(--wb-text);}
 
 /* ══ PHONE SHELL — на мобильном = весь экран ══ */
 .phone{
-  width:100%;height:100%;height:-webkit-fill-available;height:100dvh;
+  width:100%;height:100%;height:-webkit-fill-available;height:100dvh;height:var(--app-height,100dvh);
   background:var(--wb-surface);border-radius:0;overflow:hidden;
   position:relative;display:flex;flex-direction:column;
   box-shadow:none;
