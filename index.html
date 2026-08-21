@@ -730,6 +730,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
         <span style="font-size:16px;flex-shrink:0;">📋</span>
         <span style="font-size:13px;font-weight:700;color:var(--text2);white-space:nowrap;">Загрузка номенклатур</span>
         <span class="results-info" id="nlistInfo" style="margin-left:4px;">—</span>
+        <span id="nlistShopBadge" style="display:none;margin-left:6px;background:linear-gradient(135deg,#2a5fa8,#4a7fc1);color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">🏬 Магазин №—</span>
       </div>
       <div class="search-wrap" style="max-width:340px;min-width:180px;">
         <span style="position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:13px;pointer-events:none;">🔍</span>
@@ -748,6 +749,11 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
         style="background:linear-gradient(135deg,#1a7a3a,#2aaa5a);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;white-space:nowrap;transition:all .2s;"
         onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
         📥 Excel
+      </button>
+      <button onclick="openNlistHistory()" title="История загруженных файлов по магазинам"
+        style="background:linear-gradient(135deg,#5a5a6a,#7a7a8a);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;white-space:nowrap;transition:all .2s;"
+        onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
+        📜 История
       </button>
       <button onclick="clearNlist()"
         style="background:linear-gradient(135deg,#7a1a1a,#c03030);color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;white-space:nowrap;transition:all .2s;"
@@ -785,6 +791,52 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
         <tbody id="nlistBody"></tbody>
       </table>
     </div>
+  </div>
+</div>
+
+<!-- ═══ NLIST: модалка номера магазина (обязательна перед загрузкой файла) ═══ -->
+<div id="nlistShopOverlay" style="display:none;position:fixed;inset:0;background:rgba(20,20,35,.6);backdrop-filter:blur(5px);z-index:700;align-items:center;justify-content:center;" onclick="if(event.target===this)closeNlistShopModal()">
+  <div style="background:var(--surface2);border-radius:18px;width:min(420px,94vw);box-shadow:0 24px 64px rgba(0,0,0,.35);overflow:hidden;animation:authIn .3s ease;">
+    <div style="background:linear-gradient(135deg,#2a5fa8,#4a7fc1);padding:18px 24px;display:flex;align-items:center;gap:12px;">
+      <span style="font-size:22px;">🏬</span>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:16px;font-weight:800;color:#fff;">Номер магазина</div>
+        <div id="nlistShopFileLabel" style="font-size:11px;color:rgba(255,255,255,.75);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Укажите номер магазина перед загрузкой</div>
+      </div>
+      <button onclick="closeNlistShopModal()" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:30px;height:30px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:900;flex-shrink:0;">✕</button>
+    </div>
+    <div style="padding:22px 24px;display:flex;flex-direction:column;gap:14px;">
+      <div>
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;">№ магазина *</div>
+        <input id="nlistShopInput" type="text" placeholder="Например: 1234" autocomplete="off"
+          style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:15px;font-family:'JetBrains Mono',monospace;font-weight:700;outline:none;box-sizing:border-box;color:var(--text);background:var(--surface3);"
+          onfocus="this.style.borderColor='#4a7fc1'" onblur="this.style.borderColor=''"
+          onkeydown="if(event.key==='Enter')confirmNlistShopModal()">
+      </div>
+      <div id="nlistShopError" style="font-size:12px;font-weight:700;color:#c03030;min-height:16px;"></div>
+      <button onclick="confirmNlistShopModal()"
+        style="width:100%;height:44px;background:linear-gradient(135deg,#2a5fa8,#4a7fc1);color:#fff;border:none;border-radius:11px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s;box-shadow:0 4px 16px rgba(74,127,193,.35);"
+        onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
+        📂 Загрузить список
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ NLIST: модалка истории загрузок по магазинам ═══ -->
+<div id="nlistHistoryOverlay" style="display:none;position:fixed;inset:0;background:rgba(20,20,35,.6);backdrop-filter:blur(5px);z-index:700;align-items:center;justify-content:center;" onclick="if(event.target===this)closeNlistHistory()">
+  <div style="background:var(--surface2);border-radius:18px;width:min(620px,94vw);max-height:80vh;box-shadow:0 24px 64px rgba(0,0,0,.35);overflow:hidden;display:flex;flex-direction:column;animation:authIn .3s ease;">
+    <div style="background:linear-gradient(135deg,#2a5fa8,#4a7fc1);padding:18px 24px;display:flex;align-items:center;gap:10px;flex-shrink:0;">
+      <span style="font-size:22px;">📜</span>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:16px;font-weight:800;color:#fff;">История загрузок</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.75);">Списки номенклатур по магазинам</div>
+      </div>
+      <button onclick="clearNlistHistory()" title="Очистить всю историю"
+        style="background:rgba(255,255,255,.15);border:none;color:#fff;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;">🗑 Очистить всё</button>
+      <button onclick="closeNlistHistory()" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:30px;height:30px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:900;flex-shrink:0;">✕</button>
+    </div>
+    <div id="nlistHistoryBody" style="flex:1;overflow-y:auto;padding:14px 18px;display:flex;flex-direction:column;gap:8px;"></div>
   </div>
 </div>
 <div class="upload-modal" id="kitDetailModal" style="max-width:780px;width:92vw;padding:0;overflow:hidden;border-radius:16px;">
@@ -5038,6 +5090,8 @@ document.addEventListener('click',function(e){
 
 // ═══ NOMENCLATURE LIST ═══
 var nlistItems = []; // массив найденных позиций
+var nlistCurrentShop = ''; // номер магазина текущего загруженного списка
+var nlistPendingFile = null; // файл, ожидающий ввода номера магазина
 
 // Сортировка списка номенклатур: {key: 'code'|'name'|'short'|'cat'|null, dir: 1|-1}
 var nlistSort = {key: null, dir: 1};
@@ -5094,6 +5148,7 @@ function sortNlist(key){
 
 function clearNlist(){
   nlistItems = [];
+  nlistCurrentShop = '';
   nlistSort = {key: null, dir: 1};
   nlistQuery = '';
   var si = document.getElementById('nlistSearch');
@@ -5101,8 +5156,20 @@ function clearNlist(){
   var sc = document.getElementById('nlistSearchClear');
   if(sc) sc.style.display = 'none';
   _nsortArrows();
+  updateNlistShopBadge();
   renderNlist();
   document.getElementById('cnt-nlist').textContent = '0';
+}
+
+function updateNlistShopBadge(){
+  var badge = document.getElementById('nlistShopBadge');
+  if(!badge) return;
+  if(nlistCurrentShop){
+    badge.style.display = 'inline-block';
+    badge.textContent = '🏬 Магазин №' + nlistCurrentShop;
+  } else {
+    badge.style.display = 'none';
+  }
 }
 
 function renderNlist(){
@@ -5221,7 +5288,32 @@ function renderNlist(){
   body.appendChild(frag);
 }
 
-function loadNlistFile(file){
+// Поиск кодов в allItems, lightAll, tvAll — вынесено отдельно, чтобы
+// можно было пересобрать список и при восстановлении из истории загрузок
+// (актуальными данными каталога на текущий момент, без повторной загрузки xlsx).
+function buildNlistItemsFromCodes(codes){
+  return codes.map(function(code){
+    // Поиск без учёта регистра
+    var found = allItems.find(function(it){ return it.code && it.code.toLowerCase() === code.toLowerCase(); });
+    var prefix = '';
+    if(!found){
+      found = lightAll.find(function(it){ return it.code && it.code.toLowerCase() === code.toLowerCase(); });
+      if(found){ found = Object.assign({}, found, {cat:'light'}); prefix = 'L:'; }
+    }
+    if(!found){
+      found = tvAll.find(function(it){ return it.code && it.code.toLowerCase() === code.toLowerCase(); });
+      if(found){ found = Object.assign({}, found, {cat:'tv'}); prefix = 'TV:'; }
+    }
+
+    if(found){
+      return Object.assign({}, found, {_found: true, _prefix: prefix});
+    } else {
+      return {code: code, name: '', short: '', cat: '', _found: false, _prefix: ''};
+    }
+  });
+}
+
+function loadNlistFile(file, shopNumber){
   if(!file) return;
   var reader = new FileReader();
   reader.onload = function(e){
@@ -5243,26 +5335,9 @@ function loadNlistFile(file){
 
       if(!codes.length){ showToast('Не найдено кодов в первом столбце', 'error'); return; }
 
-      // Ищем каждый код в allItems, lightAll, tvAll
-      nlistItems = codes.map(function(code){
-        // Поиск без учёта регистра
-        var found = allItems.find(function(it){ return it.code && it.code.toLowerCase() === code.toLowerCase(); });
-        var prefix = '';
-        if(!found){
-          found = lightAll.find(function(it){ return it.code && it.code.toLowerCase() === code.toLowerCase(); });
-          if(found){ found = Object.assign({}, found, {cat:'light'}); prefix = 'L:'; }
-        }
-        if(!found){
-          found = tvAll.find(function(it){ return it.code && it.code.toLowerCase() === code.toLowerCase(); });
-          if(found){ found = Object.assign({}, found, {cat:'tv'}); prefix = 'TV:'; }
-        }
-
-        if(found){
-          return Object.assign({}, found, {_found: true, _prefix: prefix});
-        } else {
-          return {code: code, name: '', short: '', cat: '', _found: false, _prefix: ''};
-        }
-      });
+      nlistItems = buildNlistItemsFromCodes(codes);
+      nlistCurrentShop = shopNumber || '';
+      updateNlistShopBadge();
 
       var foundCnt  = nlistItems.filter(function(i){ return i._found; }).length;
       var notFound  = nlistItems.length - foundCnt;
@@ -5271,9 +5346,12 @@ function loadNlistFile(file){
       _nsortArrows();
       renderNlist();
 
-      var msg = '📋 Загружено ' + nlistItems.length + ' кодов';
+      var msg = '📋 Магазин №' + nlistCurrentShop + ' · загружено ' + nlistItems.length + ' кодов';
       if(notFound) msg += ' · ❓ не найдено: ' + notFound;
       showToast(msg, foundCnt ? 'ok' : 'error');
+
+      // Запоминаем загрузку в истории (привязана к номеру магазина)
+      saveNlistHistoryEntry(nlistCurrentShop, file.name, codes, foundCnt, nlistItems.length);
 
       // Переключаемся на панель
       selectCat('nlist');
@@ -5285,13 +5363,179 @@ function loadNlistFile(file){
   reader.readAsArrayBuffer(file);
 }
 
-// File input
+// ═══ Номер магазина: обязателен при каждой загрузке xlsx ═══
+function openNlistShopModal(file){
+  if(!file) return;
+  nlistPendingFile = file;
+  var label = document.getElementById('nlistShopFileLabel');
+  if(label) label.textContent = '📄 ' + file.name;
+  var inp = document.getElementById('nlistShopInput');
+  if(inp) inp.value = nlistCurrentShop || '';
+  var err = document.getElementById('nlistShopError');
+  if(err) err.textContent = '';
+  var ov = document.getElementById('nlistShopOverlay');
+  ov.style.display = 'flex';
+  setTimeout(function(){ if(inp) inp.focus(); }, 50);
+}
+
+function closeNlistShopModal(){
+  document.getElementById('nlistShopOverlay').style.display = 'none';
+  nlistPendingFile = null;
+}
+
+function confirmNlistShopModal(){
+  var inp = document.getElementById('nlistShopInput');
+  var err = document.getElementById('nlistShopError');
+  var shop = inp ? inp.value.trim() : '';
+  if(!shop){
+    if(err) err.textContent = '❌ Введите номер магазина — это обязательное поле';
+    if(inp) inp.focus();
+    return;
+  }
+  var file = nlistPendingFile;
+  document.getElementById('nlistShopOverlay').style.display = 'none';
+  nlistPendingFile = null;
+  loadNlistFile(file, shop);
+}
+
+// ═══ Память загруженных файлов (история по магазинам) ═══
+var NLIST_HISTORY_KEY = 'nlistUploadHistory';
+var NLIST_HISTORY_MAX = 30;
+
+function loadNlistHistoryList(){
+  try{ return JSON.parse(localStorage.getItem(NLIST_HISTORY_KEY) || '[]'); }catch(e){ return []; }
+}
+
+function saveNlistHistoryList(hist){
+  try{
+    localStorage.setItem(NLIST_HISTORY_KEY, JSON.stringify(hist));
+  }catch(e){
+    // Место в localStorage закончилось — обрезаем историю сильнее и пробуем ещё раз
+    try{
+      var trimmed = hist.slice(0, 10);
+      localStorage.setItem(NLIST_HISTORY_KEY, JSON.stringify(trimmed));
+    }catch(e2){ console.warn('Не удалось сохранить историю загрузок номенклатур', e2); }
+  }
+}
+
+function saveNlistHistoryEntry(shop, fileName, codes, foundCnt, totalCnt){
+  var hist = loadNlistHistoryList();
+  hist.unshift({
+    id: Date.now() + '-' + Math.random().toString(36).slice(2,8),
+    shop: shop,
+    fileName: fileName,
+    date: new Date().toISOString(),
+    codes: codes,
+    count: totalCnt,
+    foundCount: foundCnt
+  });
+  if(hist.length > NLIST_HISTORY_MAX) hist = hist.slice(0, NLIST_HISTORY_MAX);
+  saveNlistHistoryList(hist);
+}
+
+function removeNlistHistoryEntry(id){
+  var hist = loadNlistHistoryList().filter(function(h){ return h.id !== id; });
+  saveNlistHistoryList(hist);
+  renderNlistHistory();
+}
+
+function clearNlistHistory(){
+  if(!loadNlistHistoryList().length) return;
+  if(!confirm('Удалить всю историю загрузок номенклатур по магазинам?')) return;
+  saveNlistHistoryList([]);
+  renderNlistHistory();
+}
+
+function openNlistHistory(){
+  renderNlistHistory();
+  document.getElementById('nlistHistoryOverlay').style.display = 'flex';
+}
+
+function closeNlistHistory(){
+  document.getElementById('nlistHistoryOverlay').style.display = 'none';
+}
+
+function fmtNlistDate(iso){
+  try{
+    var d = new Date(iso);
+    var p = function(n){ return n < 10 ? '0'+n : ''+n; };
+    return p(d.getDate())+'.'+p(d.getMonth()+1)+'.'+d.getFullYear()+' '+p(d.getHours())+':'+p(d.getMinutes());
+  }catch(e){ return iso; }
+}
+
+function renderNlistHistory(){
+  var body = document.getElementById('nlistHistoryBody');
+  if(!body) return;
+  var hist = loadNlistHistoryList();
+  body.innerHTML = '';
+  if(!hist.length){
+    body.innerHTML = '<div style="text-align:center;color:var(--text3);font-size:13px;padding:30px 10px;">История пуста — загрузите список номенклатур с номером магазина</div>';
+    return;
+  }
+  hist.forEach(function(h){
+    var row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:12px;background:var(--surface3);border:1px solid var(--border);border-radius:12px;padding:10px 14px;';
+
+    var tag = document.createElement('div');
+    tag.style.cssText = 'flex-shrink:0;min-width:56px;padding:6px 8px;border-radius:8px;background:linear-gradient(135deg,#2a5fa8,#4a7fc1);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;text-align:center;line-height:1.2;';
+    tag.textContent = '№' + h.shop;
+
+    var info = document.createElement('div');
+    info.style.cssText = 'flex:1;min-width:0;';
+    var line1 = document.createElement('div');
+    line1.style.cssText = 'font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;';
+    line1.textContent = h.fileName || 'без имени';
+    var line2 = document.createElement('div');
+    line2.style.cssText = 'font-size:11px;color:var(--text3);margin-top:2px;';
+    line2.textContent = fmtNlistDate(h.date) + ' · ' + h.count + ' позиций' + (h.foundCount != null ? (' · найдено ' + h.foundCount) : '');
+    info.appendChild(line1); info.appendChild(line2);
+
+    var btnWrap = document.createElement('div');
+    btnWrap.style.cssText = 'display:flex;gap:6px;flex-shrink:0;';
+    var openBtn = document.createElement('button');
+    openBtn.textContent = '↩ Открыть';
+    openBtn.style.cssText = 'background:linear-gradient(135deg,#2a5fa8,#4a7fc1);color:#fff;border:none;border-radius:7px;padding:7px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;';
+    openBtn.onclick = (function(id){ return function(){ restoreNlistFromHistory(id); }; })(h.id);
+    var delBtn = document.createElement('button');
+    delBtn.textContent = '🗑';
+    delBtn.title = 'Удалить запись';
+    delBtn.style.cssText = 'background:var(--btn-close);color:#fff;border:none;border-radius:7px;width:30px;font-size:12px;cursor:pointer;';
+    delBtn.onclick = (function(id){ return function(){ removeNlistHistoryEntry(id); }; })(h.id);
+    btnWrap.appendChild(openBtn); btnWrap.appendChild(delBtn);
+
+    row.appendChild(tag); row.appendChild(info); row.appendChild(btnWrap);
+    body.appendChild(row);
+  });
+}
+
+function restoreNlistFromHistory(id){
+  var hist = loadNlistHistoryList();
+  var entry = hist.find(function(h){ return h.id === id; });
+  if(!entry) return;
+  nlistItems = buildNlistItemsFromCodes(entry.codes);
+  nlistCurrentShop = entry.shop;
+  updateNlistShopBadge();
+  document.getElementById('cnt-nlist').textContent = nlistItems.length;
+  nlistSort = {key: null, dir: 1};
+  nlistQuery = '';
+  var si = document.getElementById('nlistSearch');
+  if(si) si.value = '';
+  _nsortArrows();
+  renderNlist();
+  var foundCnt = nlistItems.filter(function(i){ return i._found; }).length;
+  showToast('📜 Восстановлен список магазина №' + entry.shop + ' (' + entry.count + ' позиций)', foundCnt ? 'ok' : 'error');
+  closeNlistHistory();
+  selectCat('nlist');
+}
+
+// File input — выбор файла сразу открывает окно ввода номера магазина;
+// сама загрузка/разбор xlsx происходит только после подтверждения номера.
 document.getElementById('nlistFileInput').addEventListener('change', function(e){
-  loadNlistFile(e.target.files[0]);
+  openNlistShopModal(e.target.files[0]);
   this.value = '';
 });
 
-// Drag & drop на зону
+// Drag & drop на зону — тот же обязательный шаг с номером магазина
 (function(){
   var dz = document.getElementById('nlistDropZone');
   dz.addEventListener('dragover', function(e){ e.preventDefault(); dz.style.background='#e8f4e8'; });
@@ -5299,7 +5543,7 @@ document.getElementById('nlistFileInput').addEventListener('change', function(e)
   dz.addEventListener('drop', function(e){
     e.preventDefault(); dz.style.background='';
     var f = e.dataTransfer.files[0];
-    if(f) loadNlistFile(f);
+    if(f) openNlistShopModal(f);
   });
 })();
 
