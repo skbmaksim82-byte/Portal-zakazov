@@ -466,7 +466,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <div>
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="logo-text">Каталог оборудования Kari</div>
-        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.67</div>
+        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.68</div>
       </div>
       <div class="logo-sub" id="catalogInfo">Загрузка…</div>
     </div>
@@ -488,7 +488,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
       <span style="font-size:20px;">✉️</span>
       <div style="flex:1;">
         <div style="font-size:16px;font-weight:800;color:#fff;">Обратная связь</div>
-        <div style="font-size:11px;color:rgba(255,255,255,.65);">Сообщение отправится на m&#46;skiba&#64;kari&#46;com</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.65);">Сообщение отправится на m.skiba@kari.com</div>
       </div>
       <button onclick="closeFeedback()" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:28px;height:28px;border-radius:50%;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:900;">✕</button>
     </div>
@@ -530,7 +530,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <ul class="authors-list" id="authorsList">
       <li><span>👤</span> —</li>
     </ul>
-    <div style="font-size:11px;color:var(--text3);margin-bottom:16px;">Версия <span id="modalAppVersion">1.67</span> · 2026</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:16px;">Версия <span id="modalAppVersion">1.68</span> · 2026</div>
     <button onclick="document.getElementById('authorsOverlay').classList.remove('show')"
       style="background:linear-gradient(135deg,#4a7fc1,#7458b8);color:#fff;border:none;border-radius:10px;
       padding:10px 28px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;
@@ -545,6 +545,9 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
   </button>
   <button class="cat-btn" onclick="selectCat('kits')" id="btn-kits" style="--cat-color:#6b48c8">
     <span class="cat-icon lottie-icon" id="lottie-cat-kits" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Комплекты</span><span class="cat-count" id="cnt-kits">0</span>
+  </button>
+  <button class="cat-btn" onclick="selectCat('consum')" id="btn-consum" style="--cat-color:#1f9d55">
+    <span class="cat-icon lottie-icon" id="lottie-cat-consum" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Заказ расходных материалов ПКС</span><span class="cat-count" id="cnt-consum">0</span>
   </button>
   <div class="topbar-divider"></div>
   <button class="cat-btn" onclick="selectCat('Торговое оборудование')" id="btn-Торговое оборудование" style="--cat-color:#4a7fc1">
@@ -694,6 +697,9 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
   <!-- ═══ TV PANEL ═══ -->
   <div id="tvPanel" style="display:none;flex:1;overflow:hidden;flex-direction:row;">
     <div class="main" style="display:flex;flex-direction:column;overflow:hidden;flex:1;">
+      <div id="consumBanner" style="display:none;align-items:center;gap:8px;margin:12px 14px 0;padding:10px 14px;background:linear-gradient(135deg,#e8f7ee,#d4f3e0);border:1.5px solid #8fd9ab;border-radius:10px;font-size:12.5px;font-weight:700;color:#1a6b3a;">
+        🧰 Заказ расходных материалов ПКС — показаны только расходные материалы слаботочного оборудования, доступные к заказу
+      </div>
       <div class="toolbar">
         <div class="search-wrap">
           <span class="search-icon">🔍</span>
@@ -1204,9 +1210,9 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 <div class="overlay" id="overlay" onclick="closeAll()"></div>
 <div class="toast" id="toast"></div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 // ═══ ВЕРСИЯ ПРИЛОЖЕНИЯ ═══
-var APP_VERSION = '1.67';
+var APP_VERSION = '1.68';
 // При каждом обновлении index.html — менять только эту строку (1.17, 1.18 и т.д.)
 (function(){
   var el = document.getElementById('appVersionBadge');
@@ -1292,6 +1298,7 @@ function parseSlabotRows(rows){
   var iCat   = hRow.findIndex(function(c){ return c.indexOf('категория')>=0; });
   var iSubcat = hRow.findIndex(function(c){ return c.indexOf('подраздел')>=0; });
   var iAnalog = hRow.findIndex(function(c){ return c.indexOf('аналог')>=0; });
+  var iConsum = hRow.findIndex(function(c){ return c.indexOf('расходн')>=0; });
   if(iCode<0) iCode=0; if(iName<0) iName=1; if(iShort<0) iShort=2; if(iCat<0) iCat=4;
 
   var newCats = {};
@@ -1304,6 +1311,9 @@ function parseSlabotRows(rows){
     var item = {code:code, name:name, short:String(r[iShort]||'').trim()};
     if(iSubcat>=0&&r[iSubcat]){var sv=String(r[iSubcat]||'').trim();if(sv)item.subcat=sv;}
     if(iAnalog>=0&&r[iAnalog]){var av=String(r[iAnalog]||'').trim();if(av)item.analogs=av;}
+    // Колонка «Расходные материалы» — если заполнена, позиция доступна к заказу
+    // через кнопку «Заказ расходных материалов ПКС»
+    if(iConsum>=0){ var cv=String(r[iConsum]||'').trim(); if(cv) item.consumable=true; }
     if(!newCats[cat]) newCats[cat]=[];
     newCats[cat].push(item);
   }
@@ -1318,6 +1328,10 @@ function parseSlabotRows(rows){
   var cnt = document.getElementById('cnt-tv');
   if(cnt) cnt.textContent = flat.length.toLocaleString('ru');
   document.getElementById('tvResultsInfo').textContent = flat.length.toLocaleString('ru') + ' позиций';
+  // Счётчик расходных материалов (кнопка «Заказ расходных материалов ПКС»)
+  var consumCnt = flat.filter(function(it){ return it.consumable; }).length;
+  var ccnt = document.getElementById('cnt-consum');
+  if(ccnt) ccnt.textContent = consumCnt.toLocaleString('ru');
   if(currentTab==='tv') applyTvFilters();
 
   // Обновить заголовок панели (категории)
@@ -1394,6 +1408,7 @@ function parseShopsRows(rows){
 var TV_ITEMS = []; // заполняется из Excel при загрузке
 var tvAll = [], tvFiltered = [], tvRendered = 0, tvRendering = false;
 var tvSearch = '', tvPhotoFilter = 'all', currentTvSubcat = '';
+var tvMode = 'all'; // 'all' — обычный раздел «Слаботочное оборудование», 'consum' — «Заказ расходных материалов ПКС»
 
 // ═══ GOOGLE DRIVE IMAGES CONFIG ═══
 // Инструкция по настройке:
@@ -1618,12 +1633,39 @@ function rebuildSidebar(obj){
 
 function showTvPanel(){
   currentTab = 'tv';
+  tvMode = 'all';
   document.getElementById('mainCatalogPanel').style.display = 'none';
   document.getElementById('lightPanel').style.display = 'none';
   document.getElementById('kitsPanel').style.display = 'none';
   document.getElementById('tvPanel').style.display = 'flex';
   document.getElementById('nlistPanel').style.display = 'none';
-  if(tvFiltered.length === 0 && tvAll.length > 0) applyTvFilters();
+  updateTvPanelUI();
+  applyTvFilters();
+}
+
+// ═══ «Заказ расходных материалов ПКС» — тот же tvPanel, но только позиции
+// с заполненной колонкой «Расходные материалы» из листа «Слаботочное оборудование» ═══
+function showConsumPanel(){
+  currentTab = 'tv';
+  tvMode = 'consum';
+  currentTvSubcat = '';
+  document.getElementById('mainCatalogPanel').style.display = 'none';
+  document.getElementById('lightPanel').style.display = 'none';
+  document.getElementById('kitsPanel').style.display = 'none';
+  document.getElementById('tvPanel').style.display = 'flex';
+  document.getElementById('nlistPanel').style.display = 'none';
+  updateTvPanelUI();
+  applyTvFilters();
+}
+
+function updateTvPanelUI(){
+  var isConsum = (tvMode === 'consum');
+  var banner = document.getElementById('consumBanner');
+  if(banner) banner.style.display = isConsum ? 'flex' : 'none';
+  var sInput = document.getElementById('tvSearch');
+  if(sInput) sInput.placeholder = isConsum ? 'Поиск по расходным материалам…' : 'Поиск по слаботочному оборудованию…';
+  var everywhereBtn = document.getElementById('searchAllBtnTv');
+  if(everywhereBtn) everywhereBtn.style.display = isConsum ? 'none' : '';
 }
 
 function showNlistPanel(){
@@ -1651,7 +1693,8 @@ function setTvPhotoFilter(mode){
 
 function applyTvFilters(){
   var q = tvSearch.toLowerCase().trim();
-  tvFiltered = tvAll.filter(function(it){
+  var basePool = tvMode==='consum' ? tvAll.filter(function(it){ return it.consumable; }) : tvAll;
+  tvFiltered = basePool.filter(function(it){
     if(currentTvSubcat && (it.subcat||'')!==currentTvSubcat) return false;
     if(q&&!(it.name.toLowerCase().indexOf(q) >= 0 || it.code.toLowerCase().indexOf(q) >= 0 || (it.short||'').toLowerCase().indexOf(q) >= 0)) return false;
     if(tvPhotoFilter==='yes'){ if(!getImgUrl(it)) return false; }
@@ -1663,13 +1706,13 @@ function applyTvFilters(){
   if(!tvFiltered.length){
     var em = document.createElement('div');
     em.style.cssText = 'width:100%;text-align:center;padding:40px;color:var(--text3);font-size:14px';
-    em.textContent = '🔍 Ничего не найдено';
+    em.textContent = (tvMode==='consum' && !basePool.length) ? '🧰 Расходные материалы пока не отмечены в справочнике' : '🔍 Ничего не найдено';
     document.getElementById('tvBody').appendChild(em);
   } else { renderTvPage(); }
   document.getElementById('tvResultsInfo').textContent =
-    tvFiltered.length === tvAll.length
-      ? tvAll.length.toLocaleString('ru') + ' позиций'
-      : tvFiltered.length.toLocaleString('ru') + ' из ' + tvAll.length.toLocaleString('ru');
+    tvFiltered.length === basePool.length
+      ? basePool.length.toLocaleString('ru') + ' позиций'
+      : tvFiltered.length.toLocaleString('ru') + ' из ' + basePool.length.toLocaleString('ru');
 }
 
 function renderTvPage(){
@@ -1690,11 +1733,12 @@ function renderTvPage(){
 
     var imgUrl = getImgUrl(it);
     if(imgUrl){
+      var phIcon = tvMode==='consum' ? '🧰' : '📺';
       var img = document.createElement('img'); img.className = 'product-tile-photo'; img.src = imgUrl; img.loading = 'lazy';
-      img.onerror = function(){ this.outerHTML = '<div class="product-tile-photo-placeholder">📺</div>'; };
+      img.onerror = function(){ this.outerHTML = '<div class="product-tile-photo-placeholder">'+phIcon+'</div>'; };
       tile.appendChild(img);
     } else {
-      var ph = document.createElement('div'); ph.className = 'product-tile-photo-placeholder'; ph.textContent = '📺';
+      var ph = document.createElement('div'); ph.className = 'product-tile-photo-placeholder'; ph.textContent = tvMode==='consum' ? '🧰' : '📺';
       tile.appendChild(ph);
     }
 
@@ -2562,7 +2606,7 @@ var catDisplayNames = {
   'Торговое оборудование':'Торговое оборудование','Ювелирное оборудование':'Ювелирное оборудование',
   'Рекламные материалы':'Рекламные материалы','Канцелярия':'Канцелярия',
   'ИТ оборудование':'ИТ оборудование','karikids':'Кари Кидс',
-  'kits':'Комплекты','nlist':'Загрузка номенклатур'
+  'kits':'Комплекты','nlist':'Загрузка номенклатур','consum':'Заказ расходных материалов ПКС'
 };
 function getCatDisplayName(cat){ return catDisplayNames[cat] || cat; }
 
@@ -2758,6 +2802,7 @@ function restoreNavState(){
   if(st.cat === 'light'){ hasData = (typeof lightAll !== 'undefined' && lightAll.length > 0); }
   else if(st.cat === 'tv'){ hasData = (typeof tvAll !== 'undefined' && tvAll.length > 0); }
   else if(st.cat === 'kits'){ hasData = (typeof allKits !== 'undefined' && allKits.length > 0); }
+  else if(st.cat === 'consum'){ hasData = (typeof tvAll !== 'undefined' && tvAll.length > 0); }
   else { hasData = allItems.some(function(it){ return it.cat === st.cat; }); }
   if(!hasData && st.cat !== 'karikids') return;
   if(st.cat === 'karikids' && !allItems.length) return;
@@ -2789,6 +2834,7 @@ function selectCat(c){
     return;
   }
   if(c==='kits'){hideSubcatScreen();showKitsPanel();return;}
+  if(c==='consum'){hideSubcatScreen();showConsumPanel();return;}
   if(c==='nlist'){hideSubcatScreen();showNlistPanel();return;}
   if(c==='karikids'||c==='all'){hideSubcatScreen();showCatalogPanel();applyFilters();return;}
   // Для обычных разделов — показываем экран выбора подраздела
@@ -4707,9 +4753,9 @@ function exportToExcel(section){
   } else if(section==='tv'){
     data = tvFiltered;
     headers = ['Код','Наименование','Краткое описание'];
-    sheetName = 'Слаботочное оборудование';
+    sheetName = tvMode==='consum' ? 'Расходные материалы ПКС' : 'Слаботочное оборудование';
     var q = document.getElementById('tvSearch').value.trim();
-    filename = 'Слаботочное' + (q ? '_'+q : '') + '.xlsx';
+    filename = (tvMode==='consum' ? 'Расходные_материалы' : 'Слаботочное') + (q ? '_'+q : '') + '.xlsx';
   } else if(section==='nlist'){
     data = nlistVisible();
     headers = ['Код','Наименование','Краткое описание','Раздел'];
@@ -5645,6 +5691,7 @@ document.getElementById('nlistFileInput').addEventListener('change', function(e)
   setIcon('lottie-cat-uvelir', makeCatSVG('💎','#b84580'));
   setIcon('lottie-cat-reklam', makeCatSVG('📢','#c07a2a'));
   setIcon('lottie-cat-kits',   makeCatSVG('📦','#6b48c8'));
+  setIcon('lottie-cat-consum', makeCatSVG('🧰','#1f9d55'));
 
 })();
 
