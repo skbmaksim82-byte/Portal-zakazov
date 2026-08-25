@@ -467,7 +467,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <div>
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="logo-text">Каталог оборудования Kari</div>
-        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.69</div>
+        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.70</div>
       </div>
       <div class="logo-sub" id="catalogInfo">Загрузка…</div>
     </div>
@@ -532,7 +532,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <ul class="authors-list" id="authorsList">
       <li><span>👤</span> —</li>
     </ul>
-    <div style="font-size:11px;color:var(--text3);margin-bottom:16px;">Версия <span id="modalAppVersion">1.69</span> · 2026</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:16px;">Версия <span id="modalAppVersion">1.70</span> · 2026</div>
     <button onclick="document.getElementById('authorsOverlay').classList.remove('show')"
       style="background:linear-gradient(135deg,#4a7fc1,#7458b8);color:#fff;border:none;border-radius:10px;
       padding:10px 28px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;
@@ -1211,7 +1211,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 
 <script>
 // ═══ ВЕРСИЯ ПРИЛОЖЕНИЯ ═══
-var APP_VERSION = '1.69';
+var APP_VERSION = '1.70';
 // При каждом обновлении index.html — менять только эту строку (1.17, 1.18 и т.д.)
 (function(){
   var el = document.getElementById('appVersionBadge');
@@ -5602,10 +5602,11 @@ document.getElementById('nlistFileInput').addEventListener('change', function(e)
   // Карта: id контейнера → имя файла в папке IKON
   var ICONS = [
     // Шапка
-    { id: 'lottie-feedback', file: 'Обратная связь.json',       size: 22 },
-    { id: 'lottie-photo',    file: 'Загрузка Фото.json',        size: 22 },
-    { id: 'lottie-cart',     file: 'Корзина.json',              size: 24 },
-    { id: 'lottie-update',   file: 'Обновить.json',             size: 22 },
+    { id: 'lottie-feedback',   file: 'Обратная связь.json',  size: 16 },
+    { id: 'lottie-photo',      file: 'Загрузка Фото.json',   size: 16 },
+    { id: 'lottie-cart',       file: 'Корзина.json',         size: 18 },
+    { id: 'lottie-update',     file: 'Обновить.json',        size: 16 },
+    { id: 'lottie-cat-consum', file: 'Заказ ПКС.json',       size: 18 },
     // Поиск — все 4 панели (один файл, четыре контейнера)
     { id: 'lottie-search-main',  file: 'Поиск по категориям.json', size: 22 },
     { id: 'lottie-search-light', file: 'Поиск по категориям.json', size: 22 },
@@ -5618,7 +5619,7 @@ document.getElementById('nlistFileInput').addEventListener('change', function(e)
     { id: 'lottie-cat-it',     file: 'ИТ Оборудование.json',          size: 26 },
     { id: 'lottie-cat-kanc',   file: 'Канцелярия.json',               size: 26 },
     { id: 'lottie-cat-kids',   file: 'Кари Кидс.json',                size: 26 },
-    { id: 'lottie-cat-nlist',  file: 'Загрузка номенклатур.json',     size: 26 },
+    { id: 'lottie-cat-nlist',  file: 'Загрузка номенклатур.json',     size: 16 },
   ];
 
   // Хранилище анимаций
@@ -5690,7 +5691,6 @@ document.getElementById('nlistFileInput').addEventListener('change', function(e)
   setIcon('lottie-cat-uvelir', makeCatSVG('💎','#b84580'));
   setIcon('lottie-cat-reklam', makeCatSVG('📢','#c07a2a'));
   setIcon('lottie-cat-kits',   makeCatSVG('📦','#6b48c8'));
-  setIcon('lottie-cat-consum', makeCatSVG('🧰','#1f9d55'));
 
 })();
 
