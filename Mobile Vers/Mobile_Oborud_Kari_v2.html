@@ -207,6 +207,7 @@ body{font-family:'Inter',sans-serif;color:var(--wb-text);}
 .act-btn.photo{color:#C00080;border-color:rgba(200,0,128,.25);background:#FFF0F9;}
 .act-btn.feedback{color:#B85000;border-color:rgba(184,80,0,.25);background:#FFF8E6;}
 .act-btn.theme{color:var(--wb-text2);border-color:var(--wb-border);background:var(--wb-gray);}
+.act-btn.consum{color:#1f9d55;border-color:rgba(31,157,85,.25);background:#EAF9F0;}
 
 /* ══ SKELETON LOADERS ══ */
 @keyframes skeletonPulse{0%{background-position:-200px 0;}100%{background-position:calc(200px + 100%) 0;}}
@@ -717,6 +718,7 @@ body{font-family:'Inter',sans-serif;color:var(--wb-text);}
     <div class="breadcrumb" id="breadcrumb"></div>
     <div class="action-row">
       <button class="act-btn update" onclick="mobUpdateFromGitHub()">☁ Обновить</button>
+      <button class="act-btn consum" onclick="goSection('consum')" title="Заказ расходных материалов ПКС">🧰 Расходные ПКС</button>
       <button class="act-btn photo" onclick="openModal('Photo')">📸 Загрузить фото</button>
       <button class="act-btn feedback" onclick="openModal('Feedback')">✉ Отзыв</button>
       <button class="act-btn theme" id="themeToggleBtn" onclick="toggleTheme()">🌙 Тема</button>
@@ -1051,7 +1053,8 @@ var SECTIONS = [
   {id:'it',     name:'\u0418\u0422 \u043e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u0435',          emoji:'\uD83D\uDCBB', color:'#0e6ba8'},
   {id:'kits',   name:'\u041a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u044b',              emoji:'\uD83D\uDCCB', color:'#6b48c8', wide:true},
   {id:'favs',   name:'\u0418\u0437\u0431\u0440\u0430\u043d\u043d\u043e\u0435',              emoji:'\u2B50', color:'#e0a000', wide:true},
-  {id:'nlist',  name:'\u0417\u0430\u0433\u0440\u0443\u0437\u043a\u0430 \u043d\u043e\u043c\u0435\u043d\u043a\u043b\u0430\u0442\u0443\u0440',   emoji:'\uD83D\uDCE4', color:'#be5103', wide:true}
+  {id:'nlist',  name:'\u0417\u0430\u0433\u0440\u0443\u0437\u043a\u0430 \u043d\u043e\u043c\u0435\u043d\u043a\u043b\u0430\u0442\u0443\u0440',   emoji:'\uD83D\uDCE4', color:'#be5103', wide:true},
+  {id:'consum', name:'\u0420\u0430\u0441\u0445\u043e\u0434\u043d\u044b\u0435 \u043c\u0430\u0442\u0435\u0440\u0438\u0430\u043b\u044b \u041f\u041a\u0421', emoji:'\ud83e\uddf0', color:'#1f9d55', hidden:true}
 ];
 
 /* Маппинг листа xlsx → id раздела */
@@ -1097,7 +1100,7 @@ var DEMO_DATA = {
   'ads':    [{code:'ADV0200015',name:'\u0411\u0430\u043d\u043d\u0435\u0440 \u041f\u0412\u0425 2x1\u043c',subcat:'\u0411\u0430\u043d\u043d\u0435\u0440\u044b'},{code:'ADV0300022',name:'\u041b\u0438\u0441\u0442\u043e\u0432\u043a\u0438 A5',subcat:'\u041f\u043e\u043b\u0438\u0433\u0440\u0430\u0444\u0438\u044f'}],
   'office': [{code:'KNS0010088',name:'\u0411\u0443\u043c\u0430\u0433\u0430 A4 80\u0433/\u043c2',subcat:'\u0411\u0443\u043c\u0430\u0433\u0430'},{code:'KNS0020044',name:'\u0421\u043a\u043e\u0442\u0447 48\u043c\u043c',subcat:'\u0420\u0430\u0441\u0445\u043e\u0434\u043d\u0438\u043a\u0438'}],
   'light':  [{code:'LMP1100042',name:'\u0421\u0432\u0435\u0442\u0438\u043b\u044c\u043d\u0438\u043a \u0442\u0440\u0435\u043a\u043e\u0432\u044b\u0439 LED 20W',subcat:'\u0422\u0440\u0435\u043a\u043e\u0432\u044b\u0435'},{code:'LMP1200033',name:'\u041b\u0435\u043d\u0442\u0430 LED RGB 5\u043c',subcat:'\u041b\u0435\u043d\u0442\u044b'}],
-  'tv':     [{code:'RUM0500221',name:'\u041a\u043e\u043b\u043e\u043d\u043a\u0438 5.1',subcat:'\u0410\u0443\u0434\u0438\u043e'},{code:'RUM0511127',name:'\u0412\u0438\u0434\u0435\u043e\u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0430\u0442\u043e\u0440 DS-7204HGHI-SH',subcat:'\u0412\u0438\u0434\u0435\u043e\u043d\u0430\u0431\u043b\u044e\u0434\u0435\u043d\u0438\u0435'},{code:'RUM0501274',name:'HDD Toshiba SATA-III 2TB',subcat:'\u0412\u0438\u0434\u0435\u043e\u043d\u0430\u0431\u043b\u044e\u0434\u0435\u043d\u0438\u0435'},{code:'RUM0504164',name:'\u0421\u044a\u0435\u043c\u043d\u0438\u043a \u043c\u0430\u0433\u043d\u0438\u0442\u043d\u044b\u0439',subcat:'\u041f\u0440\u043e\u0442\u0438\u0432\u043e\u043a\u0440\u0430\u0436\u043d\u044b\u0435'}],
+  'tv':     [{code:'RUM0500221',name:'\u041a\u043e\u043b\u043e\u043d\u043a\u0438 5.1',subcat:'\u0410\u0443\u0434\u0438\u043e'},{code:'RUM0511127',name:'\u0412\u0438\u0434\u0435\u043e\u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0430\u0442\u043e\u0440 DS-7204HGHI-SH',subcat:'\u0412\u0438\u0434\u0435\u043e\u043d\u0430\u0431\u043b\u044e\u0434\u0435\u043d\u0438\u0435'},{code:'RUM0501274',name:'HDD Toshiba SATA-III 2TB',subcat:'\u0412\u0438\u0434\u0435\u043e\u043d\u0430\u0431\u043b\u044e\u0434\u0435\u043d\u0438\u0435',consumable:true},{code:'RUM0504164',name:'\u0421\u044a\u0435\u043c\u043d\u0438\u043a \u043c\u0430\u0433\u043d\u0438\u0442\u043d\u044b\u0439',subcat:'\u041f\u0440\u043e\u0442\u0438\u0432\u043e\u043a\u0440\u0430\u0436\u043d\u044b\u0435'}],
   'it':     [{code:'NET0650017',name:'\u041a\u043e\u043c\u043c\u0443\u0442\u0430\u0442\u043e\u0440 24 \u043f\u043e\u0440\u0442\u0430',subcat:'\u0421\u0435\u0442\u0435\u0432\u043e\u0435'},{code:'PC0100011',name:'\u041c\u043e\u043d\u043e\u0431\u043b\u043e\u043a',subcat:'\u041a\u043e\u043c\u043f\u044c\u044e\u0442\u0435\u0440\u044b'}],
   'kits':   [{code:'KIT0010003',name:'\u041a\u043e\u043c\u043f\u043b\u0435\u043a\u0442 \u043d\u043e\u0432\u044b\u0439 \u043c\u0430\u0433\u0430\u0437\u0438\u043d',subcat:'\u041d\u043e\u0432\u044b\u0439 \u043c\u0430\u0433\u0430\u0437\u0438\u043d'},{code:'KIT0020007',name:'\u041a\u043e\u043c\u043f\u043b\u0435\u043a\u0442 \u0440\u0435\u043c\u043e\u043d\u0442',subcat:'\u0420\u0435\u043c\u043e\u043d\u0442'}],
   'nlist':  []
@@ -1119,7 +1122,8 @@ function loadDemoData(){
         secId: secId,
         subcat: rows[ri].subcat||'',
         emoji: sec?sec.emoji:'\uD83D\uDCE6',
-        photo: null
+        photo: null,
+        consumable: !!rows[ri].consumable
       });
     }
   }
@@ -1262,9 +1266,11 @@ function getFilteredItems(){
   var qLoc =(getEl('searchLocal') ||{value:''}).value.toLowerCase().trim();
   var q = qLoc || qGlob;
   var isFavs = currentSecId==='favs';
+  var isConsum = currentSecId==='consum';
   for(i=0;i<allItems.length;i++){
     var it=allItems[i];
     if(isFavs){ if(!favorites[it.id]) continue; }
+    else if(isConsum){ if(it.secId!=='tv' || !it.consumable) continue; }
     else{
       if(currentSecId && it.secId!==currentSecId) continue;
       if(currentSubcat && it.subcat!==currentSubcat) continue;
@@ -1288,6 +1294,7 @@ function renderSections(){
   var h='';
   for(var i=0;i<SECTIONS.length;i++){
     var sec=SECTIONS[i];
+    if(sec.hidden) continue;
     var cnt=getSectionCount(sec.id);
     h+='<div class="sec-card'+(sec.wide?' wide':'')+'" style="--accent:'+sec.color+'" data-action="go-section" data-val="'+sec.id+'">';
     h+='<div class="sec-card-top"><span class="sec-card-emoji">'+sec.emoji+'</span><div class="sec-card-name">'+sec.name+'</div></div>';
@@ -1457,6 +1464,13 @@ function goSection(secId){
     updateHeader();
     return;
   }
+  if(secId==='consum'){
+    renderItems();
+    showScreen('s3');
+    navHistory=['s1','s3'];
+    updateHeader();
+    return;
+  }
   renderSubcats(secId);
   /* renderSubcats сама вызовет goSubcat если нет подразделов */
   if(getEl('subcatScreen')&&getEl('subcatScreen').innerHTML.indexOf('subcat-grid')>=0){
@@ -1545,7 +1559,7 @@ function updateHeader(){
     var slc2=getEl('searchLocalClear');if(slc2)slc2.classList.remove('show');
   } else if(cur==='s3'){
     if(backBtn)backBtn.classList.add('show');
-    var isFavScreen = currentSecId==='favs' || currentSecId==='nlist';
+    var isFavScreen = currentSecId==='favs' || currentSecId==='nlist' || currentSecId==='consum';
     var subLabel=isFavScreen?'':(currentSubcat||'\u0412\u0441\u0435 \u043f\u043e\u0437\u0438\u0446\u0438\u0438');
     if(titleMain)titleMain.textContent=isFavScreen?(sec?sec.name:'\u2B50 \u0418\u0437\u0431\u0440\u0430\u043d\u043d\u043e\u0435'):subLabel;
     var cnt3=getFilteredItems().length;
@@ -2832,6 +2846,7 @@ function parseXlsxBuffer(buf) {
     var nameCol = map.nameCol;
     var subcatCol = map.subcatCol;
     var descCol  = map.descCol;
+    var consumCol = -1;  /* колонка "Расходные материалы" — только у листа Слаботочное оборудование */
 
     /* Пробуем найти колонки по названию заголовка */
     for (var hi = 0; hi < hdr.length; hi++) {
@@ -2841,6 +2856,7 @@ function parseXlsxBuffer(buf) {
       else if (h.indexOf('\u043d\u0430\u0438\u043c\u0435\u043d\u043e\u0432') >= 0 || h.indexOf('\u043d\u0430\u0437\u0432\u0430\u043d') >= 0) nameCol = hi;
       else if (h.indexOf('\u043f\u043e\u0434\u0440\u0430\u0437\u0434\u0435\u043b') >= 0) subcatCol = hi;
       else if (h.indexOf('\u043e\u043f\u0438\u0441\u0430\u043d') >= 0 || h.indexOf('\u043f\u0440\u0438\u043c\u0435\u0447') >= 0) descCol = hi;
+      else if (h.indexOf('\u0440\u0430\u0441\u0445\u043e\u0434\u043d') >= 0) consumCol = hi;
     }
 
     var sheetCount = 0;
@@ -2857,6 +2873,7 @@ function parseXlsxBuffer(buf) {
       var subcat = String(row[subcatCol] || '').trim();
       var desc   = String(row[descCol]   || '').trim();
       if (desc === name) desc = '';
+      var consumable = consumCol >= 0 ? !!String(row[consumCol] || '').trim() : false;
 
       allItems.push({
         id:     map.secId + '-' + totalRows,
@@ -2866,7 +2883,8 @@ function parseXlsxBuffer(buf) {
         secId:  map.secId,
         subcat: subcat,
         emoji:  secEmoji,
-        photo:  null
+        photo:  null,
+        consumable: consumable
       });
       sheetCount++;
       totalRows++;
@@ -3183,7 +3201,7 @@ mobUpdateFromGitHub();
 /* ── PWA: Service Worker через Blob (работает из file:// и data:) ── */
 (function() {
   if (!('serviceWorker' in navigator)) return;
-  var SW_CODE = "const CACHE = 'kari-mobile-v1';\nconst PRECACHE = [\n  'Mobile_Oborud_Kari_v2.html',\n  'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',\n  'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap'\n];\n\nself.addEventListener('install', function(e) {\n  e.waitUntil(\n    caches.open(CACHE).then(function(c) {\n      return Promise.allSettled(\n        PRECACHE.map(function(url) {\n          return c.add(url).catch(function() { /* CDN может отклонить — игнорируем */ });\n        })\n      );\n    })\n  );\n  self.skipWaiting();\n});\n\nself.addEventListener('activate', function(e) {\n  e.waitUntil(\n    caches.keys().then(function(keys) {\n      return Promise.all(\n        keys.filter(function(k) { return k !== CACHE; })\n            .map(function(k) { return caches.delete(k); })\n      );\n    })\n  );\n  self.clients.claim();\n});\n\nself.addEventListener('fetch', function(e) {\n  var url = e.request.url;\n\n  /* GitHub API и raw — всегда сеть (актуальные данные), без кэша */\n  if (url.indexOf('github') !== -1) {\n    e.respondWith(fetch(e.request));\n    return;\n  }\n\n  /* Всё остальное: сначала кэш, при промахе — сеть */\n  e.respondWith(\n    caches.match(e.request).then(function(cached) {\n      if (cached) return cached;\n      return fetch(e.request).then(function(resp) {\n        if (resp && resp.status === 200 && resp.type !== 'opaque') {\n          var clone = resp.clone();\n          caches.open(CACHE).then(function(c) { c.put(e.request, clone); });\n        }\n        return resp;\n      }).catch(function() {\n        /* Офлайн-заглушка для навигационных запросов */\n        if (e.request.mode === 'navigate') {\n          return caches.match('Mobile_Oborud_Kari_v2.html');\n        }\n      });\n    })\n  );\n});\n";
+  var SW_CODE = "const CACHE = 'kari-mobile-v2';\nconst PRECACHE = [\n  'Mobile_Oborud_Kari_v2.html',\n  'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',\n  'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap'\n];\n\nself.addEventListener('install', function(e) {\n  e.waitUntil(\n    caches.open(CACHE).then(function(c) {\n      return Promise.allSettled(\n        PRECACHE.map(function(url) {\n          return c.add(url).catch(function() { /* CDN может отклонить — игнорируем */ });\n        })\n      );\n    })\n  );\n  self.skipWaiting();\n});\n\nself.addEventListener('activate', function(e) {\n  e.waitUntil(\n    caches.keys().then(function(keys) {\n      return Promise.all(\n        keys.filter(function(k) { return k !== CACHE; })\n            .map(function(k) { return caches.delete(k); })\n      );\n    })\n  );\n  self.clients.claim();\n});\n\nself.addEventListener('fetch', function(e) {\n  var url = e.request.url;\n\n  /* GitHub API и raw — всегда сеть (актуальные данные), без кэша */\n  if (url.indexOf('github') !== -1) {\n    e.respondWith(fetch(e.request));\n    return;\n  }\n\n  /* Всё остальное: сначала кэш, при промахе — сеть */\n  e.respondWith(\n    caches.match(e.request).then(function(cached) {\n      if (cached) return cached;\n      return fetch(e.request).then(function(resp) {\n        if (resp && resp.status === 200 && resp.type !== 'opaque') {\n          var clone = resp.clone();\n          caches.open(CACHE).then(function(c) { c.put(e.request, clone); });\n        }\n        return resp;\n      }).catch(function() {\n        /* Офлайн-заглушка для навигационных запросов */\n        if (e.request.mode === 'navigate') {\n          return caches.match('Mobile_Oborud_Kari_v2.html');\n        }\n      });\n    })\n  );\n});\n";
   try {
     var blob = new Blob([SW_CODE], {type: 'application/javascript'});
     var swUrl = URL.createObjectURL(blob);
