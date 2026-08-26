@@ -3006,7 +3006,7 @@ function setPhotoFilter(mode){
 function applyFilters(){
   var q=currentSearch.toLowerCase().trim();
 
-  // Базовый пул: при поиске по «Все категории» включаем световое и слаботочное
+  // Базовый пул: при поиске по «Все категории» включаем световое, слаботочное и комплекты
   var pool = allItems;
   if(q && currentCat === 'all'){
     // Добавляем световое с виртуальным cat='light'
@@ -3017,7 +3017,11 @@ function applyFilters(){
     var tvItems = tvAll.map(function(it){
       return {code:it.code, name:it.name, short:it.short||it.desc||'', cat:'tv', photo:it.photo||it.thumb||''};
     });
-    pool = allItems.concat(lightItems).concat(tvItems);
+    // Добавляем комплекты с виртуальным cat='kits' (code хранит id комплекта)
+    var kitsItems = allKits.map(function(k){
+      return {code:k.id, name:k.name, short:(k.desc?k.desc+' ':'')+'('+k.items.length+' поз.)', cat:'kits', photo:getKitImgUrl(k)||''};
+    });
+    pool = allItems.concat(lightItems).concat(tvItems).concat(kitsItems);
   }
 
   filteredItems=pool.filter(function(it){
@@ -3193,7 +3197,66 @@ function renderNextPage(page){
   tb.innerHTML="";
   var fr=document.createDocumentFragment();
   for(var i=start;i<end;i++){
-    var it=filteredItems[i],inC=!!cart[it.code];
+    var it=filteredItems[i];
+
+    // Комплекты (из глобального поиска «Все категории») — отдельная карточка
+    // со своей корзиной (KIT_...), т.к. это не единичная позиция, а набор позиций.
+    if(it.cat==='kits'){
+      var kit=allKits.find(function(k){ return k.id===it.code; });
+      if(!kit) continue;
+      var kInC=!!cart['KIT_'+kit.id];
+      var kTile=document.createElement("div");
+      kTile.className="product-tile"+(kInC?" in-cart":"");
+      kTile.id="row-KIT_"+CSS.escape(kit.id);
+      kTile.title=kit.name;
+
+      var kImgUrl=it.photo||'';
+      if(kImgUrl){
+        var kimg=document.createElement("img");kimg.className="product-tile-photo";kimg.src=kImgUrl;kimg.loading="lazy";
+        kimg.onerror=function(){this.outerHTML='<div class="product-tile-photo-placeholder">📦</div>';};
+        kTile.appendChild(kimg);
+      }else{
+        var kph=document.createElement("div");kph.className="product-tile-photo-placeholder";kph.textContent="📦";
+        kTile.appendChild(kph);
+      }
+
+      var kBody=document.createElement("div");kBody.className="product-tile-body";
+      var kBadge=document.createElement("div");kBadge.className="product-tile-code";kBadge.textContent="📦 Комплект";
+      var kName=document.createElement("div");kName.className="product-tile-name";kName.textContent=kit.name;
+      kBody.appendChild(kBadge);kBody.appendChild(kName);
+      if(kit.desc){
+        var kSh=document.createElement("div");kSh.className="product-tile-short";
+        kSh.textContent=kit.desc+' ('+kit.items.length+' поз.)';
+        kBody.appendChild(kSh);
+      }
+
+      var kBot=document.createElement("div");kBot.className="product-tile-bottom";
+      var kWrap=document.createElement("div");kWrap.className="qty-wrap";
+      var kMinus=document.createElement("button");kMinus.className="qty-btn";kMinus.textContent="−";
+      var kInp=document.createElement("input");kInp.className="qty-input";kInp.type="number";kInp.min="1";kInp.max="99";kInp.value="1";
+      kInp.id="akqty-"+CSS.escape(kit.id);
+      kInp.onclick=function(e){e.stopPropagation();};
+      kMinus.onclick=(function(inpEl){ return function(e){ e.stopPropagation(); inpEl.value=Math.max(1,(parseInt(inpEl.value)||1)-1); }; })(kInp);
+      var kPlus=document.createElement("button");kPlus.className="qty-btn";kPlus.textContent="+";
+      kPlus.onclick=(function(inpEl){ return function(e){ e.stopPropagation(); inpEl.value=Math.min(99,(parseInt(inpEl.value)||1)+1); }; })(kInp);
+      kWrap.appendChild(kMinus);kWrap.appendChild(kInp);kWrap.appendChild(kPlus);
+      var kAdd=document.createElement("button");kAdd.className="add-btn"+(kInC?" added":"");
+      kAdd.id="kadd-all-"+CSS.escape(kit.id);kAdd.textContent=kInC?"✓":"+";
+      (function(kitId,inpEl){ kAdd.onclick=function(e){ e.stopPropagation(); var q=parseInt(inpEl.value)||1; togKitCart(kitId,q); }; })(kit.id,kInp);
+      kBot.appendChild(kWrap);kBot.appendChild(kAdd);
+      kBody.appendChild(kBot);
+      kTile.appendChild(kBody);
+
+      (function(kitId){ kTile.onclick=function(e){
+        if(e.target.closest('.qty-wrap')||e.target.closest('.add-btn')) return;
+        openKitDetail(kitId);
+      }; })(kit.id);
+
+      fr.appendChild(kTile);
+      continue;
+    }
+
+    var inC=!!cart[it.code];
     var tile=document.createElement("div");
     tile.className="product-tile"+(inC?" in-cart":"");
     tile.id="row-"+CSS.escape(it.code);
@@ -4768,7 +4831,7 @@ function adjustKitQty(kitId, delta){
   if(inp) inp.value = Math.max(1, Math.min(99, (parseInt(inp.value)||1) + delta));
 }
 
-function togKitCart(kitId){
+function togKitCart(kitId, qtyOverride){
   var kit = allKits.find(function(k){ return k.id === kitId; });
   if(!kit) return;
   var key = 'KIT_' + kitId;
@@ -4776,13 +4839,18 @@ function togKitCart(kitId){
     // Убрать все позиции этого комплекта
     Object.keys(cart).forEach(function(k){ if(k.startsWith('KIT_'+kitId+'_') || k === key) delete cart[k]; });
   } else {
-    var mult = parseInt(document.getElementById('kqty-'+kitId).value) || 1;
+    var qtyInp = document.getElementById('kqty-'+kitId);
+    var mult = (typeof qtyOverride === 'number' && qtyOverride > 0) ? qtyOverride : (parseInt(qtyInp && qtyInp.value) || 1);
     kit.items.forEach(function(it){
       cart['KIT_'+kitId+'_'+it.code] = {code:it.code, name:it.name, qty:it.qty*mult, kitId:kitId, kitName:kit.name, kitMult:mult};
     });
     cart[key] = {_kitGroup:true, kitId:kitId, kitName:kit.name};
   }
-  renderKitsTable();
+  if(document.getElementById('kitsTableBody')) renderKitsTable();
+  // Если комплект показан в объединённой выдаче «Все категории» — обновляем и её карточку
+  var kAllBtn=document.getElementById('kadd-all-'+CSS.escape(kitId)), kAllRow=document.getElementById('row-KIT_'+CSS.escape(kitId));
+  if(kAllBtn){kAllBtn.classList.toggle('added',!!cart[key]);kAllBtn.textContent=cart[key]?'✓':'+';}
+  if(kAllRow){kAllRow.classList.toggle('in-cart',!!cart[key]);}
   updCart();
   showToast(cart[key] ? '📦 «'+kit.name+'» добавлен' : '🗑 «'+kit.name+'» убран', 'ok');
 }
