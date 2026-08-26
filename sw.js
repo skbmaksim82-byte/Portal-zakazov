@@ -2,7 +2,7 @@
 // Версия кэша синхронизирована с APP_VERSION в index.html.
 // При каждом обновлении index.html — бампать CACHE_NAME здесь тоже,
 // иначе у пользователей останется закэшированная старая версия страницы.
-var CACHE_NAME = 'portal-zakazov-v1.70';
+var CACHE_NAME = 'portal-zakazov-v1.72';
 
 var PRECACHE_URLS = [
   './',
