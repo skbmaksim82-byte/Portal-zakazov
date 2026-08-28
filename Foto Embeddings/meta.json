@@ -1,0 +1,6 @@
+{
+  "model": "mobilenet_v2_1.0_224 (tfjs cpu backend)",
+  "dim": 1280,
+  "count": 1348,
+  "builtAt": "2026-08-28T07:43:02.569Z"
+}
