@@ -2,7 +2,7 @@
 // Версия кэша синхронизирована с APP_VERSION в index.html.
 // При каждом обновлении index.html — бампать CACHE_NAME здесь тоже,
 // иначе у пользователей останется закэшированная старая версия страницы.
-var CACHE_NAME = 'portal-zakazov-v1.73';
+var CACHE_NAME = 'portal-zakazov-v1.74';
 
 var PRECACHE_URLS = [
   './',
@@ -34,7 +34,10 @@ self.addEventListener('activate', function(event){
 });
 
 // Стратегия: network-first для index.html (чтобы обновления версии подхватывались сразу),
-// cache-first с фоновым обновлением для остальных статических ресурсов.
+// cache-first с фоновым обновлением для остальных статических ресурсов — это же правило
+// автоматически кэширует и новые ресурсы «Поиска по фото» (TF.js/MobileNet с CDN,
+// Foto Embeddings/* с GitHub): ничего отдельно прописывать не нужно, они не входят
+// в PRECACHE_URLS специально, чтобы не раздувать первую установку офлайн-версии сайта.
 self.addEventListener('fetch', function(event){
   var req = event.request;
   if(req.method !== 'GET') return;
