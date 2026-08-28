@@ -200,9 +200,13 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 .td-code{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:var(--text3);}
 .td-name{color:var(--text);font-weight:600;max-width:0;overflow:visible;}
 .td-short{color:var(--text2);font-size:12px;font-weight:500;text-align:center;}
-/* ── Product Tile Grid ── */
-.product-grid{display:grid;grid-template-columns:repeat(var(--cols,6),1fr);grid-template-rows:repeat(var(--rows,2),1fr);gap:14px;padding:14px;height:100%;box-sizing:border-box;}
-.product-grid.is-empty{display:flex;align-items:center;justify-content:center;}
+/* ── Product Tile Grid ──
+   Колонки подстраиваются под ширину экрана (auto-fill), высота строк фиксирована,
+   а сам грид не обрезается по высоте — прокручивает его родительский .table-wrap.
+   Так на широком мониторе помещается больше карточек в одном «экране», а на телефоне
+   сетка сама сжимается до 1–2 колонок вместо жёстких 5–6. ── */
+.product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));grid-auto-rows:232px;align-content:start;gap:14px;padding:14px;min-height:100%;box-sizing:border-box;}
+.product-grid.is-empty{display:flex;align-items:center;justify-content:center;min-height:100%;}
 /* ── Постраничная навигация карточек ── */
 .pagination-bar{display:none;align-items:center;justify-content:center;gap:16px;padding:10px 16px;background:var(--surface2);border-top:1.5px solid var(--border);flex-shrink:0;}
 .pagination-bar.show{display:flex;}
@@ -270,23 +274,8 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 
 /* ── LIGHT CATALOG ── */
 
-/* Split pane: table left, preview right */
 .light-body{flex:1;display:flex;overflow:hidden;}
 .light-table-wrap{flex:1;overflow-y:auto;background:var(--bg);}
-
-/* Preview panel */
-.preview-panel{width:300px;min-width:300px;background:var(--surface2);border-left:1px solid var(--border);
-  display:flex;flex-direction:column;align-items:center;padding:0;box-shadow:-3px 0 12px rgba(0,0,0,.06);}
-.preview-header{width:100%;padding:14px 16px;border-bottom:1px solid var(--border);background:var(--surface3);}
-.preview-title{font-size:12px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:1px;}
-.preview-name{font-size:13px;font-weight:700;color:var(--text);margin-top:6px;line-height:1.4;}
-.preview-code{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text3);margin-top:3px;}
-.preview-img-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:20px;width:100%;cursor:zoom-in;}
-.preview-img-wrap img{max-width:100%;max-height:240px;object-fit:contain;border-radius:10px;
-  box-shadow:var(--shadow-md);transition:transform .2s;}
-.preview-img-wrap:hover img{transform:scale(1.03);}
-.preview-empty{color:var(--text3);font-size:13px;text-align:center;padding:40px 20px;}
-.preview-empty-icon{font-size:48px;margin-bottom:12px;}
 
 /* Light table specific */
 .light-thumb{width:36px;height:36px;object-fit:contain;border-radius:5px;cursor:pointer;
@@ -450,21 +439,47 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
   cursor:pointer;white-space:nowrap;box-shadow:0 2px 8px rgba(107,72,200,.3);transition:all .2s;margin-left:8px;}
 .kits-upload-btn-small:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(107,72,200,.45);}
 
-/* Kit groups in cart */
+/* Kit groups in cart
+   Было: .cart-kit-header{...  без закрывающей }, из-за чего парсер CSS «съедал» все
+   следующие правила (.kit-id-badge/.kit-name/.kit-desc/.kit-qty-badge/.kit-multiplier)
+   как невалидное содержимое одного блока, а хвостовая строка деклараций без селектора
+   неожиданно «прилипала» к .cart-kit-header. Ни один из этих классов, кроме
+   .cart-kit-header, в разметке не используется — оставляем только рабочее правило. */
 .cart-kit-header{padding:6px 12px;background:linear-gradient(135deg,#ede8ff,#f4f2ff);
-  border:1.5px solid #c4b5f8;border-radius:8px;margin-top:4px;margin-bottom:2px;
-/* Kit card inner elements */
-.kit-id-badge{display:inline-block;background:var(--btn-kits);color:#fff;border-radius:12px;
-  padding:2px 9px;font-size:11px;font-weight:800;font-family:'JetBrains Mono',monospace;margin-right:8px;}
-.kit-name{font-size:15px;font-weight:800;color:var(--text);vertical-align:middle;}
-.kit-desc{font-size:12px;color:var(--text2);margin-top:4px;line-height:1.4;}
-.kit-qty-badge{background:linear-gradient(135deg,#8060e0,var(--btn-kits));color:#fff;
-  border-radius:20px;padding:3px 11px;font-size:12px;font-weight:800;font-family:'JetBrains Mono',monospace;
-  display:inline-block;white-space:nowrap;}
-.kit-multiplier{display:flex;align-items:center;gap:0;}
-  font-size:11px;font-weight:800;color:var(--btn-kits);display:flex;align-items:center;gap:5px;}
-.kit-item-tag{font-size:9px;background:var(--btn-kits);color:#fff;border-radius:10px;
-  padding:1px 6px;font-weight:800;letter-spacing:.3px;flex-shrink:0;}
+  border:1.5px solid #c4b5f8;border-radius:8px;margin-top:4px;margin-bottom:2px;}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   АДАПТИВНОСТЬ ДЛЯ УЗКИХ ЭКРАНОВ (телефон/маленькое окно).
+   Раньше во всём файле не было ни одного @media — при этом подключены
+   manifest, service worker и баннер «Установить приложение», то есть
+   мобильное использование предполагалось изначально.
+   Сайдбар подразделов превращается в горизонтальную прокручиваемую полосу
+   (по тому же паттерну, что уже используют .cat-topbar и .header-right),
+   а не в отдельную выезжающую шторку — это не требует новой JS-логики
+   открытия/закрытия и не конфликтует с уже существующим показом/скрытием
+   сайдбара через display. Панель корзины разворачивается на весь экран.
+   ═══════════════════════════════════════════════════════════════════════ */
+@media (max-width: 860px){
+  .layout{flex-direction:column;}
+  .sidebar{width:100%;min-width:0;max-width:100%;flex-direction:row;align-items:stretch;
+    overflow-x:auto;overflow-y:hidden;border-right:none;border-bottom:1.5px solid var(--border);
+    padding:8px 10px;gap:0;}
+  .sidebar-title{padding:0 10px 0 2px;white-space:nowrap;display:flex;align-items:center;}
+  .sidebar > div[style*="position:relative"]{display:none;} /* поле поиска подразделов — на телефоне мало пользы, освобождаем место */
+  #subcatSidebarList{flex-direction:row!important;overflow-x:auto;padding-bottom:2px;}
+  .subcat-side-btn{width:auto;flex-shrink:0;white-space:nowrap;padding:8px 12px;}
+  .subcat-side-btn .cat-label{white-space:nowrap;}
+
+  .cart-panel{width:100%;}
+
+  .toolbar{padding:10px 12px;flex-wrap:wrap;row-gap:8px;}
+  .results-info{white-space:normal;}
+
+  .product-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));grid-auto-rows:210px;gap:10px;padding:10px;}
+
+  .logo-text{font-size:14px;}
+  .header{padding:0 10px;}
+}
 </style>
 </head>
 <body>
@@ -479,9 +494,12 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <div>
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="logo-text">Каталог оборудования Kari</div>
-        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.72</div>
+        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.73</div>
       </div>
-      <div class="logo-sub" id="catalogInfo">Загрузка…</div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="logo-sub" id="catalogInfo">Загрузка…</div>
+        <span id="catalogStaleBadge" title="Не удалось получить список фото с GitHub при последнем обновлении — часть изображений может быть устаревшей. Нажмите «Обновить» ещё раз." style="display:none;align-items:center;gap:4px;background:rgba(224,140,32,.22);border:1px solid rgba(224,140,32,.45);color:#ffcf8a;border-radius:20px;padding:1px 9px 1px 7px;font-size:10px;font-weight:800;letter-spacing:.2px;white-space:nowrap;cursor:default;">⚠️ Данные могут быть устаревшими</span>
+      </div>
     </div>
   </div>
   <div class="header-right">
@@ -544,7 +562,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <ul class="authors-list" id="authorsList">
       <li><span>👤</span> —</li>
     </ul>
-    <div style="font-size:11px;color:var(--text3);margin-bottom:16px;">Версия <span id="modalAppVersion">1.72</span> · 2026</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:16px;">Версия <span id="modalAppVersion">1.73</span> · 2026</div>
     <button onclick="document.getElementById('authorsOverlay').classList.remove('show')"
       style="background:linear-gradient(135deg,#4a7fc1,#7458b8);color:#fff;border:none;border-radius:10px;
       padding:10px 28px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;
@@ -1227,7 +1245,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 
 <script>
 // ═══ ВЕРСИЯ ПРИЛОЖЕНИЯ ═══
-var APP_VERSION = '1.72';
+var APP_VERSION = '1.73';
 // При каждом обновлении index.html — менять только эту строку (1.17, 1.18 и т.д.)
 (function(){
   var el = document.getElementById('appVersionBadge');
@@ -1605,20 +1623,21 @@ function initShopSelect(){
 // ═══ CATALOG STATE ═══
 var allItems=[],currentCat="all",currentSearch="",currentPhotoFilter="all",currentSubcat="",filteredItems=[],catalogPage=1,cart={};
 var PAGE=60;
-// ── Размер страницы карточек: «Все категории» и «Комплекты» — 12 (сетка 6×2),
-//     остальные разделы — 10 (сетка 5×2). Карточки заполняют окно точно, без обрезки. ──
+// ── Базовый размер страницы карточек (для узкого экрана — телефон/маленькое окно). ──
+//     Сетка сама подстраивает число колонок под ширину экрана (см. .product-grid),
+//     а число карточек на страницу растёт вместе с шириной окна — pageSizeFactor()
+//     ниже — чтобы для разделов на тысячи позиций не приходилось листать сотни страниц.
 var CATALOG_PAGE_SIZE_ALL=12, CATALOG_PAGE_SIZE_CAT=10, KITS_PAGE_SIZE=12, OTHER_PAGE_SIZE=10;
-var GRID_COLS_BIG=6, GRID_ROWS_BIG=2;   // 12 карточек: «Все категории», «Комплекты»
-var GRID_COLS_SMALL=5, GRID_ROWS_SMALL=2; // 10 карточек: остальные разделы
-function getCatalogPageSize(){ return currentCat==='all' ? CATALOG_PAGE_SIZE_ALL : CATALOG_PAGE_SIZE_CAT; }
-
-// ── Задаёт число колонок/строк сетки карточек для контейнера ──
-function setGridShape(containerId, cols, rows){
-  var el=document.getElementById(containerId);
-  if(!el) return;
-  el.style.setProperty('--cols', cols);
-  el.style.setProperty('--rows', rows);
+function pageSizeFactor(){
+  var w = window.innerWidth || document.documentElement.clientWidth || 1200;
+  if(w >= 1900) return 5;
+  if(w >= 1440) return 3.5;
+  if(w >= 1024) return 2;
+  return 1;
 }
+function getCatalogPageSize(){ return Math.round((currentCat==='all' ? CATALOG_PAGE_SIZE_ALL : CATALOG_PAGE_SIZE_CAT) * pageSizeFactor()); }
+function getKitsPageSize(){ return Math.round(KITS_PAGE_SIZE * pageSizeFactor()); }
+function getOtherPageSize(){ return Math.round(OTHER_PAGE_SIZE * pageSizeFactor()); }
 
 // ── Общий рендер панели пагинации (счётчик страниц) ──
 function buildPager(containerId, page, totalPages, goFn){
@@ -1766,15 +1785,15 @@ function applyTvFilters(){
     buildPager('tvPager', 1, 1, null);
   } else { tvB.classList.remove('is-empty'); renderTvPage(1); }
   document.getElementById('tvResultsInfo').textContent =
-    tvFiltered.length === basePool.length
+    (tvFiltered.length === basePool.length
       ? basePool.length.toLocaleString('ru') + ' позиций'
-      : tvFiltered.length.toLocaleString('ru') + ' из ' + basePool.length.toLocaleString('ru');
+      : tvFiltered.length.toLocaleString('ru') + ' из ' + basePool.length.toLocaleString('ru'))
+    + summarySuffix(tvFiltered, getImgUrl, function(it){ return 'TV:'+it.code; });
 }
 
 function renderTvPage(page){
   var tb = document.getElementById('tvBody');
-  setGridShape('tvBody', GRID_COLS_SMALL, GRID_ROWS_SMALL);
-  var pageSize = OTHER_PAGE_SIZE;
+  var pageSize = getOtherPageSize();
   var totalPages = Math.max(1, Math.ceil(tvFiltered.length / pageSize));
   if(page !== undefined) tvPage = page;
   tvPage = Math.max(1, Math.min(tvPage, totalPages));
@@ -3187,8 +3206,6 @@ function renderNextPage(page){
   var tb=document.getElementById("tableBody");
   tb.classList.remove('is-empty');
   var pageSize=getCatalogPageSize();
-  if(currentCat==='all'){ setGridShape('tableBody', GRID_COLS_BIG, GRID_ROWS_BIG); }
-  else{ setGridShape('tableBody', GRID_COLS_SMALL, GRID_ROWS_SMALL); }
   var totalPages=Math.max(1,Math.ceil(filteredItems.length/pageSize));
   if(page!==undefined) catalogPage=page;
   catalogPage=Math.max(1,Math.min(catalogPage,totalPages));
@@ -3320,17 +3337,32 @@ function renderNextPage(page){
   buildPager('tablePager', catalogPage, totalPages, renderNextPage);
 }
 
+// ── Компактная сводка над списком: сколько позиций без фото и сколько уже в корзине.
+//    Пригодится в первую очередь для больших разделов (тысячи позиций) — сразу видно,
+//    сколько ещё не сфотографировано и сколько уже отложено в заказ, без прокрутки. ──
+function summarySuffix(list, hasPhotoFn, cartKeyFn){
+  if(!list || !list.length) return '';
+  var noPhoto=0, inCart=0;
+  list.forEach(function(it){
+    if(!hasPhotoFn(it)) noPhoto++;
+    var k=cartKeyFn(it);
+    if(k && cart[k]) inCart++;
+  });
+  return ' · 🖼 без фото '+noPhoto.toLocaleString('ru')+' · 🛒 в корзине '+inCart.toLocaleString('ru');
+}
+function catalogCartKey(it){ return it.code; }
+
 function updateInfo(){
   var el=document.getElementById("resultsInfo");
-  el.textContent=filteredItems.length===allItems.length?allItems.length.toLocaleString("ru")+" позиций":filteredItems.length.toLocaleString("ru")+" из "+allItems.length.toLocaleString("ru");
+  el.textContent=(filteredItems.length===allItems.length?allItems.length.toLocaleString("ru")+" позиций":filteredItems.length.toLocaleString("ru")+" из "+allItems.length.toLocaleString("ru"))
+    + summarySuffix(filteredItems, getImgUrl, catalogCartKey);
 }
 
 // ═══ LIGHT CATALOG STATE ═══
 var lightAll=LIGHT_ITEMS, lightFiltered=[], lightPage=1;
-var lightSearch='', selectedLightRow=null, currentLightSubcat='';
+var lightSearch='', currentLightSubcat='';
 var lightPhotoFilter='all', lightCatFilter='';
 var LIGHT_CATS={}; // { категория: [items] } — заполняется при загрузке xlsx
-var currentPreviewImg='', currentPreviewCaption='';
 
 function onLightSearch(){lightSearch=document.getElementById("lightSearch").value;applyLightFilters();}
 
@@ -3405,14 +3437,14 @@ function applyLightFilters(){
     buildPager('lightPager', 1, 1, null);
   }else{ lBody.classList.remove('is-empty'); renderLightPage(1); }
   document.getElementById("lightResultsInfo").textContent=
-    lightFiltered.length===lightAll.length?lightAll.length.toLocaleString("ru")+" позиций":
-    lightFiltered.length.toLocaleString("ru")+" из "+lightAll.length.toLocaleString("ru");
+    (lightFiltered.length===lightAll.length?lightAll.length.toLocaleString("ru")+" позиций":
+    lightFiltered.length.toLocaleString("ru")+" из "+lightAll.length.toLocaleString("ru"))
+    + summarySuffix(lightFiltered, getImgUrl, function(it){ return 'L:'+it.code; });
 }
 
 function renderLightPage(page){
   var tb=document.getElementById("lightBody");
-  setGridShape('lightBody', GRID_COLS_SMALL, GRID_ROWS_SMALL);
-  var pageSize=OTHER_PAGE_SIZE;
+  var pageSize=getOtherPageSize();
   var totalPages=Math.max(1,Math.ceil(lightFiltered.length/pageSize));
   if(page!==undefined) lightPage=page;
   lightPage=Math.max(1,Math.min(lightPage,totalPages));
@@ -3484,32 +3516,6 @@ function renderLightPage(page){
   }
   tb.appendChild(fr);
   buildPager('lightPager', lightPage, totalPages, renderLightPage);
-}
-
-// ═══ PREVIEW ═══
-function showPreview(item, rowEl){
-  // Deselect previous
-  if(selectedLightRow) selectedLightRow.classList.remove("selected-row");
-  selectedLightRow=rowEl;rowEl.classList.add("selected-row");
-
-  document.getElementById("previewName").textContent=item.name;
-  document.getElementById("previewCode").textContent=item.code;
-  currentPreviewImg=getImgUrl(item)||'';
-  currentPreviewCaption=item.name;
-
-  var wrap=document.getElementById("previewImgWrap");
-  wrap.innerHTML="";
-  if(currentPreviewImg){
-    var img=document.createElement("img");
-    img.src=currentPreviewImg;
-    img.alt=item.name;
-    img.title="Нажмите для полного экрана";
-    wrap.appendChild(img);
-    wrap.style.cursor="zoom-in";
-  }else{
-    wrap.style.cursor="default";
-    wrap.innerHTML='<div class="preview-empty"><div class="preview-empty-icon">🖼️</div>Изображение<br>недоступно</div>';
-  }
 }
 
 // ═══ LIGHTBOX ═══
@@ -3727,37 +3733,36 @@ function parseRowsForCat(rows, fixedCat){
 
 // ═══ GITHUB AUTO-UPDATE ═══
 var GITHUB_RAW = 'https://raw.githubusercontent.com/skbmaksim82-byte/Portal-zakazov/main/';
-var GITHUB_API = 'https://api.github.com/repos/skbmaksim82-byte/Portal-zakazov/contents/';
+var GITHUB_REPO_API = 'https://api.github.com/repos/skbmaksim82-byte/Portal-zakazov/';
+// Дерево репозитория (git trees API, ветка main) — список ВСЕХ файлов ОДНИМ запросом.
+// Раньше здесь было 9 отдельных запросов к contents API (по одному на папку с фото).
+// Неавторизованный лимит GitHub — 60 запросов/час НА IP: если несколько сотрудников
+// заходят из одной сети (магазин/офис/VPN), пары обновлений хватало, чтобы у всех
+// коллег на этом IP фото переставали подгружаться (ошибка HTTP 403) на весь час.
+// Одним запросом за раз мы используем лимит в 9 раз экономнее.
+var GITHUB_TREE_API = GITHUB_REPO_API + 'git/trees/main?recursive=1';
 var GITHUB_XLSX = GITHUB_RAW + '%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA_%D0%BE%D0%B1%D0%BE%D1%80%D1%83%D0%B4%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F_%D0%A4%D0%98%D0%9D%D0%90%D0%9B.xlsx';
+
+// Помечает шапку каталога как «данные могут быть устаревшими» — показываем явно,
+// если список фото с GitHub не удалось получить (например, лимит запросов исчерпан),
+// вместо того чтобы тихо оставить часть фото не подгруженными.
+function markCatalogStale(isStale){
+  var el = document.getElementById('catalogStaleBadge');
+  if(!el) return;
+  el.style.display = isStale ? 'inline-flex' : 'none';
+}
 
 function updateFromGitHub(){
   var icon = document.getElementById('updateIcon');
   icon.innerHTML = "<span class='spin' style='font-size:14px;'>⏳</span>";
 
-  var p1 = loadGitHubPhotos('Foto%20Svet',     SVET_PHOTOS,     'Foto Svet');
-  var p2 = loadGitHubPhotos('Foto%20slabotoch', SLAB_PHOTOS,     'Foto slabotoch');
-  var p3 = loadGitHubXlsx();
-  var p4 = loadGitHubPhotos('Foto%20Oborud',   OBORUD_PHOTOS,   'Foto Oborud');
-  var p5 = loadComplectPhotos();
-  var p6 = loadGitHubPhotos('Foto%20reklama',  REKLAM_PHOTOS,   'Foto reklama');
-  var p7 = loadGitHubPhotos('Foto%20Uvelir',   UVELIR_PHOTOS,   'Foto Uvelir');
-  var p8 = loadGitHubPhotos('IT%20oborud',     IT_PHOTOS,       'IT oborud');
-  var p9 = loadGitHubPhotos('Foto%20Cancel',  CANCEL_PHOTOS,   'Foto Cancel');
+  var pTree = fetchGitHubTree();
+  var pXlsx = loadGitHubXlsx();
 
-  // Используем allSettled — ошибка одной папки с фото не блокирует загрузку xlsx и каталога
-  Promise.allSettled([p1, p2, p3, p4, p5, p6, p7, p8, p9])
+  // Используем allSettled — ошибка получения дерева фото не блокирует загрузку каталога
+  Promise.allSettled([pTree, pXlsx])
     .then(function(results){
-      // Извлекаем значения — fulfilled даёт value, rejected даёт null + собираем ошибки
-      function val(r, fallback){ return r.status === 'fulfilled' ? r.value : fallback; }
-      var svetCnt      = val(results[0], 0);
-      var slabCnt      = val(results[1], 0);
-      var xlsxResult   = results[2];
-      var oborudCnt    = val(results[3], 0);
-      var complectCnt  = val(results[4], 0);
-      var reklamCnt    = val(results[5], 0);
-      var uvelirCnt    = val(results[6], 0);
-      var itCnt        = val(results[7], 0);
-      var cancelCnt    = val(results[8], 0);
+      var treeResult = results[0], xlsxResult = results[1];
 
       // Если xlsx не загрузился — это критическая ошибка, сообщаем и выходим
       if(xlsxResult.status === 'rejected'){
@@ -3766,6 +3771,22 @@ function updateFromGitHub(){
         return;
       }
       var xlsxInfo = xlsxResult.value;
+
+      var svetCnt=0, slabCnt=0, oborudCnt=0, complectCnt=0, reklamCnt=0, uvelirCnt=0, itCnt=0, cancelCnt=0;
+      var treeError = null;
+      if(treeResult.status === 'fulfilled'){
+        var tree = treeResult.value;
+        svetCnt     = photosFromTree(tree, 'Foto Svet',      SVET_PHOTOS);
+        slabCnt     = photosFromTree(tree, 'Foto slabotoch', SLAB_PHOTOS);
+        oborudCnt   = photosFromTree(tree, 'Foto Oborud',    OBORUD_PHOTOS);
+        reklamCnt   = photosFromTree(tree, 'Foto reklama',   REKLAM_PHOTOS);
+        uvelirCnt   = photosFromTree(tree, 'Foto Uvelir',    UVELIR_PHOTOS);
+        itCnt       = photosFromTree(tree, 'IT oborud',      IT_PHOTOS);
+        cancelCnt   = photosFromTree(tree, 'Foto Cancel',    CANCEL_PHOTOS);
+        complectCnt = complectPhotosFromTree(tree);
+      } else {
+        treeError = treeResult.reason;
+      }
 
       // Применяем фото к световому
       lightAll.forEach(function(it){
@@ -3815,7 +3836,7 @@ function updateFromGitHub(){
       // Перерисовываем открытые панели каталога
       if(currentTab === 'light'){ lightFiltered=[]; lightPage=1; document.getElementById('lightBody').innerHTML=''; applyLightFilters(); }
       if(currentTab === 'tv'){ tvFiltered=[]; tvPage=1; document.getElementById('tvBody').innerHTML=''; applyTvFilters(); }
-      if(currentTab === 'catalog' || currentTab === 'karikids'){ document.getElementById('tableBody').innerHTML=''; renderNextPage(1); }
+      if(currentTab === 'catalog' || currentTab === 'karikids'){ document.getElementById('tableBody').innerHTML=''; renderNextPage(1); updateInfo(); }
 
       // Собираем строки с флагами ok/error для отображения галочек/крестиков
       var lines = [];
@@ -3828,13 +3849,10 @@ function updateFromGitHub(){
       lines.push({ ok: uvelirCnt > 0,   icon: '💎', text: 'Ювелирное: ' + uvelirCnt + ' фото' });
       lines.push({ ok: itCnt > 0,       icon: '💻', text: 'ИТ оборудование: ' + itCnt + ' фото' });
       lines.push({ ok: cancelCnt > 0,   icon: '📎', text: 'Канцелярия: ' + cancelCnt + ' фото' });
-      // results: 0=Svet,1=Slab,2=xlsx,3=Oborud,4=Complect,5=Reklam,6=Uvelir,7=IT,8=Cancel
-      [results[0], results[1], results[3], results[4], results[5], results[6], results[7], results[8]].forEach(function(r, i){
-        if(r.status === 'rejected'){
-          var labels = ['Foto Svet','Foto slabotoch','Foto Oborud','Foto Complect','Foto reklama','Foto Uvelir','IT oborud','Foto Cancel'];
-          lines.push({ ok: false, icon: '⚠️', text: labels[i] + ': ' + r.reason.message });
-        }
-      });
+      if(treeError){
+        lines.push({ ok: false, icon: '⚠️', text: 'Список файлов с GitHub: ' + treeError.message + ' — фото могли не обновиться' });
+      }
+      markCatalogStale(!!treeError);
       showGitHubToast(lines);
       icon.textContent = '☁️';
     });
@@ -3885,80 +3903,86 @@ function getAllImgUrls(item){
   return urls;
 }
 
-function loadGitHubPhotos(folder, targetMap, label){
-  return fetch(GITHUB_API + folder, {cache: 'no-cache'})
+// Одним запросом получает список ВСЕХ файлов репозитория (git trees API).
+function fetchGitHubTree(){
+  return fetch(GITHUB_TREE_API, {cache: 'no-cache'})
     .then(function(r){
-      if(!r.ok) throw new Error('Не удалось загрузить список ' + label + ' (HTTP ' + r.status + ')');
+      if(!r.ok) throw new Error('HTTP ' + r.status + (r.status===403 ? ' — исчерпан лимит запросов GitHub' : ''));
       return r.json();
     })
-    .then(function(files){
-      var baseFolder = folder.replace(/%20/g,' ');
-      // Очищаем кэш перед заполнением — иначе при повторном обновлении
-      // фото дублируются (старые записи не удаляются)
-      Object.keys(targetMap).forEach(function(k){ delete targetMap[k]; });
-      var count = 0;
-      files.forEach(function(f){
-        if(!/\.(png|jpg|jpeg|gif|webp|svg)$/i.test(f.name)) return;
-        // Используем download_url из GitHub API — он уже корректно закодирован
-        var url = f.download_url || (GITHUB_RAW + encodeURIComponent(baseFolder) + '/' + encodeURIComponent(f.name));
-        // Убираем расширение и суффикс _2, _3 и т.п. → базовый код
-        var nameNoExt = f.name.replace(/\.[^.]+$/, '');
-        var baseCode  = nameNoExt.replace(/_\d+$/, '');
-        if(!targetMap[baseCode]) targetMap[baseCode] = [];
-        // Сортируем: основной файл (без суффикса) идёт первым
-        if(nameNoExt === baseCode) targetMap[baseCode].unshift(url);
-        else targetMap[baseCode].push(url);
-        count++;
-      });
-      return count;
+    .then(function(data){
+      if(data.truncated){
+        console.warn('[GitHub] дерево репозитория усечено (слишком много файлов в репозитории) — часть фото может не подгрузиться');
+      }
+      return (data.tree || []).filter(function(e){ return e.type === 'blob'; });
     });
 }
 
-// Загружает фото комплектов: имя файла (без расширения) = название комплекта
-// Поддерживает кириллику и пробелы в именах
-function loadComplectPhotos(){
-  return fetch(GITHUB_API + 'Foto%20Complect', {cache: 'no-cache'})
-    .then(function(r){
-      if(!r.ok) throw new Error('Не удалось загрузить Foto Complect (HTTP ' + r.status + ')');
-      return r.json();
-    })
-    .then(function(files){
-      Object.keys(COMPLECT_PHOTOS).forEach(function(k){ delete COMPLECT_PHOTOS[k]; });
-      var count = 0;
-      // Сортируем файлы чтобы базовое фото шло перед _1, _2 и т.д.
-      // Сначала собираем все файлы по базовому имени
-      var grouped = {};
-      files.forEach(function(f){
-        if(!/\.(png|jpg|jpeg|gif|webp|svg)$/i.test(f.name)) return;
-        var rawName = f.name.replace(/\.[^.]+$/, '');
-        var url = f.download_url || (GITHUB_RAW + 'Foto%20Complect/' + encodeURIComponent(f.name));
-        var baseName = rawName.replace(/_\d+$/, '');
-        var isBase = (rawName === baseName);
-        if(!grouped[baseName]) grouped[baseName] = { base: null, extra: [] };
-        if(isBase) grouped[baseName].base = url;
-        else grouped[baseName].extra.push({ name: rawName, url: url });
-        count++;
-      });
-      // Формируем массивы: сначала базовое фото, потом _1, _2… отсортированные
-      Object.keys(grouped).forEach(function(baseName){
-        var g = grouped[baseName];
-        g.extra.sort(function(a,b){ return a.name.localeCompare(b.name); });
-        var urls = [];
-        if(g.base) urls.push(g.base);
-        g.extra.forEach(function(e){ urls.push(e.url); });
-        // Сохраняем по уникальным ключам (оригинал, trim, lowercase, нормализованный)
-        var norm = baseName.trim().toLowerCase().replace(/\s+/g, ' ');
-        var keys = {};
-        keys[baseName] = true;
-        keys[baseName.trim()] = true;
-        keys[baseName.toLowerCase()] = true;
-        keys[norm] = true;
-        Object.keys(keys).forEach(function(key){
-          COMPLECT_PHOTOS[key] = urls;
-        });
-      });
-      return count;
+// Заполняет targetMap фото из указанной папки по уже загруженному дереву репозитория —
+// без отдельного сетевого запроса на каждую папку (см. комментарий у GITHUB_TREE_API).
+function photosFromTree(tree, folder, targetMap){
+  var prefix = folder + '/';
+  // Очищаем кэш перед заполнением — иначе при повторном обновлении фото дублируются
+  Object.keys(targetMap).forEach(function(k){ delete targetMap[k]; });
+  var count = 0;
+  tree.forEach(function(e){
+    if(e.path.indexOf(prefix) !== 0) return;
+    var name = e.path.slice(prefix.length);
+    if(name.indexOf('/') !== -1) return; // вложенные подпапки не учитываем
+    if(!/\.(png|jpg|jpeg|gif|webp|svg)$/i.test(name)) return;
+    var url = GITHUB_RAW + encodeURIComponent(folder) + '/' + encodeURIComponent(name);
+    // Убираем расширение и суффикс _2, _3 и т.п. → базовый код
+    var nameNoExt = name.replace(/\.[^.]+$/, '');
+    var baseCode  = nameNoExt.replace(/_\d+$/, '');
+    if(!targetMap[baseCode]) targetMap[baseCode] = [];
+    // Сортируем: основной файл (без суффикса) идёт первым
+    if(nameNoExt === baseCode) targetMap[baseCode].unshift(url);
+    else targetMap[baseCode].push(url);
+    count++;
+  });
+  return count;
+}
+
+// Фото комплектов: имя файла (без расширения) = название комплекта.
+// Поддерживает кириллику и пробелы в именах. Тоже читает уже загруженное дерево.
+function complectPhotosFromTree(tree){
+  var prefix = 'Foto Complect/';
+  Object.keys(COMPLECT_PHOTOS).forEach(function(k){ delete COMPLECT_PHOTOS[k]; });
+  var count = 0;
+  var grouped = {};
+  tree.forEach(function(e){
+    if(e.path.indexOf(prefix) !== 0) return;
+    var name = e.path.slice(prefix.length);
+    if(name.indexOf('/') !== -1) return;
+    if(!/\.(png|jpg|jpeg|gif|webp|svg)$/i.test(name)) return;
+    var rawName = name.replace(/\.[^.]+$/, '');
+    var url = GITHUB_RAW + 'Foto%20Complect/' + encodeURIComponent(name);
+    var baseName = rawName.replace(/_\d+$/, '');
+    var isBase = (rawName === baseName);
+    if(!grouped[baseName]) grouped[baseName] = { base: null, extra: [] };
+    if(isBase) grouped[baseName].base = url;
+    else grouped[baseName].extra.push({ name: rawName, url: url });
+    count++;
+  });
+  // Формируем массивы: сначала базовое фото, потом _1, _2… отсортированные
+  Object.keys(grouped).forEach(function(baseName){
+    var g = grouped[baseName];
+    g.extra.sort(function(a,b){ return a.name.localeCompare(b.name); });
+    var urls = [];
+    if(g.base) urls.push(g.base);
+    g.extra.forEach(function(e){ urls.push(e.url); });
+    // Сохраняем по уникальным ключам (оригинал, trim, lowercase, нормализованный)
+    var norm = baseName.trim().toLowerCase().replace(/\s+/g, ' ');
+    var keys = {};
+    keys[baseName] = true;
+    keys[baseName.trim()] = true;
+    keys[baseName.toLowerCase()] = true;
+    keys[norm] = true;
+    Object.keys(keys).forEach(function(key){
+      COMPLECT_PHOTOS[key] = urls;
     });
+  });
+  return count;
 }
 
 function loadGitHubXlsx(){
@@ -4569,7 +4593,8 @@ function parseKitsRows(rows){
   kitsFiltered = allKits.slice();
   updateKitsCatFilter();
   renderKitsTable(1);
-  document.getElementById('kitsResultsInfo').textContent = allKits.length + ' комплектов';
+  document.getElementById('kitsResultsInfo').textContent = allKits.length + ' комплектов'
+    + summarySuffix(allKits, getKitImgUrl, function(k){ return 'KIT_'+k.id; });
 }
 
 function onKitsSearch(){
@@ -4623,7 +4648,8 @@ function applyKitsFilters(){
     return true;
   });
   renderKitsTable(1);
-  document.getElementById('kitsResultsInfo').textContent = kitsFiltered.length + ' из ' + allKits.length;
+  document.getElementById('kitsResultsInfo').textContent = kitsFiltered.length + ' из ' + allKits.length
+    + summarySuffix(kitsFiltered, getKitImgUrl, function(k){ return 'KIT_'+k.id; });
 }
 
 function initKitsPreload(){
@@ -4632,7 +4658,8 @@ function initKitsPreload(){
     kitsFiltered = allKits.slice();
     updateKitsCatFilter();
     document.getElementById('cnt-kits').textContent = allKits.length;
-    document.getElementById('kitsResultsInfo').textContent = allKits.length + ' комплектов';
+    document.getElementById('kitsResultsInfo').textContent = allKits.length + ' комплектов'
+      + summarySuffix(allKits, getKitImgUrl, function(k){ return 'KIT_'+k.id; });
     renderKitsTable(1);
   }
 }
@@ -4769,8 +4796,7 @@ function renderKitsTable(page){
     return;
   }
   grid.classList.remove('is-empty');
-  setGridShape('kitsTableBody', GRID_COLS_BIG, GRID_ROWS_BIG);
-  var pageSize = KITS_PAGE_SIZE;
+  var pageSize = getKitsPageSize();
   var totalPages = Math.max(1, Math.ceil(kitsFiltered.length / pageSize));
   if(page !== undefined) kitsPage = page;
   kitsPage = Math.max(1, Math.min(kitsPage, totalPages));
@@ -4879,6 +4905,10 @@ function filterKits(){}
 function renderKits(){}
 
 // ═══ EXPORT TO EXCEL ═══
+// Общие хелперы ручной сборки XLSX (раньше были продублированы в exportToExcel и exportCartToExcel)
+function xlsxEscXml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function xlsxColLetter(i){ var s=''; i++; while(i>0){i--;s=String.fromCharCode(65+i%26)+s;i=Math.floor(i/26);} return s; }
+
 function exportToExcel(section){
   var data, headers, filename, sheetName;
 
@@ -4919,11 +4949,6 @@ function exportToExcel(section){
   var colW = section==='light' ? [20,60] : (section==='nlist' ? [20,55,40,28] : [20,55,40]);
   var nc = headers.length;
 
-  // Escape XML
-  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-  // Column letter
-  function colLetter(i){ var s=''; i++; while(i>0){i--;s=String.fromCharCode(65+i%26)+s;i=Math.floor(i/26);} return s; }
-
   // Build sharedStrings
   var sst = []; var sstMap = {};
   function addStr(s){ s=String(s); if(sstMap[s]!==undefined) return sstMap[s]; var idx=sst.length; sst.push(s); sstMap[s]=idx; return idx; }
@@ -4931,7 +4956,7 @@ function exportToExcel(section){
   rows.forEach(function(r){ r.forEach(addStr); });
 
   // Sheet XML
-  var lastCol = colLetter(nc-1);
+  var lastCol = xlsxColLetter(nc-1);
   var lastRow = rows.length+1;
   var xml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
     +'<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
@@ -4940,12 +4965,12 @@ function exportToExcel(section){
   xml+='</cols><sheetData>';
   // Header row (style index 1)
   xml+='<row r="1" ht="22" customHeight="1">';
-  headers.forEach(function(h,i){ xml+='<c r="'+colLetter(i)+'1" t="s" s="1"><v>'+addStr(h)+'</v></c>'; });
+  headers.forEach(function(h,i){ xml+='<c r="'+xlsxColLetter(i)+'1" t="s" s="1"><v>'+addStr(h)+'</v></c>'; });
   xml+='</row>';
   // Data rows (style 0)
   rows.forEach(function(r,ri){
     xml+='<row r="'+(ri+2)+'">';
-    r.forEach(function(v,ci){ xml+='<c r="'+colLetter(ci)+(ri+2)+'" t="s" s="0"><v>'+addStr(v)+'</v></c>'; });
+    r.forEach(function(v,ci){ xml+='<c r="'+xlsxColLetter(ci)+(ri+2)+'" t="s" s="0"><v>'+addStr(v)+'</v></c>'; });
     xml+='</row>';
   });
   xml+='</sheetData></worksheet>';
@@ -4953,7 +4978,7 @@ function exportToExcel(section){
   // SharedStrings XML
   var sstXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
     +'<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="'+sst.length+'" uniqueCount="'+sst.length+'">';
-  sst.forEach(function(s){ sstXml+='<si><t>'+esc(s)+'</t></si>'; });
+  sst.forEach(function(s){ sstXml+='<si><t>'+xlsxEscXml(s)+'</t></si>'; });
   sstXml+='</sst>';
 
   // Styles XML — s="0" normal, s="1" header (bold white on dark blue, centered)
@@ -4977,7 +5002,7 @@ function exportToExcel(section){
     +'</styleSheet>';
 
   // Workbook XML
-  var sn = esc(sheetName.substring(0,31));
+  var sn = xlsxEscXml(sheetName.substring(0,31));
   var wbXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
     +'<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
     +'<sheets><sheet name="'+sn+'" sheetId="1" r:id="rId1"/></sheets></workbook>';
@@ -5069,9 +5094,6 @@ function exportCartToExcel(){
   var colW = [28, 18, 60, 12];
   var nc = headers.length;
 
-  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-  function colLetter(i){ var s=''; i++; while(i>0){i--;s=String.fromCharCode(65+i%26)+s;i=Math.floor(i/26);} return s; }
-
   var sst=[]; var sstMap={};
   function addStr(s){ s=String(s); if(sstMap[s]!==undefined) return sstMap[s]; var idx=sst.length; sst.push(s); sstMap[s]=idx; return idx; }
   headers.forEach(addStr);
@@ -5083,12 +5105,12 @@ function exportCartToExcel(){
   colW.forEach(function(w,i){ xml+='<col min="'+(i+1)+'" max="'+(i+1)+'" width="'+w+'" customWidth="1"/>'; });
   xml+='</cols><sheetData>';
   xml+='<row r="1" ht="22" customHeight="1">';
-  headers.forEach(function(h,i){ xml+='<c r="'+colLetter(i)+'1" t="s" s="1"><v>'+addStr(h)+'</v></c>'; });
+  headers.forEach(function(h,i){ xml+='<c r="'+xlsxColLetter(i)+'1" t="s" s="1"><v>'+addStr(h)+'</v></c>'; });
   xml+='</row>';
   rows.forEach(function(r,ri){
     xml+='<row r="'+(ri+2)+'">';
     r.forEach(function(v,ci){
-      var ref = colLetter(ci)+(ri+2);
+      var ref = xlsxColLetter(ci)+(ri+2);
       // Количество — число
       if(ci===3) xml+='<c r="'+ref+'" s="0"><v>'+Number(v)+'</v></c>';
       else xml+='<c r="'+ref+'" t="s" s="0"><v>'+addStr(v)+'</v></c>';
@@ -5099,7 +5121,7 @@ function exportCartToExcel(){
 
   var sstXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
     +'<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="'+sst.length+'" uniqueCount="'+sst.length+'">';
-  sst.forEach(function(s){ sstXml+='<si><t>'+esc(s)+'</t></si>'; });
+  sst.forEach(function(s){ sstXml+='<si><t>'+xlsxEscXml(s)+'</t></si>'; });
   sstXml+='</sst>';
 
   var stylesXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
@@ -5119,7 +5141,7 @@ function exportCartToExcel(){
   var blob = buildZipBlob([
     {name:'_rels/.rels', data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>'},
     {name:'xl/_rels/workbook.xml.rels', data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings" Target="sharedStrings.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>'},
-    {name:'xl/workbook.xml', data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="'+esc(sheetName)+'" sheetId="1" r:id="rId1"/></sheets></workbook>'},
+    {name:'xl/workbook.xml', data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="'+xlsxEscXml(sheetName)+'" sheetId="1" r:id="rId1"/></sheets></workbook>'},
     {name:'xl/worksheets/sheet1.xml', data:xml},
     {name:'xl/sharedStrings.xml', data:sstXml},
     {name:'xl/styles.xml', data:stylesXml},
@@ -5380,9 +5402,10 @@ function renderNlist(){
   drop.style.display  = 'none';
   table.style.display = '';
   var visible = nlistVisible();
-  info.textContent = nlistQuery
+  info.textContent = (nlistQuery
     ? (visible.length + ' из ' + nlistItems.length + ' позиций')
-    : (nlistItems.length + ' позиций');
+    : (nlistItems.length + ' позиций'))
+    + summarySuffix(visible, function(it){ return it._found && getImgUrl(it); }, catalogCartKey);
 
   var frag = document.createDocumentFragment();
   visible.forEach(function(it){
@@ -5918,9 +5941,11 @@ function openPhotoUpload(){
   document.getElementById('pu-file-info').textContent = '';
   document.getElementById('pu-error').textContent = '';
   document.getElementById('pu-status').textContent = '';
-  // PAT из localStorage
+  // PAT — подставляем, только если ранее явно попросили запомнить (см. puUpload).
+  // По умолчанию токен нигде не хранится и вводится заново каждый раз.
   var saved = localStorage.getItem('gh_pat') || '';
   document.getElementById('pu-pat').value = saved;
+  document.getElementById('pu-pat-remember').checked = !!saved;
   document.getElementById('pu-overlay').style.display = 'flex';
 }
 
@@ -5994,8 +6019,13 @@ async function puUpload(){
   if(!_puFile){ puSetError('❌ Выберите фото'); return; }
   if(!pat){     puSetError('❌ Введите GitHub токен (PAT)'); return; }
 
-  // Сохраняем PAT
-  localStorage.setItem('gh_pat', pat);
+  // Сохраняем PAT только если пользователь явно поставил галочку «Запомнить» —
+  // иначе токен с правом записи в репозиторий не должен оседать в браузере молча.
+  if(document.getElementById('pu-pat-remember').checked){
+    localStorage.setItem('gh_pat', pat);
+  } else {
+    localStorage.removeItem('gh_pat');
+  }
 
   var ext      = _puFile.type === 'image/png' ? 'png' : 'jpg';
   var fileName = code + '.' + ext;
@@ -6144,7 +6174,11 @@ document.addEventListener('DOMContentLoaded', function(){
         <input id="pu-pat" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off"
           style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:'JetBrains Mono',monospace;font-weight:500;outline:none;box-sizing:border-box;color:var(--text);background:var(--surface3);"
           onfocus="this.style.borderColor='#8040c8'" onblur="this.style.borderColor=''">
-        <div style="font-size:11px;color:var(--text3);margin-top:5px;">Токен сохраняется локально в браузере. Нужны права: <code>repo</code></div>
+        <label style="display:flex;align-items:center;gap:6px;margin-top:8px;font-size:11.5px;font-weight:600;color:var(--text2);cursor:pointer;">
+          <input id="pu-pat-remember" type="checkbox" style="cursor:pointer;">
+          Запомнить токен в этом браузере
+        </label>
+        <div style="font-size:11px;color:var(--text3);margin-top:5px;">Нужны права: <code>repo</code>. ⚠️ Токен с правом записи в репозиторий — по умолчанию он <strong>не сохраняется</strong> и вводится заново при каждой загрузке фото; на общем/чужом компьютере не включайте «Запомнить».</div>
       </div>
 
       <!-- Статус загрузки -->
