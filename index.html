@@ -494,7 +494,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <div>
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="logo-text">Каталог оборудования Kari</div>
-        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.73</div>
+        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.74</div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="logo-sub" id="catalogInfo">Загрузка…</div>
@@ -507,6 +507,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
     <button onclick="selectCat('consum')" id="btn-consum" style="background:rgba(31,157,85,.2);backdrop-filter:blur(8px);color:#7de0a8;border:1px solid rgba(31,157,85,.35);border-radius:9px;padding:6px 10px;font-family:'Nunito',sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 0 12px rgba(31,157,85,.12);transition:all .25s;white-space:nowrap;" title="Заказ расходных материалов ПКС" onmouseover="this.style.background='rgba(31,157,85,.35)';this.style.borderColor='rgba(31,157,85,.6)'" onmouseout="this.style.background='rgba(31,157,85,.2)';this.style.borderColor='rgba(31,157,85,.35)'"><span class="lottie-icon" id="lottie-cat-consum" style="width:16px;height:16px;font-size:0;">🧰</span> Расходные ПКС <span class="cart-count" id="cnt-consum">0</span></button>
     <button onclick="openFeedback()" style="background:rgba(220,170,50,.2);backdrop-filter:blur(8px);color:#ffe080;border:1px solid rgba(220,170,50,.3);border-radius:9px;padding:6px 10px;font-family:'Nunito',sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 0 12px rgba(220,170,50,.12);transition:all .25s;white-space:nowrap;" onmouseover="this.style.background='rgba(220,170,50,.35)';this.style.borderColor='rgba(220,170,50,.6)'" onmouseout="this.style.background='rgba(220,170,50,.2)';this.style.borderColor='rgba(220,170,50,.3)'"><span class="lottie-icon" id="lottie-feedback" style="width:16px;height:16px;"></span> Обратная связь</button>
     <button onclick="openPhotoUpload()" style="background:rgba(180,80,180,.2);backdrop-filter:blur(8px);color:#e8a0ff;border:1px solid rgba(180,80,180,.3);border-radius:9px;padding:6px 10px;font-family:'Nunito',sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 0 12px rgba(180,80,180,.12);transition:all .25s;white-space:nowrap;" onmouseover="this.style.background='rgba(180,80,180,.35)';this.style.borderColor='rgba(180,80,180,.6)'" onmouseout="this.style.background='rgba(180,80,180,.2)';this.style.borderColor='rgba(180,80,180,.3)'"><span class="lottie-icon" id="lottie-photo" style="width:16px;height:16px;"></span> Фото</button>
+    <button onclick="openPhotoSearch()" style="background:rgba(26,144,192,.2);backdrop-filter:blur(8px);color:#7dd0ff;border:1px solid rgba(26,144,192,.3);border-radius:9px;padding:6px 10px;font-family:'Nunito',sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 0 12px rgba(26,144,192,.12);transition:all .25s;white-space:nowrap;" title="Поиск по фото — визуальное сходство" onmouseover="this.style.background='rgba(26,144,192,.35)';this.style.borderColor='rgba(26,144,192,.6)'" onmouseout="this.style.background='rgba(26,144,192,.2)';this.style.borderColor='rgba(26,144,192,.3)'">🔍 Найти по фото</button>
     <button class="update-btn" onclick="updateFromGitHub()"><span class="lottie-icon" id="lottie-update" style="width:16px;height:16px;"></span><span id="updateIcon" style="display:none;">☁️</span> Обновить</button>
     <button class="cart-btn" onclick="toggleCart()"><span class="lottie-icon" id="lottie-cart" style="width:18px;height:18px;"></span> Корзина <span class="cart-count" id="cartCountBadge">0</span></button>
   </div>
@@ -1245,7 +1246,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 
 <script>
 // ═══ ВЕРСИЯ ПРИЛОЖЕНИЯ ═══
-var APP_VERSION = '1.73';
+var APP_VERSION = '1.74';
 // При каждом обновлении index.html — менять только эту строку (1.17, 1.18 и т.д.)
 (function(){
   var el = document.getElementById('appVersionBadge');
@@ -1621,7 +1622,7 @@ function initShopSelect(){
 }
 
 // ═══ CATALOG STATE ═══
-var allItems=[],currentCat="all",currentSearch="",currentPhotoFilter="all",currentSubcat="",filteredItems=[],catalogPage=1,cart={};
+var allItems=[],currentCat="all",currentSearch="",currentPhotoFilter="all",currentSubcat="",filteredItems=[],catalogPage=1,cart={},photoSearchResults=null;
 var PAGE=60;
 // ── Базовый размер страницы карточек (для узкого экрана — телефон/маленькое окно). ──
 //     Сетка сама подстраивает число колонок под ширину экрана (см. .product-grid),
@@ -2890,6 +2891,7 @@ function restoreNavState(){
 }
 
 function selectCat(c){
+  if(photoSearchResults) clearPhotoSearchResults();
   currentSubcat='';
   currentCat=c;
   document.querySelectorAll(".cat-btn").forEach(function(b){b.classList.remove("active");});
@@ -2926,6 +2928,7 @@ function updateSearchClear(inputId, clearId){
 
 function clearSearch(panel){
   if(panel === 'main'){
+    if(photoSearchResults) clearPhotoSearchResults();
     document.getElementById('searchInput').value = '';
     document.getElementById('searchClear').style.display = 'none';
     currentSearch = '';
@@ -2980,6 +2983,7 @@ function updateSearchScopeUI(){
 }
 
 function onSearch(){
+  if(photoSearchResults) clearPhotoSearchResults();
   currentSearch = document.getElementById("searchInput").value;
   var q = currentSearch.toLowerCase().trim();
 
@@ -3025,9 +3029,9 @@ function setPhotoFilter(mode){
 function applyFilters(){
   var q=currentSearch.toLowerCase().trim();
 
-  // Базовый пул: при поиске по «Все категории» включаем световое, слаботочное и комплекты
+  // Базовый пул: при поиске по «Все категории» (текстом или фото) включаем световое, слаботочное и комплекты
   var pool = allItems;
-  if(q && currentCat === 'all'){
+  if((q || photoSearchResults) && currentCat === 'all'){
     // Добавляем световое с виртуальным cat='light'
     var lightItems = lightAll.map(function(it){
       return {code:it.code, name:it.name, short:it.short||'', cat:'light', photo:it.photo||it.thumb||''};
@@ -3058,6 +3062,16 @@ function applyFilters(){
     if(currentPhotoFilter==='no'){ if(getImgUrl(it)) return false; }
     return true;
   });
+
+  // Активные результаты «Поиска по фото» — сужаем до найденных кодов и сортируем
+  // по убыванию сходства (см. applyPhotoSearchResults()).
+  if(photoSearchResults && currentCat === 'all'){
+    var psScore = {};
+    photoSearchResults.forEach(function(r){ psScore[r.code] = r.score; });
+    filteredItems = filteredItems.filter(function(it){ return psScore.hasOwnProperty(it.code); });
+    filteredItems.sort(function(a,b){ return (psScore[b.code]||0) - (psScore[a.code]||0); });
+  }
+
   var tBody=document.getElementById("tableBody");
   tBody.innerHTML=""; // analog-row тоже удаляются как дочерние
   document.querySelectorAll('.analog-badge.open').forEach(function(b){ b.classList.remove('open'); });
@@ -6089,6 +6103,242 @@ async function puUpload(){
   }
 }
 
+// ═══ ПОИСК ПО ФОТО (визуальное сходство, MobileNet-эмбеддинги) ═══
+// Как это работает:
+// 1) Модель MobileNet (TensorFlow.js) грузится лениво с CDN при первом открытии модалки —
+//    на обычную загрузку страницы это не влияет.
+// 2) Загружается заранее посчитанный набор векторов для уже сфотографированных позиций
+//    каталога — см. build-photo-embeddings.js и папку "Foto Embeddings" в репозитории
+//    (codes.json + vectors.f32 + meta.json). Эти файлы нужно собрать один раз офлайн
+//    (и пересобирать по мере добавления новых фото) — сравнивать тысячи фото прямо
+//    в браузере при каждой загрузке страницы нереально.
+// 3) Для загруженного пользователем фото считается такой же вектор, и по косинусному
+//    сходству находятся ближайшие кандидаты среди позиций, у которых уже есть фото.
+// 4) Результат подставляется в обычный список (панель «Все категории») — карточки,
+//    пагинация и добавление в корзину те же самые, ничего не дублируется.
+var PHOTO_SEARCH_TFJS_URL  = 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js';
+var PHOTO_SEARCH_MODEL_URL = 'https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.1/dist/mobilenet.min.js';
+var PHOTO_SEARCH_TOPN = 60; // сколько кандидатов показывать, по убыванию сходства
+
+var _psFile = null;
+var photoSearchModel = null;
+var photoSearchModelPromise = null;
+var photoSearchVectors = null;
+var photoSearchVectorsPromise = null;
+
+function openPhotoSearch(){
+  _psFile = null;
+  document.getElementById('ps-file-input').value = '';
+  document.getElementById('ps-preview').style.display = 'none';
+  document.getElementById('ps-drop').style.display = 'flex';
+  document.getElementById('ps-file-info').textContent = '';
+  psSetStatus('');
+  document.getElementById('ps-btn').disabled = true;
+  document.getElementById('ps-btn').style.opacity = '.5';
+  document.getElementById('ps-overlay').style.display = 'flex';
+  // Начинаем грузить модель и векторы заранее в фоне — к моменту клика «Найти похожие»
+  // они, скорее всего, уже готовы. Ошибки здесь не показываем — покажем при явном клике.
+  ensurePhotoSearchModel().catch(function(){});
+  ensurePhotoSearchVectors().catch(function(){});
+}
+
+function closePhotoSearch(){
+  document.getElementById('ps-overlay').style.display = 'none';
+}
+
+function psSetStatus(msg, color){
+  var el = document.getElementById('ps-status');
+  if(!el) return;
+  el.textContent = msg;
+  el.style.color = color || 'var(--text2)';
+}
+
+function psHandleFile(file){
+  if(!file || file.type.indexOf('image/') !== 0){
+    psSetStatus('❌ Выберите файл изображения', '#c03030');
+    return;
+  }
+  _psFile = file;
+  document.getElementById('ps-file-info').textContent =
+    '✅ ' + file.name + ' · ' + (file.size/1024).toFixed(0) + ' KB';
+  var reader = new FileReader();
+  reader.onload = function(e){
+    document.getElementById('ps-preview-img').src = e.target.result;
+    document.getElementById('ps-drop').style.display = 'none';
+    document.getElementById('ps-preview').style.display = 'flex';
+  };
+  reader.readAsDataURL(file);
+  document.getElementById('ps-btn').disabled = false;
+  document.getElementById('ps-btn').style.opacity = '1';
+  psSetStatus('');
+}
+
+function psClearFile(){
+  _psFile = null;
+  document.getElementById('ps-file-input').value = '';
+  document.getElementById('ps-file-info').textContent = '';
+  document.getElementById('ps-preview').style.display = 'none';
+  document.getElementById('ps-drop').style.display = 'flex';
+  document.getElementById('ps-btn').disabled = true;
+  document.getElementById('ps-btn').style.opacity = '.5';
+  psSetStatus('');
+}
+
+// Подключает внешний скрипт один раз; повторные вызовы с тем же src ждут первую загрузку
+var _psScriptPromises = {};
+function psLoadScriptOnce(src){
+  if(_psScriptPromises[src]) return _psScriptPromises[src];
+  _psScriptPromises[src] = new Promise(function(resolve, reject){
+    var s = document.createElement('script');
+    s.src = src; s.async = true;
+    s.onload = function(){ resolve(); };
+    s.onerror = function(){ reject(new Error('Не удалось загрузить ' + src)); };
+    document.head.appendChild(s);
+  });
+  return _psScriptPromises[src];
+}
+
+function ensurePhotoSearchModel(){
+  if(photoSearchModel) return Promise.resolve(photoSearchModel);
+  if(!photoSearchModelPromise){
+    photoSearchModelPromise = psLoadScriptOnce(PHOTO_SEARCH_TFJS_URL)
+      .then(function(){ return psLoadScriptOnce(PHOTO_SEARCH_MODEL_URL); })
+      .then(function(){ return mobilenet.load({version: 2, alpha: 1.0}); })
+      .then(function(m){ photoSearchModel = m; return m; })
+      .catch(function(err){ photoSearchModelPromise = null; throw err; });
+  }
+  return photoSearchModelPromise;
+}
+
+function ensurePhotoSearchVectors(){
+  if(photoSearchVectors) return Promise.resolve(photoSearchVectors);
+  if(!photoSearchVectorsPromise){
+    var base = GITHUB_RAW + 'Foto%20Embeddings/';
+    photoSearchVectorsPromise = Promise.all([
+      fetch(base + 'meta.json', {cache:'no-cache'}).then(function(r){
+        if(!r.ok) throw new Error('meta.json недоступен (HTTP ' + r.status + ') — база фото для сравнения ещё не собрана');
+        return r.json();
+      }),
+      fetch(base + 'codes.json', {cache:'no-cache'}).then(function(r){
+        if(!r.ok) throw new Error('codes.json недоступен (HTTP ' + r.status + ')');
+        return r.json();
+      }),
+      fetch(base + 'vectors.f32', {cache:'no-cache'}).then(function(r){
+        if(!r.ok) throw new Error('vectors.f32 недоступен (HTTP ' + r.status + ')');
+        return r.arrayBuffer();
+      })
+    ]).then(function(res){
+      var meta = res[0], codes = res[1], buf = res[2];
+      var dim = meta && meta.dim;
+      var data = new Float32Array(buf);
+      if(!dim || data.length !== codes.length * dim){
+        throw new Error('Файл векторов повреждён или устарел (несовпадение размеров) — пересоберите Foto Embeddings');
+      }
+      photoSearchVectors = {codes: codes, dim: dim, data: data, meta: meta};
+      return photoSearchVectors;
+    }).catch(function(err){ photoSearchVectorsPromise = null; throw err; });
+  }
+  return photoSearchVectorsPromise;
+}
+
+// Косинусное сходство запроса со всеми векторами каталога, топ-N по убыванию
+function psCosineTopN(queryVec, vectors, topN){
+  var dim = vectors.dim, data = vectors.data, codes = vectors.codes;
+  var qNorm = 0;
+  for(var i = 0; i < dim; i++) qNorm += queryVec[i] * queryVec[i];
+  qNorm = Math.sqrt(qNorm) || 1;
+  var results = [];
+  for(var idx = 0; idx < codes.length; idx++){
+    var off = idx * dim, dot = 0, vNorm = 0;
+    for(var d = 0; d < dim; d++){ var v = data[off + d]; dot += queryVec[d] * v; vNorm += v * v; }
+    vNorm = Math.sqrt(vNorm) || 1;
+    results.push({code: codes[idx], score: dot / (qNorm * vNorm)});
+  }
+  results.sort(function(a, b){ return b.score - a.score; });
+  return results.slice(0, topN);
+}
+
+function psStartSearch(){
+  if(!_psFile) return;
+  document.getElementById('ps-btn').disabled = true;
+  psSetStatus('⏳ Загружаем модель распознавания…');
+  var img = new Image();
+  var objUrl = URL.createObjectURL(_psFile);
+  img.onload = function(){
+    ensurePhotoSearchModel().then(function(model){
+      psSetStatus('⏳ Загружаем базу фото для сравнения…');
+      return ensurePhotoSearchVectors().then(function(vectors){
+        psSetStatus('🔎 Сравниваем…');
+        var embedding = model.infer(img, true);
+        return embedding.data().then(function(queryVec){
+          embedding.dispose();
+          URL.revokeObjectURL(objUrl);
+          var top = psCosineTopN(queryVec, vectors, PHOTO_SEARCH_TOPN);
+          if(!top.length){
+            psSetStatus('😕 Совпадений не найдено', '#b04010');
+            document.getElementById('ps-btn').disabled = false;
+            return;
+          }
+          applyPhotoSearchResults(top);
+        });
+      });
+    }).catch(function(err){
+      URL.revokeObjectURL(objUrl);
+      psSetStatus('❌ ' + (err && err.message ? err.message : 'Ошибка поиска по фото'), '#c03030');
+      document.getElementById('ps-btn').disabled = false;
+    });
+  };
+  img.onerror = function(){
+    URL.revokeObjectURL(objUrl);
+    psSetStatus('❌ Не удалось прочитать файл изображения', '#c03030');
+    document.getElementById('ps-btn').disabled = false;
+  };
+  img.src = objUrl;
+}
+
+// Подставляет результаты фото-поиска в обычный список каталога (панель «Все категории»),
+// отсортированный по убыванию сходства — переиспользует стандартные карточки и рендер,
+// новой вёрстки результатов не создаём (см. applyFilters()).
+function applyPhotoSearchResults(top){
+  photoSearchResults = top;
+  closePhotoSearch();
+  currentCat = 'all';
+  currentSubcat = '';
+  document.querySelectorAll(".cat-btn").forEach(function(b){ b.classList.remove("active"); });
+  var btnAll = document.getElementById('btn-all');
+  if(btnAll) btnAll.classList.add('active');
+  updateSearchScopeUI();
+  if(typeof saveNavState === 'function') saveNavState();
+  hideSubcatScreen();
+  showCatalogPanel();
+  currentSearch = '';
+  var inp = document.getElementById('searchInput');
+  if(inp) inp.value = '';
+  updateSearchClear('searchInput', 'searchClear');
+  applyFilters();
+  document.getElementById('catalogInfo').textContent =
+    '🔍 Похоже по фото: ' + filteredItems.length.toLocaleString('ru') + ' позиций (по убыванию сходства)';
+}
+
+function clearPhotoSearchResults(){
+  if(!photoSearchResults) return;
+  photoSearchResults = null;
+}
+
+// Инициализация drag&drop и file input для модалки «Поиск по фото»
+document.addEventListener('DOMContentLoaded', function(){
+  var psDz = document.getElementById('ps-drop');
+  var psFi = document.getElementById('ps-file-input');
+  if(!psDz || !psFi) return;
+  psDz.addEventListener('dragover',  function(e){ e.preventDefault(); psDz.style.borderColor = '#1a90c0'; });
+  psDz.addEventListener('dragleave', function(){ psDz.style.borderColor = ''; });
+  psDz.addEventListener('drop', function(e){
+    e.preventDefault(); psDz.style.borderColor = '';
+    if(e.dataTransfer.files[0]) psHandleFile(e.dataTransfer.files[0]);
+  });
+  psFi.addEventListener('change', function(){ if(psFi.files[0]) psHandleFile(psFi.files[0]); });
+});
+
 // Инициализация drag&drop и file input для модального окна
 document.addEventListener('DOMContentLoaded', function(){
   // Заполняем выпадающий список папок
@@ -6190,6 +6440,59 @@ document.addEventListener('DOMContentLoaded', function(){
         onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
         📤 Загрузить на GitHub
       </button>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PHOTO SEARCH MODAL (поиск по фото / визуальное сходство) ═══ -->
+<div id="ps-overlay" style="display:none;position:fixed;inset:0;background:rgba(20,20,35,.6);backdrop-filter:blur(5px);z-index:700;align-items:center;justify-content:center;" onclick="if(event.target===this)closePhotoSearch()">
+  <div style="background:var(--surface2);border-radius:18px;width:min(480px,94vw);box-shadow:0 24px 64px rgba(0,0,0,.35);overflow:hidden;animation:authIn .3s ease;">
+
+    <!-- Заголовок -->
+    <div style="background:linear-gradient(135deg,#0a5a7a,#1a90c0);padding:18px 24px;display:flex;align-items:center;gap:12px;">
+      <span style="font-size:22px;">🔍</span>
+      <div style="flex:1;">
+        <div style="font-size:16px;font-weight:800;color:#fff;">Поиск по фото</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.65);">Сфотографируйте оборудование — покажем похожие позиции каталога</div>
+      </div>
+      <button onclick="closePhotoSearch()" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:30px;height:30px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:900;">✕</button>
+    </div>
+
+    <div style="padding:22px 24px;display:flex;flex-direction:column;gap:16px;">
+
+      <!-- Drag & Drop / съёмка -->
+      <div id="ps-drop" onclick="document.getElementById('ps-file-input').click()"
+        style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border:2.5px dashed var(--border2);border-radius:12px;padding:28px 16px;cursor:pointer;transition:border-color .2s,background .2s;"
+        onmouseover="this.style.background='var(--surface3)'" onmouseout="this.style.background=''">
+        <div style="font-size:36px;">📷</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text2);">Нажмите, перетащите фото или сделайте снимок</div>
+        <div style="font-size:11px;color:var(--text3);">PNG или JPEG · результат — список похожих позиций каталога</div>
+        <input id="ps-file-input" type="file" accept="image/*" capture="environment" style="display:none">
+      </div>
+
+      <!-- Превью -->
+      <div id="ps-preview" style="display:none;align-items:center;gap:14px;background:var(--surface3);border-radius:10px;padding:10px 14px;">
+        <img id="ps-preview-img" src="" alt="" style="width:72px;height:72px;object-fit:contain;border-radius:8px;border:1px solid var(--border);background:#fff;">
+        <div style="flex:1;min-width:0;">
+          <div id="ps-file-info" style="font-size:12px;font-weight:600;color:var(--text2);word-break:break-all;"></div>
+        </div>
+        <button onclick="psClearFile()" style="background:var(--btn-close);border:none;color:#fff;width:26px;height:26px;border-radius:50%;font-size:13px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;">✕</button>
+      </div>
+
+      <!-- Статус -->
+      <div id="ps-status" style="font-size:13px;font-weight:700;min-height:18px;"></div>
+
+      <!-- Кнопка поиска -->
+      <button id="ps-btn" onclick="psStartSearch()" disabled
+        style="width:100%;height:44px;background:linear-gradient(135deg,#0a5a7a,#1a90c0);color:#fff;border:none;border-radius:11px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s;box-shadow:0 4px 16px rgba(26,144,192,.35);opacity:.5;"
+        onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
+        🔎 Найти похожие
+      </button>
+
+      <div style="font-size:10.5px;color:var(--text3);line-height:1.5;">
+        ⚠️ Поиск сравнивает фото с уже загруженными фотографиями каталога — находит вероятных кандидатов, а не гарантирует точное совпадение. Модель распознавания (≈5–16 МБ) и база фото для сравнения загружаются при первом использовании и затем кэшируются офлайн-кэшем приложения.
+      </div>
 
     </div>
   </div>
