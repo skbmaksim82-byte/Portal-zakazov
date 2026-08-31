@@ -208,6 +208,9 @@ body{font-family:'Inter',sans-serif;color:var(--wb-text);}
 .act-btn.feedback{color:#B85000;border-color:rgba(184,80,0,.25);background:#FFF8E6;}
 .act-btn.theme{color:var(--wb-text2);border-color:var(--wb-border);background:var(--wb-gray);}
 .act-btn.consum{color:#1f9d55;border-color:rgba(31,157,85,.25);background:#EAF9F0;}
+.act-btn.photosearch{color:#0a7ab0;border-color:rgba(26,144,192,.3);background:#E8F6FC;}
+.btn-lottie-icon{width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;line-height:1;}
+.btn-lottie-icon svg{width:100%;height:100%;}
 
 /* ══ SKELETON LOADERS ══ */
 @keyframes skeletonPulse{0%{background-position:-200px 0;}100%{background-position:calc(200px + 100%) 0;}}
@@ -570,6 +573,8 @@ body{font-family:'Inter',sans-serif;color:var(--wb-text);}
 .modal-submit.purple{background:var(--wb-purple);}
 .modal-submit.green{background:var(--wb-green);}
 .modal-submit.orange{background:#E07A00;}
+.modal-submit.blue{background:#1a90c0;}
+.modal-submit:disabled{opacity:.5;cursor:default;}
 .upload-drop{border:2px dashed var(--wb-border);border-radius:14px;padding:28px 16px;
   text-align:center;cursor:pointer;transition:border-color .2s;margin-bottom:14px;}
 .upload-drop:hover{border-color:var(--wb-purple);}
@@ -720,6 +725,7 @@ body{font-family:'Inter',sans-serif;color:var(--wb-text);}
       <button class="act-btn update" onclick="mobUpdateFromGitHub()">☁ Обновить</button>
       <button class="act-btn consum" onclick="goSection('consum')" title="Заказ расходных материалов ПКС">🧰 Расходные ПКС</button>
       <button class="act-btn photo" onclick="openModal('Photo')">📸 Загрузить фото</button>
+      <button class="act-btn photosearch" onclick="openModal('PhotoSearch')"><span class="btn-lottie-icon" id="btnPhotoSearchIcon">🔍</span> Поиск по фото</button>
       <button class="act-btn feedback" onclick="openModal('Feedback')">✉ Отзыв</button>
       <button class="act-btn theme" id="themeToggleBtn" onclick="toggleTheme()">🌙 Тема</button>
     </div>
@@ -979,6 +985,42 @@ body{font-family:'Inter',sans-serif;color:var(--wb-text);}
     </div>
   </div>
 
+  <!-- ══ MODAL: Поиск по фото ══ -->
+  <div class="modal-overlay" id="modalPhotoSearch" onclick="if(event.target===this)closeModal('PhotoSearch')">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-hdr">
+        <div class="modal-hdr-title">🔍 Поиск по фото</div>
+        <button class="modal-close" onclick="closeModal('PhotoSearch')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="font-size:11px;color:#AAAAAA;margin-bottom:14px;">Сфотографируйте оборудование или выберите фото из галереи — покажем до 10 похожих позиций каталога.</div>
+
+        <div class="upload-drop" id="ps-mob-drop" onclick="document.getElementById('ps-mob-file').click()">
+          <div class="upload-drop-icon">📷</div>
+          <div class="upload-drop-title" id="ps-mob-drop-title">Нажмите, чтобы сфотографировать или выбрать фото</div>
+          <div class="upload-drop-sub">PNG / JPEG</div>
+        </div>
+        <input type="file" id="ps-mob-file" accept="image/*" capture="environment" style="display:none" onchange="psMobHandleFile(this.files[0])">
+
+        <!-- Превью -->
+        <div id="ps-mob-preview" style="display:none;align-items:center;gap:10px;background:#F7F7F7;border-radius:10px;padding:10px;margin-bottom:10px;">
+          <img id="ps-mob-img" src="" style="width:60px;height:60px;object-fit:contain;border-radius:8px;border:1px solid var(--wb-border);background:var(--wb-surface);">
+          <div style="flex:1;font-size:11px;font-weight:600;color:#6B6B6B;" id="ps-mob-fname"></div>
+          <button onclick="psMobClearFile()" style="background:#E24B4A;border:none;color:#fff;width:22px;height:22px;border-radius:50%;font-size:10px;cursor:pointer;">✕</button>
+        </div>
+
+        <div id="ps-mob-status" style="font-size:12px;font-weight:700;min-height:16px;margin-bottom:8px;"></div>
+
+        <button class="modal-submit blue" id="ps-mob-btn" onclick="psMobStartSearch()" disabled>
+          🔎 Найти похожие
+        </button>
+
+        <div style="font-size:10px;color:#AAAAAA;margin-top:10px;line-height:1.5;">⚠️ Поиск сравнивает фото с уже загруженными фотографиями каталога — находит вероятных кандидатов, а не гарантирует точное совпадение. Модель распознавания (≈5–16 МБ) и база фото для сравнения загружаются при первом использовании и затем кэшируются офлайн.</div>
+      </div>
+    </div>
+  </div>
+
   <!-- ══ MODAL: Обратная связь ══ -->
   <div class="modal-overlay" id="modalFeedback" onclick="if(event.target===this)closeModal('Feedback')">
     <div class="modal-sheet">
@@ -1054,7 +1096,8 @@ var SECTIONS = [
   {id:'kits',   name:'\u041a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u044b',              emoji:'\uD83D\uDCCB', color:'#6b48c8', wide:true},
   {id:'favs',   name:'\u0418\u0437\u0431\u0440\u0430\u043d\u043d\u043e\u0435',              emoji:'\u2B50', color:'#e0a000', wide:true},
   {id:'nlist',  name:'\u0417\u0430\u0433\u0440\u0443\u0437\u043a\u0430 \u043d\u043e\u043c\u0435\u043d\u043a\u043b\u0430\u0442\u0443\u0440',   emoji:'\uD83D\uDCE4', color:'#be5103', wide:true},
-  {id:'consum', name:'\u0420\u0430\u0441\u0445\u043e\u0434\u043d\u044b\u0435 \u043c\u0430\u0442\u0435\u0440\u0438\u0430\u043b\u044b \u041f\u041a\u0421', emoji:'\ud83e\uddf0', color:'#1f9d55', hidden:true}
+  {id:'consum', name:'\u0420\u0430\u0441\u0445\u043e\u0434\u043d\u044b\u0435 \u043c\u0430\u0442\u0435\u0440\u0438\u0430\u043b\u044b \u041f\u041a\u0421', emoji:'\ud83e\uddf0', color:'#1f9d55', hidden:true},
+  {id:'photosearch', name:'\u041f\u043e\u0445\u043e\u0436\u0435 \u043f\u043e \u0444\u043e\u0442\u043e', emoji:'\ud83d\udd0d', color:'#1a90c0', hidden:true}
 ];
 
 /* Маппинг листа xlsx → id раздела */
@@ -1267,16 +1310,24 @@ function getFilteredItems(){
   var q = qLoc || qGlob;
   var isFavs = currentSecId==='favs';
   var isConsum = currentSecId==='consum';
+  var isPhotoSearch = currentSecId==='photosearch';
   for(i=0;i<allItems.length;i++){
     var it=allItems[i];
-    if(isFavs){ if(!favorites[it.id]) continue; }
+    if(isPhotoSearch){ if(!photoSearchScore.hasOwnProperty(it.code)) continue; }
+    else if(isFavs){ if(!favorites[it.id]) continue; }
     else if(isConsum){ if(it.secId!=='tv' || !it.consumable) continue; }
     else{
       if(currentSecId && it.secId!==currentSecId) continue;
       if(currentSubcat && it.subcat!==currentSubcat) continue;
     }
-    if(q && it.name.toLowerCase().indexOf(q)<0 && it.code.toLowerCase().indexOf(q)<0) continue;
+    if(!isPhotoSearch && q && it.name.toLowerCase().indexOf(q)<0 && it.code.toLowerCase().indexOf(q)<0) continue;
     items.push(it);
+  }
+  /* Результаты поиска по фото — фиксированный порядок по убыванию сходства,
+     а не обычная сортировка (см. psMobStartSearch / psCosineTopN) */
+  if(isPhotoSearch){
+    items.sort(function(a,b){ return (photoSearchScore[b.code]||0) - (photoSearchScore[a.code]||0); });
+    return items;
   }
   return sortItemsArray(items);
 }
@@ -1411,7 +1462,7 @@ function renderItems(){
       h+='</div>';
     }
     h+='<div class="item-info">';
-    h+='<div class="item-code">'+it.code+'</div>';
+    h+='<div class="item-code">'+it.code+(currentSecId==='photosearch'&&photoSearchScore.hasOwnProperty(it.code)?' <span style="color:#0a7ab0;font-weight:800;">· '+Math.round(Math.max(0,photoSearchScore[it.code])*100)+'% похоже</span>':'')+'</div>';
     h+='<div class="item-name" data-action="go-item" data-val="'+it.id+'">'+it.name+'</div>';
     var anCnt=getAnalogsForCode(it.code).length;
     var cmCnt=getCompatForCode(it.code).length;
@@ -1465,6 +1516,13 @@ function goSection(secId){
     return;
   }
   if(secId==='consum'){
+    renderItems();
+    showScreen('s3');
+    navHistory=['s1','s3'];
+    updateHeader();
+    return;
+  }
+  if(secId==='photosearch'){
     renderItems();
     showScreen('s3');
     navHistory=['s1','s3'];
@@ -1559,7 +1617,8 @@ function updateHeader(){
     var slc2=getEl('searchLocalClear');if(slc2)slc2.classList.remove('show');
   } else if(cur==='s3'){
     if(backBtn)backBtn.classList.add('show');
-    var isFavScreen = currentSecId==='favs' || currentSecId==='nlist' || currentSecId==='consum';
+    var isFavScreen = currentSecId==='favs' || currentSecId==='nlist' || currentSecId==='consum' || currentSecId==='photosearch';
+    var spEl=getEl('sortPill'); if(spEl) spEl.style.display = (currentSecId==='photosearch') ? 'none' : '';
     var subLabel=isFavScreen?'':(currentSubcat||'\u0412\u0441\u0435 \u043f\u043e\u0437\u0438\u0446\u0438\u0438');
     if(titleMain)titleMain.textContent=isFavScreen?(sec?sec.name:'\u2B50 \u0418\u0437\u0431\u0440\u0430\u043d\u043d\u043e\u0435'):subLabel;
     var cnt3=getFilteredItems().length;
@@ -2773,6 +2832,13 @@ function openModal(name) {
     var pe = document.getElementById('pu-mob-pat');
     if (pe) pe.value = saved;
   }
+  if (name === 'PhotoSearch') {
+    psMobReset();
+    /* Грузим модель и базу векторов заранее в фоне — к моменту клика
+       «Найти похожие» они, скорее всего, уже готовы. Ошибки покажем при клике. */
+    ensurePhotoSearchModel().catch(function(){});
+    ensurePhotoSearchVectors().catch(function(){});
+  }
 }
 function closeModal(name) {
   var el = document.getElementById('modal' + name);
@@ -3189,8 +3255,218 @@ function fbMobSend(){
   showToast('Outlook \u043e\u0442\u043a\u0440\u044b\u0442','ok');
 }
 
+/* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+   \u041f\u041e\u0418\u0421\u041a \u041f\u041e \u0424\u041e\u0422\u041e (\u0432\u0438\u0437\u0443\u0430\u043b\u044c\u043d\u043e\u0435 \u0441\u0445\u043e\u0434\u0441\u0442\u0432\u043e, MobileNet-\u044d\u043c\u0431\u0435\u0434\u0434\u0438\u043d\u0433\u0438)
+   \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+   1) \u041c\u043e\u0434\u0435\u043b\u044c MobileNet (TensorFlow.js) \u0433\u0440\u0443\u0437\u0438\u0442\u0441\u044f \u043b\u0435\u043d\u0438\u0432\u043e \u0441 CDN \u043f\u0440\u0438 \u043f\u0435\u0440\u0432\u043e\u043c
+      \u043e\u0442\u043a\u0440\u044b\u0442\u0438\u0438 \u043c\u043e\u0434\u0430\u043b\u043a\u0438 \u2014 \u043d\u0430 \u043e\u0431\u044b\u0447\u043d\u0443\u044e \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0443 \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u044f \u044d\u0442\u043e \u043d\u0435 \u0432\u043b\u0438\u044f\u0435\u0442.
+   2) \u0417\u0430\u0433\u0440\u0443\u0436\u0430\u0435\u0442\u0441\u044f \u0437\u0430\u0440\u0430\u043d\u0435\u0435 \u043f\u043e\u0441\u0447\u0438\u0442\u0430\u043d\u043d\u044b\u0439 \u043d\u0430\u0431\u043e\u0440 \u0432\u0435\u043a\u0442\u043e\u0440\u043e\u0432 \u0434\u043b\u044f \u0443\u0436\u0435
+      \u0441\u0444\u043e\u0442\u043e\u0433\u0440\u0430\u0444\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u044b\u0445 \u043f\u043e\u0437\u0438\u0446\u0438\u0439 \u043a\u0430\u0442\u0430\u043b\u043e\u0433\u0430 \u2014 \u043f\u0430\u043f\u043a\u0430 "Foto Embeddings"
+      \u0432 \u0440\u0435\u043f\u043e\u0437\u0438\u0442\u043e\u0440\u0438\u0438 (codes.json + vectors.f32 + meta.json). \u042d\u0442\u043e \u0442\u0430 \u0436\u0435
+      \u0431\u0430\u0437\u0430, \u043a\u043e\u0442\u043e\u0440\u0443\u044e \u0443\u0436\u0435 \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u0435\u0442 \u0434\u0435\u0441\u043a\u0442\u043e\u043f\u043d\u0430\u044f \u0432\u0435\u0440\u0441\u0438\u044f \u043f\u043e\u0440\u0442\u0430\u043b\u0430 \u2014
+      \u043f\u0435\u0440\u0435\u0441\u0447\u0438\u0442\u044b\u0432\u0430\u0442\u044c \u0435\u0451 \u0437\u0434\u0435\u0441\u044c \u043d\u0435 \u043d\u0443\u0436\u043d\u043e, \u0442\u043e\u043b\u044c\u043a\u043e \u0441\u043e\u0431\u0438\u0440\u0430\u0442\u044c \u0437\u0430\u043d\u043e\u0432\u043e \u043f\u043e \u043c\u0435\u0440\u0435
+      \u0434\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u0438\u044f \u043d\u043e\u0432\u044b\u0445 \u0444\u043e\u0442\u043e (\u0441\u043c. "Poisk_po_foto_plan.md" \u0432 \u043f\u0440\u043e\u0435\u043a\u0442\u0435).
+   3) \u0414\u043b\u044f \u0441\u0434\u0435\u043b\u0430\u043d\u043d\u043e\u0433\u043e \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u0435\u043c \u0444\u043e\u0442\u043e \u0441\u0447\u0438\u0442\u0430\u0435\u0442\u0441\u044f \u0442\u0430\u043a\u043e\u0439 \u0436\u0435 \u0432\u0435\u043a\u0442\u043e\u0440, \u0438 \u043f\u043e
+      \u043a\u043e\u0441\u0438\u043d\u0443\u0441\u043d\u043e\u043c\u0443 \u0441\u0445\u043e\u0434\u0441\u0442\u0432\u0443 \u043d\u0430\u0445\u043e\u0434\u044f\u0442\u0441\u044f \u0431\u043b\u0438\u0436\u0430\u0439\u0448\u0438\u0435 \u043a\u0430\u043d\u0434\u0438\u0434\u0430\u0442\u044b \u0441\u0440\u0435\u0434\u0438 \u043f\u043e\u0437\u0438\u0446\u0438\u0439,
+      \u0443 \u043a\u043e\u0442\u043e\u0440\u044b\u0445 \u0443\u0436\u0435 \u0435\u0441\u0442\u044c \u0444\u043e\u0442\u043e \u2014 \u0434\u043e 10 \u0448\u0442\u0443\u043a, \u043f\u043e \u0443\u0431\u044b\u0432\u0430\u043d\u0438\u044e \u0441\u0445\u043e\u0434\u0441\u0442\u0432\u0430.
+   4) \u0420\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442 \u043f\u043e\u0434\u0441\u0442\u0430\u0432\u043b\u044f\u0435\u0442\u0441\u044f \u0432 \u043e\u0431\u044b\u0447\u043d\u044b\u0439 \u0441\u043f\u0438\u0441\u043e\u043a \u0442\u043e\u0432\u0430\u0440\u043e\u0432 (\u044d\u043a\u0440\u0430\u043d s3) \u2014
+      \u043a\u0430\u0440\u0442\u043e\u0447\u043a\u0438, \u043a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e, \u0434\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0432 \u043a\u043e\u0440\u0437\u0438\u043d\u0443 \u0442\u0435 \u0436\u0435 \u0441\u0430\u043c\u044b\u0435.
+*/
+var PHOTO_SEARCH_TFJS_URL  = 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js';
+var PHOTO_SEARCH_MODEL_URL = 'https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.1/dist/mobilenet.min.js';
+var PHOTO_SEARCH_TOPN = 10; // \u0441\u043a\u043e\u043b\u044c\u043a\u043e \u043a\u0430\u043d\u0434\u0438\u0434\u0430\u0442\u043e\u0432 \u043f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c, \u043f\u043e \u0443\u0431\u044b\u0432\u0430\u043d\u0438\u044e \u0441\u0445\u043e\u0434\u0441\u0442\u0432\u0430
+
+var _psMobFile = null;
+var photoSearchModel = null;
+var photoSearchModelPromise = null;
+var photoSearchVectors = null;
+var photoSearchVectorsPromise = null;
+var photoSearchScore = {}; // {code: score} \u2014 \u0430\u043a\u0442\u0438\u0432\u043d\u044b\u0435 \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u044b \u043f\u043e\u0438\u0441\u043a\u0430 \u043f\u043e \u0444\u043e\u0442\u043e (\u043f\u0443\u0441\u0442\u043e, \u0435\u0441\u043b\u0438 \u043f\u043e\u0438\u0441\u043a \u043d\u0435 \u0437\u0430\u043f\u0443\u0441\u043a\u0430\u043b\u0441\u044f)
+
+function psMobReset(){
+  _psMobFile = null;
+  var fi=getEl('ps-mob-file'); if(fi) fi.value='';
+  var pr=getEl('ps-mob-preview'); if(pr) pr.style.display='none';
+  var dr=getEl('ps-mob-drop'); if(dr) dr.style.display='flex';
+  var fn=getEl('ps-mob-fname'); if(fn) fn.textContent='';
+  psMobSetStatus('');
+  var b=getEl('ps-mob-btn'); if(b) b.disabled=true;
+}
+
+function psMobSetStatus(msg, color){
+  var el=getEl('ps-mob-status'); if(!el) return;
+  el.textContent=msg;
+  el.style.color = color || '#6B6B6B';
+}
+
+function psMobHandleFile(file){
+  if(!file || file.type.indexOf('image/') !== 0){
+    psMobSetStatus('\u274c \u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0444\u0430\u0439\u043b \u0438\u0437\u043e\u0431\u0440\u0430\u0436\u0435\u043d\u0438\u044f', '#E24B4A');
+    return;
+  }
+  _psMobFile = file;
+  var reader = new FileReader();
+  reader.onload = function(e){
+    var img=getEl('ps-mob-img'); if(img) img.src=e.target.result;
+    var dr=getEl('ps-mob-drop'); if(dr) dr.style.display='none';
+    var pr=getEl('ps-mob-preview'); if(pr) pr.style.display='flex';
+  };
+  reader.readAsDataURL(file);
+  var fn=getEl('ps-mob-fname'); if(fn) fn.textContent=file.name+' ('+Math.round(file.size/1024)+' \u041a\u0411)';
+  var b=getEl('ps-mob-btn'); if(b) b.disabled=false;
+  psMobSetStatus('');
+}
+
+function psMobClearFile(){
+  psMobReset();
+}
+
+/* \u041f\u043e\u0434\u043a\u043b\u044e\u0447\u0430\u0435\u0442 \u0432\u043d\u0435\u0448\u043d\u0438\u0439 \u0441\u043a\u0440\u0438\u043f\u0442 \u043e\u0434\u0438\u043d \u0440\u0430\u0437; \u043f\u043e\u0432\u0442\u043e\u0440\u043d\u044b\u0435 \u0432\u044b\u0437\u043e\u0432\u044b \u0441 \u0442\u0435\u043c \u0436\u0435 src \u0436\u0434\u0443\u0442 \u043f\u0435\u0440\u0432\u0443\u044e \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0443 */
+var _psScriptPromises = {};
+function psLoadScriptOnce(src){
+  if(_psScriptPromises[src]) return _psScriptPromises[src];
+  _psScriptPromises[src] = new Promise(function(resolve, reject){
+    var s=document.createElement('script');
+    s.src=src; s.async=true;
+    s.onload=function(){ resolve(); };
+    s.onerror=function(){ reject(new Error('\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044c '+src)); };
+    document.head.appendChild(s);
+  });
+  return _psScriptPromises[src];
+}
+
+function ensurePhotoSearchModel(){
+  if(photoSearchModel) return Promise.resolve(photoSearchModel);
+  if(!photoSearchModelPromise){
+    photoSearchModelPromise = psLoadScriptOnce(PHOTO_SEARCH_TFJS_URL)
+      .then(function(){ return psLoadScriptOnce(PHOTO_SEARCH_MODEL_URL); })
+      .then(function(){ return mobilenet.load({version: 2, alpha: 1.0}); })
+      .then(function(m){ photoSearchModel = m; return m; })
+      .catch(function(err){ photoSearchModelPromise = null; throw err; });
+  }
+  return photoSearchModelPromise;
+}
+
+function ensurePhotoSearchVectors(){
+  if(photoSearchVectors) return Promise.resolve(photoSearchVectors);
+  if(!photoSearchVectorsPromise){
+    var base = GITHUB_RAW + 'Foto%20Embeddings/';
+    photoSearchVectorsPromise = Promise.all([
+      fetch(base+'meta.json', {cache:'no-cache'}).then(function(r){
+        if(!r.ok) throw new Error('\u0411\u0430\u0437\u0430 \u0444\u043e\u0442\u043e \u0434\u043b\u044f \u0441\u0440\u0430\u0432\u043d\u0435\u043d\u0438\u044f \u0435\u0449\u0451 \u043d\u0435 \u0441\u043e\u0431\u0440\u0430\u043d\u0430 (HTTP '+r.status+')');
+        return r.json();
+      }),
+      fetch(base+'codes.json', {cache:'no-cache'}).then(function(r){
+        if(!r.ok) throw new Error('codes.json \u043d\u0435\u0434\u043e\u0441\u0442\u0443\u043f\u0435\u043d (HTTP '+r.status+')');
+        return r.json();
+      }),
+      fetch(base+'vectors.f32', {cache:'no-cache'}).then(function(r){
+        if(!r.ok) throw new Error('vectors.f32 \u043d\u0435\u0434\u043e\u0441\u0442\u0443\u043f\u0435\u043d (HTTP '+r.status+')');
+        return r.arrayBuffer();
+      })
+    ]).then(function(res){
+      var meta=res[0], codes=res[1], buf=res[2];
+      var dim=meta && meta.dim;
+      var data=new Float32Array(buf);
+      if(!dim || data.length !== codes.length*dim){
+        throw new Error('\u0424\u0430\u0439\u043b \u0432\u0435\u043a\u0442\u043e\u0440\u043e\u0432 \u043f\u043e\u0432\u0440\u0435\u0436\u0434\u0451\u043d \u0438\u043b\u0438 \u0443\u0441\u0442\u0430\u0440\u0435\u043b \u2014 \u043f\u0435\u0440\u0435\u0441\u043e\u0431\u0435\u0440\u0438\u0442\u0435 Foto Embeddings');
+      }
+      photoSearchVectors = {codes: codes, dim: dim, data: data, meta: meta};
+      return photoSearchVectors;
+    }).catch(function(err){ photoSearchVectorsPromise = null; throw err; });
+  }
+  return photoSearchVectorsPromise;
+}
+
+/* \u041a\u043e\u0441\u0438\u043d\u0443\u0441\u043d\u043e\u0435 \u0441\u0445\u043e\u0434\u0441\u0442\u0432\u043e \u0437\u0430\u043f\u0440\u043e\u0441\u0430 \u0441\u043e \u0432\u0441\u0435\u043c\u0438 \u0432\u0435\u043a\u0442\u043e\u0440\u0430\u043c\u0438 \u043a\u0430\u0442\u0430\u043b\u043e\u0433\u0430, \u0442\u043e\u043f-N \u043f\u043e \u0443\u0431\u044b\u0432\u0430\u043d\u0438\u044e */
+function psCosineTopN(queryVec, vectors, topN){
+  var dim=vectors.dim, data=vectors.data, codes=vectors.codes;
+  var qNorm=0;
+  for(var i=0;i<dim;i++) qNorm += queryVec[i]*queryVec[i];
+  qNorm = Math.sqrt(qNorm) || 1;
+  var results=[];
+  for(var idx=0; idx<codes.length; idx++){
+    var off=idx*dim, dot=0, vNorm=0;
+    for(var d=0; d<dim; d++){ var v=data[off+d]; dot += queryVec[d]*v; vNorm += v*v; }
+    vNorm = Math.sqrt(vNorm) || 1;
+    results.push({code: codes[idx], score: dot/(qNorm*vNorm)});
+  }
+  results.sort(function(a,b){ return b.score - a.score; });
+  return results.slice(0, topN);
+}
+
+function psMobStartSearch(){
+  if(!_psMobFile) return;
+  var b=getEl('ps-mob-btn'); if(b) b.disabled=true;
+  psMobSetStatus('\u23f3 \u0417\u0430\u0433\u0440\u0443\u0436\u0430\u0435\u043c \u043c\u043e\u0434\u0435\u043b\u044c \u0440\u0430\u0441\u043f\u043e\u0437\u043d\u0430\u0432\u0430\u043d\u0438\u044f\u2026');
+  var img=new Image();
+  var objUrl=URL.createObjectURL(_psMobFile);
+  img.onload=function(){
+    ensurePhotoSearchModel().then(function(model){
+      psMobSetStatus('\u23f3 \u0417\u0430\u0433\u0440\u0443\u0436\u0430\u0435\u043c \u0431\u0430\u0437\u0443 \u0444\u043e\u0442\u043e \u0434\u043b\u044f \u0441\u0440\u0430\u0432\u043d\u0435\u043d\u0438\u044f\u2026');
+      return ensurePhotoSearchVectors().then(function(vectors){
+        psMobSetStatus('\ud83d\udd0e \u0421\u0440\u0430\u0432\u043d\u0438\u0432\u0430\u0435\u043c\u2026');
+        var embedding=model.infer(img, true);
+        return embedding.data().then(function(queryVec){
+          embedding.dispose();
+          URL.revokeObjectURL(objUrl);
+          var top=psCosineTopN(queryVec, vectors, PHOTO_SEARCH_TOPN);
+          if(!top.length){
+            psMobSetStatus('\ud83d\ude15 \u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e', '#B85000');
+            if(b) b.disabled=false;
+            return;
+          }
+          applyPhotoSearchResultsMob(top);
+        });
+      });
+    }).catch(function(err){
+      URL.revokeObjectURL(objUrl);
+      psMobSetStatus('\u274c '+(err && err.message ? err.message : '\u041e\u0448\u0438\u0431\u043a\u0430 \u043f\u043e\u0438\u0441\u043a\u0430 \u043f\u043e \u0444\u043e\u0442\u043e'), '#E24B4A');
+      if(b) b.disabled=false;
+    });
+  };
+  img.onerror=function(){
+    URL.revokeObjectURL(objUrl);
+    psMobSetStatus('\u274c \u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u043f\u0440\u043e\u0447\u0438\u0442\u0430\u0442\u044c \u0444\u0430\u0439\u043b \u0438\u0437\u043e\u0431\u0440\u0430\u0436\u0435\u043d\u0438\u044f', '#E24B4A');
+    if(b) b.disabled=false;
+  };
+  img.src=objUrl;
+}
+
+/* \u041f\u043e\u0434\u0441\u0442\u0430\u0432\u043b\u044f\u0435\u0442 \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u044b \u0444\u043e\u0442\u043e-\u043f\u043e\u0438\u0441\u043a\u0430 \u0432 \u043e\u0431\u044b\u0447\u043d\u044b\u0439 \u0441\u043f\u0438\u0441\u043e\u043a \u043a\u0430\u0442\u0430\u043b\u043e\u0433\u0430 (\u044d\u043a\u0440\u0430\u043d s3) \u2014
+   \u043f\u0435\u0440\u0435\u0438\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u0435\u0442 \u0441\u0442\u0430\u043d\u0434\u0430\u0440\u0442\u043d\u044b\u0435 \u043a\u0430\u0440\u0442\u043e\u0447\u043a\u0438, \u043d\u0438\u0447\u0435\u0433\u043e \u043d\u0435 \u0434\u0443\u0431\u043b\u0438\u0440\u0443\u0435\u043c. */
+function applyPhotoSearchResultsMob(top){
+  var scoreMap={};
+  for(var i=0;i<top.length;i++) scoreMap[top[i].code]=top[i].score;
+  photoSearchScore = scoreMap;
+  closeModal('PhotoSearch');
+  goSection('photosearch');
+  showToast('\ud83d\udd0d \u041d\u0430\u0439\u0434\u0435\u043d\u043e '+top.length+' \u043f\u043e\u0445\u043e\u0436\u0438\u0445 \u043f\u043e\u0437\u0438\u0446\u0438\u0439', 'ok');
+}
+
 /* \u0410\u0432\u0442\u043e\u043e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435 \u2014 \u043f\u043e\u0441\u043b\u0435 \u0438\u043d\u0438\u0446\u0438\u0430\u043b\u0438\u0437\u0430\u0446\u0438\u0438 \u0432\u0441\u0435\u0445 \u043a\u043e\u043d\u0441\u0442\u0430\u043d\u0442 \u0438 \u0444\u0443\u043d\u043a\u0446\u0438\u0439 */
 mobUpdateFromGitHub();
+/* Animated icon for the "Search by photo" button (Lottie, wired-lineal-19-magnifier-zoom-search).
+   lottie-web loads lazily from CDN (like MobileNet above) -- if the network/CDN is unavailable,
+   the button just keeps the magnifier emoji placeholder, nothing else breaks. */
+var LOTTIE_WEB_URL = 'https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js';
+var PHOTOSEARCH_ICON_DATA = {"v":"5.12.1","fr":60,"ip":0,"op":120,"w":430,"h":430,"nm":"wired-lineal-19-magnifier-zoom-search","ddd":0,"assets":[{"id":"comp_2","nm":"hover-rotation","fr":60,"layers":[{"ddd":0,"ind":1,"ty":4,"nm":"Reflection","parent":2,"sr":1,"ks":{"o":{"a":0,"k":100,"ix":11},"r":{"a":0,"k":0,"ix":10},"p":{"a":0,"k":[-24.842,-23.627,0],"ix":2,"l":2},"a":{"a":0,"k":[-8.526,-8.465,0],"ix":1,"l":2},"s":{"a":0,"k":[350,350,100],"ix":6,"l":2}},"ao":0,"shapes":[{"ty":"gr","it":[{"ind":0,"ty":"sh","ix":1,"ks":{"a":0,"k":{"i":[[-12.997,-12.997],[12.997,-12.997],[12.997,12.997],[-12.997,12.997]],"o":[[12.997,12.997],[-12.997,12.997],[-12.997,-12.997],[12.997,-12.997]],"v":[[14.753,-32.253],[14.753,14.814],[-32.314,14.814],[-32.314,-32.253]],"c":true},"ix":2},"nm":"Path 1","mn":"ADBE Vector Shape - Group","hd":false},{"ty":"st","c":{"a":0,"k":[0.922,0.902,0.937,1],"ix":3},"o":{"a":0,"k":100,"ix":4},"w":{"a":0,"k":2.5,"ix":5},"lc":2,"lj":2,"bm":0,"nm":".secondary","mn":"ADBE Vector Graphic - Stroke","hd":false,"cl":"secondary"},{"ty":"tm","s":{"a":0,"k":0,"ix":1},"e":{"a":0,"k":14,"ix":2},"o":{"a":1,"k":[{"i":{"x":[0.44],"y":[1]},"o":{"x":[0.332],"y":[0]},"t":0,"s":[-113]},{"t":120,"s":[607]}],"ix":3},"m":1,"ix":3,"nm":"Trim Paths 1","mn":"ADBE Vector Filter - Trim","hd":false},{"ty":"tr","p":{"a":0,"k":[0,0],"ix":2},"a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"r":{"a":0,"k":0,"ix":6},"o":{"a":0,"k":100,"ix":7},"sk":{"a":0,"k":0,"ix":4},"sa":{"a":0,"k":0,"ix":5},"nm":"Transform"}],"nm":"Group 2","np":3,"cix":2,"bm":0,"ix":1,"mn":"ADBE Vector Group","hd":false}],"ip":0,"op":300,"st":0,"ct":1,"bm":0},{"ddd":0,"ind":2,"ty":4,"nm":"Frame","sr":1,"ks":{"o":{"a":0,"k":100,"ix":11},"r":{"a":1,"k":[{"i":{"x":[0.207],"y":[1]},"o":{"x":[0.333],"y":[0]},"t":0,"s":[0]},{"t":41,"s":[90],"h":1},{"i":{"x":[0.205],"y":[1]},"o":{"x":[0.474],"y":[0]},"t":47,"s":[90]},{"t":120,"s":[0]}],"ix":10},"p":{"a":1,"k":[{"i":{"x":0.196,"y":1},"o":{"x":0.333,"y":0},"t":0,"s":[186.033,185.999,0],"to":[21.217,-39.999,0],"ti":[0,0,0]},{"t":41,"s":[239.033,185.999,0],"h":1},{"i":{"x":0.205,"y":1},"o":{"x":0.474,"y":0},"t":47,"s":[239.033,185.999,0],"to":[-34.783,-39.249,0],"ti":[0,0,0]},{"t":120,"s":[186.033,185.999,0]}],"ix":2,"l":2},"a":{"a":0,"k":[-23.967,-23.001,0],"ix":1,"l":2},"s":{"a":1,"k":[{"i":{"x":[0.239,0.239,0.667],"y":[1,1,1]},"o":{"x":[0.333,0.333,0.333],"y":[0,0,0]},"t":0,"s":[100,100,100]},{"i":{"x":[0.667,0.667,0.667],"y":[1,1,1]},"o":{"x":[0.333,0.333,0.333],"y":[0,0,0]},"t":41,"s":[90,90,100]},{"i":{"x":[0.266,0.266,0.667],"y":[1,1,1]},"o":{"x":[0.431,0.431,0.333],"y":[0,0,0]},"t":47,"s":[90,90,100]},{"t":120,"s":[100,100,100]}],"ix":6,"l":2}},"ao":0,"shapes":[{"ty":"gr","it":[{"ind":0,"ty":"sh","ix":1,"ks":{"a":0,"k":{"i":[[61.5,61.5],[61.49,-61.49],[-61.5,-61.49],[-61.49,61.5]],"o":[[-61.49,-61.49],[-61.5,61.5],[61.49,61.5],[61.5,-61.49]],"v":[[87.378,-134.35],[-135.312,-134.35],[-135.312,88.34],[87.378,88.34]],"c":true},"ix":2},"nm":"Path 2","mn":"ADBE Vector Shape - Group","hd":false},{"ty":"st","c":{"a":0,"k":[0.071,0.075,0.192,1],"ix":3},"o":{"a":0,"k":100,"ix":4},"w":{"a":0,"k":7,"ix":5},"lc":1,"lj":1,"ml":4,"bm":0,"nm":".primary","mn":"ADBE Vector Graphic - Stroke","hd":false,"cl":"primary"},{"ty":"tr","p":{"a":0,"k":[0,0],"ix":2},"a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"r":{"a":0,"k":0,"ix":6},"o":{"a":0,"k":100,"ix":7},"sk":{"a":0,"k":0,"ix":4},"sa":{"a":0,"k":0,"ix":5},"nm":"Transform"}],"nm":"Group 2","np":3,"cix":2,"bm":0,"ix":1,"mn":"ADBE Vector Group","hd":false},{"ty":"gr","it":[{"ind":0,"ty":"sh","ix":1,"ks":{"a":0,"k":{"i":[[57.356,-57.357],[57.356,57.356],[-57.356,57.356],[-57.356,-57.368]],"o":[[-57.356,57.356],[-57.356,-57.357],[57.356,-57.368],[57.356,57.356]],"v":[[79.896,80.858],[-127.83,80.858],[-127.83,-126.857],[79.896,-126.857]],"c":true},"ix":2},"nm":"Path 1","mn":"ADBE Vector Shape - Group","hd":false},{"ind":1,"ty":"sh","ix":2,"ks":{"a":0,"k":{"i":[[61.5,61.5],[61.49,-61.49],[-61.5,-61.49],[-61.49,61.5]],"o":[[-61.49,-61.49],[-61.5,61.5],[61.49,61.5],[61.5,-61.49]],"v":[[87.378,-134.35],[-135.312,-134.35],[-135.312,88.34],[87.378,88.34]],"c":true},"ix":2},"nm":"Path 2","mn":"ADBE Vector Shape - Group","hd":false},{"ty":"fl","c":{"a":0,"k":[0.922,0.902,0.937,1],"ix":4},"o":{"a":0,"k":100,"ix":5},"r":1,"bm":0,"nm":".secondary","mn":"ADBE Vector Graphic - Fill","hd":false,"cl":"secondary"},{"ty":"tr","p":{"a":0,"k":[0,0],"ix":2},"a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"r":{"a":0,"k":0,"ix":6},"o":{"a":0,"k":100,"ix":7},"sk":{"a":0,"k":0,"ix":4},"sa":{"a":0,"k":0,"ix":5},"nm":"Transform"}],"nm":"Group 1","np":3,"cix":2,"bm":0,"ix":2,"mn":"ADBE Vector Group","hd":false}],"ip":0,"op":300,"st":0,"ct":1,"bm":0},{"ddd":0,"ind":3,"ty":4,"nm":"Glass","parent":2,"sr":1,"ks":{"o":{"a":0,"k":100,"ix":11},"r":{"a":1,"k":[{"i":{"x":[0.207],"y":[1]},"o":{"x":[0.333],"y":[0]},"t":0,"s":[-89]},{"t":41,"s":[-158],"h":1},{"i":{"x":[0.205],"y":[1]},"o":{"x":[0.474],"y":[0]},"t":47,"s":[-158]},{"t":120,"s":[-89]}],"ix":10},"p":{"a":0,"k":[-23.966,-23.212,0],"ix":2,"l":2},"a":{"a":0,"k":[226.034,226.788,0],"ix":1,"l":2},"s":{"a":0,"k":[100.682,100.682,100],"ix":6,"l":2}},"ao":0,"shapes":[{"ty":"gr","it":[{"ind":0,"ty":"sh","ix":1,"ks":{"a":0,"k":{"i":[[-53.696,53.696],[-57.447,-44.519],[3.498,3.498],[57.195,-57.195],[-57.195,-57.195],[-4.855,-3.762]],"o":[[52.738,-52.738],[-3.07,-3.748],[-57.195,-57.195],[-57.195,57.195],[4.457,4.457],[-47.127,-57.529]],"v":[[-67.481,-68.297],[129.937,-77.398],[120.087,-88.278],[-87.041,-88.278],[-87.041,118.846],[-73.056,131.174]],"c":true},"ix":2},"nm":"Path 1","mn":"ADBE Vector Shape - Group","hd":false},{"ty":"fl","c":{"a":0,"k":[0.294,0.702,0.992,1],"ix":4},"o":{"a":0,"k":100,"ix":5},"r":1,"bm":0,"nm":".tertiary","mn":"ADBE Vector Graphic - Fill","hd":false,"cl":"tertiary"},{"ty":"tr","p":{"a":0,"k":[209.511,211.291],"ix":2},"a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"r":{"a":0,"k":0,"ix":6},"o":{"a":0,"k":50,"ix":7},"sk":{"a":0,"k":0,"ix":4},"sa":{"a":0,"k":0,"ix":5},"nm":"Transform"}],"nm":"Group 1","np":2,"cix":2,"bm":1,"ix":1,"mn":"ADBE Vector Group","hd":false},{"ty":"gr","it":[{"ind":0,"ty":"sh","ix":1,"ks":{"a":0,"k":{"i":[[-57.195,-57.195],[57.195,-57.195],[57.195,57.195],[-57.195,57.195]],"o":[[57.195,57.195],[-57.195,57.195],[-57.195,-57.195],[57.195,-57.195]],"v":[[103.564,-103.562],[103.564,103.562],[-103.564,103.562],[-103.564,-103.562]],"c":true},"ix":2},"nm":"Path 1","mn":"ADBE Vector Shape - Group","hd":false},{"ty":"fl","c":{"a":0,"k":[0.294,0.702,0.992,1],"ix":4},"o":{"a":0,"k":100,"ix":5},"r":1,"bm":0,"nm":".tertiary","mn":"ADBE Vector Graphic - Fill","hd":false,"cl":"tertiary"},{"ty":"tr","p":{"a":0,"k":[226.034,227],"ix":2},"a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"r":{"a":0,"k":0,"ix":6},"o":{"a":0,"k":100,"ix":7},"sk":{"a":0,"k":0,"ix":4},"sa":{"a":0,"k":0,"ix":5},"nm":"Transform"}],"nm":"Group 2","np":2,"cix":2,"bm":0,"ix":2,"mn":"ADBE Vector Group","hd":false}],"ip":0,"op":300,"st":0,"ct":1,"bm":0},{"ddd":0,"ind":4,"ty":4,"nm":"Handle","parent":2,"sr":1,"ks":{"o":{"a":0,"k":100,"ix":11},"r":{"a":0,"k":0,"ix":10},"p":{"a":0,"k":[128.69,129.233,0],"ix":2,"l":2},"a":{"a":0,"k":[378.69,379.233,0],"ix":1,"l":2},"s":{"a":0,"k":[100,100,100],"ix":6,"l":2}},"ao":0,"shapes":[{"ty":"gr","it":[{"ind":0,"ty":"sh","ix":1,"ks":{"a":1,"k":[{"i":{"x":0.667,"y":1},"o":{"x":0.333,"y":0},"t":0,"s":[{"i":[[4.113,-4.113],[0,0],[4.113,4.113],[0,0],[-4.113,4.113],[0,0],[-4.113,-4.113],[0,0]],"o":[[0,0],[-4.113,4.113],[0,0],[-4.113,-4.113],[0,0],[4.113,-4.113],[0,0],[4.113,4.113]],"v":[[37.893,28.267],[28.267,37.893],[13.371,37.893],[-37.893,-13.371],[-37.893,-28.267],[-28.267,-37.893],[-13.371,-37.893],[37.893,13.371]],"c":true}]},{"i":{"x":0.667,"y":1},"o":{"x":0.333,"y":0},"t":13,"s":[{"i":[[4.113,-4.113],[0,0],[4.113,4.113],[0,0],[-4.113,4.113],[0,0],[-4.113,-4.113],[0,0]],"o":[[0,0],[-4.113,4.113],[0,0],[-4.113,-4.113],[0,0],[4.113,-4.113],[0,0],[4.113,4.113]],"v":[[29.359,19.046],[19.733,28.672],[4.837,28.672],[-41.448,-17.213],[-41.448,-32.109],[-31.822,-41.735],[-16.927,-41.735],[29.359,4.15]],"c":true}]},{"i":{"x":0.667,"y":1},"o":{"x":0.333,"y":0},"t":41,"s":[{"i":[[4.113,-4.113],[0,0],[4.113,4.113],[0,0],[-4.113,4.113],[0,0],[-4.113,-4.113],[0,0]],"o":[[0,0],[-4.113,4.113],[0,0],[-4.113,-4.113],[0,0],[4.113,-4.113],[0,0],[4.113,4.113]],"v":[[37.893,28.267],[28.267,37.893],[13.371,37.893],[-37.893,-13.371],[-37.893,-28.267],[-28.267,-37.893],[-13.371,-37.893],[37.893,13.371]],"c":true}]},{"i":{"x":0.667,"y":1},"o":{"x":0.333,"y":0},"t":47,"s":[{"i":[[4.113,-4.113],[0,0],[4.113,4.113],[0,0],[-4.113,4.113],[0,0],[-4.113,-4.113],[0,0]],"o":[[0,0],[-4.113,4.113],[0,0],[-4.113,-4.113],[0,0],[4.113,-4.113],[0,0],[4.113,4.113]],"v":[[37.893,28.267],[28.267,37.893],[13.371,37.893],[-37.893,-13.371],[-37.893,-28.267],[-28.267,-37.893],[-13.371,-37.893],[37.893,13.371]],"c":true}]},{"i":{"x":0.667,"y":1},"o":{"x":0.333,"y":0},"t":70.146,"s":[{"i":[[4.113,-4.113],[0,0],[4.113,4.113],[0,0],[-4.113,4.113],[0,0],[-4.113,-4.113],[0,0]],"o":[[0,0],[-4.113,4.113],[0,0],[-4.113,-4.113],[0,0],[4.113,-4.113],[0,0],[4.113,4.113]],"v":[[29.359,19.046],[19.733,28.672],[4.837,28.672],[-41.448,-17.213],[-41.448,-32.109],[-31.822,-41.735],[-16.927,-41.735],[29.359,4.15]],"c":true}]},{"t":120,"s":[{"i":[[4.113,-4.113],[0,0],[4.113,4.113],[0,0],[-4.113,4.113],[0,0],[-4.113,-4.113],[0,0]],"o":[[0,0],[-4.113,4.113],[0,0],[-4.113,-4.113],[0,0],[4.113,-4.113],[0,0],[4.113,4.113]],"v":[[37.893,28.267],[28.267,37.893],[13.371,37.893],[-37.893,-13.371],[-37.893,-28.267],[-28.267,-37.893],[-13.371,-37.893],[37.893,13.371]],"c":true}]}],"ix":2},"nm":"Path 1","mn":"ADBE Vector Shape - Group","hd":false},{"ty":"st","c":{"a":0,"k":[0.071,0.075,0.192,1],"ix":3},"o":{"a":0,"k":100,"ix":4},"w":{"a":0,"k":7,"ix":5},"lc":1,"lj":1,"ml":4,"bm":0,"nm":".primary","mn":"ADBE Vector Graphic - Stroke","hd":false,"cl":"primary"},{"ty":"fl","c":{"a":0,"k":[0.698,0.408,0.212,1],"ix":4},"o":{"a":0,"k":100,"ix":5},"r":1,"bm":0,"nm":".quaternary","mn":"ADBE Vector Graphic - Fill","hd":false,"cl":"quaternary"},{"ty":"tr","p":{"a":0,"k":[388.326,388.868],"ix":2},"a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"r":{"a":0,"k":0,"ix":6},"o":{"a":0,"k":100,"ix":7},"sk":{"a":0,"k":0,"ix":4},"sa":{"a":0,"k":0,"ix":5},"nm":"Transform"}],"nm":"Group 1","np":3,"cix":2,"bm":0,"ix":1,"mn":"ADBE Vector Group","hd":false}],"ip":0,"op":300,"st":0,"ct":1,"bm":0},{"ddd":0,"ind":5,"ty":4,"nm":"Handle 2","parent":4,"sr":1,"ks":{"o":{"a":0,"k":100,"ix":11},"r":{"a":0,"k":0,"ix":10},"p":{"a":0,"k":[378.69,379.233,0],"ix":2,"l":2},"a":{"a":0,"k":[378.69,379.233,0],"ix":1,"l":2},"s":{"a":0,"k":[100,100,100],"ix":6,"l":2}},"ao":0,"shapes":[{"ty":"gr","it":[{"ind":0,"ty":"sh","ix":1,"ks":{"a":0,"k":{"i":[[0,0],[0,0],[0,0],[0,0]],"o":[[0,0],[0,0],[0,0],[0,0]],"v":[[30.998,27.897],[23.963,35.873],[-35.873,-23.963],[-28.838,-31.939]],"c":true},"ix":2},"nm":"Path 1","mn":"ADBE Vector Shape - Group","hd":false},{"ty":"fl","c":{"a":0,"k":[0.071,0.075,0.192,1],"ix":4},"o":{"a":0,"k":100,"ix":5},"r":1,"bm":0,"nm":".primary","mn":"ADBE Vector Graphic - Fill","hd":false,"cl":"primary"},{"ty":"tr","p":{"a":0,"k":[366.232,363.063],"ix":2},"a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"r":{"a":0,"k":0,"ix":6},"o":{"a":0,"k":100,"ix":7},"sk":{"a":0,"k":0,"ix":4},"sa":{"a":0,"k":0,"ix":5},"nm":"Transform"}],"nm":"Group 3","np":2,"cix":2,"bm":0,"ix":2,"mn":"ADBE Vector Group","hd":false}],"ip":0,"op":300,"st":0,"ct":1,"bm":0}]}],"layers":[{"ddd":0,"ind":1,"ty":3,"nm":"control","sr":1,"ks":{"o":{"a":0,"k":0,"ix":11},"r":{"a":0,"k":0,"ix":10},"p":{"a":0,"k":[0,0],"ix":2,"l":2},"a":{"a":0,"k":[0,0,0],"ix":1,"l":2},"s":{"a":0,"k":[100,100,100],"ix":6,"l":2}},"ao":0,"ef":[{"ty":5,"nm":"stroke","np":3,"mn":"Pseudo/@@WGHVCmKzRY6UuQ4L+x3apQ","ix":1,"en":1,"ef":[{"ty":7,"nm":"Menu","mn":"Pseudo/@@WGHVCmKzRY6UuQ4L+x3apQ-0001","ix":1,"v":{"a":0,"k":2,"ix":1}}]},{"ty":5,"nm":"primary","np":3,"mn":"ADBE Color Control","ix":2,"en":1,"ef":[{"ty":2,"nm":"Color","mn":"ADBE Color Control-0001","ix":1,"v":{"a":0,"k":[0.071,0.075,0.192],"ix":1}}]},{"ty":5,"nm":"secondary","np":3,"mn":"ADBE Color Control","ix":3,"en":1,"ef":[{"ty":2,"nm":"Color","mn":"ADBE Color Control-0001","ix":1,"v":{"a":0,"k":[0.922,0.902,0.937],"ix":1}}]},{"ty":5,"nm":"tertiary","np":3,"mn":"ADBE Color Control","ix":4,"en":1,"ef":[{"ty":2,"nm":"Color","mn":"ADBE Color Control-0001","ix":1,"v":{"a":0,"k":[0.294,0.702,0.992],"ix":1}}]},{"ty":5,"nm":"quaternary","np":3,"mn":"ADBE Color Control","ix":5,"en":1,"ef":[{"ty":2,"nm":"Color","mn":"ADBE Color Control-0001","ix":1,"v":{"a":0,"k":[0.698,0.408,0.212],"ix":1}}]}],"ip":0,"op":701,"st":0,"bm":0},{"ddd":0,"ind":4,"ty":0,"nm":"hover-rotation","refId":"comp_2","sr":1,"ks":{"o":{"a":0,"k":100,"ix":11},"r":{"a":0,"k":0,"ix":10},"p":{"a":0,"k":[215,215,0],"ix":2,"l":2},"a":{"a":0,"k":[215,215,0],"ix":1,"l":2},"s":{"a":0,"k":[100,100,100],"ix":6,"l":2}},"ao":0,"w":430,"h":430,"ip":0,"op":130,"st":0,"bm":0}],"markers":[{"tm":0,"cm":"default:hover-rotation","dr":120}],"props":{}};
+
+function initPhotoSearchIcon(){
+  var el = getEl('btnPhotoSearchIcon');
+  if(!el || typeof lottie === 'undefined') return;
+  try{
+    el.textContent = '';
+    lottie.loadAnimation({
+      container: el,
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      animationData: PHOTOSEARCH_ICON_DATA
+    });
+  }catch(e){ el.textContent = '🔍'; }
+}
+psLoadScriptOnce(LOTTIE_WEB_URL).then(initPhotoSearchIcon).catch(function(){ /* keeps emoji placeholder */ });
 </script>
 <script>
 
