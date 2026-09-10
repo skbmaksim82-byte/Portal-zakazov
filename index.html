@@ -481,6 +481,73 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
   .header{padding:0 10px;}
 }
 </style>
+<style id="visual-refresh">
+/* Visual refresh: calmer hierarchy, larger equipment cards and one UI language. */
+:root{
+  --primary:#2563a6;--primary-soft:#eaf2fb;--success:#23845d;--danger:#c54b5c;
+  --special:#7458b8;--focus-ring:0 0 0 3px rgba(37,99,166,.16);
+}
+.header{background:#35435a;box-shadow:0 2px 10px rgba(22,32,48,.18);}
+.header::before,.header-particles{display:none!important;}
+.logo-icon{animation:none;background:var(--primary);box-shadow:none;}
+.header-right button{box-shadow:none!important;backdrop-filter:none!important;}
+.update-btn{background:rgba(255,255,255,.10);color:#dbeafe;border-color:rgba(255,255,255,.18);}
+.cart-btn{background:var(--primary);color:#fff;border-color:rgba(255,255,255,.22);}
+.cat-topbar{display:flex;gap:6px;padding:8px 14px;overflow-x:auto;box-shadow:0 1px 5px rgba(0,0,0,.05);}
+.cat-topbar .topbar-divider{height:32px;width:1px;margin:0 4px;flex:0 0 1px;}
+.cat-topbar .cat-btn{min-height:38px;padding:8px 13px;border:1px solid transparent;}
+.cat-topbar .cat-btn.active{background:var(--primary-soft);color:var(--primary);border-color:#c7dbf2;}
+.cat-topbar .cat-btn.active::before{display:none;}
+.toolbar{padding:12px 18px;gap:10px;box-shadow:none;}
+.search-input{height:40px;border-radius:10px;font-size:14px;}
+.search-input:focus{border-color:var(--primary);box-shadow:var(--focus-ring);}
+.catalog-context{display:flex;align-items:center;gap:8px;padding:11px 20px;background:#fff;border-bottom:1px solid var(--border);}
+.catalog-context-main{font-size:16px;font-weight:800;color:var(--text);}
+.catalog-context-sep{color:var(--text3);}
+.catalog-context-sub{font-size:14px;font-weight:700;color:var(--primary);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.filter-strip{display:flex;align-items:center;gap:8px;padding:9px 18px;background:#f8fafc;border-bottom:1px solid var(--border);overflow-x:auto;}
+.filter-label{font-size:11px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:var(--text3);margin-right:2px;white-space:nowrap;}
+.filter-chip,.view-btn{height:32px;padding:0 11px;border:1px solid var(--border);border-radius:16px;background:#fff;color:var(--text2);font:700 12px 'Nunito',sans-serif;cursor:pointer;white-space:nowrap;transition:.15s;}
+.filter-chip:hover,.view-btn:hover{border-color:#9ebcdf;color:var(--primary);}
+.filter-chip.active{background:var(--primary-soft);border-color:#9ebcdf;color:var(--primary);}
+.filter-chip[data-filter="cart"].active{background:#e9f7f0;border-color:#9fd4ba;color:var(--success);}
+.active-filter-summary{margin-left:auto;font-size:12px;color:var(--text3);white-space:nowrap;}
+.view-switch{display:flex;gap:4px;padding:3px;background:var(--surface3);border-radius:10px;flex-shrink:0;}
+.view-btn{height:30px;border-radius:8px;border-color:transparent;background:transparent;padding:0 10px;}
+.view-btn.active{background:#fff;color:var(--primary);box-shadow:0 1px 4px rgba(0,0,0,.10);}
+.product-grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));grid-auto-rows:310px;gap:16px;padding:18px;}
+.product-tile{border-radius:14px;cursor:default;box-shadow:0 2px 8px rgba(26,39,58,.07);}
+.product-tile:hover{border-color:#9ebcdf;transform:translateY(-2px);box-shadow:0 8px 22px rgba(26,39,58,.12);}
+.product-tile-photo,.product-tile-photo-placeholder{background:#f7f9fc;cursor:pointer;}
+.product-tile-body{padding:11px 12px 12px;gap:5px;}
+.product-tile-code{font-size:11px;}
+.product-tile-name{font-size:13px;line-height:1.35;}
+.product-tile-short{font-size:11px;line-height:1.35;}
+.product-tile .qty-wrap{transform:none;}
+.product-tile .add-btn{width:36px;height:34px;border-radius:9px;}
+.product-tile .analog-badge,.product-tile .compat-badge,.product-tile-section .section-badge{font-size:10px;padding:3px 7px;}
+body.catalog-view-compact .product-grid{grid-template-columns:repeat(auto-fill,minmax(180px,1fr));grid-auto-rows:248px;gap:10px;padding:12px;}
+body.catalog-view-list .product-grid{display:flex;flex-direction:column;gap:8px;padding:12px;}
+body.catalog-view-list .product-tile{height:112px;min-height:112px;display:grid;grid-template-columns:130px 1fr;}
+body.catalog-view-list .product-tile-photo,body.catalog-view-list .product-tile-photo-placeholder{height:110px;border-radius:12px 0 0 12px;}
+body.catalog-view-list .product-tile-body{border-top:0;border-left:1px solid var(--border);display:grid;grid-template-columns:minmax(100px,150px) 1fr auto;align-items:center;gap:10px;}
+body.catalog-view-list .product-tile-bottom{min-width:145px;}
+/* The three equipment detail windows now share dimensions, header and content rhythm. */
+#itemDetailModal,#tvDetailModal,#kitDetailModal{width:min(920px,94vw)!important;max-width:920px!important;border-radius:18px!important;box-shadow:0 24px 70px rgba(20,31,48,.28)!important;}
+#idm-header,#tvDetailModal>div:first-child,#kitDetailModal>div:first-child{background:#35435a!important;padding:18px 22px!important;}
+#idm-img-wrap,#tdm-img-wrap,#kitDetailModal>div:nth-child(2)>div:first-child{width:330px!important;background:#f7f9fc!important;border-right:1px solid var(--border)!important;}
+#idm-img,#tdm-img,#kdm-img{max-height:360px!important;}
+#idm-main [style*="font-size:10px"],#tvDetailModal [style*="font-size:10px"],#kitDetailModal th{font-size:11px!important;letter-spacing:.9px!important;color:#64748b!important;}
+#idm-analog-btn,#tdm-analog-btn{background:#fff8e7!important;color:#8a6100!important;border:1px solid #ead492!important;box-shadow:none!important;}
+#idm-compat-btn,#tdm-compat-btn{background:#edf8f2!important;color:#1f704f!important;border:1px solid #acd8c2!important;box-shadow:none!important;}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:none;box-shadow:var(--focus-ring)!important;}
+@media(max-width:760px){
+  .product-grid{grid-template-columns:repeat(auto-fill,minmax(170px,1fr));grid-auto-rows:270px;gap:10px;padding:10px;}
+  .filter-strip{padding:8px 10px;}.catalog-context{padding:10px 12px;}
+  #idm-img-wrap,#tdm-img-wrap,#kitDetailModal>div:nth-child(2)>div:first-child{width:100%!important;max-height:300px;}
+  #itemDetailModal>div:first-child,#tvDetailModal>div:nth-child(2),#kitDetailModal>div:nth-child(2){flex-direction:column!important;overflow-y:auto!important;}
+}
+</style>
 </head>
 <body>
 <input type="file" id="fileInput" accept=".xlsx,.xls">
@@ -636,8 +703,28 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
         <button id="photoFilterYes" onclick="setPhotoFilter('yes')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;">📷 С фото</button>
         <button id="photoFilterNo" onclick="setPhotoFilter('no')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;border-radius:0 7px 7px 0;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;">Без фото</button>
       </div>
+      <div class="view-switch" aria-label="Вид каталога">
+        <button class="view-btn active" id="viewCards" onclick="setCatalogView('cards')" title="Крупные карточки">▦ Карточки</button>
+        <button class="view-btn" id="viewCompact" onclick="setCatalogView('compact')" title="Компактные карточки">▦ Компактно</button>
+        <button class="view-btn" id="viewList" onclick="setCatalogView('list')" title="Список">☷ Список</button>
+      </div>
       <div class="results-info" id="resultsInfo">—</div>
       <button onclick="exportToExcel('catalog')" title="Выгрузить в Excel" style="background:linear-gradient(135deg,#1a7a3a,#2aaa5a);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;white-space:nowrap;transition:all .2s;">📥 Excel</button>
+    </div>
+    <div class="catalog-context" id="catalogContext">
+      <span class="catalog-context-main" onclick="selectCat('all')" style="cursor:pointer;">Каталог</span>
+      <span class="catalog-context-sep">›</span>
+      <span class="catalog-context-sub" id="catalogContextCat">Все категории</span>
+      <span class="catalog-context-sep" id="catalogContextSubSep" style="display:none;">›</span>
+      <span class="catalog-context-sub" id="catalogContextSub" style="display:none;"></span>
+    </div>
+    <div class="filter-strip" id="catalogFilters" aria-label="Фильтры каталога">
+      <span class="filter-label">Показать</span>
+      <button class="filter-chip" data-filter="analogs" onclick="toggleVisualFilter('analogs')">≈ Есть аналоги</button>
+      <button class="filter-chip" data-filter="compat" onclick="toggleVisualFilter('compat')">🔗 Совместимые</button>
+      <button class="filter-chip" data-filter="cart" onclick="toggleVisualFilter('cart')">✓ В заявке</button>
+      <button class="filter-chip" data-filter="kits" onclick="toggleVisualFilter('kits')">📦 Комплекты</button>
+      <span class="active-filter-summary" id="activeFilterSummary">Фильтры не выбраны</span>
     </div>
     <!-- Экран выбора подраздела -->
     <div id="subcatScreen" style="display:none;flex:1;overflow-y:auto;padding:24px 28px;">
@@ -1623,6 +1710,50 @@ function initShopSelect(){
 
 // ═══ CATALOG STATE ═══
 var allItems=[],currentCat="all",currentSearch="",currentPhotoFilter="all",currentSubcat="",filteredItems=[],catalogPage=1,cart={},photoSearchResults=null;
+var visualFilters={analogs:false,compat:false,cart:false,kits:false};
+
+function setCatalogView(mode){
+  if(['cards','compact','list'].indexOf(mode)<0) mode='cards';
+  document.body.classList.remove('catalog-view-compact','catalog-view-list');
+  if(mode==='compact') document.body.classList.add('catalog-view-compact');
+  if(mode==='list') document.body.classList.add('catalog-view-list');
+  ['Cards','Compact','List'].forEach(function(s){
+    var b=document.getElementById('view'+s);
+    if(b) b.classList.toggle('active',s.toLowerCase()===mode);
+  });
+  try{localStorage.setItem('kariCatalogView',mode);}catch(e){}
+  if(typeof renderNextPage==='function'&&filteredItems.length) renderNextPage(catalogPage||1);
+}
+
+function toggleVisualFilter(name){
+  if(!visualFilters.hasOwnProperty(name)) return;
+  visualFilters[name]=!visualFilters[name];
+  renderVisualFilters();
+  applyFilters();
+}
+
+function renderVisualFilters(){
+  var labels={analogs:'аналоги',compat:'совместимость',cart:'в заявке',kits:'комплекты'};
+  var active=[];
+  document.querySelectorAll('.filter-chip[data-filter]').forEach(function(btn){
+    var on=!!visualFilters[btn.dataset.filter];
+    btn.classList.toggle('active',on);
+    btn.setAttribute('aria-pressed',on?'true':'false');
+    if(on) active.push(labels[btn.dataset.filter]);
+  });
+  var summary=document.getElementById('activeFilterSummary');
+  if(summary) summary.textContent=active.length?'Активно: '+active.join(', '):'Фильтры не выбраны';
+}
+
+function updateCatalogContext(){
+  var cat=document.getElementById('catalogContextCat');
+  var sub=document.getElementById('catalogContextSub');
+  var sep=document.getElementById('catalogContextSubSep');
+  if(cat) cat.textContent=getCatDisplayName(currentCat);
+  var hasSub=!!currentSubcat;
+  if(sub){sub.textContent=currentSubcat;sub.style.display=hasSub?'':'none';}
+  if(sep) sep.style.display=hasSub?'':'none';
+}
 var PAGE=60;
 // ── Базовый размер страницы карточек (для узкого экрана — телефон/маленькое окно). ──
 //     Сетка сама подстраивает число колонок под ширину экрана (см. .product-grid),
@@ -2786,6 +2917,7 @@ function showSubcatScreen(cat){
 
 function selectSubcatFromScreen(sub){
   currentSubcat = sub;
+  updateCatalogContext();
   saveNavState();
 
   // Подсвечиваем активный подраздел в левом столбце
@@ -2895,6 +3027,7 @@ function selectCat(c){
   if(photoSearchResults) clearPhotoSearchResults();
   currentSubcat='';
   currentCat=c;
+  updateCatalogContext();
   document.querySelectorAll(".cat-btn").forEach(function(b){b.classList.remove("active");});
   (document.getElementById("btn-"+c)||document.getElementById("btn-all")).classList.add("active");
   updateSearchScopeUI();
@@ -3047,6 +3180,13 @@ function applyFilters(){
     });
     pool = allItems.concat(lightItems).concat(tvItems).concat(kitsItems);
   }
+  // The explicit "Комплекты" chip also brings kits into the all-categories pool.
+  if(visualFilters.kits && currentCat==='all' && !(q || photoSearchResults)){
+    var vfKits=allKits.map(function(k){
+      return {code:k.id,name:k.name,short:(k.desc?k.desc+' ':'')+'('+k.items.length+' поз.)',cat:'kits',photo:getKitImgUrl(k)||''};
+    });
+    pool=allItems.concat(vfKits);
+  }
 
   filteredItems=pool.filter(function(it){
     if(currentCat==="karikids"){
@@ -3061,6 +3201,13 @@ function applyFilters(){
     // Фильтр по фото
     if(currentPhotoFilter==='yes'){ if(!getImgUrl(it)) return false; }
     if(currentPhotoFilter==='no'){ if(getImgUrl(it)) return false; }
+    if(visualFilters.analogs && !parseAnalogCodes(it.analogs||'').length) return false;
+    if(visualFilters.compat && !(COMPAT_MAP[it.code]&&COMPAT_MAP[it.code].length)) return false;
+    if(visualFilters.cart){
+      var vfKey=it.cat==='kits'?'KIT_'+it.code:it.code;
+      if(!cart[vfKey]) return false;
+    }
+    if(visualFilters.kits && it.cat!=='kits') return false;
     return true;
   });
 
@@ -6597,6 +6744,14 @@ window.addEventListener('appinstalled', function(){
   console.log('[PWA] app installed');
   hideInstallBanner();
   deferredInstallPrompt = null;
+});
+
+document.addEventListener('DOMContentLoaded',function(){
+  var savedView='cards';
+  try{savedView=localStorage.getItem('kariCatalogView')||'cards';}catch(e){}
+  setCatalogView(savedView);
+  renderVisualFilters();
+  updateCatalogContext();
 });
 </script>
 
