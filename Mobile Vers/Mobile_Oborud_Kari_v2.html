@@ -244,9 +244,9 @@ body{font-family:'Inter',sans-serif;color:var(--wb-text);}
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
   transition:opacity .45s ease,visibility .45s ease;}
 .splash-screen.hide{opacity:0;visibility:hidden;pointer-events:none;}
-.splash-logo-box{width:96px;height:96px;border-radius:26px;background:rgba(255,255,255,.14);
-  display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.25);}
-.splash-logo-box img{width:100%;height:100%;object-fit:cover;}
+.splash-logo-box{width:190px;height:190px;border-radius:42px;background:#fff;
+  display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 16px 44px rgba(55,0,90,.28);}
+.splash-logo-box img{width:100%;height:100%;object-fit:cover;display:block;}
 .splash-title{color:#fff;font-family:'Inter',sans-serif;font-size:15px;font-weight:800;letter-spacing:.3px;}
 .splash-spinner{width:26px;height:26px;border-radius:50%;border:3px solid rgba(255,255,255,.3);
   border-top-color:#fff;animation:spin .8s linear infinite;}
@@ -717,7 +717,7 @@ body{min-height:-webkit-fill-available!important;}
 </head>
 <body>
 <div class="splash-screen" id="splashScreen">
-  <div class="splash-logo-box"><img id="splashLogoImg" alt="Kari"></div>
+  <div class="splash-logo-box"><img id="splashLogoImg" src="Kari_animated_logo.gif" alt="Анимированный логотип Kari"></div>
   <div class="splash-title">Портал заказов Kari</div>
   <div class="splash-spinner"></div>
 </div>
@@ -2877,13 +2877,12 @@ initSortPill();
 
 /* ═══ SPLASH SCREEN: показываем логотип, затем открываем приложение ═══ */
 (function(){
-  var logoImg=document.querySelector('.hdr-logo-box img');
   var splashImg=getEl('splashLogoImg');
-  if(logoImg && splashImg) splashImg.src=logoImg.src;
+  if(splashImg) splashImg.src='Kari_animated_logo.gif';
   var splash=getEl('splashScreen');
   if(splash){
-    setTimeout(function(){splash.classList.add('hide');},900);
-    setTimeout(function(){splash.remove();},1400);
+    setTimeout(function(){splash.classList.add('hide');},3100);
+    setTimeout(function(){splash.remove();},3600);
   }
 })();
 
@@ -3581,7 +3580,8 @@ psLoadScriptOnce(LOTTIE_WEB_URL).then(initPhotoSearchIcon).catch(function(){ /* 
 (function() {
   if (!('serviceWorker' in navigator)) return;
   var SW_CODE = "const CACHE = 'kari-mobile-v2';\nconst PRECACHE = [\n  'Mobile_Oborud_Kari_v2.html',\n  'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',\n  'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap'\n];\n\nself.addEventListener('install', function(e) {\n  e.waitUntil(\n    caches.open(CACHE).then(function(c) {\n      return Promise.allSettled(\n        PRECACHE.map(function(url) {\n          return c.add(url).catch(function() { /* CDN может отклонить — игнорируем */ });\n        })\n      );\n    })\n  );\n  self.skipWaiting();\n});\n\nself.addEventListener('activate', function(e) {\n  e.waitUntil(\n    caches.keys().then(function(keys) {\n      return Promise.all(\n        keys.filter(function(k) { return k !== CACHE; })\n            .map(function(k) { return caches.delete(k); })\n      );\n    })\n  );\n  self.clients.claim();\n});\n\nself.addEventListener('fetch', function(e) {\n  var url = e.request.url;\n\n  /* GitHub API и raw — всегда сеть (актуальные данные), без кэша */\n  if (url.indexOf('github') !== -1) {\n    e.respondWith(fetch(e.request));\n    return;\n  }\n\n  /* Всё остальное: сначала кэш, при промахе — сеть */\n  e.respondWith(\n    caches.match(e.request).then(function(cached) {\n      if (cached) return cached;\n      return fetch(e.request).then(function(resp) {\n        if (resp && resp.status === 200 && resp.type !== 'opaque') {\n          var clone = resp.clone();\n          caches.open(CACHE).then(function(c) { c.put(e.request, clone); });\n        }\n        return resp;\n      }).catch(function() {\n        /* Офлайн-заглушка для навигационных запросов */\n        if (e.request.mode === 'navigate') {\n          return caches.match('Mobile_Oborud_Kari_v2.html');\n        }\n      });\n    })\n  );\n});\n";
-  SW_CODE=SW_CODE.replace("kari-mobile-v2","kari-mobile-v2-safearea-1");
+  SW_CODE=SW_CODE.replace("kari-mobile-v2","kari-mobile-v2-animated-logo-1");
+  SW_CODE=SW_CODE.replace("'Mobile_Oborud_Kari_v2.html',","'Mobile_Oborud_Kari_v2.html',\n  'Kari_animated_logo.gif',");
   try {
     var blob = new Blob([SW_CODE], {type: 'application/javascript'});
     var swUrl = URL.createObjectURL(blob);
