@@ -753,7 +753,12 @@ body{
   <!-- PWA META -->
   <meta name="theme-color" content="#A000F0">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <!-- "black-translucent" заставляет WebKit в standalone-режиме считать высоту WebView
+       как screen.height МИНУС ТОЛЬКО верхний safe-area, а нижнюю safe-area-полосу
+       рисовать УЖЕ ВНЕ WebView (там, куда CSS/JS изнутри страницы вообще не достаёт —
+       поэтому ни dvh, ни fixed, ни absolute её не покрывали). "black" укладывает
+       WebView всегда edge-to-edge, а сверху рисует непрозрачный статус-бар. -->
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="Kari Portal">
   <meta name="application-name" content="Kari Portal">
   <meta name="msapplication-TileColor" content="#A000F0">
@@ -3626,7 +3631,7 @@ psLoadScriptOnce(LOTTIE_WEB_URL).then(initPhotoSearchIcon).catch(function(){ /* 
 (function() {
   if (!('serviceWorker' in navigator)) return;
   var SW_CODE = "const CACHE = 'kari-mobile-v2';\nconst PRECACHE = [\n  'Mobile_Oborud_Kari_v2.html',\n  'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',\n  'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap'\n];\n\nself.addEventListener('install', function(e) {\n  e.waitUntil(\n    caches.open(CACHE).then(function(c) {\n      return Promise.allSettled(\n        PRECACHE.map(function(url) {\n          return c.add(url).catch(function() { /* CDN может отклонить — игнорируем */ });\n        })\n      );\n    })\n  );\n  self.skipWaiting();\n});\n\nself.addEventListener('activate', function(e) {\n  e.waitUntil(\n    caches.keys().then(function(keys) {\n      return Promise.all(\n        keys.filter(function(k) { return k !== CACHE; })\n            .map(function(k) { return caches.delete(k); })\n      );\n    })\n  );\n  self.clients.claim();\n});\n\nself.addEventListener('fetch', function(e) {\n  var url = e.request.url;\n\n  /* GitHub API и raw — всегда сеть (актуальные данные), без кэша */\n  if (url.indexOf('github') !== -1) {\n    e.respondWith(fetch(e.request));\n    return;\n  }\n\n  /* Всё остальное: сначала кэш, при промахе — сеть */\n  e.respondWith(\n    caches.match(e.request).then(function(cached) {\n      if (cached) return cached;\n      return fetch(e.request).then(function(resp) {\n        if (resp && resp.status === 200 && resp.type !== 'opaque') {\n          var clone = resp.clone();\n          caches.open(CACHE).then(function(c) { c.put(e.request, clone); });\n        }\n        return resp;\n      }).catch(function() {\n        /* Офлайн-заглушка для навигационных запросов */\n        if (e.request.mode === 'navigate') {\n          return caches.match('Mobile_Oborud_Kari_v2.html');\n        }\n      });\n    })\n  );\n});\n";
-  SW_CODE=SW_CODE.replace("kari-mobile-v2","kari-mobile-v2-ios-edge-5");
+  SW_CODE=SW_CODE.replace("kari-mobile-v2","kari-mobile-v2-ios-edge-6");
   SW_CODE=SW_CODE.replace("'Mobile_Oborud_Kari_v2.html',","'Mobile_Oborud_Kari_v2.html',\n  'Kari_animated_logo.gif',");
   try {
     var blob = new Blob([SW_CODE], {type: 'application/javascript'});
@@ -3675,7 +3680,7 @@ function installPWA() {
       <img id="verLogoImg" src="" alt="Kari">
     </div>
     <div class="ver-app-name">Портал заказов<br>Kari</div>
-    <div class="ver-num" id="verNum">v3.4</div>
+    <div class="ver-num" id="verNum">v3.5</div>
     <div class="ver-build" id="verBuild">Сборка от 14.05.2025</div>
     <div class="ver-divider"></div>
     <div class="ver-info">Мобильный дашборд оборудования<br>для внутреннего использования</div>
