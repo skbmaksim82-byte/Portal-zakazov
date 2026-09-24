@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <script>
 (function(){
   function setAppHeight(){
@@ -809,7 +809,7 @@ body{
     <div style="position:relative;">
     <div class="hdr-search" id="hdrSearchGlobal">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="17" y1="17" x2="22" y2="22"/></svg>
-      <input type="text" placeholder="Поиск по каталогу…" id="searchGlobal" oninput="onGlobalSearch()">
+      <input type="text" placeholder="Поиск по каталогу…" id="searchGlobal" oninput="onGlobalSearch()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
       <button class="hdr-search-clear" id="searchGlobalClear" onclick="clearGlobalSearch()">✕</button>
     </div>
     <div class="global-results-wrap" id="globalResultsWrap">
@@ -832,7 +832,7 @@ body{
     <!-- Локальный поиск — ниже кнопок, чтобы было ясно что он для раздела -->
     <div class="hdr-search hdr-search-local" id="hdrSearchLocal" style="display:none;">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="17" y1="17" x2="22" y2="22"/></svg>
-      <input type="text" placeholder="Поиск по разделу…" id="searchLocal" oninput="onLocalSearch()">
+      <input type="text" placeholder="Поиск по разделу…" id="searchLocal" oninput="onLocalSearch()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
       <button class="hdr-search-clear" id="searchLocalClear" onclick="clearLocalSearch()">✕</button>
     </div>
   </div>
@@ -1548,17 +1548,29 @@ function renderSubcats(secId){
 }
 
 function renderSubcatsFiltered(q){
-  if(!q){renderSubcats(currentSecId);return;}
-  var ql=q.toLowerCase();
+  var ql=String(q||'').toLowerCase().trim();
+  if(!ql){renderSubcats(currentSecId);return;}
   var sec=getSec(currentSecId); if(!sec)return;
   var data=getSubcatData(currentSecId);
   var filtered=[];
   for(var j=0;j<data.subcats.length;j++) if(data.subcats[j].toLowerCase().indexOf(ql)>=0) filtered.push(data.subcats[j]);
+  /* Позиции раздела, совпавшие по наименованию или коду */
+  var found=[], total=0, LIM=100;
+  for(var m=0;m<allItems.length;m++){
+    var it=allItems[m];
+    if(it.secId!==currentSecId) continue;
+    if(it.name.toLowerCase().indexOf(ql)<0 && it.code.toLowerCase().indexOf(ql)<0) continue;
+    total++;
+    if(found.length<LIM) found.push(it);
+  }
   var el=getEl('subcatScreen'); if(!el)return;
-  var h='<div class="subcat-section-title">'+sec.emoji+' '+sec.name+'</div><div class="subcat-grid">';
-  if(!filtered.length){
-    h+='</div><div class="empty-state"><div class="empty-icon">\uD83D\uDD0D</div><div class="empty-txt">\u041d\u0438\u0447\u0435\u0433\u043e \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e</div></div>';
-  } else {
+  var h='<div class="subcat-section-title">'+sec.emoji+' '+sec.name+'</div>';
+  if(!filtered.length && !total){
+    h+='<div class="empty-state"><div class="empty-icon">\uD83D\uDD0D</div><div class="empty-txt">\u041d\u0438\u0447\u0435\u0433\u043e \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e</div></div>';
+    el.innerHTML=h; return;
+  }
+  if(filtered.length){
+    h+='<div class="subcat-grid">';
     for(var k=0;k<filtered.length;k++){
       var s=filtered[k];
       h+='<div class="subcat-card" data-action="go-subcat" data-val="'+currentSecId+'" data-subcat="'+s+'">';
@@ -1568,6 +1580,22 @@ function renderSubcatsFiltered(q){
       h+='<div class="subcat-card-arrow">\u203a</div></div>';
     }
     h+='</div>';
+  }
+  if(total){
+    h+='<div class="subcat-section-title">\uD83D\uDD0D \u041f\u043e\u0437\u0438\u0446\u0438\u0438: '+total.toLocaleString('ru')+'</div>';
+    h+='<div class="global-results-list" style="background:var(--wb-surface);border:1px solid var(--wb-border);border-radius:14px;overflow:hidden;">';
+    for(var n=0;n<found.length;n++){
+      var fi=found[n];
+      h+='<div class="search-drop-item" data-action="go-item" data-val="'+fi.id+'">';
+      h+='<div class="search-drop-emoji">'+(fi.photo?'<img src="'+fi.photo+'" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">':fi.emoji)+'</div>';
+      h+='<div class="search-drop-info">';
+      h+='<div class="search-drop-code">'+fi.code+'</div>';
+      h+='<div class="search-drop-name">'+fi.name+'</div>';
+      if(fi.subcat)h+='<div class="search-drop-cat">'+fi.subcat+'</div>';
+      h+='</div><div class="search-drop-arrow">\u203a</div></div>';
+    }
+    h+='</div>';
+    if(total>LIM) h+='<div style="padding:10px 4px;font-size:12px;color:var(--wb-text3);text-align:center;">\u041f\u043e\u043a\u0430\u0437\u0430\u043d\u044b \u043f\u0435\u0440\u0432\u044b\u0435 '+LIM+' \u2014 \u0443\u0442\u043e\u0447\u043d\u0438\u0442\u0435 \u0437\u0430\u043f\u0440\u043e\u0441</div>';
   }
   el.innerHTML=h;
 }
@@ -1736,6 +1764,7 @@ function resetToHome(){
 /* ════════════════════════════════════════════════════
    HEADER
 ════════════════════════════════════════════════════ */
+var _hdrStateKey='';
 function updateHeader(){
   var backBtn   =getEl('hdrBack');
   var breadcrumb=getEl('breadcrumb');
@@ -1745,10 +1774,17 @@ function updateHeader(){
   var localInput=getEl('searchLocal');
   var cur=navHistory[navHistory.length-1];
   var sec=getSec(currentSecId);
+  /* Поиск сбрасываем только при СМЕНЕ экрана. Повторный вызов на том же экране
+     (например, отложенный updateHeader() из _finishUpdate после автообновления)
+     раньше стирал введённый запрос и закрывал результаты — поиск «не работал». */
+  var hdrKey=cur+'|'+currentSecId+'|'+currentSubcat+'|'+(currentItem&&currentItem.id?currentItem.id:'');
+  var sameScreen=(hdrKey===_hdrStateKey); _hdrStateKey=hdrKey;
 
-  var grw=getEl('globalResultsWrap');if(grw)grw.classList.remove('show');
-  var sg=getEl('searchGlobal');if(sg)sg.value='';
-  var sgc=getEl('searchGlobalClear');if(sgc)sgc.classList.remove('show');
+  if(!sameScreen){
+    var grw=getEl('globalResultsWrap');if(grw)grw.classList.remove('show');
+    var sg=getEl('searchGlobal');if(sg)sg.value='';
+    var sgc=getEl('searchGlobalClear');if(sgc)sgc.classList.remove('show');
+  }
 
   if(cur==='s1'){
     if(backBtn)backBtn.classList.remove('show');
@@ -1766,8 +1802,8 @@ function updateHeader(){
     if(titleSub)titleSub.textContent=sub2txt;
     if(breadcrumb){breadcrumb.classList.add('show');breadcrumb.innerHTML='<span class="bc-item" data-action="reset-home">\u0413\u043b\u0430\u0432\u043d\u0430\u044f</span><span class="bc-sep">\u203a</span><span class="bc-cur">'+(sec?sec.name:'')+'</span>';}
     if(localSrch)localSrch.style.display='flex';
-    if(localInput){localInput.placeholder='\u041f\u043e\u0438\u0441\u043a: '+(sec?sec.name:'');localInput.value='';}
-    var slc2=getEl('searchLocalClear');if(slc2)slc2.classList.remove('show');
+    if(localInput){localInput.placeholder='\u041f\u043e\u0438\u0441\u043a: '+(sec?sec.name:'');if(!sameScreen)localInput.value='';}
+    var slc2=getEl('searchLocalClear');if(slc2&&!sameScreen)slc2.classList.remove('show');
   } else if(cur==='s3'){
     if(backBtn)backBtn.classList.add('show');
     var isFavScreen = currentSecId==='favs' || currentSecId==='nlist' || currentSecId==='consum' || currentSecId==='photosearch';
@@ -1786,8 +1822,8 @@ function updateHeader(){
       }
     }
     if(localSrch)localSrch.style.display=isFavScreen?'none':'flex';
-    if(localInput){localInput.placeholder='\u041f\u043e\u0438\u0441\u043a \u0432 '+subLabel;localInput.value='';}
-    var slc3=getEl('searchLocalClear');if(slc3)slc3.classList.remove('show');
+    if(localInput){localInput.placeholder='\u041f\u043e\u0438\u0441\u043a \u0432 '+subLabel;if(!sameScreen)localInput.value='';}
+    var slc3=getEl('searchLocalClear');if(slc3&&!sameScreen)slc3.classList.remove('show');
   } else if(cur==='s5'){
     if(backBtn)backBtn.classList.add('show');
     var kit5=kitsData[_s5KitIdx];
@@ -3145,8 +3181,10 @@ function parseXlsxBuffer(buf) {
   renderSections();
   var cur = navHistory[navHistory.length - 1];
   if (cur === 's3') renderItems();
-  if (cur === 's2' && currentSecId) renderSubcats(currentSecId);
+  if (cur === 's2' && currentSecId) renderSubcatsFiltered((getEl('searchLocal')||{value:''}).value);
   if (cur === 's2' && currentSecId === 'kits') renderKitsScreen();
+  var _sgq = getEl('searchGlobal');
+  if (_sgq && _sgq.value.trim()) renderGlobalResults(_sgq.value.trim());
 
   return totalRows.toLocaleString('ru') + ' поз.';
 }
@@ -3631,7 +3669,7 @@ psLoadScriptOnce(LOTTIE_WEB_URL).then(initPhotoSearchIcon).catch(function(){ /* 
 (function() {
   if (!('serviceWorker' in navigator)) return;
   var SW_CODE = "const CACHE = 'kari-mobile-v2';\nconst PRECACHE = [\n  'Mobile_Oborud_Kari_v2.html',\n  'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',\n  'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap'\n];\n\nself.addEventListener('install', function(e) {\n  e.waitUntil(\n    caches.open(CACHE).then(function(c) {\n      return Promise.allSettled(\n        PRECACHE.map(function(url) {\n          return c.add(url).catch(function() { /* CDN может отклонить — игнорируем */ });\n        })\n      );\n    })\n  );\n  self.skipWaiting();\n});\n\nself.addEventListener('activate', function(e) {\n  e.waitUntil(\n    caches.keys().then(function(keys) {\n      return Promise.all(\n        keys.filter(function(k) { return k !== CACHE; })\n            .map(function(k) { return caches.delete(k); })\n      );\n    })\n  );\n  self.clients.claim();\n});\n\nself.addEventListener('fetch', function(e) {\n  var url = e.request.url;\n\n  /* GitHub API и raw — всегда сеть (актуальные данные), без кэша */\n  if (url.indexOf('github') !== -1) {\n    e.respondWith(fetch(e.request));\n    return;\n  }\n\n  /* Всё остальное: сначала кэш, при промахе — сеть */\n  e.respondWith(\n    caches.match(e.request).then(function(cached) {\n      if (cached) return cached;\n      return fetch(e.request).then(function(resp) {\n        if (resp && resp.status === 200 && resp.type !== 'opaque') {\n          var clone = resp.clone();\n          caches.open(CACHE).then(function(c) { c.put(e.request, clone); });\n        }\n        return resp;\n      }).catch(function() {\n        /* Офлайн-заглушка для навигационных запросов */\n        if (e.request.mode === 'navigate') {\n          return caches.match('Mobile_Oborud_Kari_v2.html');\n        }\n      });\n    })\n  );\n});\n";
-  SW_CODE=SW_CODE.replace("kari-mobile-v2","kari-mobile-v2-ios-edge-6");
+  SW_CODE=SW_CODE.replace("kari-mobile-v2","kari-mobile-v2-ios-edge-7");
   SW_CODE=SW_CODE.replace("'Mobile_Oborud_Kari_v2.html',","'Mobile_Oborud_Kari_v2.html',\n  'Kari_animated_logo.gif',");
   try {
     var blob = new Blob([SW_CODE], {type: 'application/javascript'});
@@ -3680,7 +3718,7 @@ function installPWA() {
       <img id="verLogoImg" src="" alt="Kari">
     </div>
     <div class="ver-app-name">Портал заказов<br>Kari</div>
-    <div class="ver-num" id="verNum">v3.5</div>
+    <div class="ver-num" id="verNum">v3.6</div>
     <div class="ver-build" id="verBuild">Сборка от 14.05.2025</div>
     <div class="ver-divider"></div>
     <div class="ver-info">Мобильный дашборд оборудования<br>для внутреннего использования</div>
