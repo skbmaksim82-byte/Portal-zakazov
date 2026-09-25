@@ -1587,7 +1587,7 @@ function renderSubcatsFiltered(q){
     for(var n=0;n<found.length;n++){
       var fi=found[n];
       h+='<div class="search-drop-item" data-action="go-item" data-val="'+fi.id+'">';
-      h+='<div class="search-drop-emoji">'+(fi.photo?'<img src="'+fi.photo+'" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">':fi.emoji)+'</div>';
+      h+='<div class="search-drop-emoji">'+(fi.photo?'<img src="'+thumbUrl(fi.photo)+'" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">':fi.emoji)+'</div>';
       h+='<div class="search-drop-info">';
       h+='<div class="search-drop-code">'+fi.code+'</div>';
       h+='<div class="search-drop-name">'+fi.name+'</div>';
@@ -1629,12 +1629,12 @@ function renderItems(){
       h+='<button class="item-fav-btn'+(isFav?' act':'')+'" data-fav-id="'+it.id+'" data-action="toggle-fav" data-val="'+it.id+'">'+(isFav?'★':'☆')+'</button>';
       if(itPhotos.length>1){
         h+='<div class="card-carousel" data-card-car="'+it.id+'">';
-        for(var pi=0;pi<itPhotos.length;pi++) h+='<div class="card-carousel-slide"><img src="'+itPhotos[pi]+'" loading="lazy"></div>';
+        for(var pi=0;pi<itPhotos.length;pi++) h+='<div class="card-carousel-slide"><img src="'+thumbUrl(itPhotos[pi])+'" loading="lazy" decoding="async"></div>';
         h+='</div><div class="card-dots">';
         for(var di=0;di<itPhotos.length;di++) h+='<div class="card-dot'+(di===0?' act':'')+'"></div>';
         h+='</div>';
       } else {
-        h+='<img src="'+itPhotos[0]+'">';
+        h+='<img src="'+thumbUrl(itPhotos[0])+'" loading="lazy" decoding="async">';
       }
       h+='</div>';
     } else {
@@ -1906,12 +1906,12 @@ function renderKitsScreen(){
     h+='<div class="kit-card-photo">';
     if(kitPhotos.length>1){
       h+='<div class="card-carousel" data-card-car="kit-'+i+'">';
-      for(var kpi=0;kpi<kitPhotos.length;kpi++) h+='<div class="card-carousel-slide"><img src="'+kitPhotos[kpi]+'" loading="lazy" onerror="this.parentNode.textContent=\'\u{1F4CB}\'"></div>';
+      for(var kpi=0;kpi<kitPhotos.length;kpi++) h+='<div class="card-carousel-slide"><img src="'+thumbUrl(kitPhotos[kpi])+'" loading="lazy" decoding="async" onerror="this.parentNode.textContent=\'\u{1F4CB}\'"></div>';
       h+='</div><div class="card-dots">';
       for(var kdi=0;kdi<kitPhotos.length;kdi++) h+='<div class="card-dot'+(kdi===0?' act':'')+'"></div>';
       h+='</div>';
     } else if(kitPhotos.length===1){
-      h+='<img src="'+kitPhotos[0]+'" onerror="this.parentNode.textContent=\'\u{1F4CB}\'">';
+      h+='<img src="'+thumbUrl(kitPhotos[0])+'" loading="lazy" decoding="async" onerror="this.parentNode.textContent=\'\u{1F4CB}\'">';
     } else {
       h+='\uD83D\uDCCB';
     }
@@ -1994,7 +1994,7 @@ function goKit(idx){
       var it=kit.items[j];
       var itData=findItemByCode(it.code);
       var itPh=findPhotoByCode(it.code);
-      var thumb=itPh?('<img src="'+itPh+'" onerror="this.parentNode.textContent=\'📦\'">'):'📦';
+      var thumb=itPh?('<img src="'+thumbUrl(itPh)+'" loading="lazy" decoding="async" onerror="this.parentNode.textContent=\'📦\'">'):'📦';
       var goAttr=itData?(' data-action="go-item" data-val="'+itData.id+'"'):'';
       var compatCount=getCompatForCode(it.code).length;
       var compatHtml=compatCount?'<div class="kit-item-compat has">🔗 '+compatCount+' совм.</div>':'';
@@ -2048,7 +2048,7 @@ function addKitToCart(idx){
 
 function findPhotoByCode(code){
   var maps=[OBORUD_PHOTOS,REKLAM_PHOTOS,SVET_PHOTOS,SLAB_PHOTOS,UVELIR_PHOTOS,IT_PHOTOS,COMPLECT_PHOTOS];
-  for(var m=0;m<maps.length;m++){var arr=maps[m][code];if(arr&&arr.length)return arr[0];}
+  for(var m=0;m<maps.length;m++){var arr=photoLookup(maps[m],code);if(arr&&arr.length)return arr[0];}
   return null;
 }
 
@@ -2327,7 +2327,7 @@ function renderGlobalResults(q){
     var sec=getSec(it.secId);
     var catName=sec?sec.name:'';
     h+='<div class="search-drop-item" data-action="go-item" data-val="'+it.id+'">';
-    h+='<div class="search-drop-emoji">'+(it.photo?'<img src="'+it.photo+'" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">':it.emoji)+'</div>';
+    h+='<div class="search-drop-emoji">'+(it.photo?'<img src="'+thumbUrl(it.photo)+'" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">':it.emoji)+'</div>';
     h+='<div class="search-drop-info">';
     h+='<div class="search-drop-code">'+it.code+'</div>';
     h+='<div class="search-drop-name">'+it.name+'</div>';
@@ -2982,6 +2982,28 @@ var GITHUB_RAW  = 'https://raw.githubusercontent.com/skbmaksim82-byte/Portal-zak
 var GITHUB_API  = 'https://api.github.com/repos/skbmaksim82-byte/Portal-zakazov/contents/';
 var GITHUB_XLSX = GITHUB_RAW + '%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA_%D0%BE%D0%B1%D0%BE%D1%80%D1%83%D0%B4%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F_%D0%A4%D0%98%D0%9D%D0%90%D0%9B.xlsx';
 
+/* Манифест фото (генерирует GitHub Action «Оптимизация фото») — без лимита GitHub API */
+var PHOTO_MANIFEST_URL = GITHUB_RAW + 'photos.json';
+var PHOTO_FALLBACK = {};   /* URL облегчённой копии -> URL оригинала (если копия не загрузилась) */
+function _encPath(p){ return String(p).split('/').map(encodeURIComponent).join('/'); }
+function photoNormCode(s){ return String(s||'').replace(/[\s\u00a0]+/g,'').toUpperCase(); }
+/* Миниатюра 400px для списков; для оригиналов без копии возвращает сам URL */
+function thumbUrl(u){ return (u && u.indexOf('/Foto%20Opt/full/')>=0) ? u.replace('/Foto%20Opt/full/','/Foto%20Opt/thumb/') : u; }
+/* Поиск фото по коду: точное совпадение, затем без учёта регистра и пробелов */
+function photoLookup(map, code){
+  if(!code) return null;
+  var a=map[code]; if(a&&a.length) return a;
+  var idx=map.__idx; if(idx){ a=idx[photoNormCode(code)]; if(a&&a.length) return a; }
+  return null;
+}
+/* Если облегчённая копия не загрузилась — тихо подставляем оригинал (до срабатывания onerror карточки) */
+document.addEventListener('error', function(e){
+  var t=e.target; if(!t||t.tagName!=='IMG') return;
+  var src=t.getAttribute('src')||''; var fb=PHOTO_FALLBACK[src];
+  if(fb && !t.getAttribute('data-fb')){ e.stopImmediatePropagation(); t.setAttribute('data-fb','1'); t.src=fb; return; }
+  if(!t.getAttribute('onerror') && t.closest && t.closest('.item-thumb,.card-carousel-slide,.search-drop-emoji')) t.style.visibility='hidden';
+}, true);
+
 /* Фото-кэши */
 var OBORUD_PHOTOS   = {};
 var REKLAM_PHOTOS   = {};
@@ -3191,9 +3213,11 @@ function parseXlsxBuffer(buf) {
 /* ═══════════════════════════════════════════════════
    ЗАГРУЗКА ФОТО
 ═══════════════════════════════════════════════════ */
-function _fillPhotoMap(targetMap, folder, treeFiles) {
+function _fillPhotoMap(targetMap, folder, treeFiles, optInfo) {
   var keys = Object.keys(targetMap);
   for (var ki = 0; ki < keys.length; ki++) delete targetMap[keys[ki]];
+  var idx = {};
+  Object.defineProperty(targetMap, '__idx', {value: idx, enumerable: false, configurable: true, writable: true});
   var count = 0;
   for (var fi = 0; fi < treeFiles.length; fi++) {
     var path = treeFiles[fi];
@@ -3202,17 +3226,30 @@ function _fillPhotoMap(targetMap, folder, treeFiles) {
     if (fname.indexOf('/') >= 0) continue;
     if (!/\.(png|jpg|jpeg|gif|webp)$/i.test(fname)) continue;
     var nameNoExt = fname.replace(/\.[^.]+$/, '');
-    var baseCode  = nameNoExt.replace(/_\d+$/, '');
-    var url = GITHUB_RAW + path;
+    var baseCode  = nameNoExt.replace(/_\s*\d+$/, '').trim();   /* «КОД_1», «КОД_ 1» */
+    var isMain    = nameNoExt.trim() === baseCode;
+    var orig = GITHUB_RAW + _encPath(path);
+    var info = optInfo && optInfo[path];
+    var url;
+    if (info && info.ok) {
+      url = GITHUB_RAW + _encPath('Foto Opt/full/' + path + '.webp') + '?v=' + info.sha;
+      var origV = orig + '?v=' + info.sha;
+      PHOTO_FALLBACK[url] = origV;
+      PHOTO_FALLBACK[thumbUrl(url)] = origV;
+    } else {
+      url = orig + (info ? '?v=' + info.sha : '');
+    }
     if (!targetMap[baseCode]) targetMap[baseCode] = [];
-    if (nameNoExt === baseCode) targetMap[baseCode].unshift(url);
+    if (isMain) targetMap[baseCode].unshift(url);
     else targetMap[baseCode].push(url);
+    var nk = photoNormCode(baseCode);
+    if (!idx[nk]) idx[nk] = targetMap[baseCode];
     count++;
   }
   return count;
 }
 
-function _processTreePaths(paths) {
+function _processTreePaths(paths, optInfo) {
   var folders = [
     ['Foto Oborud',    OBORUD_PHOTOS],
     ['Foto reklama',   REKLAM_PHOTOS],
@@ -3225,37 +3262,73 @@ function _processTreePaths(paths) {
   ];
   var totalPhotos = 0;
   for (var f = 0; f < folders.length; f++) {
-    totalPhotos += _fillPhotoMap(folders[f][1], folders[f][0], paths);
+    totalPhotos += _fillPhotoMap(folders[f][1], folders[f][0], paths, optInfo);
     _tickProg();
   }
   return totalPhotos;
 }
 
+function _manifestToPaths(m) {
+  var paths = [], optInfo = {};
+  var files = (m && m.files) || [];
+  for (var i = 0; i < files.length; i++) {
+    paths.push(files[i][0]);
+    optInfo[files[i][0]] = {sha: files[i][1], ok: files[i][2] === 1};
+  }
+  return {paths: paths, optInfo: optInfo};
+}
+
 function loadAllPhotos() {
   var TREE_URL = 'https://api.github.com/repos/skbmaksim82-byte/Portal-zakazov/git/trees/main?recursive=1';
   var CACHE_KEY = 'mob_photo_tree';
-  var CACHE_TTL = 3600000;
-  return fetch(TREE_URL, {cache: 'no-cache'})
+  var MANIFEST_KEY = 'mob_photo_manifest';
+
+  function fromTreeApi() {
+    return fetch(TREE_URL, {cache: 'no-cache'})
+      .then(function(r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function(data) {
+        var paths = [];
+        var tree = data.tree || [];
+        for (var i = 0; i < tree.length; i++) {
+          if (tree[i].type === 'blob') paths.push(tree[i].path);
+        }
+        try { localStorage.setItem(CACHE_KEY, JSON.stringify({ts: Date.now(), paths: paths})); } catch(e){}
+        return _processTreePaths(paths, null);
+      });
+  }
+
+  /* 1) photos.json — обычный файл, у raw.githubusercontent.com нет лимита 60 запросов/час */
+  return fetch(PHOTO_MANIFEST_URL + '?t=' + Math.floor(Date.now() / 60000), {cache: 'no-cache'})
     .then(function(r) {
       if (!r.ok) throw new Error('HTTP ' + r.status);
       return r.json();
     })
-    .then(function(data) {
-      var paths = [];
-      var tree = data.tree || [];
-      for (var i = 0; i < tree.length; i++) {
-        if (tree[i].type === 'blob') paths.push(tree[i].path);
-      }
-      try { localStorage.setItem(CACHE_KEY, JSON.stringify({ts: Date.now(), paths: paths})); } catch(e){}
-      return _processTreePaths(paths);
+    .then(function(m) {
+      if (!m || !m.files || !m.files.length) throw new Error('empty manifest');
+      try { localStorage.setItem(MANIFEST_KEY, JSON.stringify(m)); } catch(e){}
+      var pm = _manifestToPaths(m);
+      return _processTreePaths(pm.paths, pm.optInfo);
     })
+    /* 2) запасной путь — GitHub API, как раньше */
+    .catch(function() { return fromTreeApi(); })
+    /* 3) офлайн / лимит API — последний сохранённый список */
     .catch(function(e) {
+      try {
+        var cm = JSON.parse(localStorage.getItem(MANIFEST_KEY));
+        if (cm && cm.files && cm.files.length) {
+          var pm2 = _manifestToPaths(cm);
+          return _processTreePaths(pm2.paths, pm2.optInfo);
+        }
+      } catch(ex){}
       try {
         var cached = JSON.parse(localStorage.getItem(CACHE_KEY));
         if (cached && cached.paths && cached.paths.length) {
-          return _processTreePaths(cached.paths);
+          return _processTreePaths(cached.paths, null);
         }
-      } catch(ex){}
+      } catch(ex2){}
       for (var t = 0; t < 8; t++) _tickProg();
       return 0;
     });
@@ -3267,7 +3340,7 @@ function applyPhotos() {
     var it = allItems[i];
     if (!it.code) continue;
     for (var m = 0; m < maps.length; m++) {
-      var arr = maps[m][it.code];
+      var arr = photoLookup(maps[m], it.code);
       if (arr && arr.length) { it.photos = arr; it.photo = arr[0]; break; }
     }
   }
@@ -3665,16 +3738,13 @@ psLoadScriptOnce(LOTTIE_WEB_URL).then(initPhotoSearchIcon).catch(function(){ /* 
 
 
 <script>
-/* ── PWA: Service Worker через Blob (работает из file:// и data:) ── */
+/* ── PWA: Service Worker — отдельный файл sw-mobile.js рядом со страницей.
+   (Регистрация из Blob-URL браузерами запрещена, поэтому раньше SW не работал.) ── */
 (function() {
   if (!('serviceWorker' in navigator)) return;
-  var SW_CODE = "const CACHE = 'kari-mobile-v2';\nconst PRECACHE = [\n  'Mobile_Oborud_Kari_v2.html',\n  'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',\n  'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap'\n];\n\nself.addEventListener('install', function(e) {\n  e.waitUntil(\n    caches.open(CACHE).then(function(c) {\n      return Promise.allSettled(\n        PRECACHE.map(function(url) {\n          return c.add(url).catch(function() { /* CDN может отклонить — игнорируем */ });\n        })\n      );\n    })\n  );\n  self.skipWaiting();\n});\n\nself.addEventListener('activate', function(e) {\n  e.waitUntil(\n    caches.keys().then(function(keys) {\n      return Promise.all(\n        keys.filter(function(k) { return k !== CACHE; })\n            .map(function(k) { return caches.delete(k); })\n      );\n    })\n  );\n  self.clients.claim();\n});\n\nself.addEventListener('fetch', function(e) {\n  var url = e.request.url;\n\n  /* GitHub API и raw — всегда сеть (актуальные данные), без кэша */\n  if (url.indexOf('github') !== -1) {\n    e.respondWith(fetch(e.request));\n    return;\n  }\n\n  /* Всё остальное: сначала кэш, при промахе — сеть */\n  e.respondWith(\n    caches.match(e.request).then(function(cached) {\n      if (cached) return cached;\n      return fetch(e.request).then(function(resp) {\n        if (resp && resp.status === 200 && resp.type !== 'opaque') {\n          var clone = resp.clone();\n          caches.open(CACHE).then(function(c) { c.put(e.request, clone); });\n        }\n        return resp;\n      }).catch(function() {\n        /* Офлайн-заглушка для навигационных запросов */\n        if (e.request.mode === 'navigate') {\n          return caches.match('Mobile_Oborud_Kari_v2.html');\n        }\n      });\n    })\n  );\n});\n";
-  SW_CODE=SW_CODE.replace("kari-mobile-v2","kari-mobile-v2-ios-edge-7");
-  SW_CODE=SW_CODE.replace("'Mobile_Oborud_Kari_v2.html',","'Mobile_Oborud_Kari_v2.html',\n  'Kari_animated_logo.gif',");
+  if (location.protocol !== 'https:' && location.hostname !== 'localhost') return;
   try {
-    var blob = new Blob([SW_CODE], {type: 'application/javascript'});
-    var swUrl = URL.createObjectURL(blob);
-    navigator.serviceWorker.register(swUrl, {scope: './'})
+    navigator.serviceWorker.register('sw-mobile.js', {scope: './'})
       .then(function(reg) {
         console.log('SW registered:', reg.scope);
         /* Показываем кнопку "Установить" если возможно */
@@ -3718,7 +3788,7 @@ function installPWA() {
       <img id="verLogoImg" src="" alt="Kari">
     </div>
     <div class="ver-app-name">Портал заказов<br>Kari</div>
-    <div class="ver-num" id="verNum">v3.6</div>
+    <div class="ver-num" id="verNum">v3.7</div>
     <div class="ver-build" id="verBuild">Сборка от 14.05.2025</div>
     <div class="ver-divider"></div>
     <div class="ver-info">Мобильный дашборд оборудования<br>для внутреннего использования</div>
