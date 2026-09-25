@@ -1,0 +1,61 @@
+name: Оптимизация фото
+
+# Запускается при любом изменении в папках с фото (в т.ч. при загрузке фото из приложения)
+# и вручную: вкладка Actions -> «Оптимизация фото» -> Run workflow.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'Foto Oborud/**'
+      - 'Foto reklama/**'
+      - 'Foto Svet/**'
+      - 'Foto slabotoch/**'
+      - 'Foto Uvelir/**'
+      - 'IT oborud/**'
+      - 'Foto Complect/**'
+      - 'Foto Cancel/**'
+      - 'tools/optimize_photos.py'
+      - '.github/workflows/optimize-photos.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: optimize-photos
+  cancel-in-progress: false
+
+jobs:
+  optimize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Установка Pillow
+        run: pip install --quiet "pillow>=10"
+
+      - name: Сжатие фото и манифест
+        run: python tools/optimize_photos.py
+
+      - name: Сохранить результат в репозиторий
+        run: |
+          git config user.name  "photo-bot"
+          git config user.email "photo-bot@users.noreply.github.com"
+          git add -A "Foto Opt" photos.json
+          if git diff --cached --quiet; then
+            echo "Изменений нет"
+            exit 0
+          fi
+          git commit -m "Оптимизация фото (авто)"
+          for i in 1 2 3; do
+            git pull --rebase --autostash origin main && git push origin HEAD:main && exit 0
+            sleep 5
+          done
+          exit 1
