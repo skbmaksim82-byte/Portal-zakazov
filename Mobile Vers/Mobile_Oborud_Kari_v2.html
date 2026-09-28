@@ -173,7 +173,7 @@ body{font-family:'Inter',sans-serif;color:var(--wb-text);}
 .global-results-count{font-size:11px;color:var(--wb-text3);}
 .global-results-list{overflow-y:auto;display:flex;flex-direction:column;}
 .search-drop-item{
-  display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;
+  flex-shrink:0;display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;
   border-bottom:1px solid var(--wb-border);transition:background .1s;
 }
 .search-drop-item:active{background:var(--wb-purple-bg);}
@@ -2312,32 +2312,48 @@ function clearGlobalSearch(){
   var sgc=getEl('searchGlobalClear');if(sgc)sgc.classList.remove('show');
   var grw=getEl('globalResultsWrap');if(grw)grw.classList.remove('show');
 }
+/* Все совпадения без лимита; отрисовка порциями по 100 при прокрутке (быстро даже на 1 букву) */
+var _grResults=[],_grShown=0,_GR_BATCH=100;
+function _grRowHtml(it){
+  var sec=getSec(it.secId);
+  var catName=sec?sec.name:'';
+  var h='<div class="search-drop-item" data-action="go-item" data-val="'+it.id+'">';
+  h+='<div class="search-drop-emoji">'+(it.photo?'<img src="'+thumbUrl(it.photo)+'" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">':it.emoji)+'</div>';
+  h+='<div class="search-drop-info">';
+  h+='<div class="search-drop-code">'+it.code+'</div>';
+  h+='<div class="search-drop-name">'+it.name+'</div>';
+  if(catName)h+='<div class="search-drop-cat">'+catName+'</div>';
+  h+='</div>';
+  h+='<div class="search-drop-arrow">\u203a</div>';
+  h+='</div>';
+  return h;
+}
+function _grAppendBatch(){
+  var wrap=getEl('globalResultsList');if(!wrap||_grShown>=_grResults.length)return;
+  var end=Math.min(_grShown+_GR_BATCH,_grResults.length),h='';
+  for(var i=_grShown;i<end;i++)h+=_grRowHtml(_grResults[i]);
+  _grShown=end;
+  wrap.insertAdjacentHTML('beforeend',h);
+}
+function _grOnScroll(e){
+  var sc=e&&e.currentTarget;if(!sc)return;
+  if(sc.scrollTop+sc.clientHeight>=sc.scrollHeight-300)_grAppendBatch();
+}
 function renderGlobalResults(q){
-  var ql=q.toLowerCase(),wrap=getEl('globalResultsList'),cnt=getEl('globalResultsCount');
+  var ql=q.toLowerCase(),wrap=getEl('globalResultsList'),cnt=getEl('globalResultsCount'),sc=getEl('globalResultsWrap');
   var results=[];
   for(var k=0;k<allItems.length;k++){
     var it=allItems[k];
     if(it.name.toLowerCase().indexOf(ql)<0&&it.code.toLowerCase().indexOf(ql)<0)continue;
     results.push(it);
-    if(results.length>=20)break;
   }
-  var h='';
-  for(var i=0;i<results.length;i++){
-    var it=results[i];
-    var sec=getSec(it.secId);
-    var catName=sec?sec.name:'';
-    h+='<div class="search-drop-item" data-action="go-item" data-val="'+it.id+'">';
-    h+='<div class="search-drop-emoji">'+(it.photo?'<img src="'+thumbUrl(it.photo)+'" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">':it.emoji)+'</div>';
-    h+='<div class="search-drop-info">';
-    h+='<div class="search-drop-code">'+it.code+'</div>';
-    h+='<div class="search-drop-name">'+it.name+'</div>';
-    if(catName)h+='<div class="search-drop-cat">'+catName+'</div>';
-    h+='</div>';
-    h+='<div class="search-drop-arrow">\u203a</div>';
-    h+='</div>';
+  _grResults=results;_grShown=0;
+  /* прокручиваться может и обёртка, и сам список — слушаем оба */
+  [sc,wrap].forEach(function(el){if(!el)return;el.scrollTop=0;if(!el._grBound){el.addEventListener('scroll',_grOnScroll,{passive:true});el._grBound=1;}});
+  if(wrap){
+    if(!results.length)wrap.innerHTML='<div style="padding:20px;text-align:center;color:var(--wb-text3);font-size:13px;">\u041d\u0438\u0447\u0435\u0433\u043e \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e</div>';
+    else{wrap.innerHTML='';_grAppendBatch();}
   }
-  if(!h)h='<div style="padding:20px;text-align:center;color:var(--wb-text3);font-size:13px;">\u041d\u0438\u0447\u0435\u0433\u043e \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e</div>';
-  if(wrap)wrap.innerHTML=h;
   if(cnt)cnt.textContent=results.length?results.length+' \u0448\u0442':'';
 }
 
@@ -3788,7 +3804,7 @@ function installPWA() {
       <img id="verLogoImg" src="" alt="Kari">
     </div>
     <div class="ver-app-name">Портал заказов<br>Kari</div>
-    <div class="ver-num" id="verNum">v3.7</div>
+    <div class="ver-num" id="verNum">v3.8</div>
     <div class="ver-build" id="verBuild">Сборка от 14.05.2025</div>
     <div class="ver-divider"></div>
     <div class="ver-info">Мобильный дашборд оборудования<br>для внутреннего использования</div>
