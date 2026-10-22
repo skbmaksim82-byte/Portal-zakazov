@@ -88,7 +88,7 @@ body{font-family:'Inter',sans-serif;color:var(--wb-text);}
   background:var(--wb-purple-bg);border:1.5px solid rgba(160,0,240,.2);
   cursor:pointer;display:none;align-items:center;gap:4px;
   font-family:'Inter',sans-serif;font-size:12px;font-weight:800;
-  color:var(--wb-purple);flex-shrink:0;transition:all .15s;white-space:nowrap;
+  color:var(--wb-purple);flex-shrink:0;transition:transform .15s,opacity .15s,background-color .15s,border-color .15s,color .15s,box-shadow .15s;white-space:nowrap;
 }
 .hdr-back:active{background:var(--wb-purple-bg2);border-color:rgba(160,0,240,.4);}
 .hdr-back.show{display:flex;}
@@ -199,7 +199,7 @@ body{font-family:'Inter',sans-serif;color:var(--wb-text);}
 .act-btn{
   flex-shrink:0;display:flex;align-items:center;gap:5px;height:32px;padding:0 12px;
   border-radius:20px;border:1.5px solid var(--wb-border);background:var(--wb-surface);
-  font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;white-space:nowrap;
+  font-size:11px;font-weight:700;cursor:pointer;transition:transform .15s,opacity .15s,background-color .15s,border-color .15s,color .15s,box-shadow .15s;white-space:nowrap;
 }
 .act-btn:active{filter:brightness(.95);}
 .act-btn.update{color:var(--wb-purple);border-color:rgba(160,0,240,.25);background:var(--wb-purple-bg);}
@@ -295,7 +295,7 @@ body{font-family:'Inter',sans-serif;color:var(--wb-text);}
 .subcat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
 .subcat-card{
   border-radius:14px;border:1.5px solid var(--wb-border);background:var(--wb-surface);
-  padding:14px;cursor:pointer;transition:all .15s;
+  padding:14px;cursor:pointer;transition:transform .15s,opacity .15s,background-color .15s,border-color .15s,color .15s,box-shadow .15s;
   display:flex;flex-direction:column;gap:6px;
 }
 .subcat-card:active{background:var(--wb-gray);border-color:var(--accent,var(--wb-purple));}
@@ -336,7 +336,7 @@ body{font-family:'Inter',sans-serif;color:var(--wb-text);}
 .card-carousel-slide{min-width:100%;width:100%;height:100%;display:flex;align-items:center;justify-content:center;}
 .card-carousel-slide img{width:100%;height:100%;object-fit:contain;}
 .card-dots{position:absolute;bottom:4px;left:0;right:0;display:flex;justify-content:center;gap:3px;z-index:2;}
-.card-dot{width:5px;height:5px;border-radius:50%;background:rgba(0,0,0,.2);transition:all .2s;}
+.card-dot{width:5px;height:5px;border-radius:50%;background:rgba(0,0,0,.2);transition:width .2s,background-color .2s;}
 .card-dot.act{background:var(--wb-purple);width:12px;border-radius:3px;}
 .item-info{flex:1;min-width:0;padding:8px 8px 4px;display:flex;flex-direction:column;gap:2px;}
 .item-code{font-size:12.5px;font-weight:700;font-family:'Courier New',monospace;color:var(--wb-purple);letter-spacing:.3px;}
@@ -353,7 +353,7 @@ body{font-family:'Inter',sans-serif;color:var(--wb-text);}
 .item-right{display:flex;align-items:center;justify-content:center;gap:4px;padding:4px 8px 8px;flex-shrink:0;}
 .qty-row{display:flex;align-items:center;}
 .q-btn{width:22px;height:22px;border:none;cursor:pointer;font-size:13px;font-weight:700;
-  display:flex;align-items:center;justify-content:center;transition:all .12s;}
+  display:flex;align-items:center;justify-content:center;transition:transform .12s,opacity .12s,background-color .12s,border-color .12s,color .12s,box-shadow .12s;}
 .q-minus{background:var(--wb-gray);border-radius:6px 0 0 6px;color:var(--wb-text2);}
 .q-minus:active{background:var(--wb-gray2);}
 .q-plus{background:var(--wb-purple);border-radius:0 6px 6px 0;color:#fff;}
@@ -364,9 +364,9 @@ body{font-family:'Inter',sans-serif;color:var(--wb-text);}
   width:28px;height:28px;border-radius:8px;border:none;cursor:pointer;
   background:var(--wb-purple);color:#fff;font-size:14px;
   display:flex;align-items:center;justify-content:center;
-  box-shadow:0 4px 12px rgba(160,0,240,.35);transition:all .15s;
+  box-shadow:0 4px 12px rgba(160,0,240,.35);transition:transform .15s,opacity .15s,background-color .15s,border-color .15s,color .15s,box-shadow .15s;
 }
-.add-btn:active{transform:scale(.9);}
+.add-btn:active{transform:scale(.97);}
 .add-btn.added{background:var(--wb-green);box-shadow:0 4px 12px rgba(0,194,111,.3);}
 .empty-state{text-align:center;padding:50px 20px;display:flex;flex-direction:column;align-items:center;gap:12px;}
 .empty-icon{font-size:52px;opacity:.3;}
@@ -420,7 +420,7 @@ body{font-family:'Inter',sans-serif;color:var(--wb-text);}
   background:linear-gradient(135deg,#1b8a2e,#27ae3f);
   color:#fff;font-family:'Inter',sans-serif;font-size:13px;font-weight:800;
   display:flex;align-items:center;justify-content:center;gap:8px;text-align:center;
-  box-shadow:0 6px 20px rgba(39,174,63,.4);transition:all .2s;line-height:1.2;padding:8px 12px;}
+  box-shadow:0 6px 20px rgba(39,174,63,.4);transition:transform .2s,opacity .2s,background-color .2s,border-color .2s,color .2s,box-shadow .2s;line-height:1.2;padding:8px 12px;}
 .send-btn:active{transform:scale(.97);}
 
 
@@ -446,7 +446,7 @@ body{font-family:'Inter',sans-serif;color:var(--wb-text);}
   position:absolute;bottom:16px;left:50%;transform:translateX(-50%) translateY(20px);
   background:#1A1A1A;color:#fff;border-radius:12px;padding:10px 18px;
   font-size:13px;font-weight:700;z-index:100;white-space:nowrap;
-  box-shadow:0 6px 20px rgba(0,0,0,.25);opacity:0;transition:all .25s;pointer-events:none;
+  box-shadow:0 6px 20px rgba(0,0,0,.25);opacity:0;transition:transform .25s,opacity .25s,background-color .25s,border-color .25s,color .25s,box-shadow .25s;pointer-events:none;
 }
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 .toast.ok{background:var(--wb-green);}
@@ -469,7 +469,7 @@ body{font-family:'Inter',sans-serif;color:var(--wb-text);}
 .s4-dots{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);
   display:flex;gap:6px;z-index:2;}
 .s4-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.4);
-  transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.4);}
+  transition:width .2s,background-color .2s,border-radius .2s;box-shadow:0 1px 3px rgba(0,0,0,.4);}
 .s4-dot.act{background:#fff;width:20px;border-radius:4px;}
 .s4-info{background:var(--wb-surface);padding:14px;border-bottom:1px solid var(--wb-border);}
 .s4-breadcrumb{display:flex;align-items:center;gap:5px;margin-bottom:8px;flex-wrap:wrap;}
@@ -579,7 +579,7 @@ body{font-family:'Inter',sans-serif;color:var(--wb-text);}
 .modal-submit:disabled{opacity:.5;cursor:default;}
 .upload-drop{border:2px dashed var(--wb-border);border-radius:14px;padding:28px 16px;
   text-align:center;cursor:pointer;transition:border-color .2s;margin-bottom:14px;}
-.upload-drop:hover{border-color:var(--wb-purple);}
+@media (hover:hover) and (pointer:fine){.upload-drop:hover{border-color:var(--wb-purple);}}
 .upload-drop-icon{font-size:36px;margin-bottom:8px;}
 .upload-drop-title{font-size:13px;font-weight:700;color:var(--wb-text2);margin-bottom:4px;}
 .upload-drop-sub{font-size:11px;color:var(--wb-text3);}
@@ -639,7 +639,7 @@ body{font-family:'Inter',sans-serif;color:var(--wb-text);}
 .photo-viewer-dots{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);
   display:flex;gap:6px;z-index:3;}
 .photo-viewer-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.4);
-  transition:all .2s;box-shadow:0 1px 4px rgba(0,0,0,.6);}
+  transition:width .2s,background-color .2s,border-radius .2s;box-shadow:0 1px 4px rgba(0,0,0,.6);}
 .photo-viewer-dot.act{background:#fff;width:20px;border-radius:4px;}
 .photo-viewer-info{padding:10px 16px 4px;text-align:center;background:#000;}
 .photo-viewer-code{color:rgba(255,255,255,.45);font-size:10px;font-family:'Courier New',monospace;}
@@ -651,7 +651,7 @@ body{font-family:'Inter',sans-serif;color:var(--wb-text);}
   margin:10px auto calc(10px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;justify-content:center;gap:8px;
   backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);flex-shrink:0;}
 .clear-cart-btn{width:100%;height:40px;border-radius:12px;background:none;border:1.5px solid var(--wb-pink);
-  color:var(--wb-pink);font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;}
+  color:var(--wb-pink);font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:transform .15s,opacity .15s,background-color .15s,border-color .15s,color .15s,box-shadow .15s;}
 .clear-cart-btn:active{background:var(--wb-pink);color:#fff;}
 .tag-sub{background:#EEF4FF;color:#2563EB;}
 .subcat-card--all{border-style:dashed;}
@@ -691,7 +691,7 @@ html{background:linear-gradient(160deg,#7B00C0,#A000F0 55%,#BE4FFF);}
 .view-toggle{display:flex;background:var(--wb-gray);padding:3px;border-radius:12px;margin-left:auto;margin-right:8px}.view-toggle button{width:36px;height:32px;border:0;border-radius:9px;background:transparent;color:var(--wb-text3);font-size:16px}.view-toggle button.active{background:#fff;color:var(--wb-purple);box-shadow:0 1px 4px rgba(0,0,0,.08)}
 .items-list{gap:12px;padding:12px 16px}.item-card{border:1px solid var(--wb-border);border-radius:18px;box-shadow:0 2px 10px rgba(24,18,32,.04)}
 .item-thumb{background:#F3F4F6;border:0}.item-info{padding:11px 11px 6px;gap:4px}.item-code{font-size:12px}.item-name{font-size:14px;line-height:1.38}.tag{font-size:11px;padding:4px 8px}.item-link-btn{display:none}.item-fav-btn{width:40px;height:40px;top:8px;right:8px;font-size:18px}
-.item-right{padding:7px 10px 11px;justify-content:flex-end}.qty-row{display:none}.add-btn{width:auto;min-width:100%;height:44px;border-radius:12px;font-size:0;box-shadow:none}.add-btn::after{content:'В заказ';font-size:14px;font-weight:800}.add-btn.added::after{content:'Добавлено'}
+.item-right{padding:7px 10px 11px;justify-content:flex-end}.qty-row{display:none}.add-btn{width:auto;min-width:100%;height:44px;border-radius:12px;font-size:0;box-shadow:none}.add-btn::after{content:'В заявку';font-size:14px;font-weight:800}.add-btn.added::after{content:'Добавлено'}
 .items-list.list-mode{grid-template-columns:1fr}.items-list.list-mode .item-card{display:grid;grid-template-columns:112px 1fr;min-height:120px}.items-list.list-mode .item-thumb{height:100%;aspect-ratio:auto;grid-row:1/3}.items-list.list-mode .item-info{padding:13px 12px 4px}.items-list.list-mode .item-right{padding:4px 12px 12px}.items-list.list-mode .item-fav-btn{left:66px;right:auto}
 .s4-scroll{background:var(--wb-bg);padding-bottom:88px}.s4-photo{height:min(88vw,460px);max-height:none;background:#F2F3F5}.s4-carousel-slide{background:#F2F3F5}.s4-info{padding:18px 16px 14px}.s4-name{font-size:20px;line-height:1.35;letter-spacing:-.25px}.s4-code{font-size:12px;margin-bottom:10px}.s4-qty-cart{position:fixed;bottom:calc(70px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);z-index:30;width:min(100%,720px);padding:10px 16px;background:rgba(255,255,255,.96);box-shadow:0 -8px 28px rgba(25,20,32,.08);border:0}.s4-qb,.s4-qval{height:44px}.s4-qb{width:40px}.s4-add{height:48px;font-size:14px}.s4-fav-btn{width:48px;height:48px}.s4-acc{margin:8px 12px 0;border:1px solid var(--wb-border);border-radius:16px;overflow:hidden}.s4-acc-hdr{min-height:58px;padding:12px 14px}.s4-acc-title{font-size:15px}.s4-desc-text{font-size:14px}
 .bottom-nav{position:absolute;z-index:45;left:0;right:0;bottom:-1px;display:grid;grid-template-columns:repeat(5,1fr);padding:7px 6px max(7px,env(safe-area-inset-bottom,0px));background:#fff;border-top:1px solid var(--wb-border);box-shadow:0 -5px 20px rgba(20,16,28,.06)}
@@ -768,10 +768,35 @@ html[data-theme="dark"] .s4-qty-cart{background:rgba(27,27,32,.96)}
 html[data-theme="dark"] .bottom-nav{background:var(--wb-surface)}
 html[data-theme="dark"] .security-note{background:rgba(242,170,40,.12);border-color:rgba(242,170,40,.35);color:#F2C879}
 html[data-theme="dark"] .order-status{background:rgba(0,194,111,.16);color:#4ADE9A}
+
+/* ══ v4.1 MOBILE-NATIVE (пакет A) ══ */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
+/* iOS приближает страницу при фокусе на поле < 16px */
+input:not([type=file]),select,textarea{font-size:16px!important;}
+/* мгновенный тап без задержки двойного касания */
+button,a,[role=button],.nav-btn,.sec-card,.subcat-card,.item-card,.quick-action,.sort-pill,
+.hdr-back,.hdr-cart-btn,.utility-row,.bc-item,.add-btn,.q-btn,.card-dot,.s4-dot{touch-action:manipulation;}
+/* надписи на элементах управления не выделяются долгим нажатием (коды и названия товаров — выделяются) */
+button,[role=button],.nav-btn,.sec-card,.subcat-card,.quick-action,.sort-pill,.hdr-back,
+.hdr-cart-btn,.utility-row,.bc-item,.add-btn,.q-btn,.view-toggle{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
+.item-thumb,.item-thumb img{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;}
+/* прокрутка внутри экранов и шторок не утягивает страницу */
+.screen,.drawer-scroll,.s4-scroll,.modal-body,.global-results-list{overscroll-behavior:contain;}
+/* горизонтальный свайп карусели не дёргает вертикальную прокрутку */
+.s4-photo,.s4-carousel{touch-action:pan-y;}
+/* меньше движения: оставляем смену цвета/прозрачности, убираем сдвиги и масштаб */
+@media (prefers-reduced-motion:reduce){
+  .sec-card:active,.item-card:active,.subcat-card:active,.quick-action:active,.add-btn:active,
+  .send-btn:active,.hdr-back:active,.clear-cart-btn:active{transform:none!important;}
+  .drawer,.s4-carousel,.photo-viewer-slides{transition-duration:.01ms!important;}
+  .modal-sheet{animation:none!important;}
+  .toast,.toast.show{transform:translateX(-50%)!important;}
+}
 </style>
 
   <!-- PWA META -->
-  <meta name="theme-color" content="#A000F0">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFFFF">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1B1B20">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <!-- "black-translucent" заставляет WebKit в standalone-режиме считать высоту WebView
        как screen.height МИНУС ТОЛЬКО верхний safe-area, а нижнюю safe-area-полосу
@@ -829,7 +854,7 @@ html[data-theme="dark"] .order-status{background:rgba(0,194,111,.16);color:#4ADE
     <div style="position:relative;">
     <div class="hdr-search" id="hdrSearchGlobal">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="17" y1="17" x2="22" y2="22"/></svg>
-      <input type="text" placeholder="Поиск по каталогу…" id="searchGlobal" oninput="onGlobalSearch()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+      <input type="text" placeholder="Поиск по каталогу…" id="searchGlobal" enterkeyhint="search" oninput="onGlobalSearch()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
       <button class="hdr-search-clear" id="searchGlobalClear" onclick="clearGlobalSearch()">✕</button>
     </div>
     <div class="global-results-wrap" id="globalResultsWrap">
@@ -852,7 +877,7 @@ html[data-theme="dark"] .order-status{background:rgba(0,194,111,.16);color:#4ADE
     <!-- Локальный поиск — ниже кнопок, чтобы было ясно что он для раздела -->
     <div class="hdr-search hdr-search-local" id="hdrSearchLocal" style="display:none;">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="17" y1="17" x2="22" y2="22"/></svg>
-      <input type="text" placeholder="Поиск по разделу…" id="searchLocal" oninput="onLocalSearch()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+      <input type="text" placeholder="Поиск по разделу…" id="searchLocal" enterkeyhint="search" oninput="onLocalSearch()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
       <button class="hdr-search-clear" id="searchLocalClear" onclick="clearLocalSearch()">✕</button>
     </div>
   </div>
@@ -942,11 +967,11 @@ html[data-theme="dark"] .order-status{background:rgba(0,194,111,.16);color:#4ADE
       <div class="s4-qty-cart">
         <div style="display:flex;align-items:center;">
           <button class="s4-qb minus" onclick="s4chQ(-1)">−</button>
-          <input class="s4-qval" type="number" value="1" min="1" id="s4qv">
+          <input class="s4-qval" type="number" inputmode="numeric" value="1" min="1" id="s4qv">
           <button class="s4-qb plus" onclick="s4chQ(1)">+</button>
         </div>
         <button class="s4-add" id="s4addBtn" onclick="s4toggleCart()">
-          <span id="s4addIco">🛒</span><span id="s4addTxt">Добавить в корзину</span>
+          <span id="s4addIco">🛒</span><span id="s4addTxt">Добавить в заявку</span>
         </button>
         <button class="s4-fav-btn" id="s4favBtn" onclick="s4ToggleFav()">☆</button>
       </div>
@@ -1047,7 +1072,7 @@ html[data-theme="dark"] .order-status{background:rgba(0,194,111,.16);color:#4ADE
   <div class="screen" id="s6">
     <div class="utility-screen">
       <div class="utility-title">Мои заявки</div>
-      <div class="utility-card"><button class="utility-row" onclick="openCart()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 7h14l-1 13H6zM9 9V5a3 3 0 0 1 6 0v4"/></svg>Текущий заказ <span id="ordersCartCount" style="margin-left:auto;color:var(--wb-purple);font-weight:800">0 поз.</span><span class="chev">›</span></button></div>
+      <div class="utility-card"><button class="utility-row" onclick="openCart()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 7h14l-1 13H6zM9 9V5a3 3 0 0 1 6 0v4"/></svg>Текущая заявка <span id="ordersCartCount" style="margin-left:auto;color:var(--wb-purple);font-weight:800">0 поз.</span><span class="chev">›</span></button></div>
       <div class="section-label-new" style="padding:4px 0 10px">История</div>
       <div id="ordersList"></div>
     </div>
@@ -1072,7 +1097,7 @@ html[data-theme="dark"] .order-status{background:rgba(0,194,111,.16);color:#4ADE
     <button class="nav-btn active" id="navCatalog" onclick="navTo('catalog')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg><span>Каталог</span></button>
     <button class="nav-btn" id="navSearch" onclick="navTo('search')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></svg><span>Поиск</span></button>
     <button class="nav-btn" id="navFavs" onclick="navTo('favs')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-2.9-5.6 2.9 1.1-6.2L3 9.6l6.2-.9z"/></svg><span>Избранное</span></button>
-    <button class="nav-btn" id="navOrders" onclick="navTo('orders')"><span class="nav-badge" id="navCartBadge">0</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 7h14l-1 13H6zM9 9V5a3 3 0 0 1 6 0v4"/></svg><span>Заказ</span></button>
+    <button class="nav-btn" id="navOrders" onclick="navTo('orders')"><span class="nav-badge" id="navCartBadge">0</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 7h14l-1 13H6zM9 9V5a3 3 0 0 1 6 0v4"/></svg><span>Заявка</span></button>
     <button class="nav-btn" id="navMore" onclick="navTo('more')"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg><span>Ещё</span></button>
   </nav>
 
@@ -1082,7 +1107,7 @@ html[data-theme="dark"] .order-status{background:rgba(0,194,111,.16);color:#4ADE
   <div class="drawer" id="drawer">
     <div class="drawer-handle"></div>
     <div class="drawer-hdr">
-      <div class="drawer-hdr-title" id="drawerTitle">🛒 Корзина</div>
+      <div class="drawer-hdr-title" id="drawerTitle">🛒 Заявка</div>
       <div style="display:flex;align-items:center;gap:8px;">
         <button class="clear-cart-btn" id="clearCartBtn" style="width:auto;padding:0 12px;height:28px;font-size:11px;display:none;" onclick="clearCart()">🗑 Очистить</button>
         <button class="drawer-close" onclick="closeCart()">✕</button>
@@ -1090,16 +1115,16 @@ html[data-theme="dark"] .order-status{background:rgba(0,194,111,.16);color:#4ADE
     </div>
     <div class="drawer-scroll" id="drawerScroll"></div>
     <div class="drawer-footer">
-      <div class="cart-order-info" id="cartOrderInfo">Позиций в заказе: 0</div>
+      <div class="cart-order-info" id="cartOrderInfo">Позиций в заявке: 0</div>
       <select class="shop-sel" id="shopSelect" onchange="onShopChange()">
         <option value="">— Выберите номер магазина —</option>
       </select>
       <input class="cart-email" id="cartEmail" readonly placeholder="Email магазина">
       <div class="cart-row-split">
-        <input class="cart-input" id="cartContact" placeholder="Контактное лицо">
-        <input class="cart-input" id="cartPhone" type="tel" placeholder="Телефон">
+        <input class="cart-input" id="cartContact" autocomplete="name" enterkeyhint="next" placeholder="Контактное лицо">
+        <input class="cart-input" id="cartPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="Телефон">
       </div>
-      <textarea class="cart-comment" id="cartComment" rows="2" placeholder="Комментарий к заказу"></textarea>
+      <textarea class="cart-comment" id="cartComment" rows="2" placeholder="Комментарий к заявке"></textarea>
       <button class="send-btn" onclick="sendOrder()">ОТПРАВИТЬ ЗАКАЗ АДМИНИСТРАТИВНОМУ ДИРЕКТОРУ</button>
     </div>
   </div>
@@ -1115,7 +1140,7 @@ html[data-theme="dark"] .order-status{background:rgba(0,194,111,.16);color:#4ADE
       </div>
       <div class="modal-body">
         <div class="modal-form-label">Код номенклатуры *</div>
-        <input class="modal-input" type="text" id="pu-mob-code" placeholder="Например: RUM0520385" autocomplete="off">
+        <input class="modal-input" type="text" id="pu-mob-code" autocapitalize="characters" autocorrect="off" spellcheck="false" enterkeyhint="done" placeholder="Например: RUM0520385" autocomplete="off">
 
         <div class="modal-form-label">Раздел (папка) *</div>
         <select class="modal-input" id="pu-mob-folder" style="appearance:none;background-image:url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%228%22%3E%3Cpath fill=%22%23AAA%22 d=%22M0 0l6 8 6-8z%22/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right 12px center;">
@@ -1207,7 +1232,7 @@ html[data-theme="dark"] .order-status{background:rgba(0,194,111,.16);color:#4ADE
           Сообщение отправится на <b style="color:#6B6B6B;">m.skiba@kari.com</b>
         </div>
         <div class="modal-form-label">Позиция (необязательно)</div>
-        <input class="modal-input" type="text" id="fb-mob-search" placeholder="Поиск по наименованию или коду…" oninput="fbMobSearch()" autocomplete="off">
+        <input class="modal-input" type="text" id="fb-mob-search" enterkeyhint="search" placeholder="Поиск по наименованию или коду…" oninput="fbMobSearch()" autocomplete="off">
         <div id="fb-mob-results" style="display:none;background:var(--wb-surface);border:1px solid var(--wb-border);border-radius:10px;max-height:140px;overflow-y:auto;margin-top:-10px;margin-bottom:10px;"></div>
         <div id="fb-mob-selected" style="display:none;background:#F5EEFF;border-radius:10px;padding:7px 10px;font-size:12px;font-weight:600;color:#1A1A1A;margin-bottom:10px;">
           <span id="fb-mob-sel-code" style="font-weight:800;color:#7B00C0;"></span> <span id="fb-mob-sel-name"></span>
@@ -1428,6 +1453,8 @@ function initTheme(){
 function applyTheme(theme){
   document.documentElement.setAttribute('data-theme', theme);
   localStorage.setItem('kariTheme', theme);
+  /* v4.1: цвет полосы браузера = цвет шапки выбранной темы (в т.ч. при ручной смене) */
+  try{var tcs=document.querySelectorAll('meta[name="theme-color"]');for(var ti=0;ti<tcs.length;ti++)tcs[ti].setAttribute('content',theme==='dark'?'#1B1B20':'#FFFFFF');}catch(e){}
   var btn=getEl('themeToggleBtn');
   if(btn) btn.innerHTML = theme==='dark' ? '☀️ Тема' : '🌙 Тема';
 }
@@ -1675,7 +1702,7 @@ function renderItems(){
     h+='</div></div>';
     h+='<div class="item-right"><div class="qty-row">';
     h+='<button class="q-btn q-minus" data-action="q-minus" data-val="'+it.id+'">-</button>';
-    h+='<input class="q-val" type="number" value="'+qty+'" min="1" id="qv-'+it.id+'" oninput="qInputChange(this,\''+it.id+'\')">';
+    h+='<input class="q-val" type="number" inputmode="numeric" value="'+qty+'" min="1" id="qv-'+it.id+'" oninput="qInputChange(this,\''+it.id+'\')">';
     h+='<button class="q-btn q-plus" data-action="q-plus" data-val="'+it.id+'">+</button></div>';
     h+='<button class="add-btn'+(inC?' added':'')+'" id="ab-'+it.id+'" data-action="toggle-cart" data-val="'+it.id+'">'+(inC?'&#10003;':'+')+' </button>';
     h+='</div></div>';
@@ -1853,6 +1880,9 @@ function updateHeader(){
     if(breadcrumb){breadcrumb.classList.add('show');breadcrumb.innerHTML='<span class="bc-item" data-action="reset-home">\u0413\u043b\u0430\u0432\u043d\u0430\u044f</span><span class="bc-sep">\u203a</span><span class="bc-item" data-action="go-back">\u041a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u044b</span><span class="bc-sep">\u203a</span><span class="bc-cur">'+kname+'</span>';}
     if(localSrch)localSrch.style.display='none';
     if(localInput)localInput.value='';
+  } else if((cur==='s6'||cur==='s7')&&typeof updateHeaderForUtility==='function'){
+    /* v4.1: корневые вкладки «Заявки»/«Ещё» — без «Назад»; раньше попадали в ветку «Товар» */
+    updateHeaderForUtility(cur==='s6'?'Мои заявки':'Ещё',cur==='s6'?'История заявок':'Настройки и сервисы');
   } else {
     if(backBtn)backBtn.classList.add('show');
     var iname=currentItem?currentItem.name:'\u0422\u043e\u0432\u0430\u0440';
@@ -2405,7 +2435,7 @@ function toggleCart(id){
     var ab=getEl('ab-'+id);if(ab){ab.textContent='+';ab.classList.remove('added');}
     var ic=getEl('ic-'+id);if(ic)ic.classList.remove('in-cart');
     var gic=getEl('gic-'+id);if(gic)gic.classList.remove('in-cart');
-    showToast('\u0423\u0431\u0440\u0430\u043d\u043e \u0438\u0437 \u043a\u043e\u0440\u0437\u0438\u043d\u044b','');
+    showToast('\u0423\u0431\u0440\u0430\u043d\u043e \u0438\u0437 \u0437\u0430\u044f\u0432\u043a\u0438','');
   } else {
     var qEl=getEl('qv-'+id);
     var qty=qEl?(parseInt(qEl.value)||1):1;
@@ -2413,7 +2443,7 @@ function toggleCart(id){
     var ab2=getEl('ab-'+id);if(ab2){ab2.innerHTML='&#10003;';ab2.classList.add('added');}
     var ic2=getEl('ic-'+id);if(ic2)ic2.classList.add('in-cart');
     var gic2=getEl('gic-'+id);if(gic2)gic2.classList.add('in-cart');
-    showToast('\u0414\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u043e \u0432 \u043a\u043e\u0440\u0437\u0438\u043d\u0443','ok');
+    showToast('\u0414\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u043e \u0432 \u0437\u0430\u044f\u0432\u043a\u0443','ok');
   }
   updateCartBadge();
 }
@@ -2482,8 +2512,8 @@ function updateCartBadge(){
   saveCartToStorage();
   var cnt=Object.keys(cart).length;
   var b=getEl('cartBadge');if(b){b.style.display=cnt?'flex':'none';b.textContent=cnt;}
-  var dt=getEl('drawerTitle');if(dt)dt.textContent='\uD83D\uDED2 \u041a\u043e\u0440\u0437\u0438\u043d\u0430'+(cnt?' ('+cnt+')':'');
-  var info=getEl('cartOrderInfo');if(info)info.textContent='\u041F\u043e\u0437\u0438\u0446\u0438\u0439 \u0432 \u0437\u0430\u043a\u0430\u0437\u0435: '+cnt;
+  var dt=getEl('drawerTitle');if(dt)dt.textContent='\uD83D\uDED2 \u0417\u0430\u044f\u0432\u043a\u0430'+(cnt?' ('+cnt+')':'');
+  var info=getEl('cartOrderInfo');if(info)info.textContent='\u041f\u043e\u0437\u0438\u0446\u0438\u0439 \u0432 \u0437\u0430\u044f\u0432\u043a\u0435: '+cnt;
 }
 function openCart(){getEl('overlay').classList.add('show');getEl('drawer').classList.add('show');renderCartDrawer();}
 function closeCart(){getEl('overlay').classList.remove('show');getEl('drawer').classList.remove('show');}
@@ -2491,7 +2521,7 @@ function renderCartDrawer(){
   var sc=getEl('drawerScroll');if(!sc)return;
   var keys=Object.keys(cart);
   var clrBtn=getEl('clearCartBtn');if(clrBtn)clrBtn.style.display=keys.length?'block':'none';
-  if(!keys.length){sc.innerHTML='<div class="empty-state"><div class="empty-icon">\uD83D\uDED2</div><div class="empty-txt">\u041a\u043e\u0440\u0437\u0438\u043d\u0430 \u043f\u0443\u0441\u0442\u0430</div></div>';return;}
+  if(!keys.length){sc.innerHTML='<div class="empty-state"><div class="empty-icon">\uD83D\uDED2</div><div class="empty-txt">\u0417\u0430\u044f\u0432\u043a\u0430 \u043f\u0443\u0441\u0442\u0430</div></div>';return;}
   var h='';
   for(var i=0;i<keys.length;i++){
     var it=cart[keys[i]];
@@ -2506,7 +2536,7 @@ function rmCart(id){delete cart[id];updateCartBadge();renderCartDrawer();var ab=
 function clearCart(){var keys=Object.keys(cart);for(var i=0;i<keys.length;i++){var ab=getEl('ab-'+keys[i]);if(ab){ab.textContent='+';ab.classList.remove('added');}var ic=getEl('ic-'+keys[i]);if(ic)ic.classList.remove('in-cart');}cart={};updateCartBadge();renderCartDrawer();}
 function sendOrder(){
   var keys=Object.keys(cart);
-  if(!keys.length){showToast('\u041a\u043e\u0440\u0437\u0438\u043d\u0430 \u043f\u0443\u0441\u0442\u0430','');return;}
+  if(!keys.length){showToast('\u0417\u0430\u044f\u0432\u043a\u0430 \u043f\u0443\u0441\u0442\u0430','');return;}
   var shop=getEl('shopSelect').value;
   if(!shop){showToast('\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043C\u0430\u0433\u0430\u0437\u0438\u043d','');return;}
   var storeEmail=getEl('cartEmail').value||'';
@@ -2628,7 +2658,7 @@ function goItem(itemId){
   var inC=!!cart[it.id];
   var addBtn=getEl('s4addBtn');if(addBtn)addBtn.classList.toggle('added',inC);
   var addIco=getEl('s4addIco');if(addIco)addIco.textContent=inC?'\u2713':'\uD83D\uDED2';
-  var addTxt=getEl('s4addTxt');if(addTxt)addTxt.textContent=inC?'\u0412 \u043a\u043e\u0440\u0437\u0438\u043d\u0435':'\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u0432 \u043a\u043e\u0440\u0437\u0438\u043d\u0443';
+  var addTxt=getEl('s4addTxt');if(addTxt)addTxt.textContent=inC?'\u0412 \u0437\u0430\u044f\u0432\u043a\u0435':'\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u0432 \u0437\u0430\u044f\u0432\u043a\u0443';
   var qv=getEl('s4qv');if(qv)qv.value=(cart[it.id]&&cart[it.id].qty)||1;
   var favBtn=getEl('s4favBtn');
   if(favBtn){var isFav=!!favorites[it.id];favBtn.classList.toggle('act',isFav);favBtn.textContent=isFav?'★':'☆';}
@@ -2794,17 +2824,17 @@ function s4toggleCart(){
   if(cart[id]){
     delete cart[id];if(btn)btn.classList.remove('added');
     var ico=getEl('s4addIco');if(ico)ico.textContent='\uD83D\uDED2';
-    var txt=getEl('s4addTxt');if(txt)txt.textContent='\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u0432 \u043a\u043e\u0440\u0437\u0438\u043d\u0443';
+    var txt=getEl('s4addTxt');if(txt)txt.textContent='\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u0432 \u0437\u0430\u044f\u0432\u043a\u0443';
     var ab=getEl('ab-'+id);if(ab){ab.textContent='+';ab.classList.remove('added');}
-    showToast('\u0423\u0431\u0440\u0430\u043d\u043e \u0438\u0437 \u043a\u043e\u0440\u0437\u0438\u043d\u044b','');
+    showToast('\u0423\u0431\u0440\u0430\u043d\u043e \u0438\u0437 \u0437\u0430\u044f\u0432\u043a\u0438','');
   } else {
     var qty=parseInt((getEl('s4qv')||{value:'1'}).value)||1;
     cart[id]={id:id,code:currentItem.code,name:currentItem.name,emoji:currentItem.emoji,qty:qty};
     if(btn)btn.classList.add('added');
     var ico2=getEl('s4addIco');if(ico2)ico2.textContent='\u2713';
-    var txt2=getEl('s4addTxt');if(txt2)txt2.textContent='\u0412 \u043a\u043e\u0440\u0437\u0438\u043d\u0435';
+    var txt2=getEl('s4addTxt');if(txt2)txt2.textContent='\u0412 \u0437\u0430\u044f\u0432\u043a\u0435';
     var ab2=getEl('ab-'+id);if(ab2){ab2.innerHTML='&#10003;';ab2.classList.add('added');}
-    showToast('\u0414\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u043e \u0432 \u043a\u043e\u0440\u0437\u0438\u043d\u0443','ok');
+    showToast('\u0414\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u043e \u0432 \u0437\u0430\u044f\u0432\u043a\u0443','ok');
   }
   updateCartBadge();
 }
@@ -3840,7 +3870,7 @@ function installPWA() {
       <img id="verLogoImg" src="" alt="Kari">
     </div>
     <div class="ver-app-name">Портал заказов<br>Kari</div>
-    <div class="ver-num" id="verNum">v4.0</div>
+    <div class="ver-num" id="verNum">v4.1</div>
     <div class="ver-build" id="verBuild">Сборка от 14.05.2025</div>
     <div class="ver-divider"></div>
     <div class="ver-info">Мобильный дашборд оборудования<br>для внутреннего использования</div>
@@ -3904,7 +3934,7 @@ function navTo(name){
   if(name==='catalog'){resetToHome();setActiveNav(name);return;}
   if(name==='search'){focusMainSearch();return;}
   if(name==='favs'){goSection('favs');setActiveNav(name);return;}
-  if(name==='orders'){showScreen('s6');navHistory=['s6'];renderOrders();updateHeaderForUtility('Мои заявки','История заказов');setActiveNav(name);return;}
+  if(name==='orders'){showScreen('s6');navHistory=['s6'];renderOrders();updateHeaderForUtility('Мои заявки','История заявок');setActiveNav(name);return;}
   if(name==='more'){showScreen('s7');navHistory=['s7'];updateHeaderForUtility('Ещё','Настройки и сервисы');setActiveNav(name);return;}
 }
 function updateHeaderForUtility(title,sub){
@@ -3918,7 +3948,7 @@ function getOrderHistory(){try{return JSON.parse(localStorage.getItem('kariOrder
 function saveOrderHistory(order){var rows=getOrderHistory();rows.unshift(order);localStorage.setItem('kariOrderHistory',JSON.stringify(rows.slice(0,50)));renderOrders();}
 function renderOrders(){
   var el=document.getElementById('ordersList');if(!el)return;var rows=getOrderHistory();
-  if(!rows.length){el.innerHTML='<div class="utility-card" style="padding:28px 18px;text-align:center"><div style="font-size:34px;margin-bottom:10px">□</div><div style="font-size:16px;font-weight:800">Заявок пока нет</div><div style="font-size:14px;color:var(--wb-text2);margin-top:6px">Отправленные заказы появятся здесь</div></div>';return;}
+  if(!rows.length){el.innerHTML='<div class="utility-card" style="padding:28px 18px;text-align:center"><div style="color:var(--wb-text3);margin-bottom:10px;display:flex;justify-content:center"><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14l-1 13H6zM9 9V5a3 3 0 0 1 6 0v4"/></svg></div><div style="font-size:16px;font-weight:800">Заявок пока нет</div><div style="font-size:14px;color:var(--wb-text2);margin-top:6px">Отправленные заявки появятся здесь</div></div>';return;}
   el.innerHTML=rows.map(function(o){var d=new Date(o.date);return '<div class="order-card"><div class="order-top"><div class="order-id">'+o.id+'</div><div class="order-date">'+d.toLocaleDateString('ru-RU')+'</div></div><div class="order-meta">Магазин '+o.shop+' · '+o.count+' поз. · '+o.total+' шт.</div><div class="order-status">'+o.status+'</div></div>';}).join('');
 }
 var originalUpdateCartBadge=updateCartBadge;
