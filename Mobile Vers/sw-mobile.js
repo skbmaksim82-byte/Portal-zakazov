@@ -1,7 +1,7 @@
 // ═══ Мобильный каталог Kari — Service Worker ═══
 // Лежит рядом с Mobile_Oborud_Kari_v2.html (папка «Mobile Vers») и управляет только этой папкой.
 // При обновлении HTML бампать VERSION, чтобы телефоны гарантированно получили новую страницу.
-var VERSION = 'kari-mobile-v4.2';
+var VERSION = 'kari-mobile-v4.4';
 var STATIC_CACHE = VERSION + '-static';
 var PHOTO_CACHE = 'kari-mobile-photos-v1';   // фото переживают обновления приложения
 var PHOTO_LIMIT = 2500;                      // ≈ миниатюры 6 КБ + карточки 35 КБ — десятки МБ
