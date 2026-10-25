@@ -598,6 +598,18 @@ html.splash-on,html.splash-on body{background:var(--splash-bg)!important;}
   max-height:85%;display:flex;flex-direction:column;
   animation:slideUp .3s cubic-bezier(.32,0,.2,1);}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+/* v4.5 apple-design: модалка уходит вниз тем же путём, что и пришла (зеркальная кривая) */
+.modal-overlay.closing{background:rgba(0,0,0,0);transition:background .25s ease;}
+.modal-overlay.closing .modal-sheet{animation:kariSheetDown .25s cubic-bezier(.8,0,.68,1) forwards;}
+@keyframes kariSheetDown{to{transform:translateY(100%)}}
+/* v4.5: шторку можно тянуть за ручку и шапку */
+.drawer-handle,.drawer-hdr,.modal-handle,.modal-hdr{touch-action:none;}
+.drawer-handle,.modal-handle{position:relative;}
+.drawer-handle::after,.modal-handle::after{content:'';position:absolute;left:-40px;right:-40px;top:-10px;bottom:-8px;}
+/* v4.5: тост с кнопкой «Вернуть» */
+.toast.undo{pointer-events:auto;display:flex;align-items:center;gap:14px;}
+.toast-undo{background:none;border:none;color:#D9B3FF;font:inherit;font-weight:800;padding:8px 4px;margin:-8px -4px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.toast-undo:active{opacity:.6;}
 .modal-handle{width:36px;height:4px;border-radius:2px;background:var(--wb-border);margin:10px auto 0;}
 .modal-hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;
   border-bottom:1px solid var(--wb-border);}
@@ -1147,7 +1159,7 @@ button,[role=button],.nav-btn,.sec-card,.subcat-card,.quick-action,.sort-pill,.h
     <div class="drawer-hdr">
       <div class="drawer-hdr-title" id="drawerTitle">🛒 Заявка</div>
       <div style="display:flex;align-items:center;gap:8px;">
-        <button class="clear-cart-btn" id="clearCartBtn" style="width:auto;padding:0 12px;height:28px;font-size:11px;display:none;" onclick="clearCart()">🗑 Очистить</button>
+        <button class="clear-cart-btn" id="clearCartBtn" style="width:auto;padding:0 12px;height:28px;font-size:11px;display:none;" onclick="clearCartWithUndo()">🗑 Очистить</button>
         <button class="drawer-close" onclick="closeCart()">✕</button>
       </div>
     </div>
@@ -2061,11 +2073,17 @@ function goKit(idx){
   /* Touch swipe for carousel */
   var s5p=getEl('s5photo'); var _s5tx=0;
   if(s5p){
-    s5p.ontouchstart=function(e){_s5tx=e.touches[0].clientX;};
+    /* v4.5: лента едет за пальцем, листание по скорости */
+    var s5car=getEl('s5carousel');
+    var s5sw=s5car?kSwipeTrack(s5car,function(){return _s5PhotoIdx;},function(){return _s5Photos.length;},s5CarouselGo):null;
+    s5p.ontouchstart=function(e){_s5tx=e.touches[0].clientX;if(s5sw)s5sw.start(e.touches[0].clientX,e.touches[0].clientY);};
+    s5p.ontouchmove=function(e){if(s5sw&&s5sw.move(e.touches[0].clientX,e.touches[0].clientY))e.preventDefault();};
     s5p.ontouchend=function(e){
+      if(s5sw){if(s5sw.end())e.preventDefault();return;}
       var dx=e.changedTouches[0].clientX-_s5tx;
       if(Math.abs(dx)>40) s5CarouselGo(dx<0?1:-1);
     };
+    s5p.ontouchcancel=function(){if(s5sw)s5sw.cancel();};
     /* mouse events for desktop */
     s5p.onmousedown=function(e){_s5tx=e.clientX;e.preventDefault();};
     s5p.onmouseup=function(e){
@@ -2199,10 +2217,13 @@ function openPhotoViewer(startIdx, photos, code, name){
   var n=getEl('photoViewerName');if(n)n.textContent=name||'';
   /* touch — swipe + pinch-zoom + pan */
   var trk=getEl('pvTrack');
+  /* v4.5: лента фото едет за пальцем, листание по скорости, резинка на краях */
+  var pvSw=kSwipeTrack(slides,function(){return _pvIdx;},function(){return _pvPhotos.length;},pvGo);
   if(trk){
     trk.ontouchstart=function(e){
       if(e.touches.length===2){
         e.preventDefault();
+        pvSw.cancel();
         _pvPinching=true;
         _pvPinchStart=_pvGetDist(e.touches);
         _pvScaleStart=_pvScale;
@@ -2213,6 +2234,7 @@ function openPhotoViewer(startIdx, photos, code, name){
         _pvPanStartY=e.touches[0].clientY;
         _pvPanBaseX=_pvPanX;
         _pvPanBaseY=_pvPanY;
+        if(_pvScale<=1)pvSw.start(e.touches[0].clientX,e.touches[0].clientY);
       }
     };
     trk.ontouchmove=function(e){
@@ -2226,14 +2248,16 @@ function openPhotoViewer(startIdx, photos, code, name){
         _pvPanX=_pvPanBaseX+(e.touches[0].clientX-_pvPanStartX);
         _pvPanY=_pvPanBaseY+(e.touches[0].clientY-_pvPanStartY);
         _pvApplyTransform();
+      } else if(e.touches.length===1&&_pvScale<=1){
+        pvSw.move(e.touches[0].clientX,e.touches[0].clientY);
       }
     };
     trk.ontouchend=function(e){
       if(_pvPinching){_pvPinching=false;if(_pvScale<=1)_pvResetZoom();return;}
       if(_pvScale>1)return;
-      var dx=e.changedTouches[0].clientX-_pvTouchX;
-      if(Math.abs(dx)>40) pvGo(dx<0?1:-1);
+      pvSw.end();
     };
+    trk.ontouchcancel=function(){pvSw.cancel();};
   }
   v.classList.add('show');
 }
@@ -2265,16 +2289,23 @@ function initCardCarousels(){
     if(!cid)continue;
     _cardCarIdx[cid]=0;
     (function(el,id){
+      /* v4.5: лента едет за пальцем, листание по скорости */
+      var sw=kSwipeTrack(el,function(){return _cardCarIdx[id]||0;},
+        function(){return el.querySelectorAll('.card-carousel-slide').length;},
+        function(dir){cardCarGo(id,el,dir);});
       el.ontouchstart=function(e){
         _cardCarTouch[id]=e.touches[0].clientX;
+        sw.start(e.touches[0].clientX,e.touches[0].clientY);
         e.stopPropagation();
+      };
+      el.ontouchmove=function(e){
+        if(sw.move(e.touches[0].clientX,e.touches[0].clientY)){e.preventDefault();e.stopPropagation();}
       };
       el.ontouchend=function(e){
-        var sx=_cardCarTouch[id];if(sx===undefined)return;
-        var dx=e.changedTouches[0].clientX-sx;
-        if(Math.abs(dx)>30){cardCarGo(id,el,dx<0?1:-1);e.preventDefault();}
+        if(sw.end())e.preventDefault();
         e.stopPropagation();
       };
+      el.ontouchcancel=function(){sw.cancel();};
       el.onmousedown=function(e){_cardCarTouch[id]=e.clientX;e.stopPropagation();};
       el.onmouseup=function(e){
         var sx=_cardCarTouch[id];if(sx===undefined)return;
@@ -2299,6 +2330,173 @@ function initCardCarousels(){
       };
     })(car,cid);
   }
+}
+/* ═══ v4.5 apple-design: живые свайпы и шторки ═══
+   Всё движется за пальцем 1:1; при отпускании решение принимается по проекции
+   скорости (как инерция прокрутки iOS), на краях — «резиновое» сопротивление.
+   Анимация всегда стартует с текущего положения на экране, поэтому жест можно
+   перехватить посреди анимации. */
+function _kRubber(over,dim){var c=0.55;return (over*dim*c)/(dim+c*Math.abs(over));}
+function _kProject(vPxMs){return vPxMs*0.998/(1-0.998);}   /* v в px/мс → путь до остановки, px */
+function _kLiveT(el,axis){
+  try{
+    var m=getComputedStyle(el).transform;if(!m||m==='none')return 0;
+    var p=m.match(/matrix(3d)?\(([^)]+)\)/);if(!p)return 0;
+    var a=p[2].split(',');
+    return parseFloat(a[p[1]?(axis==='y'?13:12):(axis==='y'?5:4)])||0;
+  }catch(e){return 0;}
+}
+function _kVel(hist){
+  if(!hist||hist.length<2)return 0;
+  var last=hist[hist.length-1];
+  if(Date.now()-last.t>80)return 0;            /* палец остановился перед отпусканием */
+  var i=hist.length-2;while(i>0&&last.t-hist[i].t<100)i--;
+  var f=hist[i],dt=last.t-f.t;
+  return dt>0?(last.v-f.v)/dt:0;
+}
+/* Горизонтальная лента слайдов: track двигается через transform, go(dir) листает (-1/0/1). */
+function kSwipeTrack(track,getIdx,getN,go){
+  var st=null;
+  return {
+    start:function(x,y){
+      var w=(track.parentNode&&track.parentNode.offsetWidth)||track.offsetWidth||1;
+      var live=_kLiveT(track,'x');
+      st={x:x,y:y,w:w,base:live,pos:live,orig:track.style.transform,axis:null,hist:[{v:x,t:Date.now()}]};
+      track.style.transition='none';
+      track.style.transform='translateX('+live+'px)';
+    },
+    move:function(x,y){
+      if(!st)return false;
+      var dx=x-st.x,dy=y-st.y;
+      if(!st.axis){
+        if(Math.abs(dx)<8&&Math.abs(dy)<8)return false;
+        st.axis=Math.abs(dx)>Math.abs(dy)?'x':'y';
+        if(st.axis==='y'){track.style.transition='';track.style.transform=st.orig;}
+      }
+      if(st.axis!=='x')return false;
+      var n=Math.max(1,getN()),min=-(n-1)*st.w,pos=st.base+dx;
+      if(pos>0)pos=_kRubber(pos,st.w);
+      else if(pos<min)pos=min-_kRubber(min-pos,st.w);
+      st.pos=pos;
+      track.style.transform='translateX('+pos+'px)';
+      st.hist.push({v:x,t:Date.now()});if(st.hist.length>10)st.hist.shift();
+      return true;
+    },
+    end:function(){
+      if(!st)return false;
+      var s=st;st=null;track.style.transition='';
+      if(s.axis!=='x'){if(s.axis!=='y')track.style.transform=s.orig;return false;}
+      var off=s.pos+_kProject(_kVel(s.hist))+getIdx()*s.w;   /* смещение от текущего слайда */
+      go(off<-s.w/2?1:(off>s.w/2?-1:0));
+      return true;
+    },
+    cancel:function(){
+      if(!st)return;
+      var s=st;st=null;track.style.transition='';track.style.transform=s.orig;
+    }
+  };
+}
+/* Шторка снизу: тянется вниз за ручку/шапку, закрывается по проекции скорости. */
+function kSheetDrag(handles,sheet,backdrop,bdMode,onClose){
+  var st=null;
+  function start(e){
+    if(e.touches.length!==1){st=null;return;}
+    var t=e.touches[0];
+    clearTimeout(sheet._kT);
+    st={x:t.clientX,y:t.clientY,base:_kLiveT(sheet,'y'),ty:0,h:sheet.offsetHeight||1,active:false,hist:[{v:t.clientY,t:Date.now()}]};
+  }
+  function move(e){
+    if(!st)return;
+    var t=e.touches[0],dy=t.clientY-st.y,dx=t.clientX-st.x;
+    if(!st.active){
+      if(Math.abs(dy)<6&&Math.abs(dx)<6)return;
+      if(Math.abs(dx)>Math.abs(dy)){st=null;return;}
+      st.active=true;
+      sheet.style.transition='none';
+      if(getComputedStyle(sheet).animationName!=='none')sheet.style.animation='none';
+      if(backdrop)backdrop.style.transition='none';
+    }
+    e.preventDefault();
+    var ty=st.base+dy;
+    if(ty<0)ty=-_kRubber(-ty,st.h);
+    st.ty=ty;
+    sheet.style.transform='translateY('+ty+'px)';
+    st.hist.push({v:t.clientY,t:Date.now()});if(st.hist.length>10)st.hist.shift();
+    if(backdrop){
+      var p=Math.max(0,Math.min(1,ty/st.h));
+      if(bdMode==='opacity')backdrop.style.opacity=String(1-p);
+      else backdrop.style.background='rgba(0,0,0,'+(0.5*(1-p)).toFixed(3)+')';
+    }
+  }
+  function end(){
+    if(!st)return;
+    var s=st;st=null;
+    if(!s.active)return;
+    var v=_kVel(s.hist);
+    var close=(s.ty+_kProject(v))>s.h*0.5;
+    if(backdrop)backdrop.style.transition='';
+    if(close){sheet.style.transition='';onClose(v);return;}
+    /* возврат на место: скорость старта анимации = скорости пальца (кривая ease-out, наклон ≈4) */
+    var d=Math.abs(v)>0.1?Math.max(180,Math.min(420,4*Math.abs(s.ty)/Math.abs(v))):320;
+    sheet.style.transition='transform '+Math.round(d)+'ms cubic-bezier(.25,1,.5,1)';
+    sheet.style.transform='';
+    if(backdrop){backdrop.style.opacity='';backdrop.style.background='';}
+    sheet._kT=setTimeout(function(){sheet.style.transition='';},d+60);
+  }
+  for(var i=0;i<handles.length;i++){
+    var hd=handles[i];if(!hd)continue;
+    hd.addEventListener('touchstart',start,{passive:true});
+    hd.addEventListener('touchmove',move,{passive:false});
+    hd.addEventListener('touchend',end);
+    hd.addEventListener('touchcancel',end);
+  }
+}
+function kInitSheets(){
+  var dr=getEl('drawer'),ov=getEl('overlay');
+  if(dr&&!dr._kSheet){
+    dr._kSheet=1;
+    kSheetDrag([dr.querySelector('.drawer-handle'),dr.querySelector('.drawer-hdr')],dr,ov,'opacity',function(v){
+      /* продолжаем с той же скоростью, с которой отпустили палец */
+      var rem=dr.offsetHeight-_kLiveT(dr,'y');
+      var d=v>0.1?Math.max(160,Math.min(350,4*rem/v)):300;
+      dr.style.transition='transform '+Math.round(d)+'ms cubic-bezier(.25,1,.5,1)';
+      dr.style.transform='';ov.style.opacity='';
+      closeCart();
+      dr._kT=setTimeout(function(){dr.style.transition='';},d+60);
+    });
+  }
+  var mods=document.querySelectorAll('.modal-overlay');
+  for(var i=0;i<mods.length;i++){
+    (function(mo){
+      var sh=mo.querySelector('.modal-sheet');if(!sh||sh._kSheet)return;
+      sh._kSheet=1;
+      kSheetDrag([sh.querySelector('.modal-handle'),sh.querySelector('.modal-hdr')],sh,mo,'bg',function(){
+        closeModal(mo.id.replace(/^modal/,''));
+      });
+    })(mods[i]);
+  }
+}
+/* Очистка заявки с возможностью вернуть (5 с) */
+var _kCartUndo=null;
+function clearCartWithUndo(){
+  if(!Object.keys(cart).length)return;
+  _kCartUndo=JSON.parse(JSON.stringify(cart));
+  clearCart();
+  showToast('Заявка очищена<button class="toast-undo" onclick="cartUndo()">Вернуть</button>','undo');
+  clearTimeout(_tt);
+  _tt=setTimeout(function(){var t=getEl('toast');if(t)t.classList.remove('show');_kCartUndo=null;},5000);
+}
+function cartUndo(){
+  if(!_kCartUndo)return;
+  cart=_kCartUndo;_kCartUndo=null;
+  var keys=Object.keys(cart);
+  for(var i=0;i<keys.length;i++){
+    var ab=getEl('ab-'+keys[i]);if(ab){ab.innerHTML='&#10003;';ab.classList.add('added');}
+    var ic=getEl('ic-'+keys[i]);if(ic)ic.classList.add('in-cart');
+    var gic=getEl('gic-'+keys[i]);if(gic)gic.classList.add('in-cart');
+  }
+  updateCartBadge();renderCartDrawer();
+  showToast('Заявка восстановлена','ok');
 }
 function cardCarGo(id,el,dir){
   var slides=el.querySelectorAll('.card-carousel-slide');
@@ -2656,11 +2854,12 @@ function buildS4Carousel(it){
   dots.innerHTML = dh;
 
   /* touch events */
-  car.ontouchstart = function(e){ _s4TouchX = e.touches[0].clientX; };
-  car.ontouchend   = function(e){
-    var dx = e.changedTouches[0].clientX - _s4TouchX;
-    if(Math.abs(dx)>40){ s4CarouselGo(dx < 0 ? 1 : -1); }
-  };
+  /* v4.5: лента едет за пальцем, листание по скорости */
+  var s4sw = kSwipeTrack(car,function(){return _s4PhotoIdx;},function(){return _s4Photos.length;},s4CarouselGo);
+  car.ontouchstart = function(e){ _s4TouchX = e.touches[0].clientX; s4sw.start(e.touches[0].clientX,e.touches[0].clientY); };
+  car.ontouchmove  = function(e){ if(s4sw.move(e.touches[0].clientX,e.touches[0].clientY)) e.preventDefault(); };
+  car.ontouchend   = function(e){ if(s4sw.end()) e.preventDefault(); };
+  car.ontouchcancel= function(){ s4sw.cancel(); };
   /* mouse events for desktop */
   car.onmousedown = function(e){ _s4TouchX = e.clientX; e.preventDefault(); };
   car.onmouseup   = function(e){
@@ -3065,6 +3264,7 @@ initNlistShopSelect();
 loadCartFromStorage();
 updateCartBadge();
 initSortPill();
+kInitSheets();       /* v4.5: шторки корзины и модалок тянутся пальцем */
 
 /* ═══ SPLASH SCREEN: показываем логотип, затем открываем приложение ═══ */
 (function(){
@@ -3162,6 +3362,7 @@ var SHEET_MAP = {
 function openModal(name) {
   var el = document.getElementById('modal' + name);
   if (!el) return;
+  _kModalFinish(el);   /* v4.5: если окно ещё уезжало вниз — сбросить */
   el.classList.add('show');
   if (name === 'Photo') {
     puMobReset();
@@ -3179,7 +3380,23 @@ function openModal(name) {
 }
 function closeModal(name) {
   var el = document.getElementById('modal' + name);
-  if (el) el.classList.remove('show');
+  if (!el) return;
+  /* v4.5: уходит вниз тем же путём, что пришло; стартует с текущего положения (в т.ч. после свайпа) */
+  var sh = el.querySelector('.modal-sheet');
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!el.classList.contains('show') || !sh || reduce) { _kModalFinish(el); return; }
+  el.style.background = '';
+  el.classList.add('closing');
+  sh.style.transition = ''; sh.style.animation = '';
+  clearTimeout(el._kCloseT);
+  el._kCloseT = setTimeout(function(){ _kModalFinish(el); }, 270);
+}
+function _kModalFinish(el) {
+  clearTimeout(el._kCloseT);
+  el.classList.remove('show'); el.classList.remove('closing');
+  el.style.background = '';
+  var sh = el.querySelector('.modal-sheet');
+  if (sh) { sh.style.transform = ''; sh.style.animation = ''; sh.style.transition = ''; }
 }
 
 /* ╔═══════════════════════════════════════════════════╗
@@ -3930,7 +4147,7 @@ function installPWA() {
       <img id="verLogoImg" src="" alt="Kari">
     </div>
     <div class="ver-app-name">Портал заказов<br>Kari</div>
-    <div class="ver-num" id="verNum">v4.4</div>
+    <div class="ver-num" id="verNum">v4.5</div>
     <div class="ver-build" id="verBuild">Сборка от 14.05.2025</div>
     <div class="ver-divider"></div>
     <div class="ver-info">Мобильный дашборд оборудования<br>для внутреннего использования</div>
