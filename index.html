@@ -707,6 +707,9 @@ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',ini
 .analog-code,.cart-item-code{font-family:inherit;font-size:12px;letter-spacing:.01em;font-variant-numeric:tabular-nums;}
 /* v1.79: одно семейство шрифтов с мобильным — Inter; кнопки и поля наследуют шрифт */
 button,input,select,textarea{font-family:inherit;}
+/* v1.80: иконки вместо эмодзи — контурные, размер по шрифту контейнера */
+.ic{display:inline-block;width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;vertical-align:-0.14em;flex-shrink:0;}
+.cart-empty-icon .ic,.drop-zone-icon .ic,.modal-icon .ic{stroke:#8B7CC7;stroke-width:1.5;}
 </style>
 </head>
 <body>
@@ -725,17 +728,17 @@ button,input,select,textarea{font-family:inherit;}
       </div>
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="logo-sub" id="catalogInfo">Загрузка…</div>
-        <span id="catalogStaleBadge" title="Не удалось получить список фото с GitHub при последнем обновлении — часть изображений может быть устаревшей. Нажмите «Обновить» ещё раз." style="display:none;align-items:center;gap:4px;background:rgba(224,140,32,.22);border:1px solid rgba(224,140,32,.45);color:#ffcf8a;border-radius:20px;padding:1px 9px 1px 7px;font-size:10px;font-weight:800;letter-spacing:.2px;white-space:nowrap;cursor:default;">⚠️ Данные могут быть устаревшими</span>
+        <span id="catalogStaleBadge" title="Не удалось получить список фото с GitHub при последнем обновлении — часть изображений может быть устаревшей. Нажмите «Обновить» ещё раз." style="display:none;align-items:center;gap:4px;background:rgba(224,140,32,.22);border:1px solid rgba(224,140,32,.45);color:#ffcf8a;border-radius:20px;padding:1px 9px 1px 7px;font-size:10px;font-weight:800;letter-spacing:.2px;white-space:nowrap;cursor:default;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9v4M10.363 3.591 2.257 17.125a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636-2.87L13.637 3.59a1.914 1.914 0 0 0-3.274 0zM12 16h.01"/></svg> Данные могут быть устаревшими</span>
       </div>
     </div>
   </div>
   <div class="header-right">
     <button onclick="selectCat('nlist')" id="btn-nlist" style="background:rgba(190,81,3,.2);backdrop-filter:blur(8px);color:#ffb877;border:1px solid rgba(190,81,3,.35);border-radius:9px;padding:6px 10px;font-family:Inter,sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 0 12px rgba(190,81,3,.12);transition:all .25s;white-space:nowrap;" onmouseover="this.style.background='rgba(190,81,3,.35)';this.style.borderColor='rgba(190,81,3,.6)'" onmouseout="this.style.background='rgba(190,81,3,.2)';this.style.borderColor='rgba(190,81,3,.35)'"><span class="lottie-icon" id="lottie-cat-nlist" style="width:16px;height:16px;font-size:0;"></span> Номенклатуры <span class="cart-count" id="cnt-nlist">0</span></button>
-    <button onclick="selectCat('consum')" id="btn-consum" style="background:rgba(31,157,85,.2);backdrop-filter:blur(8px);color:#7de0a8;border:1px solid rgba(31,157,85,.35);border-radius:9px;padding:6px 10px;font-family:Inter,sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 0 12px rgba(31,157,85,.12);transition:all .25s;white-space:nowrap;" title="Заказ расходных материалов ПКС" onmouseover="this.style.background='rgba(31,157,85,.35)';this.style.borderColor='rgba(31,157,85,.6)'" onmouseout="this.style.background='rgba(31,157,85,.2)';this.style.borderColor='rgba(31,157,85,.35)'"><span class="lottie-icon" id="lottie-cat-consum" style="width:16px;height:16px;font-size:0;">🧰</span> Расходные ПКС <span class="cart-count" id="cnt-consum">0</span></button>
+    <button onclick="selectCat('consum')" id="btn-consum" style="background:rgba(31,157,85,.2);backdrop-filter:blur(8px);color:#7de0a8;border:1px solid rgba(31,157,85,.35);border-radius:9px;padding:6px 10px;font-family:Inter,sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 0 12px rgba(31,157,85,.12);transition:all .25s;white-space:nowrap;" title="Заказ расходных материалов ПКС" onmouseover="this.style.background='rgba(31,157,85,.35)';this.style.borderColor='rgba(31,157,85,.6)'" onmouseout="this.style.background='rgba(31,157,85,.2)';this.style.borderColor='rgba(31,157,85,.35)'"><span class="lottie-icon" id="lottie-cat-consum" style="width:16px;height:16px;font-size:0;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10h3V7L6.5 3.5a6 6 0 0 1 8 8l6 6a2 2 0 0 1-3 3l-6-6a6 6 0 0 1-8-8L7 10"/></svg></span> Расходные ПКС <span class="cart-count" id="cnt-consum">0</span></button>
     <button onclick="openFeedback()" style="background:rgba(220,170,50,.2);backdrop-filter:blur(8px);color:#ffe080;border:1px solid rgba(220,170,50,.3);border-radius:9px;padding:6px 10px;font-family:Inter,sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 0 12px rgba(220,170,50,.12);transition:all .25s;white-space:nowrap;" onmouseover="this.style.background='rgba(220,170,50,.35)';this.style.borderColor='rgba(220,170,50,.6)'" onmouseout="this.style.background='rgba(220,170,50,.2)';this.style.borderColor='rgba(220,170,50,.3)'"><span class="lottie-icon" id="lottie-feedback" style="width:16px;height:16px;"></span> Обратная связь</button>
     <button onclick="openPhotoUpload()" style="background:rgba(180,80,180,.2);backdrop-filter:blur(8px);color:#e8a0ff;border:1px solid rgba(180,80,180,.3);border-radius:9px;padding:6px 10px;font-family:Inter,sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 0 12px rgba(180,80,180,.12);transition:all .25s;white-space:nowrap;" onmouseover="this.style.background='rgba(180,80,180,.35)';this.style.borderColor='rgba(180,80,180,.6)'" onmouseout="this.style.background='rgba(180,80,180,.2)';this.style.borderColor='rgba(180,80,180,.3)'"><span class="lottie-icon" id="lottie-photo" style="width:16px;height:16px;"></span> Фото</button>
-    <button onclick="openPhotoSearch()" style="background:rgba(26,144,192,.2);backdrop-filter:blur(8px);color:#7dd0ff;border:1px solid rgba(26,144,192,.3);border-radius:9px;padding:6px 10px;font-family:Inter,sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 0 12px rgba(26,144,192,.12);transition:all .25s;white-space:nowrap;" title="Поиск по фото — визуальное сходство" onmouseover="this.style.background='rgba(26,144,192,.35)';this.style.borderColor='rgba(26,144,192,.6)'" onmouseout="this.style.background='rgba(26,144,192,.2)';this.style.borderColor='rgba(26,144,192,.3)'">🔍 Найти по фото</button>
-    <button class="update-btn" onclick="updateFromGitHub()"><span class="lottie-icon" id="lottie-update" style="width:16px;height:16px;"></span><span id="updateIcon" style="display:none;">☁️</span> Обновить</button>
+    <button onclick="openPhotoSearch()" style="background:rgba(26,144,192,.2);backdrop-filter:blur(8px);color:#7dd0ff;border:1px solid rgba(26,144,192,.3);border-radius:9px;padding:6px 10px;font-family:Inter,sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 0 12px rgba(26,144,192,.12);transition:all .25s;white-space:nowrap;" title="Поиск по фото — визуальное сходство" onmouseover="this.style.background='rgba(26,144,192,.35)';this.style.borderColor='rgba(26,144,192,.6)'" onmouseout="this.style.background='rgba(26,144,192,.2)';this.style.borderColor='rgba(26,144,192,.3)'"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0 7 7 0 1 0-14 0M21 21l-6-6"/></svg> Найти по фото</button>
+    <button class="update-btn" onclick="updateFromGitHub()"><span class="lottie-icon" id="lottie-update" style="width:16px;height:16px;"></span><span id="updateIcon" style="display:none;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11A8.1 8.1 0 0 0 4.5 9M4 5v4h4M4 13a8.1 8.1 0 0 0 15.5 2M20 19v-4h-4"/></svg></span> Обновить</button>
     <button class="cart-btn" onclick="toggleCart()"><span class="lottie-icon" id="lottie-cart" style="width:18px;height:18px;"></span> Корзина <span class="cart-count" id="cartCountBadge">0</span></button>
   </div>
 </div>
@@ -745,7 +748,7 @@ button,input,select,textarea{font-family:inherit;}
   <div style="background:#fff;border-radius:16px;padding:0;max-width:480px;width:92vw;box-shadow:0 20px 60px rgba(0,0,0,.25);overflow:hidden;animation:authIn .3s ease;">
     <!-- Header -->
     <div style="background:linear-gradient(135deg,#b8860b,#daa520);padding:18px 24px;display:flex;align-items:center;gap:10px;">
-      <span style="font-size:20px;">✉️</span>
+      <span style="font-size:20px;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 7l9 6 9-6"/></svg></span>
       <div style="flex:1;">
         <div style="font-size:16px;font-weight:800;color:#fff;">Обратная связь</div>
         <div style="font-size:11px;color:rgba(255,255,255,.65);">Сообщение отправится на m.skiba@kari.com</div>
@@ -776,7 +779,7 @@ button,input,select,textarea{font-family:inherit;}
       <!-- Кнопка отправить -->
       <button onclick="fbSend()" style="width:100%;height:40px;background:linear-gradient(135deg,#b8860b,#daa520);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all .2s;box-shadow:0 3px 12px rgba(184,134,11,.3);"
         onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
-        📨 Отправить через Outlook
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 7l9 6 9-6"/></svg> Отправить через Outlook
       </button>
     </div>
   </div>
@@ -785,10 +788,10 @@ button,input,select,textarea{font-family:inherit;}
 <!-- Authors modal -->
 <div class="authors-overlay" id="authorsOverlay" onclick="if(event.target===this)this.classList.remove('show')">
   <div class="authors-modal">
-    <h3>📦 Каталог оборудования Kari</h3>
+    <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3M12 12l8-4.5M12 12v9M12 12 4 7.5"/></svg> Каталог оборудования Kari</h3>
     <div class="auth-sub">Каталог оборудования Сибирь</div>
     <ul class="authors-list" id="authorsList">
-      <li><span>👤</span> —</li>
+      <li><span><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 7a4 4 0 1 0 8 0 4 4 0 0 0-8 0M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg></span> —</li>
     </ul>
     <div style="font-size:11px;color:var(--text3);margin-bottom:16px;">Версия <span id="modalAppVersion">1.76</span> · 2026</div>
     <button onclick="document.getElementById('authorsOverlay').classList.remove('show')"
@@ -839,7 +842,7 @@ button,input,select,textarea{font-family:inherit;}
   <div class="sidebar" id="catalogSidebar" style="display:none;">
     <div class="sidebar-title" id="subcatSidebarTitle">Подразделы</div>
     <div style="position:relative;padding:0 10px 8px;">
-      <span style="position:absolute;left:19px;top:50%;transform:translateY(calc(-50% - 4px));font-size:11px;pointer-events:none;opacity:.7;">🔍</span>
+      <span style="position:absolute;left:19px;top:50%;transform:translateY(calc(-50% - 4px));font-size:11px;pointer-events:none;opacity:.7;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0 7 7 0 1 0-14 0M21 21l-6-6"/></svg></span>
       <input type="text" id="subcatSideSearch" placeholder="Поиск подраздела…" oninput="filterSubcatSidebar()"
         style="width:100%;background:var(--surface3);border:1.5px solid var(--border);border-radius:8px;padding:6px 10px 6px 28px;color:var(--text);font-family:Inter,sans-serif;font-size:12px;font-weight:500;outline:none;transition:border-color .2s;"
         onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
@@ -857,19 +860,19 @@ button,input,select,textarea{font-family:inherit;}
           <svg viewBox="0 0 10 10"><path d="M1 1l8 8M9 1l-8 8" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>
         </button>
       </div>
-      <button id="searchAllBtn" onclick="searchEverywhere('main')" title="Искать по всем категориям" style="display:none;height:36px;padding:0 12px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface2);color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;white-space:nowrap;transition:all .15s;flex-shrink:0;display:flex;align-items:center;gap:5px;" onmouseover="this.style.background='var(--surface3)';this.style.color='var(--text)'" onmouseout="this.style.background='var(--surface2)';this.style.color='var(--text2)'">🔍 Везде</button>
+      <button id="searchAllBtn" onclick="searchEverywhere('main')" title="Искать по всем категориям" style="display:none;height:36px;padding:0 12px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface2);color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;white-space:nowrap;transition:all .15s;flex-shrink:0;display:flex;align-items:center;gap:5px;" onmouseover="this.style.background='var(--surface3)';this.style.color='var(--text)'" onmouseout="this.style.background='var(--surface2)';this.style.color='var(--text2)'"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0 7 7 0 1 0-14 0M21 21l-6-6"/></svg> Везде</button>
       <div style="display:flex;gap:2px;flex-shrink:0;">
         <button id="photoFilterAll" onclick="setPhotoFilter('all')" style="padding:5px 10px;border:1.5px solid var(--border);border-radius:7px 0 0 7px;background:var(--surface3);color:var(--text);font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s;">Все</button>
-        <button id="photoFilterYes" onclick="setPhotoFilter('yes')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s;">📷 С фото</button>
+        <button id="photoFilterYes" onclick="setPhotoFilter('yes')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h1a2 2 0 0 0 2-2 1 1 0 0 1 1-1h6a1 1 0 0 1 1 1 2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2M9 13a3 3 0 1 0 6 0 3 3 0 0 0-6 0"/></svg> С фото</button>
         <button id="photoFilterNo" onclick="setPhotoFilter('no')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;border-radius:0 7px 7px 0;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s;">Без фото</button>
       </div>
       <div class="view-switch" aria-label="Вид каталога">
         <button class="view-btn active" id="viewCards" onclick="setCatalogView('cards')" title="Крупные карточки">▦ Карточки</button>
         <button class="view-btn" id="viewCompact" onclick="setCatalogView('compact')" title="Компактные карточки">▦ Компактно</button>
-        <button class="view-btn" id="viewList" onclick="setCatalogView('list')" title="Список">☷ Список</button>
+        <button class="view-btn" id="viewList" onclick="setCatalogView('list')" title="Список"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11M5 6v.01M5 12v.01M5 18v.01"/></svg> Список</button>
       </div>
       <div class="results-info" id="resultsInfo">—</div>
-      <button onclick="exportToExcel('catalog')" title="Выгрузить в Excel" style="background:linear-gradient(135deg,#1a7a3a,#2aaa5a);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:Inter,sans-serif;white-space:nowrap;transition:all .2s;">📥 Excel</button>
+      <button onclick="exportToExcel('catalog')" title="Выгрузить в Excel" style="background:linear-gradient(135deg,#1a7a3a,#2aaa5a);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:Inter,sans-serif;white-space:nowrap;transition:all .2s;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 11l5 5 5-5M12 4v12"/></svg> Excel</button>
     </div>
     <div class="catalog-context" id="catalogContext">
       <span class="catalog-context-main" onclick="selectCat('all')" style="cursor:pointer;">Каталог</span>
@@ -881,9 +884,9 @@ button,input,select,textarea{font-family:inherit;}
     <div class="filter-strip" id="catalogFilters" aria-label="Фильтры каталога">
       <span class="filter-label">Показать</span>
       <button class="filter-chip" data-filter="analogs" onclick="toggleVisualFilter('analogs')">≈ Есть аналоги</button>
-      <button class="filter-chip" data-filter="compat" onclick="toggleVisualFilter('compat')">🔗 Совместимые</button>
+      <button class="filter-chip" data-filter="compat" onclick="toggleVisualFilter('compat')"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 15l6-6M11 6l.463-.536a5 5 0 0 1 7.071 7.072L18 13M13 18l-.397.534a5.068 5.068 0 0 1-7.127 0 4.972 4.972 0 0 1 0-7.071L6 11"/></svg> Совместимые</button>
       <button class="filter-chip" data-filter="cart" onclick="toggleVisualFilter('cart')">✓ В заявке</button>
-      <button class="filter-chip" data-filter="kits" onclick="toggleVisualFilter('kits')">📦 Комплекты</button>
+      <button class="filter-chip" data-filter="kits" onclick="toggleVisualFilter('kits')"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3M12 12l8-4.5M12 12v9M12 12 4 7.5"/></svg> Комплекты</button>
       <span class="active-filter-summary" id="activeFilterSummary">Фильтры не выбраны</span>
     </div>
     <!-- Экран выбора подраздела -->
@@ -920,17 +923,17 @@ button,input,select,textarea{font-family:inherit;}
           <svg viewBox="0 0 10 10"><path d="M1 1l8 8M9 1l-8 8" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>
         </button>
         </div>
-        <button id="searchAllBtnLight" onclick="searchEverywhere('light')" title="Искать по всем категориям" style="height:36px;padding:0 12px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface2);color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;white-space:nowrap;transition:all .15s;flex-shrink:0;display:flex;align-items:center;gap:5px;" onmouseover="this.style.background='var(--surface3)';this.style.color='var(--text)'" onmouseout="this.style.background='var(--surface2)';this.style.color='var(--text2)'">🔍 Везде</button>
+        <button id="searchAllBtnLight" onclick="searchEverywhere('light')" title="Искать по всем категориям" style="height:36px;padding:0 12px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface2);color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;white-space:nowrap;transition:all .15s;flex-shrink:0;display:flex;align-items:center;gap:5px;" onmouseover="this.style.background='var(--surface3)';this.style.color='var(--text)'" onmouseout="this.style.background='var(--surface2)';this.style.color='var(--text2)'"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0 7 7 0 1 0-14 0M21 21l-6-6"/></svg> Везде</button>
         <select id="light-cat-filter" onchange="onLightCatFilter()" style="height:36px;padding:0 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;cursor:pointer;display:none;">
           <option value="">Все разделы</option>
         </select>
         <div style="display:flex;gap:2px;flex-shrink:0;">
           <button id="lightPhotoFilterAll" onclick="setLightPhotoFilter('all')" style="padding:5px 10px;border:1.5px solid var(--border);border-radius:7px 0 0 7px;background:var(--surface3);color:var(--text);font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s;">Все</button>
-          <button id="lightPhotoFilterYes" onclick="setLightPhotoFilter('yes')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s;">📷 С фото</button>
+          <button id="lightPhotoFilterYes" onclick="setLightPhotoFilter('yes')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h1a2 2 0 0 0 2-2 1 1 0 0 1 1-1h6a1 1 0 0 1 1 1 2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2M9 13a3 3 0 1 0 6 0 3 3 0 0 0-6 0"/></svg> С фото</button>
           <button id="lightPhotoFilterNo" onclick="setLightPhotoFilter('no')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;border-radius:0 7px 7px 0;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s;">Без фото</button>
         </div>
         <div class="results-info" id="lightResultsInfo">—</div>
-        <button onclick="exportToExcel('light')" title="Выгрузить в Excel" style="background:linear-gradient(135deg,#1a7a3a,#2aaa5a);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:Inter,sans-serif;white-space:nowrap;transition:all .2s;">📥 Excel</button>
+        <button onclick="exportToExcel('light')" title="Выгрузить в Excel" style="background:linear-gradient(135deg,#1a7a3a,#2aaa5a);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:Inter,sans-serif;white-space:nowrap;transition:all .2s;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 11l5 5 5-5M12 4v12"/></svg> Excel</button>
       </div>
       <div class="light-body">
         <div class="light-table-wrap" id="lightTableWrap">
@@ -946,7 +949,7 @@ button,input,select,textarea{font-family:inherit;}
   <div class="main" id="kitsPanel" style="display:none;">
     <div class="toolbar">
       <div class="search-wrap">
-        <span class="search-icon">🔍</span>
+        <span class="search-icon"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0 7 7 0 1 0-14 0M21 21l-6-6"/></svg></span>
         <input type="text" class="search-input" id="kitsSearch" placeholder="Поиск по комплектам…" oninput="onKitsSearch();updateSearchClear('kitsSearch','kitsSearchClear')">
         <button class="search-clear" id="kitsSearchClear" onclick="clearSearch('kits')" title="Очистить поиск">
           <svg viewBox="0 0 10 10"><path d="M1 1l8 8M9 1l-8 8" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>
@@ -957,7 +960,7 @@ button,input,select,textarea{font-family:inherit;}
       </select>
       <div style="display:flex;gap:2px;flex-shrink:0;">
         <button id="kitsPhotoFilterAll" onclick="setKitsPhotoFilter('all')" style="padding:5px 10px;border:1.5px solid var(--border);border-radius:7px 0 0 7px;background:var(--surface3);color:var(--text);font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s;">Все</button>
-        <button id="kitsPhotoFilterYes" onclick="setKitsPhotoFilter('yes')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s;">📷 С фото</button>
+        <button id="kitsPhotoFilterYes" onclick="setKitsPhotoFilter('yes')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h1a2 2 0 0 0 2-2 1 1 0 0 1 1-1h6a1 1 0 0 1 1 1 2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2M9 13a3 3 0 1 0 6 0 3 3 0 0 0-6 0"/></svg> С фото</button>
         <button id="kitsPhotoFilterNo" onclick="setKitsPhotoFilter('no')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;border-radius:0 7px 7px 0;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s;">Без фото</button>
       </div>
       <div class="results-info" id="kitsResultsInfo">—</div>
@@ -965,7 +968,7 @@ button,input,select,textarea{font-family:inherit;}
     <div class="table-wrap" id="kitsTableWrap">
       <div class="product-grid is-empty" id="kitsTableBody">
         <div style="text-align:center;padding:60px 20px;color:var(--text3);font-size:14px;font-weight:600;">
-          📦 Загрузите Excel-файл с комплектами<br>
+          <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3M12 12l8-4.5M12 12v9M12 12 4 7.5"/></svg> Загрузите Excel-файл с комплектами<br>
           <span style="font-size:12px;font-weight:400;margin-top:8px;display:block;">
             Колонки: A — Код · B — Название · C — Описание · D — Код товара · E — Наименование · F — Кол-во
           </span>
@@ -978,27 +981,27 @@ button,input,select,textarea{font-family:inherit;}
   <div id="tvPanel" style="display:none;flex:1;overflow:hidden;flex-direction:row;">
     <div class="main" style="display:flex;flex-direction:column;overflow:hidden;flex:1;">
       <div id="consumBanner" style="display:none;align-items:center;gap:8px;margin:12px 14px 0;padding:10px 14px;background:linear-gradient(135deg,#e8f7ee,#d4f3e0);border:1.5px solid #8fd9ab;border-radius:10px;font-size:12.5px;font-weight:700;color:#1a6b3a;">
-        🧰 Заказ расходных материалов ПКС — показаны только расходные материалы слаботочного оборудования, доступные к заказу
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10h3V7L6.5 3.5a6 6 0 0 1 8 8l6 6a2 2 0 0 1-3 3l-6-6a6 6 0 0 1-8-8L7 10"/></svg> Заказ расходных материалов ПКС — показаны только расходные материалы слаботочного оборудования, доступные к заказу
       </div>
       <div class="toolbar">
         <div class="search-wrap">
-          <span class="search-icon">🔍</span>
+          <span class="search-icon"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0 7 7 0 1 0-14 0M21 21l-6-6"/></svg></span>
           <input type="text" class="search-input" id="tvSearch" placeholder="Поиск по слаботочному оборудованию…" oninput="onTvSearch();updateSearchClear('tvSearch','tvSearchClear')">
         <button class="search-clear" id="tvSearchClear" onclick="clearSearch('tv')" title="Очистить поиск">
           <svg viewBox="0 0 10 10"><path d="M1 1l8 8M9 1l-8 8" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>
         </button>
         </div>
-        <button id="searchAllBtnTv" onclick="searchEverywhere('tv')" title="Искать по всем категориям" style="height:36px;padding:0 12px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface2);color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;white-space:nowrap;transition:all .15s;flex-shrink:0;display:flex;align-items:center;gap:5px;" onmouseover="this.style.background='var(--surface3)';this.style.color='var(--text)'" onmouseout="this.style.background='var(--surface2)';this.style.color='var(--text2)'">🔍 Везде</button>
+        <button id="searchAllBtnTv" onclick="searchEverywhere('tv')" title="Искать по всем категориям" style="height:36px;padding:0 12px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface2);color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;white-space:nowrap;transition:all .15s;flex-shrink:0;display:flex;align-items:center;gap:5px;" onmouseover="this.style.background='var(--surface3)';this.style.color='var(--text)'" onmouseout="this.style.background='var(--surface2)';this.style.color='var(--text2)'"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0 7 7 0 1 0-14 0M21 21l-6-6"/></svg> Везде</button>
         <select id="slabot-cat-filter" onchange="onSlabotCatFilter()" style="height:36px;padding:0 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;cursor:pointer;display:none;">
           <option value="">Все категории</option>
         </select>
         <div style="display:flex;gap:2px;flex-shrink:0;">
           <button id="tvPhotoFilterAll" onclick="setTvPhotoFilter('all')" style="padding:5px 10px;border:1.5px solid var(--border);border-radius:7px 0 0 7px;background:var(--surface3);color:var(--text);font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s;">Все</button>
-          <button id="tvPhotoFilterYes" onclick="setTvPhotoFilter('yes')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s;">📷 С фото</button>
+          <button id="tvPhotoFilterYes" onclick="setTvPhotoFilter('yes')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h1a2 2 0 0 0 2-2 1 1 0 0 1 1-1h6a1 1 0 0 1 1 1 2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2M9 13a3 3 0 1 0 6 0 3 3 0 0 0-6 0"/></svg> С фото</button>
           <button id="tvPhotoFilterNo" onclick="setTvPhotoFilter('no')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;border-radius:0 7px 7px 0;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s;">Без фото</button>
         </div>
         <div class="results-info" id="tvResultsInfo">—</div>
-        <button onclick="exportToExcel('tv')" title="Выгрузить в Excel" style="background:linear-gradient(135deg,#1a7a3a,#2aaa5a);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:Inter,sans-serif;white-space:nowrap;transition:all .2s;">📥 Excel</button>
+        <button onclick="exportToExcel('tv')" title="Выгрузить в Excel" style="background:linear-gradient(135deg,#1a7a3a,#2aaa5a);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:Inter,sans-serif;white-space:nowrap;transition:all .2s;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 11l5 5 5-5M12 4v12"/></svg> Excel</button>
       </div>
       <div class="light-body">
         <div class="light-table-wrap" id="tvTableWrap">
@@ -1014,13 +1017,13 @@ button,input,select,textarea{font-family:inherit;}
     <!-- Тулбар -->
     <div class="toolbar" style="gap:10px;flex-wrap:wrap;">
       <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0;">
-        <span style="font-size:16px;flex-shrink:0;">📋</span>
+        <span style="font-size:16px;flex-shrink:0;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2zM9 12h6M9 16h6"/></svg></span>
         <span style="font-size:13px;font-weight:700;color:var(--text2);white-space:nowrap;">Загрузка номенклатур</span>
         <span class="results-info" id="nlistInfo" style="margin-left:4px;">—</span>
-        <span id="nlistShopBadge" style="display:none;margin-left:6px;background:linear-gradient(135deg,#583A88,#7960A2);color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">🏬 Магазин №—</span>
+        <span id="nlistShopBadge" style="display:none;margin-left:6px;background:linear-gradient(135deg,#583A88,#7960A2);color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M3 7v1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7H3l2-4h14l2 4M5 21V10.85M19 21V10.85M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/></svg> Магазин №—</span>
       </div>
       <div class="search-wrap" style="max-width:340px;min-width:180px;">
-        <span style="position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:13px;pointer-events:none;">🔍</span>
+        <span style="position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:13px;pointer-events:none;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0 7 7 0 1 0-14 0M21 21l-6-6"/></svg></span>
         <input type="text" class="search-input" id="nlistSearch" placeholder="Поиск по загруженному списку…" oninput="onNlistSearch();updateSearchClear('nlistSearch','nlistSearchClear')">
         <button class="search-clear" id="nlistSearchClear" onclick="clearSearch('nlist')" title="Очистить поиск">
           <svg viewBox="0 0 10 10"><path d="M1 1l8 8M9 1l-8 8" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>
@@ -1030,22 +1033,22 @@ button,input,select,textarea{font-family:inherit;}
       <button onclick="document.getElementById('nlistFileInput').click()"
         style="background:linear-gradient(135deg,#583A88,#7960A2);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:Inter,sans-serif;white-space:nowrap;transition:all .2s;"
         onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
-        📂 Загрузить xlsx
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2"/></svg> Загрузить xlsx
       </button>
       <button onclick="exportToExcel('nlist')" title="Выгрузить текущий список (с учётом сортировки) в Excel"
         style="background:linear-gradient(135deg,#1a7a3a,#2aaa5a);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:Inter,sans-serif;white-space:nowrap;transition:all .2s;"
         onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
-        📥 Excel
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 11l5 5 5-5M12 4v12"/></svg> Excel
       </button>
       <button onclick="openNlistHistory()" title="История загруженных файлов по магазинам"
         style="background:linear-gradient(135deg,#5a5a6a,#7a7a8a);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:Inter,sans-serif;white-space:nowrap;transition:all .2s;"
         onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
-        📜 История
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8v4l2 2M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"/></svg> История
       </button>
       <button onclick="clearNlist()"
         style="background:linear-gradient(135deg,#7a1a1a,#c03030);color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:Inter,sans-serif;white-space:nowrap;transition:all .2s;"
         onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
-        🗑 Очистить
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg> Очистить
       </button>
     </div>
     <!-- Тело: пустое состояние или таблица -->
@@ -1053,7 +1056,7 @@ button,input,select,textarea{font-family:inherit;}
       <!-- Дроп-зона (показывается когда список пуст) -->
       <div id="nlistDropZone" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:16px;padding:40px;cursor:pointer;"
            onclick="document.getElementById('nlistFileInput').click()">
-        <div style="font-size:52px;">📋</div>
+        <div style="font-size:52px;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2zM9 12h6M9 16h6"/></svg></div>
         <div style="font-size:16px;font-weight:800;color:var(--text2);">Загрузите список номенклатур</div>
         <div style="font-size:13px;color:var(--text3);text-align:center;max-width:340px;line-height:1.6;">
           Excel-файл со столбцом кодов номенклатур.<br>Каждый код — в отдельной строке.
@@ -1085,7 +1088,7 @@ button,input,select,textarea{font-family:inherit;}
 <div id="nlistShopOverlay" style="display:none;position:fixed;inset:0;background:rgba(20,20,35,.6);backdrop-filter:blur(5px);z-index:700;align-items:center;justify-content:center;" onclick="if(event.target===this)closeNlistShopModal()">
   <div style="background:var(--surface2);border-radius:18px;width:min(420px,94vw);box-shadow:0 24px 64px rgba(0,0,0,.35);overflow:hidden;animation:authIn .3s ease;">
     <div style="background:linear-gradient(135deg,#583A88,#7960A2);padding:18px 24px;display:flex;align-items:center;gap:12px;">
-      <span style="font-size:22px;">🏬</span>
+      <span style="font-size:22px;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M3 7v1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7H3l2-4h14l2 4M5 21V10.85M19 21V10.85M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/></svg></span>
       <div style="flex:1;min-width:0;">
         <div style="font-size:16px;font-weight:800;color:#fff;">Номер магазина</div>
         <div id="nlistShopFileLabel" style="font-size:11px;color:rgba(255,255,255,.75);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Укажите номер магазина перед загрузкой</div>
@@ -1104,7 +1107,7 @@ button,input,select,textarea{font-family:inherit;}
       <button onclick="confirmNlistShopModal()"
         style="width:100%;height:44px;background:linear-gradient(135deg,#583A88,#7960A2);color:#fff;border:none;border-radius:11px;font-size:15px;font-weight:800;cursor:pointer;font-family:Inter,sans-serif;transition:all .2s;box-shadow:0 4px 16px rgba(121,96,162,.35);"
         onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
-        📂 Загрузить список
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2"/></svg> Загрузить список
       </button>
     </div>
   </div>
@@ -1114,13 +1117,13 @@ button,input,select,textarea{font-family:inherit;}
 <div id="nlistHistoryOverlay" style="display:none;position:fixed;inset:0;background:rgba(20,20,35,.6);backdrop-filter:blur(5px);z-index:700;align-items:center;justify-content:center;" onclick="if(event.target===this)closeNlistHistory()">
   <div style="background:var(--surface2);border-radius:18px;width:min(620px,94vw);max-height:80vh;box-shadow:0 24px 64px rgba(0,0,0,.35);overflow:hidden;display:flex;flex-direction:column;animation:authIn .3s ease;">
     <div style="background:linear-gradient(135deg,#583A88,#7960A2);padding:18px 24px;display:flex;align-items:center;gap:10px;flex-shrink:0;">
-      <span style="font-size:22px;">📜</span>
+      <span style="font-size:22px;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8v4l2 2M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"/></svg></span>
       <div style="flex:1;min-width:0;">
         <div style="font-size:16px;font-weight:800;color:#fff;">История загрузок</div>
         <div style="font-size:11px;color:rgba(255,255,255,.75);">Списки номенклатур по магазинам</div>
       </div>
       <button onclick="clearNlistHistory()" title="Очистить всю историю"
-        style="background:rgba(255,255,255,.15);border:none;color:#fff;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;">🗑 Очистить всё</button>
+        style="background:rgba(255,255,255,.15);border:none;color:#fff;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg> Очистить всё</button>
       <button onclick="closeNlistHistory()" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:30px;height:30px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:900;flex-shrink:0;">✕</button>
     </div>
     <div id="nlistHistoryBody" style="flex:1;overflow-y:auto;padding:14px 18px;display:flex;flex-direction:column;gap:8px;"></div>
@@ -1128,7 +1131,7 @@ button,input,select,textarea{font-family:inherit;}
 </div>
 <div class="upload-modal" id="kitDetailModal" style="max-width:780px;width:92vw;padding:0;overflow:hidden;border-radius:16px;">
   <div style="background:linear-gradient(135deg,#322C47,#7265A3);padding:20px 24px;display:flex;align-items:center;gap:12px;">
-    <span style="font-size:22px">📦</span>
+    <span style="font-size:22px"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3M12 12l8-4.5M12 12v9M12 12 4 7.5"/></svg></span>
     <div style="flex:1">
       <div id="kdm-title" style="font-size:17px;font-weight:900;color:#fff;"></div>
       <div id="kdm-desc" style="font-size:12px;color:#C5BFDC;margin-top:2px;"></div>
@@ -1141,7 +1144,7 @@ button,input,select,textarea{font-family:inherit;}
       <div style="flex:1;display:flex;align-items:center;justify-content:center;width:100%;">
         <img id="kdm-img" src="" alt="Комплект" style="max-width:100%;max-height:290px;object-fit:contain;border-radius:10px;display:none;cursor:zoom-in;" title="Нажмите для увеличения">
         <div id="kdm-no-img" style="text-align:center;color:#8073B3;font-size:13px;">
-          <div style="font-size:40px;margin-bottom:8px;">📦</div>
+          <div style="font-size:40px;margin-bottom:8px;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3M12 12l8-4.5M12 12v9M12 12 4 7.5"/></svg></div>
           Фото недоступно
         </div>
       </div>
@@ -1177,14 +1180,14 @@ button,input,select,textarea{font-family:inherit;}
       <input id="kdm-qty-input" type="number" value="1" min="1" max="99" style="width:46px;height:30px;border:1px solid #C5BFDC;border-left:none;border-right:none;text-align:center;font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;font-size:13px;font-weight:700;outline:none;">
       <button onclick="document.getElementById('kdm-qty-input').value=Math.min(99,(parseInt(document.getElementById('kdm-qty-input').value)||1)+1)" style="width:30px;height:30px;background:linear-gradient(135deg,#887BB8,#7265A3);border:none;color:#fff;border-radius:0 7px 7px 0;font-size:16px;cursor:pointer;">+</button>
     </div>
-    <button onclick="addKitDetailToCart()" style="margin-left:auto;background:linear-gradient(135deg,#887BB8,#7265A3);color:#fff;border:none;border-radius:10px;padding:10px 22px;font-family:Inter,sans-serif;font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(114,101,163,.35);">🛒 Добавить в корзину</button>
+    <button onclick="addKitDetailToCart()" style="margin-left:auto;background:linear-gradient(135deg,#887BB8,#7265A3);color:#fff;border:none;border-radius:10px;padding:10px 22px;font-family:Inter,sans-serif;font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(114,101,163,.35);"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.331 8h11.339a2 2 0 0 1 1.977 2.304l-1.255 8.152A3 3 0 0 1 15.426 21H8.574a3 3 0 0 1-2.965-2.544l-1.255-8.152A2 2 0 0 1 6.331 8zM9 11V6a3 3 0 0 1 6 0v5"/></svg> Добавить в корзину</button>
   </div>
 </div>
 
 <!-- Слаботочное оборудование Detail Modal -->
 <div class="upload-modal" id="tvDetailModal" style="max-width:700px;width:92vw;padding:0;overflow:hidden;border-radius:16px;">
   <div style="background:linear-gradient(135deg,#0c3547,#0e7490);padding:20px 24px;display:flex;align-items:center;gap:12px;">
-    <span style="font-size:22px">📡</span>
+    <span style="font-size:22px"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM17 17v.01M13 17v.01M15 13v-2M11.75 8.75a4 4 0 0 1 6.5 0M8.5 6.5a8 8 0 0 1 13 0"/></svg></span>
     <div style="flex:1">
       <div id="tdm-title" style="font-size:17px;font-weight:900;color:#fff;"></div>
       <div id="tdm-code" style="font-size:12px;color:#a5d8e8;margin-top:2px;font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;"></div>
@@ -1197,7 +1200,7 @@ button,input,select,textarea{font-family:inherit;}
       <div style="flex:1;display:flex;align-items:center;justify-content:center;width:100%;">
         <img id="tdm-img" src="" alt="" style="max-width:100%;max-height:290px;object-fit:contain;border-radius:10px;display:none;cursor:zoom-in;" title="Нажмите для увеличения">
         <div id="tdm-no-img" style="text-align:center;color:#7ab;font-size:13px;">
-          <div style="font-size:40px;margin-bottom:8px;">📷</div>
+          <div style="font-size:40px;margin-bottom:8px;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h1a2 2 0 0 0 2-2 1 1 0 0 1 1-1h6a1 1 0 0 1 1 1 2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2M9 13a3 3 0 1 0 6 0 3 3 0 0 0-6 0"/></svg></div>
           Фото недоступно
         </div>
       </div>
@@ -1236,11 +1239,11 @@ button,input,select,textarea{font-family:inherit;}
       </div>
       <!-- Кнопка совместимости -->
       <button id="tdm-compat-btn" onclick="tdmToggleCompat()" style="display:none;width:100%;height:40px;background:linear-gradient(135deg,#1a6a3a,#2a9a5a);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer;transition:all .2s;font-family:Inter,sans-serif;box-shadow:0 3px 10px rgba(42,154,90,.25);">
-        🔗 Совместимость <span id="tdm-compat-cnt" style="background:rgba(255,255,255,.2);border-radius:10px;padding:1px 8px;font-size:12px;margin-left:4px;"></span>
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 15l6-6M11 6l.463-.536a5 5 0 0 1 7.071 7.072L18 13M13 18l-.397.534a5.068 5.068 0 0 1-7.127 0 4.972 4.972 0 0 1 0-7.071L6 11"/></svg> Совместимость <span id="tdm-compat-cnt" style="background:rgba(255,255,255,.2);border-radius:10px;padding:1px 8px;font-size:12px;margin-left:4px;"></span>
       </button>
       <!-- Панель совместимости -->
       <div id="tdm-compat-panel" style="display:none;border-radius:12px;border:1.5px solid #b0e0b0;background:#f6fbf6;overflow:hidden;">
-        <div style="padding:8px 14px 4px;font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#1a6a3a;">🔗 Совместимые позиции</div>
+        <div style="padding:8px 14px 4px;font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#1a6a3a;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 15l6-6M11 6l.463-.536a5 5 0 0 1 7.071 7.072L18 13M13 18l-.397.534a5.068 5.068 0 0 1-7.127 0 4.972 4.972 0 0 1 0-7.071L6 11"/></svg> Совместимые позиции</div>
         <div id="tdm-compat-list" style="max-height:250px;overflow-y:auto;padding:4px 10px 10px;display:flex;flex-direction:column;gap:5px;"></div>
       </div>
       <!-- Количество и кнопка -->
@@ -1268,7 +1271,7 @@ button,input,select,textarea{font-family:inherit;}
   <!-- Карточка товара -->
   <div id="idm-main" style="min-width:0;flex:1;display:flex;flex-direction:column;">
   <div id="idm-header" style="background:linear-gradient(135deg,#452D6B,#7960A2);padding:20px 24px;display:flex;align-items:center;gap:12px;">
-    <span id="idm-icon" style="font-size:22px">📦</span>
+    <span id="idm-icon" style="font-size:22px"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3M12 12l8-4.5M12 12v9M12 12 4 7.5"/></svg></span>
     <div style="flex:1;min-width:0;">
       <div id="idm-title" style="font-size:17px;font-weight:900;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
       <div id="idm-code-sub" style="font-size:12px;color:#C4B9D6;margin-top:2px;font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;"></div>
@@ -1282,7 +1285,7 @@ button,input,select,textarea{font-family:inherit;}
       <div style="flex:1;display:flex;align-items:center;justify-content:center;width:100%;">
         <img id="idm-img" src="" alt="" style="max-width:100%;max-height:290px;object-fit:contain;border-radius:10px;display:none;cursor:zoom-in;" title="Нажмите для увеличения">
         <div id="idm-no-img" style="text-align:center;color:#9682B6;font-size:13px;">
-          <div style="font-size:40px;margin-bottom:8px;">📷</div>
+          <div style="font-size:40px;margin-bottom:8px;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h1a2 2 0 0 0 2-2 1 1 0 0 1 1-1h6a1 1 0 0 1 1 1 2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2M9 13a3 3 0 1 0 6 0 3 3 0 0 0-6 0"/></svg></div>
           Фото недоступно
         </div>
       </div>
@@ -1336,7 +1339,7 @@ button,input,select,textarea{font-family:inherit;}
       </div>
       <!-- Кнопка совместимости (на всю ширину) -->
       <button id="idm-compat-btn" onclick="idmToggleCompat()" style="display:none;width:100%;height:40px;background:linear-gradient(135deg,#1a6a3a,#2a9a5a);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer;transition:all .2s;font-family:Inter,sans-serif;box-shadow:0 3px 10px rgba(42,154,90,.25);">
-        🔗 Совместимость <span id="idm-compat-cnt" style="background:rgba(255,255,255,.2);border-radius:10px;padding:1px 8px;font-size:12px;margin-left:4px;"></span>
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 15l6-6M11 6l.463-.536a5 5 0 0 1 7.071 7.072L18 13M13 18l-.397.534a5.068 5.068 0 0 1-7.127 0 4.972 4.972 0 0 1 0-7.071L6 11"/></svg> Совместимость <span id="idm-compat-cnt" style="background:rgba(255,255,255,.2);border-radius:10px;padding:1px 8px;font-size:12px;margin-left:4px;"></span>
       </button>
       <!-- Кнопки добавления в корзину (на всю ширину) -->
       <div style="margin-top:auto;padding-top:16px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:10px;">
@@ -1358,7 +1361,7 @@ button,input,select,textarea{font-family:inherit;}
   <!-- Правая часть: панель комплекта (появляется при клике на тег) -->
   <div id="idm-kit-panel" style="display:none;width:380px;flex-shrink:0;border-left:2px solid #DFDCEC;background:#FAF9FC;flex-direction:column;overflow:hidden;">
     <div id="idm-kp-header" style="background:linear-gradient(135deg,#322C47,#7265A3);padding:14px 18px;display:flex;align-items:center;gap:10px;">
-      <span style="font-size:18px">📦</span>
+      <span style="font-size:18px"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3M12 12l8-4.5M12 12v9M12 12 4 7.5"/></svg></span>
       <div style="flex:1;min-width:0;">
         <div id="idm-kp-name" style="font-size:14px;font-weight:900;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
         <div id="idm-kp-desc" style="font-size:11px;color:#C5BFDC;margin-top:2px;"></div>
@@ -1389,7 +1392,7 @@ button,input,select,textarea{font-family:inherit;}
         <input id="idm-kp-qty" type="number" value="1" min="1" max="99" style="width:42px;height:28px;border:1px solid #C5BFDC;border-left:none;border-right:none;text-align:center;font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;font-size:13px;font-weight:700;outline:none;">
         <button onclick="document.getElementById('idm-kp-qty').value=Math.min(99,(parseInt(document.getElementById('idm-kp-qty').value)||1)+1)" style="width:28px;height:28px;background:linear-gradient(135deg,#887BB8,#7265A3);border:none;color:#fff;border-radius:0 7px 7px 0;font-size:15px;cursor:pointer;">+</button>
       </div>
-      <button onclick="idmKpAddToCart()" style="margin-left:auto;background:linear-gradient(135deg,#887BB8,#7265A3);color:#fff;border:none;border-radius:9px;padding:8px 16px;font-family:Inter,sans-serif;font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 3px 10px rgba(114,101,163,.3);">🛒 В корзину</button>
+      <button onclick="idmKpAddToCart()" style="margin-left:auto;background:linear-gradient(135deg,#887BB8,#7265A3);color:#fff;border:none;border-radius:9px;padding:8px 16px;font-family:Inter,sans-serif;font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 3px 10px rgba(114,101,163,.3);"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.331 8h11.339a2 2 0 0 1 1.977 2.304l-1.255 8.152A3 3 0 0 1 15.426 21H8.574a3 3 0 0 1-2.965-2.544l-1.255-8.152A2 2 0 0 1 6.331 8zM9 11V6a3 3 0 0 1 6 0v5"/></svg> В корзину</button>
     </div>
   </div>
 
@@ -1398,7 +1401,7 @@ button,input,select,textarea{font-family:inherit;}
   <!-- Панель совместимости — под карточкой на всю ширину -->
   <div id="idm-compat-panel" style="display:none;border-top:2px solid #b0e0b0;background:#f6fbf6;overflow:hidden;">
     <div style="background:linear-gradient(135deg,#1a6a3a,#2a9a5a);padding:10px 18px;display:flex;align-items:center;justify-content:space-between;">
-      <span style="color:#fff;font-size:13px;font-weight:700;">🔗 Совместимое оборудование</span>
+      <span style="color:#fff;font-size:13px;font-weight:700;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 15l6-6M11 6l.463-.536a5 5 0 0 1 7.071 7.072L18 13M13 18l-.397.534a5.068 5.068 0 0 1-7.127 0 4.972 4.972 0 0 1 0-7.071L6 11"/></svg> Совместимое оборудование</span>
       <button onclick="idmToggleCompat()" style="background:rgba(255,255,255,.2);border:none;color:#fff;width:24px;height:24px;border-radius:50%;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
     </div>
     <div id="idm-compat-list" style="max-height:250px;overflow-y:auto;padding:10px 14px 14px;display:flex;flex-direction:column;gap:6px;"></div>
@@ -1408,12 +1411,12 @@ button,input,select,textarea{font-family:inherit;}
 
 <!-- Kits Upload Modal -->
 <div class="upload-modal" id="kitsUploadModal">
-  <h2>📦 Загрузить комплекты</h2>
+  <h2><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3M12 12l8-4.5M12 12v9M12 12 4 7.5"/></svg> Загрузить комплекты</h2>
   <p>Выберите Excel-файл с вкладкой <strong>«Комплекты»</strong>.<br>
   Колонки: <strong>A</strong> Код комплекта · <strong>B</strong> Название · <strong>C</strong> Описание<br>
   <strong>D</strong> Код товара · <strong>E</strong> Наименование товара · <strong>F</strong> Кол-во</p>
   <div class="drop-zone" id="kitsDropZone" onclick="document.getElementById('kitsFileInput').click()">
-    <div class="drop-zone-icon">📂</div>
+    <div class="drop-zone-icon"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2"/></svg></div>
     <div class="drop-zone-title">Перетащите файл сюда</div>
     <div class="drop-zone-sub">или нажмите для выбора</div>
     <input type="file" id="kitsFileInput" accept=".xlsx,.xls" style="display:none">
@@ -1434,15 +1437,15 @@ button,input,select,textarea{font-family:inherit;}
 <!-- Cart Panel -->
 <div class="cart-panel" id="cartPanel">
   <div class="cart-header">
-    <h2>🛒 Корзина заказа</h2>
+    <h2><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.331 8h11.339a2 2 0 0 1 1.977 2.304l-1.255 8.152A3 3 0 0 1 15.426 21H8.574a3 3 0 0 1-2.965-2.544l-1.255-8.152A2 2 0 0 1 6.331 8zM9 11V6a3 3 0 0 1 6 0v5"/></svg> Корзина заказа</h2>
     <div style="display:flex;align-items:center;gap:8px;">
-      <button class="clear-cart-btn" id="clearCartBtn" onclick="clearCart()" title="Очистить корзину" style="display:none;">🗑 Очистить</button>
+      <button class="clear-cart-btn" id="clearCartBtn" onclick="clearCart()" title="Очистить корзину" style="display:none;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg> Очистить</button>
       <button onclick="exportCartToExcel()" title="Выгрузить корзину в Excel" style="background:linear-gradient(135deg,#1a7a3a,#2aaa5a);color:#fff;border:none;border-radius:8px;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:Inter,sans-serif;transition:all .2s;white-space:nowrap;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''"><span class="lottie-icon" id="lottie-cart-excel" style="width:16px;height:16px;"></span> Excel</button>
       <button class="close-btn" onclick="closeCart()">✕</button>
     </div>
   </div>
   <div class="cart-items" id="cartItems">
-    <div class="cart-empty"><div class="cart-empty-icon">🛒</div>Корзина пуста.<br>Добавьте позиции из каталога.</div>
+    <div class="cart-empty"><div class="cart-empty-icon"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.331 8h11.339a2 2 0 0 1 1.977 2.304l-1.255 8.152A3 3 0 0 1 15.426 21H8.574a3 3 0 0 1-2.965-2.544l-1.255-8.152A2 2 0 0 1 6.331 8zM9 11V6a3 3 0 0 1 6 0v5"/></svg></div>Корзина пуста.<br>Добавьте позиции из каталога.</div>
   </div>
   <div class="cart-form">
     <div class="cart-summary"><span>Позиций в заказе:</span><strong id="cartTotal">0</strong>&nbsp;&nbsp;<span style="font-size:12px;color:var(--text3);">Итого единиц:</span><strong id="cartTotalQty" style="font-size:15px;color:var(--text2);">0</strong></div>
@@ -1472,16 +1475,16 @@ button,input,select,textarea{font-family:inherit;}
 </div>
 
 <div class="modal" id="successModal">
-  <div class="modal-icon">✅</div><h2>Заявка отправлена!</h2>
+  <div class="modal-icon"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0M9 12l2 2 4-4"/></svg></div><h2>Заявка отправлена!</h2>
   <p id="successMsg">Заказ сформирован.</p>
   <button class="modal-btn" onclick="closeModal()">Отлично!</button>
 </div>
 
 <div class="upload-modal" id="uploadModal">
-  <h2>🔄 Обновить каталог</h2>
+  <h2><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11A8.1 8.1 0 0 0 4.5 9M4 5v4h4M4 13a8.1 8.1 0 0 0 15.5 2M20 19v-4h-4"/></svg> Обновить каталог</h2>
   <p>Выберите актуальный файл Excel.<br>Каталог пересчитается — корзина сохранится.</p>
   <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
-    <div class="drop-zone-icon">📂</div>
+    <div class="drop-zone-icon"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2"/></svg></div>
     <div class="drop-zone-title">Нажмите или перетащите файл</div>
     <div class="drop-zone-sub">Список_оборудования_*.xlsx</div>
   </div>
@@ -1505,12 +1508,17 @@ function npIcon(cat){
   else if(c.indexOf('\u044e\u0432\u0435\u043b\u0438\u0440')>=0) k='diamond';
   else if(c.indexOf('\u0440\u0435\u043a\u043b\u0430\u043c')>=0) k='speaker';
   else if(c.indexOf('\u043a\u0430\u043d\u0446\u0435\u043b')>=0) k='clip';
+  else if(c==='karikids') k='balloon';
+  else if(c==='consum') k='tool';
   else if(c.indexOf('\u0441\u0432\u0435\u0442')>=0||c==='light') k='bulb';
   else if(c.indexOf('\u0441\u043b\u0430\u0431\u043e\u0442')>=0||c==='tv') k='router';
   else if(/(^|\s)\u0438\u0442(\s|$)/.test(c)) k='desktop';
   return '<svg class="np-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="'+NP_ICONS[k]+'"/></svg>';
 }
-var APP_VERSION = '1.79';
+/* v1.80: общий набор контурных иконок (тот же, что в мобильном) вместо эмодзи */
+var IC={"hanger": "M14 6a2 2 0 1 0-4 0c0 1.667.67 3 2 4h-.008l7.971 4.428a2 2 0 0 1 1.029 1.749V17a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-.823a2 2 0 0 1 1.029-1.749L12 10", "diamond": "M6 5h12l3 5-8.5 9.5a.7.7 0 0 1-1 0L3 10l3-5M10 12 8 9.8l.6-1", "balloon": "M14 8a2 2 0 0 0-2-2M6 8a6 6 0 1 1 12 0c0 4.97-2.686 9-6 9s-6-4.03-6-9M12 17v1a2 2 0 0 1-2 2H7a2 2 0 0 0-2 2", "speaker": "M18 8a3 3 0 0 1 0 6M10 8v11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1v-5M12 8l4.524-3.77A.9.9 0 0 1 18 4.922v12.156a.9.9 0 0 1-1.476.692L12 14H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h8", "clip": "M15 7l-6.5 6.5a1.5 1.5 0 0 0 3 3L18 10a3 3 0 0 0-6-6l-6.5 6.5a4.5 4.5 0 0 0 9 9L21 13", "bulb": "M3 12h1m8-9v1m8 8h1M5.6 5.6l.7.7m12.1-.7-.7.7M9 16a5 5 0 1 1 6 0 3.5 3.5 0 0 0-1 3 2 2 0 0 1-4 0 3.5 3.5 0 0 0-1-3M9.7 17h4.6", "router": "M3 15a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM17 17v.01M13 17v.01M15 13v-2M11.75 8.75a4 4 0 0 1 6.5 0M8.5 6.5a8 8 0 0 1 13 0", "desktop": "M3 5a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1zM7 20h10M9 16v4M15 16v4", "box": "M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3M12 12l8-4.5M12 12v9M12 12 4 7.5", "search": "M3 10a7 7 0 1 0 14 0 7 7 0 1 0-14 0M21 21l-6-6", "camera": "M5 7h1a2 2 0 0 0 2-2 1 1 0 0 1 1-1h6a1 1 0 0 1 1 1 2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2M9 13a3 3 0 1 0 6 0 3 3 0 0 0-6 0", "download": "M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 11l5 5 5-5M12 4v12", "upload": "M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 9l5-5 5 5M12 4v12", "link": "M9 15l6-6M11 6l.463-.536a5 5 0 0 1 7.071 7.072L18 13M13 18l-.397.534a5.068 5.068 0 0 1-7.127 0 4.972 4.972 0 0 1 0-7.071L6 11", "bag": "M6.331 8h11.339a2 2 0 0 1 1.977 2.304l-1.255 8.152A3 3 0 0 1 15.426 21H8.574a3 3 0 0 1-2.965-2.544l-1.255-8.152A2 2 0 0 1 6.331 8zM9 11V6a3 3 0 0 1 6 0v5", "tool": "M7 10h3V7L6.5 3.5a6 6 0 0 1 8 8l6 6a2 2 0 0 1-3 3l-6-6a6 6 0 0 1-8-8L7 10", "store": "M3 21h18M3 7v1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7H3l2-4h14l2 4M5 21V10.85M19 21V10.85M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4", "clipboard": "M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2zM9 12h6M9 16h6", "folder": "M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2", "history": "M12 8v4l2 2M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5", "trash": "M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3", "mail": "M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 7l9 6 9-6", "user": "M8 7a4 4 0 1 0 8 0 4 4 0 0 0-8 0M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2", "alert": "M12 9v4M10.363 3.591 2.257 17.125a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636-2.87L13.637 3.59a1.914 1.914 0 0 0-3.274 0zM12 16h.01", "refresh": "M20 11A8.1 8.1 0 0 0 4.5 9M4 5v4h4M4 13a8.1 8.1 0 0 0 15.5 2M20 19v-4h-4", "check": "M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0M9 12l2 2 4-4", "list": "M9 6h11M9 12h11M9 18h11M5 6v.01M5 12v.01M5 18v.01", "photo": "M15 8h.01M3 6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3zM3 16l5-5c.928-.893 2.072-.893 3 0l5 5M14 14l1-1c.928-.893 2.072-.893 3 0l3 3", "question": "M8 8a3.5 3 0 0 1 3.5-3h1A3.5 3 0 0 1 16 8a3 3 0 0 1-2 3 3 4 0 0 0-2 4M12 19v.01"};
+function ic(n){return '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="'+(IC[n]||IC.box)+'"/></svg>';}
+var APP_VERSION = '1.80';
 // При каждом обновлении index.html — менять только эту строку (1.17, 1.18 и т.д.)
 (function(){
   var el = document.getElementById('appVersionBadge');
@@ -1784,11 +1792,7 @@ var CAT_COLORS={
   "Слаботочное оборудование":"#5a8a3a",
   "Неизвестное оборудование":"#7a7e90"
 };
-var CAT_ICONS={
-  "Торговое оборудование":"🏪","Рекламные материалы":"📢","Строительные материалы":"🏗️",
-  "Канцелярия":"📎","Ювелирное оборудование":"💎","Материалы для оборудования":"⚙️",
-  "ИТ оборудование":"💻","Слаботочное оборудование":"📺","Неизвестное оборудование":"❓"
-};
+var CAT_ICONS={};
 var CAT_ORDER=["Торговое оборудование","Рекламные материалы","Строительные материалы","Канцелярия","Ювелирное оборудование","Материалы для оборудования","ИТ оборудование","Неизвестное оборудование"];
 var GRP_T=["MaterTO","MaterSHOP","MaterTula","MaterSORT","Materials"];
 var GRP_R=["MaterRek","materRek","MaterDECOR","materDECOR","MaterZBL","MaterialAD","MaterCATAL","materCATAL","MaterPromo"];
@@ -2086,7 +2090,7 @@ function applyTvFilters(){
     tvB.classList.add('is-empty');
     var em = document.createElement('div');
     em.style.cssText = 'text-align:center;padding:40px;color:var(--text3);font-size:14px';
-    em.textContent = (tvMode==='consum' && !basePool.length) ? '🧰 Расходные материалы пока не отмечены в справочнике' : '🔍 Ничего не найдено';
+    em.textContent = (tvMode==='consum' && !basePool.length) ? 'Расходные материалы пока не отмечены в справочнике' : 'Ничего не найдено';
     tvB.appendChild(em);
     buildPager('tvPager', 1, 1, null);
   } else { tvB.classList.remove('is-empty'); renderTvPage(1); }
@@ -2120,12 +2124,12 @@ function renderTvPage(page){
 
     var imgUrl = getImgUrl(it);
     if(imgUrl){
-      var phIcon = tvMode==='consum' ? '🧰' : '📺';
+      var phIcon = npIcon(tvMode==='consum' ? 'consum' : 'tv');
       var img = document.createElement('img'); img.className = 'product-tile-photo'; img.src = imgUrl; img.loading = 'lazy';
       img.onerror = function(){ this.outerHTML = '<div class="product-tile-photo-placeholder">'+phIcon+'</div>'; };
       tile.appendChild(img);
     } else {
-      var ph = document.createElement('div'); ph.className = 'product-tile-photo-placeholder'; ph.textContent = tvMode==='consum' ? '🧰' : '📺';
+      var ph = document.createElement('div'); ph.className = 'product-tile-photo-placeholder'; ph.innerHTML = npIcon(tvMode==='consum' ? 'consum' : 'tv');
       tile.appendChild(ph);
     }
 
@@ -2437,11 +2441,7 @@ var IDM_HEADER_COLORS = {
   'light':                       'linear-gradient(135deg,#5a3a00,#c07000)',
   'karikids':                    'linear-gradient(135deg,#6a1010,#c03030)'
 };
-var IDM_HEADER_ICONS = {
-  'Торговое оборудование':'🏪','Рекламные материалы':'📢','Строительные материалы':'🏗️',
-  'Канцелярия':'📎','Ювелирное оборудование':'💎','Материалы для оборудования':'⚙️',
-  'ИТ оборудование':'💻','Неизвестное оборудование':'❓','light':'💡','karikids':'👧'
-};
+var IDM_HEADER_ICONS = {};
 
 function idmToggleAnalogs(){
   var panel = document.getElementById('idm-analogs-panel');
@@ -2512,10 +2512,9 @@ function openItemDetail(item, cartKeyPrefix, keepKitPanel) {
   // Заголовок с цветом по разделу
   var cat = item.cat || (prefix === 'L:' ? 'light' : '');
   var hdrColor = IDM_HEADER_COLORS[cat] || 'linear-gradient(135deg,#452D6B,#7960A2)';
-  var hdrIcon  = IDM_HEADER_ICONS[cat]  || '📦';
   var hdr = document.getElementById('idm-header');
   hdr.style.background = hdrColor;
-  document.getElementById('idm-icon').textContent = hdrIcon;
+  document.getElementById('idm-icon').innerHTML = npIcon(cat);
   document.getElementById('idm-title').textContent = item.name;
   document.getElementById('idm-code-sub').textContent = item.code;
   document.getElementById('idm-code-big').textContent = item.code || '—';
@@ -2532,7 +2531,7 @@ function openItemDetail(item, cartKeyPrefix, keepKitPanel) {
   var ce = document.getElementById('idm-cat');
   if(cat){
     var st = SECTION_BADGE_STYLES[cat] || {color:'#555',bg:'#eee'};
-    var label = SECTION_LABELS[cat] || ((IDM_HEADER_ICONS[cat]||'') + ' ' + cat);
+    var label = SECTION_LABELS[cat] || cat;
     ce.textContent = label;
     ce.style.cssText = 'display:inline-flex;align-items:center;padding:5px 14px;border-radius:20px;'
       + 'font-size:13px;font-weight:700;border:1.5px solid '+st.color+';'
@@ -2769,9 +2768,9 @@ function idmFillCompat(code){
     nameEl.style.cssText='font-size:12px;font-weight:500;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0;';
 
     // Иконка типа связи
-    var typeIcon = link.type==='заменяет'?'🔄':link.type==='требует'?'⚠️':'🔗';
+    var typeIcon = link.type==='заменяет'?'refresh':link.type==='требует'?'alert':'link';
     var ico = document.createElement('span');
-    ico.textContent=typeIcon;
+    ico.innerHTML=ic(typeIcon);
     ico.title=(link.type||'подходит');
     ico.style.cssText='font-size:13px;flex-shrink:0;';
 
@@ -2929,7 +2928,7 @@ function idmKpAddToCart(){
   });
   cart['KIT_'+kit.id] = {_kitGroup:true, kitId:kit.id, kitName:kit.name};
   updCart(); renderKitsTable();
-  showToast('✅ ' + kit.name + ' ×' + mult + ' → корзина', 'ok');
+  showToast('' + kit.name + ' ×' + mult + ' → корзина', 'ok');
 }
 
 function idmChangeQty(delta){
@@ -2946,7 +2945,7 @@ function idmAddToCart(){
 
   if(prefix === 'L:'){
     // Световое
-    cart[key] = { item:{code:item.code,name:item.name,cat:'💡 Световое оборудование',thumb:item.thumb||'',img:item.img||''}, qty:qty };
+    cart[key] = { item:{code:item.code,name:item.name,cat:'Световое оборудование',thumb:item.thumb||'',img:item.img||''}, qty:qty };
     var btn2 = document.getElementById('lab-'+item.code);
     var row2 = document.getElementById('lrow-'+CSS.escape(item.code));
     if(btn2){ btn2.className='add-btn added'; btn2.textContent='✓'; }
@@ -3400,7 +3399,7 @@ function applyFilters(){
     tBody.classList.add('is-empty');
     var em=document.createElement("div");
     em.style.cssText="text-align:center;padding:40px;color:var(--text3);font-size:14px";
-    em.textContent="🔍 Ничего не найдено";
+    em.textContent="Ничего не найдено";
     tBody.appendChild(em);
     buildPager('tablePager', 1, 1, null);
   }else{ tBody.classList.remove('is-empty'); renderNextPage(1); }
@@ -3421,12 +3420,12 @@ var SECTION_BADGE_STYLES = {
   'karikids':                   {color:'#8a1010',bg:'#fce0e0'}
 };
 var SECTION_LABELS = {
-  'light':'💡 Световое', 'karikids':'👧 Кари Кидс'
+  'light':'Световое', 'karikids':'Кари Кидс'
 };
 function makeSectionBadge(cat){
   if(!cat) return null;
   var st = SECTION_BADGE_STYLES[cat] || {color:'#555',bg:'#eee'};
-  var label = SECTION_LABELS[cat] || ((IDM_HEADER_ICONS[cat]||'') + ' ' + cat);
+  var label = SECTION_LABELS[cat] || cat;
   var span = document.createElement('span');
   span.className = 'td-section-badge';
   span.textContent = label;
@@ -3600,7 +3599,7 @@ function renderNextPage(page){
       }
 
       var kBody=document.createElement("div");kBody.className="product-tile-body";
-      var kBadge=document.createElement("div");kBadge.className="product-tile-code";kBadge.textContent="📦 Комплект";
+      var kBadge=document.createElement("div");kBadge.className="product-tile-code";kBadge.textContent="Комплект";
       var kName=document.createElement("div");kName.className="product-tile-name";kName.textContent=kit.name;
       kBody.appendChild(kBadge);kBody.appendChild(kName);
       if(kit.desc){
@@ -3711,7 +3710,7 @@ function summarySuffix(list, hasPhotoFn, cartKeyFn){
     var k=cartKeyFn(it);
     if(k && cart[k]) inCart++;
   });
-  return ' · 🖼 без фото '+noPhoto.toLocaleString('ru')+' · 🛒 в корзине '+inCart.toLocaleString('ru');
+  return ' · без фото '+noPhoto.toLocaleString('ru')+' · в корзине '+inCart.toLocaleString('ru');
 }
 function catalogCartKey(it){ return it.code; }
 
@@ -3795,7 +3794,7 @@ function applyLightFilters(){
     lBody.classList.add('is-empty');
     var em=document.createElement("div");
     em.style.cssText="text-align:center;padding:40px;color:var(--text3);font-size:14px";
-    em.textContent="🔍 Ничего не найдено";
+    em.textContent="Ничего не найдено";
     lBody.appendChild(em);
     buildPager('lightPager', 1, 1, null);
   }else{ lBody.classList.remove('is-empty'); renderLightPage(1); }
@@ -3829,10 +3828,10 @@ function renderLightPage(page){
     var imgUrl=getImgUrl(it);
     if(imgUrl){
       var img=document.createElement("img");img.className="product-tile-photo";img.src=imgUrl;img.loading="lazy";
-      img.onerror=function(){this.outerHTML='<div class="product-tile-photo-placeholder">🖼️</div>';};
+      img.onerror=function(){this.outerHTML='<div class="product-tile-photo-placeholder">'+npIcon('light')+'</div>';};
       tile.appendChild(img);
     }else{
-      var ph=document.createElement("div");ph.className="product-tile-photo-placeholder";ph.textContent="🖼️";
+      var ph=document.createElement("div");ph.className="product-tile-photo-placeholder";ph.innerHTML=npIcon('light');
       tile.appendChild(ph);
     }
 
@@ -3947,8 +3946,8 @@ dz.addEventListener("drop",function(e){
 });
 
 function processFile(file){
-  document.getElementById("updateIcon").innerHTML="<span class='spin'>⏳</span>";
-  showToast("📂 Читаем "+file.name+"…","info");
+  document.getElementById("updateIcon").innerHTML="<span class='spin'>"+ic('refresh')+"</span>";
+  showToast("Читаем "+file.name+"…","info");
   var reader=new FileReader();
   reader.onload=function(ev){
     try{
@@ -4044,10 +4043,10 @@ function processFile(file){
         delete obj["Кари Кидс"]; // убираем чтобы не дублировать если не в CAT_ORDER
       }
 
-      loadCatalog(obj,"✅ "+file.name+" · "+total.toLocaleString("ru")+" позиций · "+ts);
-      showToast("✅ Каталог обновлён — "+total.toLocaleString("ru")+" позиций","success");
-    }catch(err){showToast("❌ Ошибка: "+err.message,"error");console.error(err);}
-    finally{document.getElementById("updateIcon").textContent="🔄";}
+      loadCatalog(obj,""+file.name+" · "+total.toLocaleString("ru")+" позиций · "+ts);
+      showToast("Каталог обновлён — "+total.toLocaleString("ru")+" позиций","success");
+    }catch(err){showToast("Ошибка: "+err.message,"error");console.error(err);}
+    finally{document.getElementById("updateIcon").innerHTML=ic('refresh');}
   };
   reader.readAsArrayBuffer(file);
 }
@@ -4117,7 +4116,7 @@ function markCatalogStale(isStale){
 
 function updateFromGitHub(){
   var icon = document.getElementById('updateIcon');
-  icon.innerHTML = "<span class='spin' style='font-size:14px;'>⏳</span>";
+  icon.innerHTML = "<span class='spin' style='font-size:14px;'>"+ic('refresh')+"</span>";
 
   var pTree = fetchGitHubTree();
   var pXlsx = loadGitHubXlsx();
@@ -4129,8 +4128,8 @@ function updateFromGitHub(){
 
       // Если xlsx не загрузился — это критическая ошибка, сообщаем и выходим
       if(xlsxResult.status === 'rejected'){
-        showToast('❌ Ошибка загрузки каталога: ' + xlsxResult.reason.message, 'error');
-        icon.textContent = '☁️';
+        showToast('Ошибка загрузки каталога: ' + xlsxResult.reason.message, 'error');
+        icon.innerHTML = ic('refresh');
         return;
       }
       var xlsxInfo = xlsxResult.value;
@@ -4203,21 +4202,21 @@ function updateFromGitHub(){
 
       // Собираем строки с флагами ok/error для отображения галочек/крестиков
       var lines = [];
-      lines.push({ ok: true,             icon: '📊', text: 'Каталог xlsx: ' + xlsxInfo });
-      lines.push({ ok: oborudCnt > 0,   icon: '🏪', text: 'Оборудование: ' + oborudCnt + ' фото' });
-      lines.push({ ok: reklamCnt > 0,   icon: '🎨', text: 'Рекламные: ' + reklamCnt + ' фото' });
-      lines.push({ ok: complectCnt > 0, icon: '📦', text: 'Комплекты: ' + complectCnt + ' фото' });
-      lines.push({ ok: svetCnt > 0,     icon: '💡', text: 'Световое: ' + svetCnt + ' фото' });
-      lines.push({ ok: slabCnt > 0,     icon: '📺', text: 'Слаботочное: ' + slabCnt + ' фото' });
-      lines.push({ ok: uvelirCnt > 0,   icon: '💎', text: 'Ювелирное: ' + uvelirCnt + ' фото' });
-      lines.push({ ok: itCnt > 0,       icon: '💻', text: 'ИТ оборудование: ' + itCnt + ' фото' });
-      lines.push({ ok: cancelCnt > 0,   icon: '📎', text: 'Канцелярия: ' + cancelCnt + ' фото' });
+      lines.push({ ok: true,             icon: ic('list'), text: 'Каталог xlsx: ' + xlsxInfo });
+      lines.push({ ok: oborudCnt > 0,   icon: ic('store'), text: 'Оборудование: ' + oborudCnt + ' фото' });
+      lines.push({ ok: reklamCnt > 0,   icon: ic('speaker'), text: 'Рекламные: ' + reklamCnt + ' фото' });
+      lines.push({ ok: complectCnt > 0, icon: ic('box'), text: 'Комплекты: ' + complectCnt + ' фото' });
+      lines.push({ ok: svetCnt > 0,     icon: ic('bulb'), text: 'Световое: ' + svetCnt + ' фото' });
+      lines.push({ ok: slabCnt > 0,     icon: ic('router'), text: 'Слаботочное: ' + slabCnt + ' фото' });
+      lines.push({ ok: uvelirCnt > 0,   icon: ic('diamond'), text: 'Ювелирное: ' + uvelirCnt + ' фото' });
+      lines.push({ ok: itCnt > 0,       icon: ic('desktop'), text: 'ИТ оборудование: ' + itCnt + ' фото' });
+      lines.push({ ok: cancelCnt > 0,   icon: ic('clip'), text: 'Канцелярия: ' + cancelCnt + ' фото' });
       if(treeError){
-        lines.push({ ok: false, icon: '⚠️', text: 'Список файлов с GitHub: ' + treeError.message + ' — фото могли не обновиться' });
+        lines.push({ ok: false, icon: ic('alert'), text: 'Список файлов с GitHub: ' + treeError.message + ' — фото могли не обновиться' });
       }
       markCatalogStale(!!treeError);
       showGitHubToast(lines);
-      icon.textContent = '☁️';
+      icon.innerHTML = ic('refresh');
     });
 }
 
@@ -4415,7 +4414,7 @@ function loadGitHubXlsx(){
         delete obj['Кари Кидс'];
       }
       var ts = new Date().toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
-      loadCatalog(obj, '✅ GitHub · ' + total.toLocaleString('ru') + ' позиций · ' + ts);
+      loadCatalog(obj, 'GitHub · ' + total.toLocaleString('ru') + ' позиций · ' + ts);
       return total.toLocaleString('ru') + ' позиций, ' + wb.SheetNames.length + ' листов';
     });
 }
@@ -4437,7 +4436,7 @@ function showGitHubToast(lines){
   header.style.cssText = 'background:linear-gradient(135deg,#1e4d1e,#2a6a2a);'
     + 'padding:12px 42px 12px 18px;display:flex;align-items:center;gap:10px;'
     + 'border-bottom:1px solid rgba(255,255,255,.08);';
-  header.innerHTML = '<span style="font-size:18px;">☁️</span>'
+  header.innerHTML = '<span style="font-size:18px;">'+ic('refresh')+'</span>'
     + '<span style="font-size:14px;font-weight:800;letter-spacing:-.2px;">Обновление с GitHub</span>';
   div.appendChild(header);
 
@@ -4476,7 +4475,7 @@ function showGitHubToast(lines){
 
     // Emoji категории
     var catIcon = document.createElement('span');
-    catIcon.textContent = line.icon;
+    catIcon.innerHTML = line.icon;
     catIcon.style.cssText = 'flex-shrink:0;font-size:14px;';
 
     // Текст
@@ -4535,7 +4534,7 @@ function togLight(item){
   if(cart[key]){delete cart[key];}
   else{
     var inp=document.getElementById("lqty-"+item.code);
-    cart[key]={item:{code:item.code,name:item.name,cat:'💡 Световое оборудование',thumb:item.thumb,img:item.img},qty:inp?Math.max(1,parseInt(inp.value)||1):1};
+    cart[key]={item:{code:item.code,name:item.name,cat:'Световое оборудование',thumb:item.thumb,img:item.img},qty:inp?Math.max(1,parseInt(inp.value)||1):1};
   }
   var btn=document.getElementById("lab-"+item.code),row=document.getElementById("lrow-"+CSS.escape(item.code));
   if(btn){btn.classList.toggle("added",!!cart[key]);btn.textContent=cart[key]?"✓":"+";}
@@ -4566,7 +4565,7 @@ function clearCart(){
   if(typeof renderKitsTable==='function') renderKitsTable();
   // Перерисовать TV-раздел для сброса кнопок
   if(typeof applyTvFilters==='function') applyTvFilters();
-  showToast('🗑 Корзина очищена','ok');
+  showToast('Корзина очищена','ok');
 }
 
 function updCart(){
@@ -4579,7 +4578,7 @@ function updCart(){
   if(clearBtn) clearBtn.style.display=keys.length?'flex':'none';
   var c=document.getElementById("cartItems");
   if(!keys.length){
-    c.innerHTML='<div class="cart-empty"><div class="cart-empty-icon">🛒</div>Корзина пуста.<br>Добавьте позиции из каталога.</div>';
+    c.innerHTML='<div class="cart-empty"><div class="cart-empty-icon">'+ic('bag')+'</div>Корзина пуста.<br>Добавьте позиции из каталога.</div>';
     return;
   }
   c.innerHTML="";
@@ -4600,7 +4599,7 @@ function updCart(){
   Object.keys(kitGroups).forEach(function(kitId){
     var grp=kitGroups[kitId];
     var hdr=document.createElement('div');hdr.className='cart-kit-header';
-    hdr.innerHTML='📦 <strong>'+escHtml(grp.name)+'</strong> ×'+grp.mult;
+    hdr.innerHTML=ic('box')+' <strong>'+escHtml(grp.name)+'</strong> ×'+grp.mult;
     c.appendChild(hdr);
     grp.keys.forEach(function(key){
       if(cart[key]._kitGroup) return;
@@ -4643,11 +4642,11 @@ function updCart(){
         } else if(val<expected){
           warn.style.display='block';
           warn.style.color='#d97706';
-          warn.textContent='⚠️ Количество меньше состава стеллажа (норма: '+expected+' шт)';
+          warn.textContent='Количество меньше состава стеллажа (норма: '+expected+' шт)';
         } else if(val>expected){
           warn.style.display='block';
           warn.style.color='#d97706';
-          warn.textContent='⚠️ Количество больше состава стеллажа (норма: '+expected+' шт)';
+          warn.textContent='Количество больше состава стеллажа (норма: '+expected+' шт)';
         } else {
           warn.style.display='none';
         }
@@ -4735,7 +4734,7 @@ function sendOrder(){
   var kitKeys2=Object.keys(cart).filter(function(k){return cart[k].kitId;});
   var regKeys2=Object.keys(cart).filter(function(k){return !cart[k].kitId;});
   if(kitKeys2.length){
-    body+="[📦 КОМПЛЕКТЫ]\n";
+    body+="[КОМПЛЕКТЫ]\n";
     var kg={};
     kitKeys2.forEach(function(k){var e=cart[k];if(!kg[e.kitId])kg[e.kitId]={name:e.kitName,mult:e.kitMult,items:[]};kg[e.kitId].items.push(e);});
     Object.keys(kg).forEach(function(id){var g=kg[id];body+="  Комплект "+id+" — "+g.name+" × "+g.mult+"\n";g.items.forEach(function(e){body+="    "+e.code+"  |  "+e.name+"  |  Кол-во: "+e.qty+"\n";});});
@@ -4833,7 +4832,7 @@ function sendToAdminDir(){
     + "&body="    + encodeURIComponent(body);
 
   window.location.href = mailto;
-  showToast("👔 Outlook открыт — письмо директору", "ok");
+  showToast("Outlook открыт — письмо директору", "ok");
 }
 
 var toastTimer;
@@ -4906,9 +4905,9 @@ function handleKitsFile(file){
       var rows = XLSX.utils.sheet_to_json(ws, {header:1, defval:''});
       parseKitsRows(rows);
       closeKitsUploadModal();
-      showToast('✅ Комплекты загружены: ' + allKits.length, 'ok');
+      showToast('Комплекты загружены: ' + allKits.length, 'ok');
     } catch(err){
-      showToast('❌ Ошибка: ' + err.message, 'err');
+      showToast('Ошибка: ' + err.message, 'err');
     }
   };
   reader.readAsArrayBuffer(file);
@@ -5153,7 +5152,7 @@ function renderKitsTable(page){
     grid.classList.add('is-empty');
     var em = document.createElement('div');
     em.style.cssText = 'text-align:center;padding:40px;color:var(--text3);font-size:14px';
-    em.textContent = '🔍 Ничего не найдено';
+    em.textContent = 'Ничего не найдено';
     grid.appendChild(em);
     buildPager('kitsPager', 1, 1, null);
     return;
@@ -5241,7 +5240,7 @@ function togKitCart(kitId, qtyOverride){
   if(kAllBtn){kAllBtn.classList.toggle('added',!!cart[key]);kAllBtn.textContent=cart[key]?'✓':'+';}
   if(kAllRow){kAllRow.classList.toggle('in-cart',!!cart[key]);}
   updCart();
-  showToast(cart[key] ? '📦 «'+kit.name+'» добавлен' : '🗑 «'+kit.name+'» убран', 'ok');
+  showToast(cart[key] ? '«'+kit.name+'» добавлен' : '«'+kit.name+'» убран', 'ok');
 }
 
 // drag-drop для загрузки
@@ -5408,7 +5407,7 @@ function exportToExcel(section){
   var a = document.createElement('a'); a.href=url; a.download=filename;
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   URL.revokeObjectURL(url);
-  showToast('📥 Выгружено '+data.length.toLocaleString('ru')+' позиций','ok');
+  showToast('Выгружено '+data.length.toLocaleString('ru')+' позиций','ok');
 }
 
 function exportCartToExcel(){
@@ -5515,7 +5514,7 @@ function exportCartToExcel(){
   var a = document.createElement('a'); a.href=url; a.download=filename;
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   URL.revokeObjectURL(url);
-  showToast('📥 Корзина выгружена: '+rows.length+' позиций','ok');
+  showToast('Корзина выгружена: '+rows.length+' позиций','ok');
 }
 
 // Minimal ZIP builder (no compression, store only)
@@ -5655,7 +5654,7 @@ function fbSend(){
     +'&body='+encodeURIComponent(body);
   window.open(mailto,'_self');
   closeFeedback();
-  showToast('📨 Outlook открыт для отправки','ok');
+  showToast('Outlook открыт для отправки','ok');
 }
 // Закрыть выпадашку при клике вне
 document.addEventListener('click',function(e){
@@ -5741,7 +5740,7 @@ function updateNlistShopBadge(){
   if(!badge) return;
   if(nlistCurrentShop){
     badge.style.display = 'inline-block';
-    badge.textContent = '🏬 Магазин №' + nlistCurrentShop;
+    badge.textContent = 'Магазин №' + nlistCurrentShop;
   } else {
     badge.style.display = 'none';
   }
@@ -5797,7 +5796,7 @@ function renderNlist(){
     } else {
       var ph = document.createElement('div');
       ph.className = 'light-thumb-placeholder';
-      ph.textContent = found ? '📦' : '❓';
+      ph.innerHTML = found ? npIcon('') : ic('question');
       ph.title = found ? '' : 'Не найдено в каталоге';
       tdImg.appendChild(ph);
     }
@@ -5922,8 +5921,8 @@ function loadNlistFile(file, shopNumber){
       _nsortArrows();
       renderNlist();
 
-      var msg = '📋 Магазин №' + nlistCurrentShop + ' · загружено ' + nlistItems.length + ' кодов';
-      if(notFound) msg += ' · ❓ не найдено: ' + notFound;
+      var msg = 'Магазин №' + nlistCurrentShop + ' · загружено ' + nlistItems.length + ' кодов';
+      if(notFound) msg += ' · не найдено: ' + notFound;
       showToast(msg, foundCnt ? 'ok' : 'error');
 
       // Запоминаем загрузку в истории (привязана к номеру магазина)
@@ -5944,7 +5943,7 @@ function openNlistShopModal(file){
   if(!file) return;
   nlistPendingFile = file;
   var label = document.getElementById('nlistShopFileLabel');
-  if(label) label.textContent = '📄 ' + file.name;
+  if(label) label.textContent = '' + file.name;
   var inp = document.getElementById('nlistShopInput');
   if(inp) inp.value = nlistCurrentShop || '';
   var err = document.getElementById('nlistShopError');
@@ -5964,7 +5963,7 @@ function confirmNlistShopModal(){
   var err = document.getElementById('nlistShopError');
   var shop = inp ? inp.value.trim() : '';
   if(!shop){
-    if(err) err.textContent = '❌ Введите номер магазина — это обязательное поле';
+    if(err) err.textContent = 'Введите номер магазина — это обязательное поле';
     if(inp) inp.focus();
     return;
   }
@@ -6073,7 +6072,7 @@ function renderNlistHistory(){
     openBtn.style.cssText = 'background:linear-gradient(135deg,#583A88,#7960A2);color:#fff;border:none;border-radius:7px;padding:7px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;';
     openBtn.onclick = (function(id){ return function(){ restoreNlistFromHistory(id); }; })(h.id);
     var delBtn = document.createElement('button');
-    delBtn.textContent = '🗑';
+    delBtn.innerHTML = ic('trash');
     delBtn.title = 'Удалить запись';
     delBtn.style.cssText = 'background:var(--btn-close);color:#fff;border:none;border-radius:7px;width:30px;font-size:12px;cursor:pointer;';
     delBtn.onclick = (function(id){ return function(){ removeNlistHistoryEntry(id); }; })(h.id);
@@ -6099,7 +6098,7 @@ function restoreNlistFromHistory(id){
   _nsortArrows();
   renderNlist();
   var foundCnt = nlistItems.filter(function(i){ return i._found; }).length;
-  showToast('📜 Восстановлен список магазина №' + entry.shop + ' (' + entry.count + ' позиций)', foundCnt ? 'ok' : 'error');
+  showToast('Восстановлен список магазина №' + entry.shop + ' (' + entry.count + ' позиций)', foundCnt ? 'ok' : 'error');
   closeNlistHistory();
   selectCat('nlist');
 }
@@ -6216,12 +6215,15 @@ document.getElementById('nlistFileInput').addEventListener('change', function(e)
   setIcon('lottie-cart-excel', `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><g style="animation:ai-down 1.5s ease-in-out infinite"><line x1="8" y1="2" x2="8" y2="10" stroke="white" stroke-width="2" stroke-linecap="round"/><polyline points="4,7 8,11 12,7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/><line x1="2" y1="14" x2="14" y2="14" stroke="white" stroke-width="2" stroke-linecap="round"/></g></svg>`);
 
   // Сайдбар без файлов — цветные кружки
-  function makeCatSVG(emoji, color){
+  function makeCatSVG(name, color){
+    return `<svg width="26" height="26" viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg"><circle cx="13" cy="13" r="11" fill="${color}" opacity="0.85"/><g transform="translate(6.5 6.5) scale(.54)" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${IC[name]||IC.box}"/></g></svg>`;
+  }
+  function _makeCatSVGEmoji(emoji, color){
     return `<svg width="26" height="26" viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg"><circle cx="13" cy="13" r="11" fill="${color}" opacity="0.85"/><text x="13" y="17.5" text-anchor="middle" font-size="13" fill="white">${emoji}</text></svg>`;
   }
-  setIcon('lottie-cat-all',    makeCatSVG('🗂','#7960A2'));
-  setIcon('lottie-cat-uvelir', makeCatSVG('💎','#b84580'));
-  setIcon('lottie-cat-kits',   makeCatSVG('📦','#7265A3'));
+  setIcon('lottie-cat-all',    makeCatSVG('folder','#7960A2'));
+  setIcon('lottie-cat-uvelir', makeCatSVG('diamond','#b84580'));
+  setIcon('lottie-cat-kits',   makeCatSVG('box','#7265A3'));
 
 })();
 
@@ -6274,7 +6276,7 @@ applyLightFilters();
 
 // Автозагрузка каталога с GitHub при старте
 (function(){
-  loadCatalog({}, "⏳ Загрузка каталога с GitHub…");
+  loadCatalog({}, "Загрузка каталога с GitHub…");
   updateFromGitHub();
 })();
 
@@ -6282,14 +6284,14 @@ applyLightFilters();
 
 // Папки GitHub и их метки
 var PHOTO_FOLDERS = [
-  { label: '🏪 Торговое оборудование',    folder: 'Foto Oborud'    },
-  { label: '🎨 Рекламные материалы',       folder: 'Foto reklama'   },
-  { label: '💡 Световое оборудование',     folder: 'Foto Svet'      },
-  { label: '📺 Слаботочное оборудование',  folder: 'Foto slabotoch' },
-  { label: '💎 Ювелирное оборудование',    folder: 'Foto Uvelir'    },
-  { label: '💻 ИТ оборудование',           folder: 'IT oborud'      },
-  { label: '📎 Канцелярия',               folder: 'Foto Cancel'    },
-  { label: '📦 Комплекты',                 folder: 'Foto Complect'  },
+  { label: 'Торговое оборудование',    folder: 'Foto Oborud'    },
+  { label: 'Рекламные материалы',       folder: 'Foto reklama'   },
+  { label: 'Световое оборудование',     folder: 'Foto Svet'      },
+  { label: 'Слаботочное оборудование',  folder: 'Foto slabotoch' },
+  { label: 'Ювелирное оборудование',    folder: 'Foto Uvelir'    },
+  { label: 'ИТ оборудование',           folder: 'IT oborud'      },
+  { label: 'Канцелярия',               folder: 'Foto Cancel'    },
+  { label: 'Комплекты',                 folder: 'Foto Complect'  },
 ];
 
 var _puFile = null; // текущий выбранный файл
@@ -6332,13 +6334,13 @@ function puHandleFile(file){
 
   // Формат
   if(!file.type.match(/^image\/(png|jpeg)$/)){
-    puSetError('❌ Только PNG и JPEG файлы');
+    puSetError('Только PNG и JPEG файлы');
     _puFile = null;
     return;
   }
   // Размер
   if(file.size > 500 * 1024){
-    puSetError('❌ Файл превышает 500 KB (сейчас: ' + (file.size/1024).toFixed(0) + ' KB)');
+    puSetError('Файл превышает 500 KB (сейчас: ' + (file.size/1024).toFixed(0) + ' KB)');
     _puFile = null;
     return;
   }
@@ -6346,7 +6348,7 @@ function puHandleFile(file){
   _puFile = file;
   var ext = file.type === 'image/png' ? 'png' : 'jpg';
   document.getElementById('pu-file-info').textContent =
-    '✅ ' + file.name + ' · ' + (file.size/1024).toFixed(1) + ' KB · ' + ext.toUpperCase();
+    '' + file.name + ' · ' + (file.size/1024).toFixed(1) + ' KB · ' + ext.toUpperCase();
 
   // Превью
   var reader = new FileReader();
@@ -6377,10 +6379,10 @@ async function puUpload(){
   var pat    = document.getElementById('pu-pat').value.trim();
 
   // Валидация
-  if(!code){    puSetError('❌ Введите код номенклатуры'); return; }
-  if(!folder){  puSetError('❌ Выберите раздел (папку)'); return; }
-  if(!_puFile){ puSetError('❌ Выберите фото'); return; }
-  if(!pat){     puSetError('❌ Введите GitHub токен (PAT)'); return; }
+  if(!code){    puSetError('Введите код номенклатуры'); return; }
+  if(!folder){  puSetError('Выберите раздел (папку)'); return; }
+  if(!_puFile){ puSetError('Выберите фото'); return; }
+  if(!pat){     puSetError('Введите GitHub токен (PAT)'); return; }
 
   // Сохраняем PAT только если пользователь явно поставил галочку «Запомнить» —
   // иначе токен с правом записи в репозиторий не должен оседать в браузере молча.
@@ -6394,7 +6396,7 @@ async function puUpload(){
   var fileName = code + '.' + ext;
   var filePath = folder + '/' + fileName;
 
-  puSetStatus('⏳ Загрузка...', '#72579D');
+  puSetStatus('Загрузка...', '#72579D');
   document.getElementById('pu-btn').disabled = true;
 
   try {
@@ -6437,16 +6439,16 @@ async function puUpload(){
     );
 
     if(resp.ok){
-      puSetStatus('✅ Фото загружено: ' + filePath, '#1a7a3a');
-      showToast('📸 Фото ' + fileName + ' загружено в ' + folder, 'ok');
+      puSetStatus('Фото загружено: ' + filePath, '#1a7a3a');
+      showToast('Фото ' + fileName + ' загружено в ' + folder, 'ok');
       puClearFile();
       document.getElementById('pu-code').value = '';
     } else {
       var err = await resp.json();
-      puSetError('❌ GitHub: ' + (err.message || resp.status));
+      puSetError('GitHub: ' + (err.message || resp.status));
     }
   } catch(e){
-    puSetError('❌ ' + e.message);
+    puSetError('' + e.message);
   } finally {
     document.getElementById('pu-btn').disabled = false;
   }
@@ -6504,12 +6506,12 @@ function psSetStatus(msg, color){
 
 function psHandleFile(file){
   if(!file || file.type.indexOf('image/') !== 0){
-    psSetStatus('❌ Выберите файл изображения', '#c03030');
+    psSetStatus('Выберите файл изображения', '#c03030');
     return;
   }
   _psFile = file;
   document.getElementById('ps-file-info').textContent =
-    '✅ ' + file.name + ' · ' + (file.size/1024).toFixed(0) + ' KB';
+    '' + file.name + ' · ' + (file.size/1024).toFixed(0) + ' KB';
   var reader = new FileReader();
   reader.onload = function(e){
     document.getElementById('ps-preview-img').src = e.target.result;
@@ -6610,21 +6612,21 @@ function psCosineTopN(queryVec, vectors, topN){
 function psStartSearch(){
   if(!_psFile) return;
   document.getElementById('ps-btn').disabled = true;
-  psSetStatus('⏳ Загружаем модель распознавания…');
+  psSetStatus('Загружаем модель распознавания…');
   var img = new Image();
   var objUrl = URL.createObjectURL(_psFile);
   img.onload = function(){
     ensurePhotoSearchModel().then(function(model){
-      psSetStatus('⏳ Загружаем базу фото для сравнения…');
+      psSetStatus('Загружаем базу фото для сравнения…');
       return ensurePhotoSearchVectors().then(function(vectors){
-        psSetStatus('🔎 Сравниваем…');
+        psSetStatus('Сравниваем…');
         var embedding = model.infer(img, true);
         return embedding.data().then(function(queryVec){
           embedding.dispose();
           URL.revokeObjectURL(objUrl);
           var top = psCosineTopN(queryVec, vectors, PHOTO_SEARCH_TOPN);
           if(!top.length){
-            psSetStatus('😕 Совпадений не найдено', '#b04010');
+            psSetStatus('Совпадений не найдено', '#b04010');
             document.getElementById('ps-btn').disabled = false;
             return;
           }
@@ -6633,13 +6635,13 @@ function psStartSearch(){
       });
     }).catch(function(err){
       URL.revokeObjectURL(objUrl);
-      psSetStatus('❌ ' + (err && err.message ? err.message : 'Ошибка поиска по фото'), '#c03030');
+      psSetStatus('' + (err && err.message ? err.message : 'Ошибка поиска по фото'), '#c03030');
       document.getElementById('ps-btn').disabled = false;
     });
   };
   img.onerror = function(){
     URL.revokeObjectURL(objUrl);
-    psSetStatus('❌ Не удалось прочитать файл изображения', '#c03030');
+    psSetStatus('Не удалось прочитать файл изображения', '#c03030');
     document.getElementById('ps-btn').disabled = false;
   };
   img.src = objUrl;
@@ -6666,7 +6668,7 @@ function applyPhotoSearchResults(top){
   updateSearchClear('searchInput', 'searchClear');
   applyFilters();
   document.getElementById('catalogInfo').textContent =
-    '🔍 Похоже по фото: ' + filteredItems.length.toLocaleString('ru') + ' позиций (по убыванию сходства)';
+    'Похоже по фото: ' + filteredItems.length.toLocaleString('ru') + ' позиций (по убыванию сходства)';
 }
 
 function clearPhotoSearchResults(){
@@ -6717,7 +6719,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
     <!-- Заголовок -->
     <div style="background:linear-gradient(135deg,#3F3759,#7366A5);padding:18px 24px;display:flex;align-items:center;gap:12px;">
-      <span style="font-size:22px;">📸</span>
+      <span style="font-size:22px;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h1a2 2 0 0 0 2-2 1 1 0 0 1 1-1h6a1 1 0 0 1 1 1 2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2M9 13a3 3 0 1 0 6 0 3 3 0 0 0-6 0"/></svg></span>
       <div style="flex:1;">
         <div style="font-size:16px;font-weight:800;color:#fff;">Загрузка фото</div>
         <div style="font-size:11px;color:rgba(255,255,255,.6);">PNG / JPEG · не более 500 KB · имя файла = код</div>
@@ -6749,7 +6751,7 @@ document.addEventListener('DOMContentLoaded', function(){
       <div id="pu-drop" onclick="document.getElementById('pu-file-input').click()"
         style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border:2.5px dashed var(--border2);border-radius:12px;padding:24px 16px;cursor:pointer;transition:border-color .2s,background .2s;"
         onmouseover="this.style.background='var(--surface3)'" onmouseout="this.style.background=''">
-        <div style="font-size:36px;">🖼️</div>
+        <div style="font-size:36px;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 8h.01M3 6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3zM3 16l5-5c.928-.893 2.072-.893 3 0l5 5M14 14l1-1c.928-.893 2.072-.893 3 0l3 3"/></svg></div>
         <div style="font-size:13px;font-weight:700;color:var(--text2);">Нажмите или перетащите фото</div>
         <div style="font-size:11px;color:var(--text3);">PNG или JPEG · максимум 500 KB</div>
         <input id="pu-file-input" type="file" accept="image/png,image/jpeg" style="display:none">
@@ -6777,7 +6779,7 @@ document.addEventListener('DOMContentLoaded', function(){
           <input id="pu-pat-remember" type="checkbox" style="cursor:pointer;">
           Запомнить токен в этом браузере
         </label>
-        <div style="font-size:11px;color:var(--text3);margin-top:5px;">Нужны права: <code>repo</code>. ⚠️ Токен с правом записи в репозиторий — по умолчанию он <strong>не сохраняется</strong> и вводится заново при каждой загрузке фото; на общем/чужом компьютере не включайте «Запомнить».</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:5px;">Нужны права: <code>repo</code>. <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9v4M10.363 3.591 2.257 17.125a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636-2.87L13.637 3.59a1.914 1.914 0 0 0-3.274 0zM12 16h.01"/></svg> Токен с правом записи в репозиторий — по умолчанию он <strong>не сохраняется</strong> и вводится заново при каждой загрузке фото; на общем/чужом компьютере не включайте «Запомнить».</div>
       </div>
 
       <!-- Статус загрузки -->
@@ -6787,7 +6789,7 @@ document.addEventListener('DOMContentLoaded', function(){
       <button id="pu-btn" onclick="puUpload()"
         style="width:100%;height:44px;background:linear-gradient(135deg,#4C446D,#7366A5);color:#fff;border:none;border-radius:11px;font-size:15px;font-weight:800;cursor:pointer;font-family:Inter,sans-serif;transition:all .2s;box-shadow:0 4px 16px rgba(115,102,165,.35);"
         onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
-        📤 Загрузить на GitHub
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 9l5-5 5 5M12 4v12"/></svg> Загрузить на GitHub
       </button>
 
     </div>
@@ -6800,7 +6802,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
     <!-- Заголовок -->
     <div style="background:linear-gradient(135deg,#0a5a7a,#1a90c0);padding:18px 24px;display:flex;align-items:center;gap:12px;">
-      <span style="font-size:22px;">🔍</span>
+      <span style="font-size:22px;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0 7 7 0 1 0-14 0M21 21l-6-6"/></svg></span>
       <div style="flex:1;">
         <div style="font-size:16px;font-weight:800;color:#fff;">Поиск по фото</div>
         <div style="font-size:11px;color:rgba(255,255,255,.65);">Сфотографируйте оборудование — покажем похожие позиции каталога</div>
@@ -6814,7 +6816,7 @@ document.addEventListener('DOMContentLoaded', function(){
       <div id="ps-drop" onclick="document.getElementById('ps-file-input').click()"
         style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border:2.5px dashed var(--border2);border-radius:12px;padding:28px 16px;cursor:pointer;transition:border-color .2s,background .2s;"
         onmouseover="this.style.background='var(--surface3)'" onmouseout="this.style.background=''">
-        <div style="font-size:36px;">📷</div>
+        <div style="font-size:36px;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h1a2 2 0 0 0 2-2 1 1 0 0 1 1-1h6a1 1 0 0 1 1 1 2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2M9 13a3 3 0 1 0 6 0 3 3 0 0 0-6 0"/></svg></div>
         <div style="font-size:13px;font-weight:700;color:var(--text2);">Нажмите, перетащите фото или сделайте снимок</div>
         <div style="font-size:11px;color:var(--text3);">PNG или JPEG · результат — список похожих позиций каталога</div>
         <input id="ps-file-input" type="file" accept="image/*" capture="environment" style="display:none">
@@ -6836,11 +6838,11 @@ document.addEventListener('DOMContentLoaded', function(){
       <button id="ps-btn" onclick="psStartSearch()" disabled
         style="width:100%;height:44px;background:linear-gradient(135deg,#0a5a7a,#1a90c0);color:#fff;border:none;border-radius:11px;font-size:15px;font-weight:800;cursor:pointer;font-family:Inter,sans-serif;transition:all .2s;box-shadow:0 4px 16px rgba(26,144,192,.35);opacity:.5;"
         onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
-        🔎 Найти похожие
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0 7 7 0 1 0-14 0M21 21l-6-6"/></svg> Найти похожие
       </button>
 
       <div style="font-size:10.5px;color:var(--text3);line-height:1.5;">
-        ⚠️ Поиск сравнивает фото с уже загруженными фотографиями каталога — находит вероятных кандидатов, а не гарантирует точное совпадение. Модель распознавания (≈5–16 МБ) и база фото для сравнения загружаются при первом использовании и затем кэшируются офлайн-кэшем приложения.
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9v4M10.363 3.591 2.257 17.125a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636-2.87L13.637 3.59a1.914 1.914 0 0 0-3.274 0zM12 16h.01"/></svg> Поиск сравнивает фото с уже загруженными фотографиями каталога — находит вероятных кандидатов, а не гарантирует точное совпадение. Модель распознавания (≈5–16 МБ) и база фото для сравнения загружаются при первом использовании и затем кэшируются офлайн-кэшем приложения.
       </div>
 
     </div>
@@ -6874,7 +6876,7 @@ function showInstallBanner(){
   banner.id = 'pwa-install-banner';
   banner.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:9999;background:linear-gradient(135deg,#452D6B,#7960A2);color:#fff;padding:16px 20px;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.25);display:flex;align-items:center;gap:14px;font-family:Inter,sans-serif;max-width:420px;animation:pwaSlideIn .4s ease;';
   banner.innerHTML =
-    '<div style="font-size:36px;flex-shrink:0;">📦</div>' +
+    '<div style="font-size:36px;flex-shrink:0;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3M12 12l8-4.5M12 12v9M12 12 4 7.5"/></svg></div>' +
     '<div style="flex:1;min-width:0;">' +
       '<div style="font-size:15px;font-weight:800;margin-bottom:4px;">Установить приложение</div>' +
       '<div style="font-size:12px;opacity:.85;line-height:1.4;">Каталог оборудования Kari будет работать как обычное приложение на вашем компьютере</div>' +
