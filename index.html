@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#2a4a7f">
+<meta name="theme-color" content="#452D6B">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Каталог оборудования Kari">
@@ -24,8 +24,8 @@
 :root{
   --bg:#edeef2;--bg2:#e4e5ea;--surface:#f4f5f8;--surface2:#ffffff;--surface3:#ecedf1;
   --border:#d6d8df;--border2:#c8cad3;--text:#1e2028;--text2:#5a5d6e;--text3:#9699aa;
-  --btn-add:#4a7fc1;--btn-send:#3a9068;--btn-cart:#7458b8;--btn-close:#c05060;
-  --btn-qty:#5a6070;--btn-update:#2a8a9a;--btn-light:#e07a20;--btn-kits:#6b48c8;
+  --btn-add:#7960A2;--btn-send:#3a9068;--btn-cart:#7B6DB0;--btn-close:#c05060;
+  --btn-qty:#5a6070;--btn-update:#2a8a9a;--btn-light:#e07a20;--btn-kits:#7265A3;
   --shadow-sm:0 2px 6px rgba(0,0,0,.08);--shadow-md:0 4px 16px rgba(0,0,0,.12);
   --shadow-lg:0 8px 32px rgba(0,0,0,.16);--shadow-xl:0 16px 48px rgba(0,0,0,.20);
 }
@@ -33,13 +33,13 @@
 body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;height:100vh;overflow-x:hidden;display:flex;flex-direction:column;}
 
 /* ── HEADER ── */
-.header{background:linear-gradient(135deg,#5a6080 0%,#6e7599 40%,#5c6d80 100%);border-bottom:none;
+.header{background:linear-gradient(135deg,#4E446B 0%,#655D7F 40%,#584E73 100%);border-bottom:none;
   box-shadow:0 4px 20px rgba(0,0,0,.18);
   padding:0 18px;display:flex;align-items:center;justify-content:space-between;height:64px;
   position:sticky;top:0;z-index:100;overflow:hidden;flex-shrink:0;}
 .header::before{content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse 600px 120px at 20% 50%,rgba(74,127,193,.12),transparent),
-             radial-gradient(ellipse 400px 100px at 80% 50%,rgba(116,88,184,.10),transparent);
+  background:radial-gradient(ellipse 600px 120px at 20% 50%,rgba(121,96,162,.12),transparent),
+             radial-gradient(ellipse 400px 100px at 80% 50%,rgba(123,109,176,.10),transparent);
   pointer-events:none;}
 .header-particles{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
 /* Листики */
@@ -61,16 +61,16 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;heig
 }
 /* Птицы — фазы управляются JS */
 .logo{display:flex;align-items:center;gap:14px;position:relative;z-index:1;}
-.logo-icon{width:40px;height:40px;background:linear-gradient(135deg,#5a8fd1,#8468c8);
+.logo-icon{width:40px;height:40px;background:linear-gradient(135deg,#8973AD,#8A7DB9);
   border-radius:11px;display:flex;align-items:center;justify-content:center;
-  box-shadow:0 0 14px rgba(74,127,193,.35),0 4px 12px rgba(0,0,0,.2);
+  box-shadow:0 0 14px rgba(121,96,162,.35),0 4px 12px rgba(0,0,0,.2);
   animation:logoGlow 3s ease-in-out infinite;position:relative;cursor:pointer;
   transition:transform .2s;}
 .logo-icon:hover{transform:scale(1.08);}
 .logo-icon:active{transform:scale(.95);}
 @keyframes logoGlow{
-  0%,100%{box-shadow:0 0 14px rgba(74,127,193,.35),0 4px 12px rgba(0,0,0,.2);}
-  50%{box-shadow:0 0 22px rgba(116,88,184,.5),0 4px 14px rgba(0,0,0,.2);}
+  0%,100%{box-shadow:0 0 14px rgba(121,96,162,.35),0 4px 12px rgba(0,0,0,.2);}
+  50%{box-shadow:0 0 22px rgba(123,109,176,.5),0 4px 14px rgba(0,0,0,.2);}
 }
 /* Box icon parts */
 .box-icon{position:relative;width:22px;height:20px;}
@@ -116,10 +116,10 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;heig
   border-radius:9px;padding:6px 12px;font-family:'Nunito',sans-serif;font-size:11.5px;font-weight:700;
   cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 0 12px rgba(42,138,154,.15);transition:all .25s;white-space:nowrap;}
 .update-btn:hover{transform:translateY(-2px);background:rgba(58,172,190,.35);box-shadow:0 0 20px rgba(42,138,154,.35);border-color:rgba(58,172,190,.6);}
-.cart-btn{background:rgba(116,88,184,.2);backdrop-filter:blur(8px);color:#c4b0ff;border:1px solid rgba(116,88,184,.3);
+.cart-btn{background:rgba(123,109,176,.2);backdrop-filter:blur(8px);color:#C5BFDC;border:1px solid rgba(123,109,176,.3);
   border-radius:9px;padding:6px 13px;font-family:'Nunito',sans-serif;font-size:12.5px;font-weight:700;
-  cursor:pointer;display:flex;align-items:center;gap:5px;box-shadow:0 0 12px rgba(116,88,184,.15);transition:all .25s;white-space:nowrap;}
-.cart-btn:hover{transform:translateY(-2px);background:rgba(116,88,184,.35);box-shadow:0 0 20px rgba(116,88,184,.35);border-color:rgba(116,88,184,.6);}
+  cursor:pointer;display:flex;align-items:center;gap:5px;box-shadow:0 0 12px rgba(123,109,176,.15);transition:all .25s;white-space:nowrap;}
+.cart-btn:hover{transform:translateY(-2px);background:rgba(123,109,176,.35);box-shadow:0 0 20px rgba(123,109,176,.35);border-color:rgba(123,109,176,.6);}
 .cart-count{background:rgba(255,255,255,.12);border-radius:20px;padding:1px 6px;font-size:10.5px;font-weight:800;}
 .spin{display:inline-block;animation:spin .8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
@@ -140,7 +140,7 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;heig
 .cat-topbar .cat-btn{width:auto;padding:7px 12px;border-radius:9px;font-size:12.5px;white-space:nowrap;}
 .cat-topbar .cat-btn.active{background:transparent;}
 .cat-topbar .cat-btn.active::before{left:0;right:0;top:0;bottom:0;width:auto;height:auto;
-  border-radius:9px;background:var(--cat-color,#4a7fc1);opacity:.14;box-shadow:none;}
+  border-radius:9px;background:var(--cat-color,#7960A2);opacity:.14;box-shadow:none;}
 .cat-topbar .cat-count.zero{opacity:.35;}
 .cat-topbar .cat-count{margin-left:6px;}
 .cat-topbar .topbar-divider{grid-row:1 / span 2;width:1px;height:auto;align-self:stretch;
@@ -153,7 +153,7 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;heig
 .subcat-side-btn:hover{background:var(--surface3);color:var(--text);}
 .subcat-side-btn.active{background:var(--surface3);color:var(--text);font-weight:700;}
 .subcat-side-btn.active::before{content:'';position:absolute;left:0;top:5px;bottom:5px;width:4px;
-  border-radius:0 3px 3px 0;background:var(--cat-color,#4a7fc1);box-shadow:2px 0 8px var(--cat-color,#4a7fc1);}
+  border-radius:0 3px 3px 0;background:var(--cat-color,#7960A2);box-shadow:2px 0 8px var(--cat-color,#7960A2);}
 .subcat-side-btn .cat-label{white-space:normal;line-height:1.25;}
 .sidebar-title{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
   color:var(--text3);padding:0 18px 12px;}
@@ -163,7 +163,7 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;heig
 .cat-btn:hover{background:var(--surface3);color:var(--text);}
 .cat-btn.active{background:var(--surface3);color:var(--text);font-weight:700;}
 .cat-btn.active::before{content:'';position:absolute;left:0;top:5px;bottom:5px;width:4px;
-  border-radius:0 3px 3px 0;background:var(--cat-color,#4a7fc1);box-shadow:2px 0 8px var(--cat-color,#4a7fc1);}
+  border-radius:0 3px 3px 0;background:var(--cat-color,#7960A2);box-shadow:2px 0 8px var(--cat-color,#7960A2);}
 .cat-icon{font-size:15px;flex-shrink:0;}.cat-label{flex:1;}
 .cat-count{margin-left:auto;font-size:11px;color:var(--text3);font-weight:700;
   font-family:'JetBrains Mono',monospace;background:var(--bg2);padding:2px 7px;border-radius:20px;border:1px solid var(--border);}
@@ -179,7 +179,7 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;heig
 .search-clear:hover{background:#e05555;}
 .search-clear svg{width:10px;height:10px;fill:#fff;pointer-events:none;}
 .search-input{width:100%;background:var(--surface3);border:1.5px solid var(--border);border-radius:9px;padding:8px 34px 8px 36px;color:var(--text);font-family:'Nunito',sans-serif;font-size:13px;font-weight:500;outline:none;transition:all .2s;}
-.search-input:focus{border-color:var(--btn-add);background:var(--surface2);box-shadow:0 0 0 3px rgba(74,127,193,.12);}
+.search-input:focus{border-color:var(--btn-add);background:var(--surface2);box-shadow:0 0 0 3px rgba(121,96,162,.12);}
 .search-input::placeholder{color:var(--text3);}
 .results-info{font-size:12px;color:var(--text3);white-space:nowrap;font-family:'JetBrains Mono',monospace;
   background:var(--surface3);border:1px solid var(--border);border-radius:8px;padding:5px 9px;}
@@ -193,9 +193,9 @@ th{text-align:left;padding:10px 14px;font-size:10px;font-weight:800;letter-spaci
 th.th-qty{width:150px;text-align:center;}th.th-code{width:140px;}
 th.th-action{width:58px;text-align:center;}th.th-img{width:46px;text-align:center;}
 tbody tr{background:var(--surface2);border-bottom:1px solid var(--border);transition:background .12s;}
-tbody tr:nth-child(even){background:#f8f9fb;}
-tbody tr:hover{background:#eef1f8!important;}
-tbody tr.in-cart{background:#eef4ff!important;border-left:3px solid var(--btn-add);}
+tbody tr:nth-child(even){background:#F9F8FB;}
+tbody tr:hover{background:#F1EEF5!important;}
+tbody tr.in-cart{background:#F4F2F7!important;border-left:3px solid var(--btn-add);}
 td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 .td-code{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:var(--text3);}
 .td-name{color:var(--text);font-weight:600;max-width:0;overflow:visible;}
@@ -211,7 +211,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 .pagination-bar{display:none;align-items:center;justify-content:center;gap:16px;padding:10px 16px;background:var(--surface2);border-top:1.5px solid var(--border);flex-shrink:0;}
 .pagination-bar.show{display:flex;}
 .page-nav-btn{width:34px;height:34px;border-radius:9px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text2);font-size:16px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;font-family:'Nunito',sans-serif;}
-.page-nav-btn:hover:not(:disabled){border-color:var(--btn-add);color:var(--btn-add);background:#eef4ff;transform:translateY(-1px);}
+.page-nav-btn:hover:not(:disabled){border-color:var(--btn-add);color:var(--btn-add);background:#F4F2F7;transform:translateY(-1px);}
 .page-nav-btn:disabled{opacity:.32;cursor:not-allowed;}
 .page-indicator{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;color:var(--text2);white-space:nowrap;font-family:'Nunito',sans-serif;}
 .page-indicator input{width:46px;height:28px;text-align:center;border:1.5px solid var(--border);border-radius:7px;font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:800;color:var(--text);background:var(--surface3);outline:none;-moz-appearance:textfield;}
@@ -220,9 +220,9 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 .page-indicator .page-total{color:var(--text3);font-family:'JetBrains Mono',monospace;}
 .product-tile{width:100%;height:100%;min-width:0;min-height:0;border-radius:12px;border:1.5px solid var(--border);background:var(--surface2);cursor:pointer;transition:all .18s;position:relative;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 2px 8px rgba(0,0,0,.07);}
 .product-tile:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.13);}
-.product-tile.in-cart{border-color:var(--btn-add);box-shadow:0 0 0 2px rgba(74,127,193,.18);}
-.product-tile-photo{width:100%;flex:1;min-height:0;object-fit:contain;object-position:center;background:#f8f9fb;display:block;border-radius:10px 10px 0 0;}
-.product-tile-photo-placeholder{width:100%;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;background:#f8f9fb;font-size:40px;color:var(--text3);opacity:.35;border-radius:10px 10px 0 0;}
+.product-tile.in-cart{border-color:var(--btn-add);box-shadow:0 0 0 2px rgba(121,96,162,.18);}
+.product-tile-photo{width:100%;flex:1;min-height:0;object-fit:contain;object-position:center;background:#F9F8FB;display:block;border-radius:10px 10px 0 0;}
+.product-tile-photo-placeholder{width:100%;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;background:#F9F8FB;font-size:40px;color:var(--text3);opacity:.35;border-radius:10px 10px 0 0;}
 .product-tile-body{padding:7px 9px 9px;display:flex;flex-direction:column;gap:2px;background:var(--surface2);border-top:1px solid var(--border);}
 .product-tile-code{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .product-tile-name{font-size:11px;font-weight:700;color:var(--text);line-height:1.28;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
@@ -256,13 +256,13 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
   color:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;
   transition:all .15s;font-family:monospace;line-height:1;box-shadow:var(--shadow-sm);}
 .qty-btn:first-child{border-radius:6px 0 0 6px;}.qty-btn:last-child{border-radius:0 6px 6px 0;}
-.qty-btn:hover{background:linear-gradient(135deg,#4a7fc1,#5a8fd1);transform:scale(1.05);}
+.qty-btn:hover{background:linear-gradient(135deg,#7960A2,#8973AD);transform:scale(1.05);}
 .qty-input{width:44px;height:27px;background:var(--surface3);border:1px solid var(--border2);
   border-left:none;border-right:none;color:var(--text);font-family:'JetBrains Mono',monospace;
   font-size:13px;font-weight:700;text-align:center;outline:none;}
-.add-btn{width:30px;height:30px;background:linear-gradient(135deg,#5a8fd1,var(--btn-add));border:none;
+.add-btn{width:30px;height:30px;background:linear-gradient(135deg,#8973AD,var(--btn-add));border:none;
   border-radius:8px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;
-  font-size:16px;font-weight:700;box-shadow:0 3px 10px rgba(74,127,193,.3);transition:all .18s;margin:0 auto;}
+  font-size:16px;font-weight:700;box-shadow:0 3px 10px rgba(121,96,162,.3);transition:all .18s;margin:0 auto;}
 .add-btn:hover{transform:translateY(-2px) scale(1.08);}
 .add-btn.added{background:linear-gradient(135deg,#3aaa6a,var(--btn-send));}
 
@@ -285,7 +285,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
   border:1.5px dashed var(--border);display:flex;align-items:center;justify-content:center;
   font-size:16px;color:var(--text3);}
 .selected-row{background:#fff8f0!important;border-left:3px solid var(--btn-light)!important;}
-.selected-row.in-cart{background:#f0f4ff!important;border-left:3px solid var(--btn-add)!important;}
+.selected-row.in-cart{background:#F4F2F7!important;border-left:3px solid var(--btn-add)!important;}
 
 /* ── LIGHTBOX ── */
 .lightbox{position:fixed;inset:0;background:rgba(10,10,20,.88);z-index:1000;
@@ -344,7 +344,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
   transition:background .15s;line-height:1;font-family:monospace;}
 .cart-qty-btn:first-child{border-radius:6px 0 0 6px;}
 .cart-qty-btn:last-child{border-radius:0 6px 6px 0;}
-.cart-qty-btn:hover{background:linear-gradient(135deg,#4a7fc1,#5a8fd1);}
+.cart-qty-btn:hover{background:linear-gradient(135deg,#7960A2,#8973AD);}
 .cart-qty-input{width:38px;height:24px;background:var(--surface3);border:1px solid var(--border2);
   border-left:none;border-right:none;color:var(--text);font-family:'JetBrains Mono',monospace;
   font-size:12px;font-weight:700;text-align:center;outline:none;}
@@ -359,7 +359,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 .form-label{font-size:11px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;}
 .form-input{background:var(--surface3);border:1.5px solid var(--border);border-radius:8px;
   padding:7px 11px;color:var(--text);font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;outline:none;transition:all .2s;}
-.form-input:focus{border-color:var(--btn-add);background:var(--surface2);box-shadow:0 0 0 3px rgba(74,127,193,.12);}
+.form-input:focus{border-color:var(--btn-add);background:var(--surface2);box-shadow:0 0 0 3px rgba(121,96,162,.12);}
 .form-input::placeholder{color:var(--text3);font-weight:500;}
 .shop-select{width:100%;background:var(--surface3);border:1.5px solid var(--border);border-radius:8px;
   padding:7px 11px;color:var(--text);font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;
@@ -418,7 +418,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 .subcat-card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.15);}
 .subcat-card.all-card{border-style:dashed;border-color:var(--text3);}
 .subcat-card.all-card:hover{border-color:var(--accent);}
-.subcat-card-photo-wrap{flex:1;min-height:80px;display:flex;align-items:center;justify-content:center;background:#f8f9fb;border-radius:10px 10px 0 0;overflow:hidden;}
+.subcat-card-photo-wrap{flex:1;min-height:80px;display:flex;align-items:center;justify-content:center;background:#F9F8FB;border-radius:10px 10px 0 0;overflow:hidden;}
 .subcat-card-photo{width:100%;height:100%;object-fit:contain;object-position:center;transition:transform .22s;display:block;}
 .subcat-card:hover .subcat-card-photo{transform:scale(1.04);}
 .subcat-card-body{padding:8px 12px 10px;background:var(--surface2);border-top:1px solid var(--border);flex-shrink:0;}
@@ -434,10 +434,10 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 /* ── KITS PANEL ── */
 
 .kits-upload-btn-small{
-  background:linear-gradient(135deg,#8060e0,#6b48c8);color:#fff;border:none;
+  background:linear-gradient(135deg,#887BB8,#7265A3);color:#fff;border:none;
   border-radius:8px;padding:6px 13px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;
-  cursor:pointer;white-space:nowrap;box-shadow:0 2px 8px rgba(107,72,200,.3);transition:all .2s;margin-left:8px;}
-.kits-upload-btn-small:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(107,72,200,.45);}
+  cursor:pointer;white-space:nowrap;box-shadow:0 2px 8px rgba(114,101,163,.3);transition:all .2s;margin-left:8px;}
+.kits-upload-btn-small:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(114,101,163,.45);}
 
 /* Kit groups in cart
    Было: .cart-kit-header{...  без закрывающей }, из-за чего парсер CSS «съедал» все
@@ -445,8 +445,8 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
    как невалидное содержимое одного блока, а хвостовая строка деклараций без селектора
    неожиданно «прилипала» к .cart-kit-header. Ни один из этих классов, кроме
    .cart-kit-header, в разметке не используется — оставляем только рабочее правило. */
-.cart-kit-header{padding:6px 12px;background:linear-gradient(135deg,#ede8ff,#f4f2ff);
-  border:1.5px solid #c4b5f8;border-radius:8px;margin-top:4px;margin-bottom:2px;}
+.cart-kit-header{padding:6px 12px;background:linear-gradient(135deg,#EEECF5,#F5F4F9);
+  border:1.5px solid #C7C1DE;border-radius:8px;margin-top:4px;margin-bottom:2px;}
 
 /* ═══════════════════════════════════════════════════════════════════════
    АДАПТИВНОСТЬ ДЛЯ УЗКИХ ЭКРАНОВ (телефон/маленькое окно).
@@ -484,19 +484,19 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 <style id="visual-refresh">
 /* Visual refresh: calmer hierarchy, larger equipment cards and one UI language. */
 :root{
-  --primary:#2563a6;--primary-soft:#eaf2fb;--success:#23845d;--danger:#c54b5c;
-  --special:#7458b8;--focus-ring:0 0 0 3px rgba(37,99,166,.16);
+  --primary:#5A3B8C;--primary-soft:#F1EEF5;--success:#23845d;--danger:#c54b5c;
+  --special:#7B6DB0;--focus-ring:0 0 0 3px rgba(90,59,140,.16);
 }
-.header{background:#35435a;box-shadow:0 2px 10px rgba(22,32,48,.18);}
+.header{background:#2A1E4D;box-shadow:0 2px 10px rgba(30,19,46,.18);}
 .header::before,.header-particles{display:none!important;}
 .logo-icon{animation:none;background:var(--primary);box-shadow:none;}
 .header-right button{box-shadow:none!important;backdrop-filter:none!important;}
-.update-btn{background:rgba(255,255,255,.10);color:#dbeafe;border-color:rgba(255,255,255,.18);}
+.update-btn{background:rgba(255,255,255,.10);color:#E8E4EF;border-color:rgba(255,255,255,.18);}
 .cart-btn{background:var(--primary);color:#fff;border-color:rgba(255,255,255,.22);}
 .cat-topbar{display:flex;gap:6px;padding:8px 14px;overflow-x:auto;box-shadow:0 1px 5px rgba(0,0,0,.05);}
 .cat-topbar .topbar-divider{height:32px;width:1px;margin:0 4px;flex:0 0 1px;}
 .cat-topbar .cat-btn{min-height:38px;padding:8px 13px;border:1px solid transparent;}
-.cat-topbar .cat-btn.active{background:var(--primary-soft);color:var(--primary);border-color:#c7dbf2;}
+.cat-topbar .cat-btn.active{background:var(--primary-soft);color:var(--primary);border-color:#D8D1E4;}
 .cat-topbar .cat-btn.active::before{display:none;}
 .toolbar{padding:12px 18px;gap:10px;box-shadow:none;}
 .search-input{height:40px;border-radius:10px;font-size:14px;}
@@ -505,20 +505,20 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 .catalog-context-main{font-size:16px;font-weight:800;color:var(--text);}
 .catalog-context-sep{color:var(--text3);}
 .catalog-context-sub{font-size:14px;font-weight:700;color:var(--primary);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.filter-strip{display:flex;align-items:center;gap:8px;padding:9px 18px;background:#f8fafc;border-bottom:1px solid var(--border);overflow-x:auto;}
+.filter-strip{display:flex;align-items:center;gap:8px;padding:9px 18px;background:#F9F8FB;border-bottom:1px solid var(--border);overflow-x:auto;}
 .filter-label{font-size:11px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:var(--text3);margin-right:2px;white-space:nowrap;}
 .filter-chip,.view-btn{height:32px;padding:0 11px;border:1px solid var(--border);border-radius:16px;background:#fff;color:var(--text2);font:700 12px 'Nunito',sans-serif;cursor:pointer;white-space:nowrap;transition:.15s;}
-.filter-chip:hover,.view-btn:hover{border-color:#9ebcdf;color:var(--primary);}
-.filter-chip.active{background:var(--primary-soft);border-color:#9ebcdf;color:var(--primary);}
+.filter-chip:hover,.view-btn:hover{border-color:#B8ABCE;color:var(--primary);}
+.filter-chip.active{background:var(--primary-soft);border-color:#B8ABCE;color:var(--primary);}
 .filter-chip[data-filter="cart"].active{background:#e9f7f0;border-color:#9fd4ba;color:var(--success);}
 .active-filter-summary{margin-left:auto;font-size:12px;color:var(--text3);white-space:nowrap;}
 .view-switch{display:flex;gap:4px;padding:3px;background:var(--surface3);border-radius:10px;flex-shrink:0;}
 .view-btn{height:30px;border-radius:8px;border-color:transparent;background:transparent;padding:0 10px;}
 .view-btn.active{background:#fff;color:var(--primary);box-shadow:0 1px 4px rgba(0,0,0,.10);}
 .product-grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));grid-auto-rows:310px;gap:16px;padding:18px;}
-.product-tile{border-radius:14px;cursor:default;box-shadow:0 2px 8px rgba(26,39,58,.07);}
-.product-tile:hover{border-color:#9ebcdf;transform:translateY(-2px);box-shadow:0 8px 22px rgba(26,39,58,.12);}
-.product-tile-photo,.product-tile-photo-placeholder{background:#f7f9fc;cursor:pointer;}
+.product-tile{border-radius:14px;cursor:default;box-shadow:0 2px 8px rgba(36,24,56,.07);}
+.product-tile:hover{border-color:#B8ABCE;transform:translateY(-2px);box-shadow:0 8px 22px rgba(36,24,56,.12);}
+.product-tile-photo,.product-tile-photo-placeholder{background:#F9F7FB;cursor:pointer;}
 .product-tile-body{padding:11px 12px 12px;gap:5px;}
 .product-tile-code{font-size:11px;}
 .product-tile-name{font-size:13px;line-height:1.35;}
@@ -533,9 +533,9 @@ body.catalog-view-list .product-tile-photo,body.catalog-view-list .product-tile-
 body.catalog-view-list .product-tile-body{border-top:0;border-left:1px solid var(--border);display:grid;grid-template-columns:minmax(100px,150px) 1fr auto;align-items:center;gap:10px;}
 body.catalog-view-list .product-tile-bottom{min-width:145px;}
 /* The three equipment detail windows now share dimensions, header and content rhythm. */
-#itemDetailModal,#tvDetailModal,#kitDetailModal{width:min(920px,94vw)!important;max-width:920px!important;border-radius:18px!important;box-shadow:0 24px 70px rgba(20,31,48,.28)!important;}
-#idm-header,#tvDetailModal>div:first-child,#kitDetailModal>div:first-child{background:#35435a!important;padding:18px 22px!important;}
-#idm-img-wrap,#tdm-img-wrap,#kitDetailModal>div:nth-child(2)>div:first-child{width:330px!important;background:#f7f9fc!important;border-right:1px solid var(--border)!important;}
+#itemDetailModal,#tvDetailModal,#kitDetailModal{width:min(920px,94vw)!important;max-width:920px!important;border-radius:18px!important;box-shadow:0 24px 70px rgba(29,19,45,.28)!important;}
+#idm-header,#tvDetailModal>div:first-child,#kitDetailModal>div:first-child{background:#2A1E4D!important;padding:18px 22px!important;}
+#idm-img-wrap,#tdm-img-wrap,#kitDetailModal>div:nth-child(2)>div:first-child{width:330px!important;background:#F9F7FB!important;border-right:1px solid var(--border)!important;}
 #idm-img,#tdm-img,#kdm-img{max-height:360px!important;}
 #idm-main [style*="font-size:10px"],#tvDetailModal [style*="font-size:10px"],#kitDetailModal th{font-size:11px!important;letter-spacing:.9px!important;color:#64748b!important;}
 #idm-analog-btn,#tdm-analog-btn{background:#fff8e7!important;color:#8a6100!important;border:1px solid #ead492!important;box-shadow:none!important;}
@@ -548,6 +548,140 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:none;box-s
   #itemDetailModal>div:first-child,#tvDetailModal>div:nth-child(2),#kitDetailModal>div:nth-child(2){flex-direction:column!important;overflow-y:auto!important;}
 }
 </style>
+
+<style id="palette-lavender">
+/* ПАЛИТРА: Фиолетовая лаванда (v1.75) */
+:root{--bg:#E4E3EC;--bg2:#DAD9E3;--surface:#EEEEF4;--surface3:#E3E2EB;--border:#CCCBD8;--border2:#BFBFCD;}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style id="glass-dashboard">
+/* v1.75: «Стеклянный дашборд» — Фиолетовая лаванда. Размытый фон, стеклянные панели и карточки, тёмная пилюля навигации */
+:root{--bg:transparent;--bg2:rgba(255,255,255,.28);--surface:rgba(255,255,255,.30);--surface2:rgba(249,248,253,.46);--surface3:rgba(255,255,255,.52);
+  --border:rgba(255,255,255,.62);--border2:rgba(255,255,255,.72);--text:#19171C;--text2:#403D49;--text3:#7A7489;
+  --gl:rgba(249,248,253,.40);--gl-hi:rgba(252,251,255,.74);--edge:rgba(255,255,255,.62);--dk:#1A181D;--lav:#7F69D4}
+html,body{background:#BBAFD7!important}
+body{font-family:"Onest","Nunito",system-ui,sans-serif!important;color:var(--text)}
+body::before{content:"";position:fixed;inset:-80px;z-index:-1;filter:blur(38px) saturate(1.05);pointer-events:none;background:
+  radial-gradient(28% 40% at 80% 22%,#F5F3FC 0,#E8E5F7 30%,transparent 70%),
+  radial-gradient(20% 34% at 8% 46%,#4C4069 0,#655884 30%,transparent 72%),
+  radial-gradient(12% 20% at 74% 58%,#564973 0,transparent 70%),
+  radial-gradient(34% 18% at 52% 74%,#DCD5ED 0,#C7BDE0 40%,transparent 75%),
+  radial-gradient(16% 10% at 52% 84%,#7B69A5 0,transparent 75%),
+  radial-gradient(10% 10% at 60% 34%,#9079C5 0,transparent 75%),
+  radial-gradient(18% 26% at 32% 30%,#AEA2C9 0,transparent 75%),
+  linear-gradient(180deg,#D4CCE7 0%,#C8BDE2 45%,#A798CA 78%,#8E7EB3 100%)}
+.gls,.sidebar,.product-tile,.subcat-card,.cart-panel,.search-input,.modal,.authors-modal,.upload-modal{
+  -webkit-backdrop-filter:blur(22px) saturate(1.3);backdrop-filter:blur(22px) saturate(1.3)}
+/* шапка */
+.header{background:transparent!important;box-shadow:none!important;height:68px!important;padding:0 18px!important}
+.logo{background:var(--gl);border:1px solid var(--edge);border-radius:999px;padding:5px 14px 5px 6px;
+  -webkit-backdrop-filter:blur(22px) saturate(1.3);backdrop-filter:blur(22px) saturate(1.3);box-shadow:inset 0 1px 0 rgba(255,255,255,.7)}
+.logo-text,.logo-text *{color:var(--text)!important}
+.logo-sub,.logo-sub *{color:var(--text2)!important}
+#appVersionBadge{background:var(--dk)!important;color:#fff!important;border:0!important}
+.header-right button{background:var(--gl)!important;border:1px solid var(--edge)!important;color:var(--text)!important;border-radius:999px!important;
+  -webkit-backdrop-filter:blur(22px) saturate(1.3)!important;backdrop-filter:blur(22px) saturate(1.3)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.7)!important}
+.header-right button:hover{background:var(--gl-hi)!important}
+.header-right .cart-btn{background:var(--dk)!important;color:#fff!important;border-color:var(--dk)!important}
+.header-right .cart-count{background:var(--lav)!important;color:#1B0E31!important}
+/* навигация-пилюля */
+.cat-topbar{position:relative;margin:0 18px 12px!important;width:max-content;max-width:calc(100% - 36px);padding:4px!important;gap:2px!important;
+  border-radius:999px;background:var(--gl)!important;border:1px solid var(--edge)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 10px 30px -18px rgba(38,20,70,.45)!important;
+  -webkit-backdrop-filter:blur(22px) saturate(1.3);backdrop-filter:blur(22px) saturate(1.3);overflow-x:auto;scrollbar-width:none}
+.cat-topbar::-webkit-scrollbar{display:none}
+.cat-topbar .cat-btn{position:relative;z-index:1;background:transparent!important;border:0!important;border-radius:999px!important;color:#403D49!important;
+  font-weight:500!important;min-height:34px!important;transition:color .25s}
+.cat-topbar .cat-btn.active{color:#fff!important;font-weight:600!important}
+.cat-topbar .cat-btn.active .cat-count{background:var(--lav)!important;color:#1B0E31!important}
+.cat-topbar .cat-count{background:rgba(255,255,255,.55)!important;color:inherit!important;border-radius:999px!important}
+.cat-topbar .topbar-divider{background:rgba(26,21,48,.12)!important;height:20px!important;align-self:center}
+.gpill{position:absolute;z-index:0;border-radius:999px;background:var(--dk);pointer-events:none;
+  transition:left .45s cubic-bezier(.3,1.3,.5,1),width .45s cubic-bezier(.3,1.3,.5,1),scale .25s ease,opacity .2s}
+.gpill.squish{scale:1.06 .92}
+/* рабочая область */
+.layout{gap:14px;padding:0 18px 18px}
+.sidebar{background:var(--gl)!important;border:1px solid var(--edge)!important;border-radius:22px!important;overflow:hidden;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 10px 30px -18px rgba(38,20,70,.45)}
+.main{background:#E3DCDF;border:1px solid #D8CFD3;border-radius:22px;box-shadow:0 10px 30px -18px rgba(38,20,70,.35)}
+/* светло-серая подложка под карточками — цвета из дашборда паспорта магазина (bg #E3DCDF, карточки #F2EFF0, линии #D8CFD3) */
+.main .toolbar,.main .filter-strip,.main .catalog-context,.main .pagination-bar{border-color:#D8CFD3!important}
+.main .search-input,.main .filter-chip{background:#F2EFF0!important;border-color:#D8CFD3!important}
+.main .product-tile,.main .subcat-card{background:#F2EFF0!important;border:1px solid #D8CFD3!important;border-radius:14px!important;
+  -webkit-backdrop-filter:none!important;backdrop-filter:none!important;box-shadow:0 1px 2px rgba(30,20,24,.05)!important}
+.main .product-tile:hover,.main .subcat-card:hover{background:#F7F5F6!important;border-color:#C9BDC3!important;box-shadow:0 8px 20px -10px rgba(30,20,24,.25)!important}
+.main .product-tile-photo,.main .product-tile-photo-placeholder,.main .subcat-card-photo-wrap{background:#E9E4E6!important;border-radius:10px;margin:6px 6px 0}
+.toolbar,.filter-strip,.catalog-context,.pagination-bar{background:transparent!important;border-color:rgba(255,255,255,.45)!important}
+.search-input{background:var(--gl-hi)!important;border:1px solid var(--edge)!important;border-radius:999px!important}
+.search-input:focus{border-color:#5A3B8C!important;box-shadow:0 0 0 3px rgba(90,59,140,.18)!important}
+.subcat-side-btn.active,.sidebar .active{background:var(--dk)!important;color:#fff!important;border-radius:12px}
+.filter-chip{background:var(--gl-hi)!important;border:1px solid var(--edge)!important;border-radius:999px!important}
+/* карточки */
+.product-tile,.subcat-card{background:var(--gl)!important;border:1px solid var(--edge)!important;border-radius:22px!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 10px 30px -18px rgba(38,20,70,.45)!important}
+.product-tile:hover,.subcat-card:hover{background:var(--gl-hi)!important;transform:translateY(-3px)}
+.product-tile-photo,.product-tile-photo-placeholder,.subcat-card-photo-wrap{background:rgba(255,255,255,.5)!important;border-radius:16px;margin:6px 6px 0}
+.product-tile .add-btn{background:var(--dk)!important;color:#fff!important;border-radius:999px!important}
+.qty-btn{border-radius:999px!important}
+.view-switch button.active,.view-btn.active{background:var(--dk)!important;color:#fff!important}
+/* корзина */
+.cart-panel{background:rgba(249,248,253,.72)!important;border-left:1px solid var(--edge)!important;box-shadow:-20px 0 50px -20px rgba(38,20,70,.45)!important}
+.cart-item{background:var(--gl-hi)!important;border:1px solid var(--edge)!important;border-radius:16px!important}
+.send-btn{background:var(--dk)!important;border-radius:999px!important}
+.overlay{background:rgba(60,45,100,.18)!important}
+</style>
+<style id="glass-modals">
+/* окна в стиле стеклянного дашборда + серые панели как в паспорте магазина */
+#itemDetailModal{background:rgba(249,248,253,.92)!important;-webkit-backdrop-filter:blur(26px) saturate(1.3)!important;backdrop-filter:blur(26px) saturate(1.3)!important;
+  border:1px solid rgba(255,255,255,.75)!important;border-radius:22px!important;box-shadow:0 40px 90px -30px rgba(38,20,70,.65),inset 0 1px 0 rgba(255,255,255,.8)!important}
+#idm-header{background:linear-gradient(135deg,#2A1E4D,#5A3B8C)!important;padding:16px 22px!important}
+#idm-img-wrap{background:#E3DCDF!important;border-right:1px solid #D8CFD3!important}
+#idm-no-img{color:#8C7F86!important}
+#idm-code-big{background:#F2EFF0!important;border:1px solid #D8CFD3!important;border-radius:12px!important}
+#itemDetailModal [style*="#9682B6"]{color:#7A7489!important}
+#idm-kits-tags button{background:#F2EFF0!important;border:1px solid #D8CFD3!important;color:#403D49!important;border-radius:999px!important}
+#idm-cart-btn{background:#1A181D!important;border-radius:999px!important}
+#itemDetailModal .qty-btn{border-radius:999px!important}
+#idm-compat-btn{background:#F2EFF0!important;color:#1A6A3A!important;border:1px solid #BFD9C7!important;border-radius:999px!important;box-shadow:none!important}
+#idm-compat-btn span{background:#2f9e6b!important;color:#fff!important}
+#idm-analog-btn{border-radius:999px!important}
+#idm-kit-panel{background:#F2EFF0!important;border-left:1px solid #D8CFD3!important}
+#idm-kp-header{background:linear-gradient(135deg,#2A1E4D,#5A3B8C)!important}
+/* панель совместимости — общая основа */
+#idm-compat-panel{background:#F2EFF0!important;border-top:1px solid #D8CFD3!important}
+#idm-compat-panel>div:first-child{background:transparent!important;padding:12px 18px 4px!important}
+#idm-compat-panel>div:first-child span{color:#19171C!important;font-size:12px!important;font-weight:700!important;letter-spacing:.06em;text-transform:uppercase}
+#idm-compat-panel>div:first-child button{background:#E3DCDF!important;color:#403D49!important}
+#idm-compat-list>div{background:#fff!important;border:1px solid #D8CFD3!important;border-radius:12px!important}
+#idm-compat-list>div:hover{border-color:#2f9e6b!important;box-shadow:0 6px 16px -10px rgba(26,60,40,.35)!important}
+#idm-compat-list input{border:1px solid #D8CFD3!important;border-radius:999px!important;width:44px!important}
+#idm-compat-list button{border-radius:999px!important;background:#1A181D!important}
+#idm-compat-list button:not(:empty)[style*="3aaa6a"]{background:#2f9e6b!important}
+#idm-main{min-width:0!important;width:min(760px,90vw)!important;flex:none!important}
+#itemDetailModal{width:max-content!important;max-width:94vw!important}
+#idm-compat-list>div>span:nth-child(1),#idm-compat-list>div>span:nth-child(2){text-align:left!important;justify-self:start}
+</style>
+<style id="compat-a">/* Вариант А: список под карточкой */
+#idm-compat-list{padding:8px 18px 16px!important;max-height:240px!important}
+</style>
+<style id="glass-perf">
+/* v1.75: производительность — фон уже мягкий, живое размытие только у окон поверх контента */
+body::before{filter:none!important;inset:0!important}
+.logo,.header-right button,.cat-topbar,.sidebar,.search-input,.product-tile,.subcat-card{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+.header-right button,.logo,.cat-topbar{background:rgba(246,244,252,.62)!important}
+.header-right .cart-btn{background:#1A181D!important}
+.sidebar{background:rgba(246,244,252,.58)!important}
+</style>
+<script>
+/* v1.75: индикатор-пилюля, перетекающая к активной категории */
+(function(){function init(){var bar=document.getElementById('catTopbar');if(!bar||bar.querySelector('.gpill'))return;
+var pill=document.createElement('span');pill.className='gpill';pill.setAttribute('aria-hidden','true');bar.insertBefore(pill,bar.firstChild);
+var last=null;function move(){var a=bar.querySelector('.cat-btn.active');if(!a){pill.style.opacity=0;return}
+pill.style.opacity=1;pill.style.left=a.offsetLeft+'px';pill.style.width=a.offsetWidth+'px';pill.style.top=a.offsetTop+'px';pill.style.height=a.offsetHeight+'px';
+if(last&&last!==a){pill.classList.add('squish');setTimeout(function(){pill.classList.remove('squish')},180)}last=a}
+new MutationObserver(move).observe(bar,{subtree:true,attributes:true,attributeFilter:['class']});
+window.addEventListener('resize',move);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(move);setTimeout(move,400);move()}
+document.readyState==='loading'?document.addEventListener('DOMContentLoaded',init):init()})();
+</script>
 </head>
 <body>
 <input type="file" id="fileInput" accept=".xlsx,.xls">
@@ -561,7 +695,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:none;box-s
     <div>
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="logo-text">Каталог оборудования Kari</div>
-        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.74</div>
+        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.75</div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="logo-sub" id="catalogInfo">Загрузка…</div>
@@ -602,7 +736,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:none;box-s
             style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:'Nunito',sans-serif;outline:none;box-sizing:border-box;">
           <div id="fb-results" style="display:none;position:absolute;top:100%;left:0;right:0;max-height:180px;overflow-y:auto;background:#fff;border:1px solid var(--border);border-top:none;border-radius:0 0 9px 9px;box-shadow:0 8px 20px rgba(0,0,0,.12);z-index:10;"></div>
         </div>
-        <div id="fb-selected" style="display:none;margin-top:6px;padding:6px 10px;background:#f0f4fa;border-radius:8px;font-size:12px;color:var(--text);display:none;">
+        <div id="fb-selected" style="display:none;margin-top:6px;padding:6px 10px;background:#F4F2F7;border-radius:8px;font-size:12px;color:var(--text);display:none;">
           <span id="fb-sel-code" style="font-weight:800;"></span> <span id="fb-sel-name"></span>
           <button onclick="fbClearSelection()" style="float:right;background:none;border:none;color:var(--text3);cursor:pointer;font-size:12px;">✕</button>
         </div>
@@ -630,24 +764,24 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:none;box-s
     <ul class="authors-list" id="authorsList">
       <li><span>👤</span> —</li>
     </ul>
-    <div style="font-size:11px;color:var(--text3);margin-bottom:16px;">Версия <span id="modalAppVersion">1.73</span> · 2026</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:16px;">Версия <span id="modalAppVersion">1.75</span> · 2026</div>
     <button onclick="document.getElementById('authorsOverlay').classList.remove('show')"
-      style="background:linear-gradient(135deg,#4a7fc1,#7458b8);color:#fff;border:none;border-radius:10px;
+      style="background:linear-gradient(135deg,#7960A2,#7B6DB0);color:#fff;border:none;border-radius:10px;
       padding:10px 28px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;
-      box-shadow:0 4px 14px rgba(74,127,193,.3);transition:all .2s;">Закрыть</button>
+      box-shadow:0 4px 14px rgba(121,96,162,.3);transition:all .2s;">Закрыть</button>
   </div>
 </div>
 
 <!-- ═══════════════ ГОРИЗОНТАЛЬНАЯ ПАНЕЛЬ РАЗДЕЛОВ ═══════════════ -->
 <div class="cat-topbar" id="catTopbar">
-  <button class="cat-btn active" onclick="selectCat('all')" id="btn-all" style="--cat-color:#4a7fc1">
+  <button class="cat-btn active" onclick="selectCat('all')" id="btn-all" style="--cat-color:#7960A2">
     <span class="cat-icon lottie-icon" id="lottie-cat-all" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Все категории</span><span class="cat-count" id="cnt-all">0</span>
   </button>
-  <button class="cat-btn" onclick="selectCat('kits')" id="btn-kits" style="--cat-color:#6b48c8">
+  <button class="cat-btn" onclick="selectCat('kits')" id="btn-kits" style="--cat-color:#7265A3">
     <span class="cat-icon lottie-icon" id="lottie-cat-kits" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Комплекты</span><span class="cat-count" id="cnt-kits">0</span>
   </button>
   <div class="topbar-divider"></div>
-  <button class="cat-btn" onclick="selectCat('Торговое оборудование')" id="btn-Торговое оборудование" style="--cat-color:#4a7fc1">
+  <button class="cat-btn" onclick="selectCat('Торговое оборудование')" id="btn-Торговое оборудование" style="--cat-color:#7960A2">
     <span class="cat-icon lottie-icon" id="lottie-cat-torg" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Торговое оборудование</span><span class="cat-count" id="cnt-Торговое оборудование">0</span>
   </button>
   <button class="cat-btn" onclick="selectCat('Ювелирное оборудование')" id="btn-Ювелирное оборудование" style="--cat-color:#b84580">
@@ -659,7 +793,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:none;box-s
   <button class="cat-btn" onclick="selectCat('Рекламные материалы')" id="btn-Рекламные материалы" style="--cat-color:#c07a2a">
     <span class="cat-icon lottie-icon" id="lottie-cat-reklam" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Рекламные материалы</span><span class="cat-count" id="cnt-Рекламные материалы">0</span>
   </button>
-  <button class="cat-btn" onclick="selectCat('Канцелярия')" id="btn-Канцелярия" style="--cat-color:#7458b8">
+  <button class="cat-btn" onclick="selectCat('Канцелярия')" id="btn-Канцелярия" style="--cat-color:#7B6DB0">
     <span class="cat-icon lottie-icon" id="lottie-cat-kanc" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Канцелярия</span><span class="cat-count" id="cnt-Канцелярия">0</span>
   </button>
   <button class="cat-btn" onclick="selectCat('light')" id="btn-light" style="--cat-color:#e07a20">
@@ -668,7 +802,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:none;box-s
   <button class="cat-btn" onclick="selectCat('tv')" id="btn-tv" style="--cat-color:#0e7490">
     <span class="cat-icon lottie-icon" id="lottie-cat-tv" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Слаботочное оборудование</span><span class="cat-count" id="cnt-tv">0</span>
   </button>
-  <button class="cat-btn" onclick="selectCat('ИТ оборудование')" id="btn-ИТ оборудование" style="--cat-color:#0e6ba8">
+  <button class="cat-btn" onclick="selectCat('ИТ оборудование')" id="btn-ИТ оборудование" style="--cat-color:#604290">
     <span class="cat-icon lottie-icon" id="lottie-cat-it" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">ИТ оборудование</span><span class="cat-count" id="cnt-ИТ оборудование">0</span>
   </button>
 </div>
@@ -857,7 +991,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:none;box-s
         <span style="font-size:16px;flex-shrink:0;">📋</span>
         <span style="font-size:13px;font-weight:700;color:var(--text2);white-space:nowrap;">Загрузка номенклатур</span>
         <span class="results-info" id="nlistInfo" style="margin-left:4px;">—</span>
-        <span id="nlistShopBadge" style="display:none;margin-left:6px;background:linear-gradient(135deg,#2a5fa8,#4a7fc1);color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">🏬 Магазин №—</span>
+        <span id="nlistShopBadge" style="display:none;margin-left:6px;background:linear-gradient(135deg,#583A88,#7960A2);color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">🏬 Магазин №—</span>
       </div>
       <div class="search-wrap" style="max-width:340px;min-width:180px;">
         <span style="position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:13px;pointer-events:none;">🔍</span>
@@ -868,7 +1002,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:none;box-s
       </div>
       <input type="file" id="nlistFileInput" accept=".xlsx,.xls" style="display:none">
       <button onclick="document.getElementById('nlistFileInput').click()"
-        style="background:linear-gradient(135deg,#2a5fa8,#4a7fc1);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;white-space:nowrap;transition:all .2s;"
+        style="background:linear-gradient(135deg,#583A88,#7960A2);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;white-space:nowrap;transition:all .2s;"
         onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
         📂 Загрузить xlsx
       </button>
@@ -924,7 +1058,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:none;box-s
 <!-- ═══ NLIST: модалка номера магазина (обязательна перед загрузкой файла) ═══ -->
 <div id="nlistShopOverlay" style="display:none;position:fixed;inset:0;background:rgba(20,20,35,.6);backdrop-filter:blur(5px);z-index:700;align-items:center;justify-content:center;" onclick="if(event.target===this)closeNlistShopModal()">
   <div style="background:var(--surface2);border-radius:18px;width:min(420px,94vw);box-shadow:0 24px 64px rgba(0,0,0,.35);overflow:hidden;animation:authIn .3s ease;">
-    <div style="background:linear-gradient(135deg,#2a5fa8,#4a7fc1);padding:18px 24px;display:flex;align-items:center;gap:12px;">
+    <div style="background:linear-gradient(135deg,#583A88,#7960A2);padding:18px 24px;display:flex;align-items:center;gap:12px;">
       <span style="font-size:22px;">🏬</span>
       <div style="flex:1;min-width:0;">
         <div style="font-size:16px;font-weight:800;color:#fff;">Номер магазина</div>
@@ -937,12 +1071,12 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:none;box-s
         <div style="font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;">№ магазина *</div>
         <input id="nlistShopInput" type="text" placeholder="Например: 1234" autocomplete="off"
           style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:15px;font-family:'JetBrains Mono',monospace;font-weight:700;outline:none;box-sizing:border-box;color:var(--text);background:var(--surface3);"
-          onfocus="this.style.borderColor='#4a7fc1'" onblur="this.style.borderColor=''"
+          onfocus="this.style.borderColor='#7960A2'" onblur="this.style.borderColor=''"
           onkeydown="if(event.key==='Enter')confirmNlistShopModal()">
       </div>
       <div id="nlistShopError" style="font-size:12px;font-weight:700;color:#c03030;min-height:16px;"></div>
       <button onclick="confirmNlistShopModal()"
-        style="width:100%;height:44px;background:linear-gradient(135deg,#2a5fa8,#4a7fc1);color:#fff;border:none;border-radius:11px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s;box-shadow:0 4px 16px rgba(74,127,193,.35);"
+        style="width:100%;height:44px;background:linear-gradient(135deg,#583A88,#7960A2);color:#fff;border:none;border-radius:11px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s;box-shadow:0 4px 16px rgba(121,96,162,.35);"
         onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
         📂 Загрузить список
       </button>
@@ -953,7 +1087,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:none;box-s
 <!-- ═══ NLIST: модалка истории загрузок по магазинам ═══ -->
 <div id="nlistHistoryOverlay" style="display:none;position:fixed;inset:0;background:rgba(20,20,35,.6);backdrop-filter:blur(5px);z-index:700;align-items:center;justify-content:center;" onclick="if(event.target===this)closeNlistHistory()">
   <div style="background:var(--surface2);border-radius:18px;width:min(620px,94vw);max-height:80vh;box-shadow:0 24px 64px rgba(0,0,0,.35);overflow:hidden;display:flex;flex-direction:column;animation:authIn .3s ease;">
-    <div style="background:linear-gradient(135deg,#2a5fa8,#4a7fc1);padding:18px 24px;display:flex;align-items:center;gap:10px;flex-shrink:0;">
+    <div style="background:linear-gradient(135deg,#583A88,#7960A2);padding:18px 24px;display:flex;align-items:center;gap:10px;flex-shrink:0;">
       <span style="font-size:22px;">📜</span>
       <div style="flex:1;min-width:0;">
         <div style="font-size:16px;font-weight:800;color:#fff;">История загрузок</div>
@@ -967,29 +1101,29 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:none;box-s
   </div>
 </div>
 <div class="upload-modal" id="kitDetailModal" style="max-width:780px;width:92vw;padding:0;overflow:hidden;border-radius:16px;">
-  <div style="background:linear-gradient(135deg,#2d1b69,#6b48c8);padding:20px 24px;display:flex;align-items:center;gap:12px;">
+  <div style="background:linear-gradient(135deg,#322C47,#7265A3);padding:20px 24px;display:flex;align-items:center;gap:12px;">
     <span style="font-size:22px">📦</span>
     <div style="flex:1">
       <div id="kdm-title" style="font-size:17px;font-weight:900;color:#fff;"></div>
-      <div id="kdm-desc" style="font-size:12px;color:#c4b0ff;margin-top:2px;"></div>
+      <div id="kdm-desc" style="font-size:12px;color:#C5BFDC;margin-top:2px;"></div>
     </div>
     <button onclick="closeKitDetail()" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:30px;height:30px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:900;">✕</button>
   </div>
   <div style="display:flex;gap:0;max-height:68vh;overflow:hidden;">
     <!-- Left: image gallery -->
-    <div style="width:280px;flex-shrink:0;background:#f5f1ff;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:16px 12px 10px;border-right:1px solid #ddd4ff;gap:8px;">
+    <div style="width:280px;flex-shrink:0;background:#F4F3F9;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:16px 12px 10px;border-right:1px solid #DFDCEC;gap:8px;">
       <div style="flex:1;display:flex;align-items:center;justify-content:center;width:100%;">
         <img id="kdm-img" src="" alt="Комплект" style="max-width:100%;max-height:290px;object-fit:contain;border-radius:10px;display:none;cursor:zoom-in;" title="Нажмите для увеличения">
-        <div id="kdm-no-img" style="text-align:center;color:#7c5cbf;font-size:13px;">
+        <div id="kdm-no-img" style="text-align:center;color:#8073B3;font-size:13px;">
           <div style="font-size:40px;margin-bottom:8px;">📦</div>
           Фото недоступно
         </div>
       </div>
       <div id="kdm-gallery-nav" style="display:none;width:100%;flex-direction:column;align-items:center;gap:6px;">
         <div style="display:flex;align-items:center;gap:8px;">
-          <button onclick="kdmGalleryStep(-1)" style="width:28px;height:28px;border:none;border-radius:50%;background:#e0d4ff;color:#6b48c8;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:900;" onmouseover="this.style.background='#d0c0f0'" onmouseout="this.style.background='#e0d4ff'">‹</button>
-          <span id="kdm-gallery-counter" style="font-size:12px;font-weight:700;color:#7c5cbf;min-width:36px;text-align:center;">1 / 1</span>
-          <button onclick="kdmGalleryStep(1)" style="width:28px;height:28px;border:none;border-radius:50%;background:#e0d4ff;color:#6b48c8;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:900;" onmouseover="this.style.background='#d0c0f0'" onmouseout="this.style.background='#e0d4ff'">›</button>
+          <button onclick="kdmGalleryStep(-1)" style="width:28px;height:28px;border:none;border-radius:50%;background:#DFDCEC;color:#7265A3;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:900;" onmouseover="this.style.background='#CFCAE2'" onmouseout="this.style.background='#DFDCEC'">‹</button>
+          <span id="kdm-gallery-counter" style="font-size:12px;font-weight:700;color:#8073B3;min-width:36px;text-align:center;">1 / 1</span>
+          <button onclick="kdmGalleryStep(1)" style="width:28px;height:28px;border:none;border-radius:50%;background:#DFDCEC;color:#7265A3;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:900;" onmouseover="this.style.background='#CFCAE2'" onmouseout="this.style.background='#DFDCEC'">›</button>
         </div>
         <div id="kdm-gallery-dots" style="display:flex;gap:5px;align-items:center;flex-wrap:wrap;justify-content:center;max-width:220px;"></div>
       </div>
@@ -998,26 +1132,26 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:none;box-s
     <div style="flex:1;overflow-y:auto;padding:0;">
       <table style="width:100%;border-collapse:collapse;">
         <thead>
-          <tr style="background:#f5f1ff;position:sticky;top:0;z-index:1;">
-            <th style="padding:10px 12px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#7c5cbf;border-bottom:2px solid #ddd4ff;text-align:center;width:32px;">№</th>
-            <th style="padding:10px 12px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#7c5cbf;border-bottom:2px solid #ddd4ff;text-align:left;">Код</th>
-            <th style="padding:10px 12px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#7c5cbf;border-bottom:2px solid #ddd4ff;text-align:left;">Наименование</th>
-            <th style="padding:10px 12px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#7c5cbf;border-bottom:2px solid #ddd4ff;text-align:center;">Кол-во</th>
+          <tr style="background:#F4F3F9;position:sticky;top:0;z-index:1;">
+            <th style="padding:10px 12px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#8073B3;border-bottom:2px solid #DFDCEC;text-align:center;width:32px;">№</th>
+            <th style="padding:10px 12px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#8073B3;border-bottom:2px solid #DFDCEC;text-align:left;">Код</th>
+            <th style="padding:10px 12px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#8073B3;border-bottom:2px solid #DFDCEC;text-align:left;">Наименование</th>
+            <th style="padding:10px 12px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#8073B3;border-bottom:2px solid #DFDCEC;text-align:center;">Кол-во</th>
           </tr>
         </thead>
         <tbody id="kdm-tbody"></tbody>
       </table>
     </div>
   </div>
-  <div style="padding:14px 24px;background:#faf8ff;border-top:1px solid #ede8ff;display:flex;align-items:center;gap:14px;">
+  <div style="padding:14px 24px;background:#FAF9FC;border-top:1px solid #EEECF5;display:flex;align-items:center;gap:14px;">
     <input type="hidden" id="kdm-kit-id">
-    <span style="font-size:12px;font-weight:700;color:#7c5cbf;">Количество комплектов:</span>
+    <span style="font-size:12px;font-weight:700;color:#8073B3;">Количество комплектов:</span>
     <div style="display:flex;align-items:center;">
-      <button onclick="document.getElementById('kdm-qty-input').value=Math.max(1,(parseInt(document.getElementById('kdm-qty-input').value)||1)-1)" style="width:30px;height:30px;background:linear-gradient(135deg,#8060e0,#6b48c8);border:none;color:#fff;border-radius:7px 0 0 7px;font-size:16px;cursor:pointer;">−</button>
-      <input id="kdm-qty-input" type="number" value="1" min="1" max="99" style="width:46px;height:30px;border:1px solid #c4b0ff;border-left:none;border-right:none;text-align:center;font-family:monospace;font-size:13px;font-weight:700;outline:none;">
-      <button onclick="document.getElementById('kdm-qty-input').value=Math.min(99,(parseInt(document.getElementById('kdm-qty-input').value)||1)+1)" style="width:30px;height:30px;background:linear-gradient(135deg,#8060e0,#6b48c8);border:none;color:#fff;border-radius:0 7px 7px 0;font-size:16px;cursor:pointer;">+</button>
+      <button onclick="document.getElementById('kdm-qty-input').value=Math.max(1,(parseInt(document.getElementById('kdm-qty-input').value)||1)-1)" style="width:30px;height:30px;background:linear-gradient(135deg,#887BB8,#7265A3);border:none;color:#fff;border-radius:7px 0 0 7px;font-size:16px;cursor:pointer;">−</button>
+      <input id="kdm-qty-input" type="number" value="1" min="1" max="99" style="width:46px;height:30px;border:1px solid #C5BFDC;border-left:none;border-right:none;text-align:center;font-family:monospace;font-size:13px;font-weight:700;outline:none;">
+      <button onclick="document.getElementById('kdm-qty-input').value=Math.min(99,(parseInt(document.getElementById('kdm-qty-input').value)||1)+1)" style="width:30px;height:30px;background:linear-gradient(135deg,#887BB8,#7265A3);border:none;color:#fff;border-radius:0 7px 7px 0;font-size:16px;cursor:pointer;">+</button>
     </div>
-    <button onclick="addKitDetailToCart()" style="margin-left:auto;background:linear-gradient(135deg,#8060e0,#6b48c8);color:#fff;border:none;border-radius:10px;padding:10px 22px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(107,72,200,.35);">🛒 Добавить в корзину</button>
+    <button onclick="addKitDetailToCart()" style="margin-left:auto;background:linear-gradient(135deg,#887BB8,#7265A3);color:#fff;border:none;border-radius:10px;padding:10px 22px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(114,101,163,.35);">🛒 Добавить в корзину</button>
   </div>
 </div>
 
@@ -1107,21 +1241,21 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:none;box-s
 
   <!-- Карточка товара -->
   <div id="idm-main" style="min-width:0;flex:1;display:flex;flex-direction:column;">
-  <div id="idm-header" style="background:linear-gradient(135deg,#2a4a7f,#4a7fc1);padding:20px 24px;display:flex;align-items:center;gap:12px;">
+  <div id="idm-header" style="background:linear-gradient(135deg,#452D6B,#7960A2);padding:20px 24px;display:flex;align-items:center;gap:12px;">
     <span id="idm-icon" style="font-size:22px">📦</span>
     <div style="flex:1;min-width:0;">
       <div id="idm-title" style="font-size:17px;font-weight:900;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
-      <div id="idm-code-sub" style="font-size:12px;color:#a5c8f8;margin-top:2px;font-family:monospace;"></div>
+      <div id="idm-code-sub" style="font-size:12px;color:#C4B9D6;margin-top:2px;font-family:monospace;"></div>
     </div>
     <button onclick="closeItemDetail()" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:30px;height:30px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:900;flex-shrink:0;">✕</button>
   </div>
   <div style="display:flex;gap:0;overflow-y:auto;">
     <!-- Left: фото -->
-    <div id="idm-img-wrap" style="width:260px;flex-shrink:0;background:#f0f4fa;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:16px 12px 10px;border-right:1px solid #c8d8f0;gap:8px;">
+    <div id="idm-img-wrap" style="width:260px;flex-shrink:0;background:#F4F2F7;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:16px 12px 10px;border-right:1px solid #D6CFE3;gap:8px;">
       <!-- Главное фото -->
       <div style="flex:1;display:flex;align-items:center;justify-content:center;width:100%;">
         <img id="idm-img" src="" alt="" style="max-width:100%;max-height:290px;object-fit:contain;border-radius:10px;display:none;cursor:zoom-in;" title="Нажмите для увеличения">
-        <div id="idm-no-img" style="text-align:center;color:#7a9bc0;font-size:13px;">
+        <div id="idm-no-img" style="text-align:center;color:#9682B6;font-size:13px;">
           <div style="font-size:40px;margin-bottom:8px;">📷</div>
           Фото недоступно
         </div>
@@ -1130,9 +1264,9 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:none;box-s
       <div id="idm-gallery-nav" style="display:none;width:100%;flex-direction:column;align-items:center;gap:6px;">
         <!-- Счётчик + кнопки -->
         <div style="display:flex;align-items:center;gap:8px;">
-          <button onclick="idmGalleryStep(-1)" style="width:28px;height:28px;border:none;border-radius:50%;background:#e0eaf8;color:#2a5fa8;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:900;transition:background .15s;" onmouseover="this.style.background='#c8d8f0'" onmouseout="this.style.background='#e0eaf8'">‹</button>
-          <span id="idm-gallery-counter" style="font-size:12px;font-weight:700;color:#7a9bc0;min-width:36px;text-align:center;">1 / 1</span>
-          <button onclick="idmGalleryStep(1)"  style="width:28px;height:28px;border:none;border-radius:50%;background:#e0eaf8;color:#2a5fa8;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:900;transition:background .15s;" onmouseover="this.style.background='#c8d8f0'" onmouseout="this.style.background='#e0eaf8'">›</button>
+          <button onclick="idmGalleryStep(-1)" style="width:28px;height:28px;border:none;border-radius:50%;background:#E9E4EF;color:#583A88;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:900;transition:background .15s;" onmouseover="this.style.background='#D6CFE3'" onmouseout="this.style.background='#E9E4EF'">‹</button>
+          <span id="idm-gallery-counter" style="font-size:12px;font-weight:700;color:#9682B6;min-width:36px;text-align:center;">1 / 1</span>
+          <button onclick="idmGalleryStep(1)"  style="width:28px;height:28px;border:none;border-radius:50%;background:#E9E4EF;color:#583A88;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:900;transition:background .15s;" onmouseover="this.style.background='#D6CFE3'" onmouseout="this.style.background='#E9E4EF'">›</button>
         </div>
         <!-- Точки-индикаторы -->
         <div id="idm-gallery-dots" style="display:flex;gap:5px;align-items:center;flex-wrap:wrap;justify-content:center;max-width:220px;"></div>
@@ -1143,26 +1277,26 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:none;box-s
     <!-- Right: детали -->
     <div style="flex:1;min-width:280px;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:14px;">
       <div>
-        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#7a9bc0;margin-bottom:6px;">КОД НОМЕНКЛАТУРЫ</div>
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9682B6;margin-bottom:6px;">КОД НОМЕНКЛАТУРЫ</div>
         <div id="idm-code-big" style="font-family:monospace;font-size:15px;font-weight:700;color:var(--text);background:var(--bg);padding:8px 12px;border-radius:8px;border:1px solid var(--border);"></div>
       </div>
       <div>
-        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#7a9bc0;margin-bottom:6px;">НАИМЕНОВАНИЕ</div>
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9682B6;margin-bottom:6px;">НАИМЕНОВАНИЕ</div>
         <div id="idm-name-full" style="font-size:14px;color:var(--text);line-height:1.5;"></div>
       </div>
       <div id="idm-short-wrap" style="display:none;">
-        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#7a9bc0;margin-bottom:6px;">ОПИСАНИЕ</div>
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9682B6;margin-bottom:6px;">ОПИСАНИЕ</div>
         <div id="idm-short" style="font-size:13px;color:var(--text2);line-height:1.5;"></div>
       </div>
       <div id="idm-cat-wrap" style="display:none;">
-        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#7a9bc0;margin-bottom:6px;">РАЗДЕЛ</div>
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9682B6;margin-bottom:6px;">РАЗДЕЛ</div>
         <div style="display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;">
           <div id="idm-cat" style="font-size:13px;font-weight:700;"></div>
         </div>
       </div>
       <!-- ══ ИСПОЛЬЗУЕТСЯ В КОМПЛЕКТАХ ══ -->
       <div id="idm-kits-wrap" style="display:none;">
-        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#7a9bc0;margin-bottom:8px;">Используется в оборудовании</div>
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9682B6;margin-bottom:8px;">Используется в оборудовании</div>
         <div id="idm-kits-tags" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
       </div>
       <!-- Кнопка Аналоги (на всю ширину) -->
@@ -1186,7 +1320,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:none;box-s
             <input class="qty-input" type="number" min="1" id="idm-qty" value="1">
             <button class="qty-btn" onclick="idmChangeQty(1)">+</button>
           </div>
-          <button id="idm-cart-btn" onclick="idmAddToCart()" style="flex:1;height:40px;background:linear-gradient(135deg,#2a4a7f,#4a7fc1);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;">
+          <button id="idm-cart-btn" onclick="idmAddToCart()" style="flex:1;height:40px;background:linear-gradient(135deg,#452D6B,#7960A2);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;">
             + В корзину
           </button>
         </div>
@@ -1196,40 +1330,40 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:none;box-s
   </div><!-- /idm-main -->
 
   <!-- Правая часть: панель комплекта (появляется при клике на тег) -->
-  <div id="idm-kit-panel" style="display:none;width:380px;flex-shrink:0;border-left:2px solid #ddd4ff;background:#faf8ff;flex-direction:column;overflow:hidden;">
-    <div id="idm-kp-header" style="background:linear-gradient(135deg,#2d1b69,#6b48c8);padding:14px 18px;display:flex;align-items:center;gap:10px;">
+  <div id="idm-kit-panel" style="display:none;width:380px;flex-shrink:0;border-left:2px solid #DFDCEC;background:#FAF9FC;flex-direction:column;overflow:hidden;">
+    <div id="idm-kp-header" style="background:linear-gradient(135deg,#322C47,#7265A3);padding:14px 18px;display:flex;align-items:center;gap:10px;">
       <span style="font-size:18px">📦</span>
       <div style="flex:1;min-width:0;">
         <div id="idm-kp-name" style="font-size:14px;font-weight:900;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
-        <div id="idm-kp-desc" style="font-size:11px;color:#c4b0ff;margin-top:2px;"></div>
+        <div id="idm-kp-desc" style="font-size:11px;color:#C5BFDC;margin-top:2px;"></div>
       </div>
       <button onclick="idmCloseKitPanel()" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:26px;height:26px;border-radius:50%;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:900;flex-shrink:0;">✕</button>
     </div>
     <!-- Фото комплекта -->
-    <div id="idm-kp-photo-wrap" style="display:none;background:#f0ecff;border-bottom:1px solid #ddd4ff;padding:10px 14px;align-items:center;justify-content:center;gap:12px;">
-      <img id="idm-kp-photo" src="" alt="" style="max-height:140px;max-width:100%;object-fit:contain;border-radius:8px;cursor:zoom-in;box-shadow:0 2px 10px rgba(107,72,200,.15);" title="Нажмите для увеличения">
+    <div id="idm-kp-photo-wrap" style="display:none;background:#F0EFF6;border-bottom:1px solid #DFDCEC;padding:10px 14px;align-items:center;justify-content:center;gap:12px;">
+      <img id="idm-kp-photo" src="" alt="" style="max-height:140px;max-width:100%;object-fit:contain;border-radius:8px;cursor:zoom-in;box-shadow:0 2px 10px rgba(114,101,163,.15);" title="Нажмите для увеличения">
     </div>
     <div style="flex:1;overflow-y:auto;">
       <table style="width:100%;border-collapse:collapse;">
         <thead>
-          <tr style="background:#f0ecff;position:sticky;top:0;z-index:1;">
-            <th style="padding:8px 10px;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:#7c5cbf;border-bottom:2px solid #ddd4ff;text-align:center;width:28px;">№</th>
-            <th style="padding:8px 10px;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:#7c5cbf;border-bottom:2px solid #ddd4ff;text-align:left;">Код</th>
-            <th style="padding:8px 10px;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:#7c5cbf;border-bottom:2px solid #ddd4ff;text-align:left;">Наименование</th>
-            <th style="padding:8px 10px;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:#7c5cbf;border-bottom:2px solid #ddd4ff;text-align:center;">Кол-во</th>
+          <tr style="background:#F0EFF6;position:sticky;top:0;z-index:1;">
+            <th style="padding:8px 10px;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:#8073B3;border-bottom:2px solid #DFDCEC;text-align:center;width:28px;">№</th>
+            <th style="padding:8px 10px;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:#8073B3;border-bottom:2px solid #DFDCEC;text-align:left;">Код</th>
+            <th style="padding:8px 10px;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:#8073B3;border-bottom:2px solid #DFDCEC;text-align:left;">Наименование</th>
+            <th style="padding:8px 10px;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:#8073B3;border-bottom:2px solid #DFDCEC;text-align:center;">Кол-во</th>
           </tr>
         </thead>
         <tbody id="idm-kp-tbody"></tbody>
       </table>
     </div>
-    <div style="padding:12px 18px;background:#faf8ff;border-top:1px solid #ede8ff;display:flex;align-items:center;gap:10px;">
-      <span style="font-size:12px;font-weight:700;color:#7c5cbf;">Комплектов:</span>
+    <div style="padding:12px 18px;background:#FAF9FC;border-top:1px solid #EEECF5;display:flex;align-items:center;gap:10px;">
+      <span style="font-size:12px;font-weight:700;color:#8073B3;">Комплектов:</span>
       <div style="display:flex;align-items:center;">
-        <button onclick="document.getElementById('idm-kp-qty').value=Math.max(1,(parseInt(document.getElementById('idm-kp-qty').value)||1)-1)" style="width:28px;height:28px;background:linear-gradient(135deg,#8060e0,#6b48c8);border:none;color:#fff;border-radius:7px 0 0 7px;font-size:15px;cursor:pointer;">−</button>
-        <input id="idm-kp-qty" type="number" value="1" min="1" max="99" style="width:42px;height:28px;border:1px solid #c4b0ff;border-left:none;border-right:none;text-align:center;font-family:monospace;font-size:13px;font-weight:700;outline:none;">
-        <button onclick="document.getElementById('idm-kp-qty').value=Math.min(99,(parseInt(document.getElementById('idm-kp-qty').value)||1)+1)" style="width:28px;height:28px;background:linear-gradient(135deg,#8060e0,#6b48c8);border:none;color:#fff;border-radius:0 7px 7px 0;font-size:15px;cursor:pointer;">+</button>
+        <button onclick="document.getElementById('idm-kp-qty').value=Math.max(1,(parseInt(document.getElementById('idm-kp-qty').value)||1)-1)" style="width:28px;height:28px;background:linear-gradient(135deg,#887BB8,#7265A3);border:none;color:#fff;border-radius:7px 0 0 7px;font-size:15px;cursor:pointer;">−</button>
+        <input id="idm-kp-qty" type="number" value="1" min="1" max="99" style="width:42px;height:28px;border:1px solid #C5BFDC;border-left:none;border-right:none;text-align:center;font-family:monospace;font-size:13px;font-weight:700;outline:none;">
+        <button onclick="document.getElementById('idm-kp-qty').value=Math.min(99,(parseInt(document.getElementById('idm-kp-qty').value)||1)+1)" style="width:28px;height:28px;background:linear-gradient(135deg,#887BB8,#7265A3);border:none;color:#fff;border-radius:0 7px 7px 0;font-size:15px;cursor:pointer;">+</button>
       </div>
-      <button onclick="idmKpAddToCart()" style="margin-left:auto;background:linear-gradient(135deg,#8060e0,#6b48c8);color:#fff;border:none;border-radius:9px;padding:8px 16px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 3px 10px rgba(107,72,200,.3);">🛒 В корзину</button>
+      <button onclick="idmKpAddToCart()" style="margin-left:auto;background:linear-gradient(135deg,#887BB8,#7265A3);color:#fff;border:none;border-radius:9px;padding:8px 16px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 3px 10px rgba(114,101,163,.3);">🛒 В корзину</button>
     </div>
   </div>
 
@@ -1307,7 +1441,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:none;box-s
       <input type="text" class="form-input" id="orderComment" placeholder="Срочная поставка…">
     </div></div>
     <input type="hidden" id="shopName">
-    <button class="send-btn" onclick="sendToAdminDir()" style="background:linear-gradient(135deg,#5a3a9a,#7a52c8);box-shadow:0 4px 14px rgba(116,88,184,.35);margin-top:6px;"><span class="lottie-icon" id="lottie-send-admin" style="width:18px;height:18px;"></span> Отправить административному директору</button>
+    <button class="send-btn" onclick="sendToAdminDir()" style="background:linear-gradient(135deg,#5B5082,#7B6EB0);box-shadow:0 4px 14px rgba(123,109,176,.35);margin-top:6px;"><span class="lottie-icon" id="lottie-send-admin" style="width:18px;height:18px;"></span> Отправить административному директору</button>
   </div>
 </div>
 
@@ -1333,7 +1467,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:none;box-s
 
 <script>
 // ═══ ВЕРСИЯ ПРИЛОЖЕНИЯ ═══
-var APP_VERSION = '1.74';
+var APP_VERSION = '1.75';
 // При каждом обновлении index.html — менять только эту строку (1.17, 1.18 и т.д.)
 (function(){
   var el = document.getElementById('appVersionBadge');
@@ -1600,10 +1734,10 @@ var LIGHT_ITEMS = [{"code": "100072Y0", "name": "Трековый прожект
 
 // ═══ COLORS ═══
 var CAT_COLORS={
-  "Торговое оборудование":"#4a7fc1","Рекламные материалы":"#c07a2a",
-  "Строительные материалы":"#3a9068","Канцелярия":"#7458b8",
+  "Торговое оборудование":"#7960A2","Рекламные материалы":"#c07a2a",
+  "Строительные материалы":"#3a9068","Канцелярия":"#7B6DB0",
   "Ювелирное оборудование":"#b84580","Материалы для оборудования":"#c05a2a",
-  "ИТ оборудование":"#0e6ba8",
+  "ИТ оборудование":"#604290",
   "Слаботочное оборудование":"#5a8a3a",
   "Неизвестное оборудование":"#7a7e90"
 };
@@ -2252,13 +2386,13 @@ var currentItemDetailKey = null; // prefixed key для корзины
 
 // Цвета хедера по разделу
 var IDM_HEADER_COLORS = {
-  'Торговое оборудование':       'linear-gradient(135deg,#1a3a6a,#2a5fa8)',
+  'Торговое оборудование':       'linear-gradient(135deg,#362354,#583A88)',
   'Рекламные материалы':         'linear-gradient(135deg,#6a2a1a,#c05020)',
   'Строительные материалы':      'linear-gradient(135deg,#2a4a1a,#4a8a20)',
   'Канцелярия':                  'linear-gradient(135deg,#1a4a4a,#2a8a8a)',
   'Ювелирное оборудование':      'linear-gradient(135deg,#4a3a0a,#9a7a10)',
-  'Материалы для оборудования':  'linear-gradient(135deg,#3a1a5a,#7a3a9a)',
-  'ИТ оборудование':             'linear-gradient(135deg,#0a2a4a,#0e6ba8)',
+  'Материалы для оборудования':  'linear-gradient(135deg,#322D48,#655A91)',
+  'ИТ оборудование':             'linear-gradient(135deg,#26193B,#604290)',
   'Неизвестное оборудование':    'linear-gradient(135deg,#3a3a3a,#6a6a6a)',
   'light':                       'linear-gradient(135deg,#5a3a00,#c07000)',
   'karikids':                    'linear-gradient(135deg,#6a1010,#c03030)'
@@ -2337,7 +2471,7 @@ function openItemDetail(item, cartKeyPrefix, keepKitPanel) {
 
   // Заголовок с цветом по разделу
   var cat = item.cat || (prefix === 'L:' ? 'light' : '');
-  var hdrColor = IDM_HEADER_COLORS[cat] || 'linear-gradient(135deg,#2a4a7f,#4a7fc1)';
+  var hdrColor = IDM_HEADER_COLORS[cat] || 'linear-gradient(135deg,#452D6B,#7960A2)';
   var hdrIcon  = IDM_HEADER_ICONS[cat]  || '📦';
   var hdr = document.getElementById('idm-header');
   hdr.style.background = hdrColor;
@@ -2450,7 +2584,7 @@ function idmGalleryInit(urls, caption){
     // Точка
     var dot = document.createElement('div');
     dot.style.cssText = 'width:7px;height:7px;border-radius:50%;cursor:pointer;transition:all .2s;flex-shrink:0;';
-    dot.style.background = i===0 ? '#2a5fa8' : '#c0cfe8';
+    dot.style.background = i===0 ? '#583A88' : '#CDC4DC';
     dot.onclick = (function(idx){ return function(){ idmGalleryShow(idx); }; })(i);
     dots.appendChild(dot);
 
@@ -2458,7 +2592,7 @@ function idmGalleryInit(urls, caption){
     if(idmGalleryUrls.length > 1){
       var th = document.createElement('img');
       th.src = url;
-      th.style.cssText = 'width:44px;height:36px;object-fit:contain;border-radius:5px;cursor:pointer;transition:all .15s;border:2px solid ' + (i===0 ? '#2a5fa8' : '#dde8f5') + ';background:#fff;';
+      th.style.cssText = 'width:44px;height:36px;object-fit:contain;border-radius:5px;cursor:pointer;transition:all .15s;border:2px solid ' + (i===0 ? '#583A88' : '#E6E2EE') + ';background:#fff;';
       th.title = 'Фото ' + (i+1);
       th.onerror = function(){ this.style.display='none'; };
       th.onclick = (function(idx){ return function(){ idmGalleryShow(idx); }; })(i);
@@ -2493,10 +2627,10 @@ function idmGalleryShow(idx){
   var dots   = document.getElementById('idm-gallery-dots').children;
   var thumbEl = document.getElementById('idm-gallery-thumbs');
   for(var i=0; i<dots.length; i++){
-    dots[i].style.background = i===idmGalleryIdx ? '#2a5fa8' : '#c0cfe8';
+    dots[i].style.background = i===idmGalleryIdx ? '#583A88' : '#CDC4DC';
     dots[i].style.transform  = i===idmGalleryIdx ? 'scale(1.3)' : 'scale(1)';
     var th = document.getElementById('idm-thumb-' + i);
-    if(th) th.style.borderColor = i===idmGalleryIdx ? '#2a5fa8' : '#dde8f5';
+    if(th) th.style.borderColor = i===idmGalleryIdx ? '#583A88' : '#E6E2EE';
   }
 }
 
@@ -2535,15 +2669,15 @@ function idmFillKitsTags(code){
     tag.textContent = kit.id;
     tag.title = kit.name;
     tag.dataset.kitId = kit.id;
-    tag.style.cssText = 'background:linear-gradient(135deg,#ede8ff,#e4ddff);color:#6b48c8;border:1.5px solid #c4b0ff;'
+    tag.style.cssText = 'background:linear-gradient(135deg,#EEECF5,#E5E3F0);color:#7265A3;border:1.5px solid #C5BFDC;'
       + 'border-radius:20px;padding:4px 13px;font-size:12px;font-weight:800;cursor:pointer;'
       + 'font-family:"Nunito",sans-serif;transition:all .15s;white-space:nowrap;';
-    tag.onmouseover = function(){ this.style.background='linear-gradient(135deg,#6b48c8,#8060e0)'; this.style.color='#fff'; this.style.borderColor='#6b48c8'; };
+    tag.onmouseover = function(){ this.style.background='linear-gradient(135deg,#7265A3,#887BB8)'; this.style.color='#fff'; this.style.borderColor='#7265A3'; };
     tag.onmouseout  = function(){
       var isActive = idmCurrentKitId === this.dataset.kitId;
-      this.style.background = isActive ? 'linear-gradient(135deg,#6b48c8,#8060e0)' : 'linear-gradient(135deg,#ede8ff,#e4ddff)';
-      this.style.color = isActive ? '#fff' : '#6b48c8';
-      this.style.borderColor = isActive ? '#6b48c8' : '#c4b0ff';
+      this.style.background = isActive ? 'linear-gradient(135deg,#7265A3,#887BB8)' : 'linear-gradient(135deg,#EEECF5,#E5E3F0)';
+      this.style.color = isActive ? '#fff' : '#7265A3';
+      this.style.borderColor = isActive ? '#7265A3' : '#C5BFDC';
     };
     tag.onclick = function(e){
       e.stopPropagation();
@@ -2655,9 +2789,9 @@ function idmOpenKitPanel(kitId){
   // Подсвечиваем активный тег
   document.querySelectorAll('#idm-kits-tags button').forEach(function(b){
     var isActive = b.dataset.kitId === kitId;
-    b.style.background = isActive ? 'linear-gradient(135deg,#6b48c8,#8060e0)' : 'linear-gradient(135deg,#ede8ff,#e4ddff)';
-    b.style.color = isActive ? '#fff' : '#6b48c8';
-    b.style.borderColor = isActive ? '#6b48c8' : '#c4b0ff';
+    b.style.background = isActive ? 'linear-gradient(135deg,#7265A3,#887BB8)' : 'linear-gradient(135deg,#EEECF5,#E5E3F0)';
+    b.style.color = isActive ? '#fff' : '#7265A3';
+    b.style.borderColor = isActive ? '#7265A3' : '#C5BFDC';
   });
 
   // Заголовок
@@ -2685,23 +2819,23 @@ function idmOpenKitPanel(kitId){
   tbody.innerHTML = '';
   kit.items.forEach(function(it, i){
     var tr = document.createElement('tr');
-    tr.style.borderBottom = '1px solid #ede8ff';
+    tr.style.borderBottom = '1px solid #EEECF5';
     tr.style.cursor = 'pointer';
     tr.title = 'Открыть карточку: ' + it.name;
     var isCurrent = currentItemDetail && it.code === currentItemDetail.code;
-    var bgNormal = i % 2 === 0 ? '#fff' : '#faf8ff';
-    tr.style.background = isCurrent ? '#ede8ff' : bgNormal;
-    tr.onmouseover = function(){ if(!isCurrent) this.style.background = '#f0ebff'; };
-    tr.onmouseout  = function(){ this.style.background = isCurrent ? '#ede8ff' : bgNormal; };
+    var bgNormal = i % 2 === 0 ? '#fff' : '#FAF9FC';
+    tr.style.background = isCurrent ? '#EEECF5' : bgNormal;
+    tr.onmouseover = function(){ if(!isCurrent) this.style.background = '#F0EFF6'; };
+    tr.onmouseout  = function(){ this.style.background = isCurrent ? '#EEECF5' : bgNormal; };
 
     var numTd  = document.createElement('td'); numTd.textContent = i+1;
-    numTd.style.cssText = 'text-align:center;color:#9b78e8;font-weight:700;font-size:11px;padding:7px 6px;width:28px;';
+    numTd.style.cssText = 'text-align:center;color:#9B90C3;font-weight:700;font-size:11px;padding:7px 6px;width:28px;';
     var codeTd = document.createElement('td'); codeTd.textContent = it.code;
-    codeTd.style.cssText = 'font-family:monospace;font-size:11px;color:' + (isCurrent ? '#4a20a0' : '#7c5cbf') + ';white-space:nowrap;padding:7px 8px;font-weight:' + (isCurrent ? '800' : '500') + ';';
+    codeTd.style.cssText = 'font-family:monospace;font-size:11px;color:' + (isCurrent ? '#4B426B' : '#8073B3') + ';white-space:nowrap;padding:7px 8px;font-weight:' + (isCurrent ? '800' : '500') + ';';
     var nameTd = document.createElement('td'); nameTd.textContent = it.name;
     nameTd.style.cssText = 'font-size:12px;font-weight:500;padding:7px 8px;color:var(--text);';
     var qtyTd  = document.createElement('td'); qtyTd.textContent = it.qty + ' шт';
-    qtyTd.style.cssText = 'text-align:center;font-weight:800;color:#6b48c8;white-space:nowrap;font-size:12px;padding:7px 6px;';
+    qtyTd.style.cssText = 'text-align:center;font-weight:800;color:#7265A3;white-space:nowrap;font-size:12px;padding:7px 6px;';
 
     // Клик → открываем карточку позиции (ищем во всех разделах каталога)
     (function(itemCode, itemName){
@@ -2739,9 +2873,9 @@ function idmCloseKitPanel(){
   document.getElementById('itemDetailModal').style.maxWidth = '90vw';
   // Сбрасываем подсветку тегов
   document.querySelectorAll('#idm-kits-tags button').forEach(function(b){
-    b.style.background = 'linear-gradient(135deg,#ede8ff,#e4ddff)';
-    b.style.color = '#6b48c8';
-    b.style.borderColor = '#c4b0ff';
+    b.style.background = 'linear-gradient(135deg,#EEECF5,#E5E3F0)';
+    b.style.color = '#7265A3';
+    b.style.borderColor = '#C5BFDC';
   });
 }
 
@@ -3236,13 +3370,13 @@ function applyFilters(){
 
 // ── Бейдж раздела для таблицы ──
 var SECTION_BADGE_STYLES = {
-  'Торговое оборудование':      {color:'#1a5fa8',bg:'#e8f0fb'},
+  'Торговое оборудование':      {color:'#573987',bg:'#EFECF4'},
   'Рекламные материалы':        {color:'#b04010',bg:'#fce8e0'},
   'Строительные материалы':     {color:'#2a6a10',bg:'#e2f0d8'},
   'Канцелярия':                 {color:'#1a7a7a',bg:'#d8f0f0'},
   'Ювелирное оборудование':     {color:'#8a6000',bg:'#faf0cc'},
-  'Материалы для оборудования': {color:'#6a2a8a',bg:'#f0e0fa'},
-  'ИТ оборудование':            {color:'#0e6ba8',bg:'#dceefa'},
+  'Материалы для оборудования': {color:'#554B79',bg:'#E9E7F2'},
+  'ИТ оборудование':            {color:'#604290',bg:'#EBE8F1'},
   'Неизвестное оборудование':   {color:'#555',   bg:'#eee'},
   'light':                      {color:'#904800',bg:'#fef0d0'},
   'karikids':                   {color:'#8a1010',bg:'#fce0e0'}
@@ -4446,7 +4580,7 @@ function updCart(){
       var bm=document.createElement('button');bm.className='qty-btn';bm.textContent='−';bm.style.cssText='width:24px;height:24px;font-size:14px;';
       var inp=document.createElement('input');
       inp.type='number';inp.min='0';inp.value=entry.qty;
-      inp.style.cssText='width:48px;height:24px;text-align:center;font-size:13px;font-weight:700;border:1.5px solid #c4b5f8;border-radius:6px;padding:0 2px;font-family:inherit;';
+      inp.style.cssText='width:48px;height:24px;text-align:center;font-size:13px;font-weight:700;border:1.5px solid #C7C1DE;border-radius:6px;padding:0 2px;font-family:inherit;';
       var bp=document.createElement('button');bp.className='qty-btn';bp.textContent='+';bp.style.cssText='width:24px;height:24px;font-size:14px;';
       wrap.appendChild(bm);wrap.appendChild(inp);wrap.appendChild(bp);
 
@@ -4906,7 +5040,7 @@ function kdmGalleryUpdateNav(){
     for(var i=0;i<kdmGalleryUrls.length;i++){
       var dot = document.createElement('div');
       dot.style.cssText = 'width:8px;height:8px;border-radius:50%;cursor:pointer;transition:all .15s;'
-        + (i===kdmGalleryIdx ? 'background:#6b48c8;transform:scale(1.3);' : 'background:#c4b0ff;');
+        + (i===kdmGalleryIdx ? 'background:#7265A3;transform:scale(1.3);' : 'background:#C5BFDC;');
       (function(idx){ dot.onclick = function(){ kdmGalleryIdx=idx; kdmGalleryStep(0); }; })(i);
       dotsWrap.appendChild(dot);
     }
@@ -4927,7 +5061,7 @@ function openKitDetail(kitId){
   kit.items.forEach(function(it, i){
     var tr = document.createElement('tr');
     tr.style.cssText='cursor:pointer;transition:background .15s;';
-    tr.onmouseenter=function(){this.style.background='#f0ecff';};
+    tr.onmouseenter=function(){this.style.background='#F0EFF6';};
     tr.onmouseleave=function(){this.style.background='';};
     tr.onclick=(function(item){return function(){
       // Ищем позицию в основном каталоге
@@ -4940,12 +5074,12 @@ function openKitDetail(kitId){
       if(!found) found = {code:item.code, name:item.name, short:'', cat:''};
       openItemDetail(found, '', true);
     };})(it);
-    var numTd = document.createElement('td'); numTd.textContent = i+1; numTd.style.cssText='text-align:center;color:#7c5cbf;font-weight:700;width:32px';
-    var codeTd = document.createElement('td'); codeTd.textContent = it.code; codeTd.style.cssText='font-family:monospace;font-size:12px;color:#7c5cbf;white-space:nowrap';
+    var numTd = document.createElement('td'); numTd.textContent = i+1; numTd.style.cssText='text-align:center;color:#8073B3;font-weight:700;width:32px';
+    var codeTd = document.createElement('td'); codeTd.textContent = it.code; codeTd.style.cssText='font-family:monospace;font-size:12px;color:#8073B3;white-space:nowrap';
     var nameTd = document.createElement('td'); nameTd.textContent = it.name; nameTd.style.fontWeight='500';
-    var qtyTd = document.createElement('td'); qtyTd.textContent = it.qty+' шт'; qtyTd.style.cssText='text-align:center;font-weight:800;color:#6b48c8;white-space:nowrap';
+    var qtyTd = document.createElement('td'); qtyTd.textContent = it.qty+' шт'; qtyTd.style.cssText='text-align:center;font-weight:800;color:#7265A3;white-space:nowrap';
     // Иконка-стрелка для визуальной подсказки кликабельности
-    var arrowTd = document.createElement('td'); arrowTd.textContent='›'; arrowTd.style.cssText='color:#c4b0ff;font-size:18px;font-weight:700;width:20px;text-align:center;';
+    var arrowTd = document.createElement('td'); arrowTd.textContent='›'; arrowTd.style.cssText='color:#C5BFDC;font-size:18px;font-weight:700;width:20px;text-align:center;';
     tr.appendChild(numTd); tr.appendChild(codeTd); tr.appendChild(nameTd); tr.appendChild(qtyTd); tr.appendChild(arrowTd);
     tbody.appendChild(tr);
   });
@@ -5444,7 +5578,7 @@ function fbSearch(){
   found.forEach(function(it){
     var row = document.createElement('div');
     row.style.cssText='padding:8px 12px;cursor:pointer;border-bottom:1px solid #f0f0f0;font-size:12px;transition:background .1s;';
-    row.onmouseenter=function(){this.style.background='#f0f4fa';};
+    row.onmouseenter=function(){this.style.background='#F4F2F7';};
     row.onmouseleave=function(){this.style.background='';};
     row.innerHTML='<b>'+escHtml(it.code)+'</b> '+escHtml(it.name);
     row.onclick=function(){
@@ -5879,7 +6013,7 @@ function renderNlistHistory(){
     row.style.cssText = 'display:flex;align-items:center;gap:12px;background:var(--surface3);border:1px solid var(--border);border-radius:12px;padding:10px 14px;';
 
     var tag = document.createElement('div');
-    tag.style.cssText = 'flex-shrink:0;min-width:56px;padding:6px 8px;border-radius:8px;background:linear-gradient(135deg,#2a5fa8,#4a7fc1);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;text-align:center;line-height:1.2;';
+    tag.style.cssText = 'flex-shrink:0;min-width:56px;padding:6px 8px;border-radius:8px;background:linear-gradient(135deg,#583A88,#7960A2);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;text-align:center;line-height:1.2;';
     tag.textContent = '№' + h.shop;
 
     var info = document.createElement('div');
@@ -5896,7 +6030,7 @@ function renderNlistHistory(){
     btnWrap.style.cssText = 'display:flex;gap:6px;flex-shrink:0;';
     var openBtn = document.createElement('button');
     openBtn.textContent = '↩ Открыть';
-    openBtn.style.cssText = 'background:linear-gradient(135deg,#2a5fa8,#4a7fc1);color:#fff;border:none;border-radius:7px;padding:7px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;';
+    openBtn.style.cssText = 'background:linear-gradient(135deg,#583A88,#7960A2);color:#fff;border:none;border-radius:7px;padding:7px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;';
     openBtn.onclick = (function(id){ return function(){ restoreNlistFromHistory(id); }; })(h.id);
     var delBtn = document.createElement('button');
     delBtn.textContent = '🗑';
@@ -6045,9 +6179,9 @@ document.getElementById('nlistFileInput').addEventListener('change', function(e)
   function makeCatSVG(emoji, color){
     return `<svg width="26" height="26" viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg"><circle cx="13" cy="13" r="11" fill="${color}" opacity="0.85"/><text x="13" y="17.5" text-anchor="middle" font-size="13" fill="white">${emoji}</text></svg>`;
   }
-  setIcon('lottie-cat-all',    makeCatSVG('🗂','#4a7fc1'));
+  setIcon('lottie-cat-all',    makeCatSVG('🗂','#7960A2'));
   setIcon('lottie-cat-uvelir', makeCatSVG('💎','#b84580'));
-  setIcon('lottie-cat-kits',   makeCatSVG('📦','#6b48c8'));
+  setIcon('lottie-cat-kits',   makeCatSVG('📦','#7265A3'));
 
 })();
 
@@ -6220,7 +6354,7 @@ async function puUpload(){
   var fileName = code + '.' + ext;
   var filePath = folder + '/' + fileName;
 
-  puSetStatus('⏳ Загрузка...', '#2a7ac0');
+  puSetStatus('⏳ Загрузка...', '#72579D');
   document.getElementById('pu-btn').disabled = true;
 
   try {
@@ -6530,7 +6664,7 @@ document.addEventListener('DOMContentLoaded', function(){
   var dz = document.getElementById('pu-drop');
   var fi = document.getElementById('pu-file-input');
   if(!dz || !fi) return;
-  dz.addEventListener('dragover',  function(e){ e.preventDefault(); dz.style.borderColor='#7a52c8'; });
+  dz.addEventListener('dragover',  function(e){ e.preventDefault(); dz.style.borderColor='#7B6EB0'; });
   dz.addEventListener('dragleave', function(){  dz.style.borderColor=''; });
   dz.addEventListener('drop',      function(e){ e.preventDefault(); dz.style.borderColor=''; if(e.dataTransfer.files[0]) puHandleFile(e.dataTransfer.files[0]); });
   fi.addEventListener('change',    function(){  if(fi.files[0]) puHandleFile(fi.files[0]); });
@@ -6542,7 +6676,7 @@ document.addEventListener('DOMContentLoaded', function(){
   <div style="background:var(--surface2);border-radius:18px;width:min(520px,94vw);box-shadow:0 24px 64px rgba(0,0,0,.35);overflow:hidden;animation:authIn .3s ease;">
 
     <!-- Заголовок -->
-    <div style="background:linear-gradient(135deg,#4a1a7a,#8040c8);padding:18px 24px;display:flex;align-items:center;gap:12px;">
+    <div style="background:linear-gradient(135deg,#3F3759,#7366A5);padding:18px 24px;display:flex;align-items:center;gap:12px;">
       <span style="font-size:22px;">📸</span>
       <div style="flex:1;">
         <div style="font-size:16px;font-weight:800;color:#fff;">Загрузка фото</div>
@@ -6558,7 +6692,7 @@ document.addEventListener('DOMContentLoaded', function(){
         <div style="font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;">Код номенклатуры *</div>
         <input id="pu-code" type="text" placeholder="Например: RUM0520385" autocomplete="off"
           style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:14px;font-family:'JetBrains Mono',monospace;font-weight:600;outline:none;box-sizing:border-box;color:var(--text);background:var(--surface3);"
-          onfocus="this.style.borderColor='#8040c8'" onblur="this.style.borderColor=''">
+          onfocus="this.style.borderColor='#7366A5'" onblur="this.style.borderColor=''">
       </div>
 
       <!-- Раздел (папка) -->
@@ -6566,7 +6700,7 @@ document.addEventListener('DOMContentLoaded', function(){
         <div style="font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;">Раздел (папка) *</div>
         <select id="pu-folder"
           style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:'Nunito',sans-serif;font-weight:600;outline:none;box-sizing:border-box;color:var(--text);background:var(--surface3);cursor:pointer;"
-          onfocus="this.style.borderColor='#8040c8'" onblur="this.style.borderColor=''">
+          onfocus="this.style.borderColor='#7366A5'" onblur="this.style.borderColor=''">
           <option value="">— Выберите раздел —</option>
         </select>
       </div>
@@ -6598,7 +6732,7 @@ document.addEventListener('DOMContentLoaded', function(){
         <div style="font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;">GitHub токен (PAT) *</div>
         <input id="pu-pat" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off"
           style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:'JetBrains Mono',monospace;font-weight:500;outline:none;box-sizing:border-box;color:var(--text);background:var(--surface3);"
-          onfocus="this.style.borderColor='#8040c8'" onblur="this.style.borderColor=''">
+          onfocus="this.style.borderColor='#7366A5'" onblur="this.style.borderColor=''">
         <label style="display:flex;align-items:center;gap:6px;margin-top:8px;font-size:11.5px;font-weight:600;color:var(--text2);cursor:pointer;">
           <input id="pu-pat-remember" type="checkbox" style="cursor:pointer;">
           Запомнить токен в этом браузере
@@ -6611,7 +6745,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
       <!-- Кнопка загрузки -->
       <button id="pu-btn" onclick="puUpload()"
-        style="width:100%;height:44px;background:linear-gradient(135deg,#5a1a9a,#8040c8);color:#fff;border:none;border-radius:11px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s;box-shadow:0 4px 16px rgba(128,64,200,.35);"
+        style="width:100%;height:44px;background:linear-gradient(135deg,#4C446D,#7366A5);color:#fff;border:none;border-radius:11px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s;box-shadow:0 4px 16px rgba(115,102,165,.35);"
         onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
         📤 Загрузить на GitHub
       </button>
@@ -6698,7 +6832,7 @@ function showInstallBanner(){
   if(document.getElementById('pwa-install-banner')) return;
   var banner = document.createElement('div');
   banner.id = 'pwa-install-banner';
-  banner.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:9999;background:linear-gradient(135deg,#2a4a7f,#4a7fc1);color:#fff;padding:16px 20px;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.25);display:flex;align-items:center;gap:14px;font-family:Nunito,sans-serif;max-width:420px;animation:pwaSlideIn .4s ease;';
+  banner.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:9999;background:linear-gradient(135deg,#452D6B,#7960A2);color:#fff;padding:16px 20px;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.25);display:flex;align-items:center;gap:14px;font-family:Nunito,sans-serif;max-width:420px;animation:pwaSlideIn .4s ease;';
   banner.innerHTML =
     '<div style="font-size:36px;flex-shrink:0;">📦</div>' +
     '<div style="flex:1;min-width:0;">' +
@@ -6706,7 +6840,7 @@ function showInstallBanner(){
       '<div style="font-size:12px;opacity:.85;line-height:1.4;">Каталог оборудования Kari будет работать как обычное приложение на вашем компьютере</div>' +
     '</div>' +
     '<div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;">' +
-      '<button id="pwa-install-btn" style="background:#fff;color:#2a4a7f;border:none;border-radius:8px;padding:8px 18px;font-size:13px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;transition:all .15s;white-space:nowrap;">Установить</button>' +
+      '<button id="pwa-install-btn" style="background:#fff;color:#452D6B;border:none;border-radius:8px;padding:8px 18px;font-size:13px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;transition:all .15s;white-space:nowrap;">Установить</button>' +
       '<button id="pwa-dismiss-btn" style="background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:8px;padding:6px 18px;font-size:11px;font-weight:600;cursor:pointer;font-family:Nunito,sans-serif;transition:all .15s;">Не сейчас</button>' +
     '</div>';
   document.body.appendChild(banner);
