@@ -942,6 +942,15 @@ button,input,select,textarea{font-family:inherit;}
 html[data-theme="dark"] .s4-code,html[data-theme="dark"] .s4-bc-sec{color:var(--wb-purple-light)!important;}
 /* v5.4: рамка фото не отдаёт горизонтальный жест браузеру */
 .s4-photo{overscroll-behavior-x:none;}
+/* v5.5: степпер количества в заявке */
+.ci-name{font-size:13px;}
+.ci-step{display:flex;align-items:center;gap:2px;flex-shrink:0;background:var(--wb-surface);border:1px solid var(--wb-border);border-radius:12px;padding:2px;}
+.ci-sb{width:36px;height:36px;border:0;border-radius:10px;background:transparent;color:var(--wb-purple);font-size:20px;font-weight:600;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;touch-action:manipulation;}
+.ci-sb:active{background:var(--wb-purple-bg);}
+.ci-qv{width:40px;height:36px;border:0;background:transparent;text-align:center;font-size:16px;font-weight:700;color:var(--wb-text);font-variant-numeric:tabular-nums;-moz-appearance:textfield;appearance:textfield;padding:0;}
+.ci-qv::-webkit-outer-spin-button,.ci-qv::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+.ci-qv:focus{outline:2px solid var(--wb-purple);outline-offset:-2px;border-radius:8px;}
+.cart-item{gap:8px;}
 </style>
 </head>
 <body>
@@ -2629,6 +2638,8 @@ function setupEventDelegation(){
         if(action==='q-minus'){qChange(val,-1);return;}
         if(action==='q-plus'){qChange(val,1);return;}
         if(action==='rm-cart'){rmCart(val);return;}
+        if(action==='ci-minus'){ciSetQty(val,((cart[val]||{}).qty||1)-1);return;}
+        if(action==='ci-plus'){ciSetQty(val,((cart[val]||{}).qty||1)+1);return;}
         if(action==='go-back'){goBack();return;}
         if(action==='reset-home'){resetToHome();return;}
         if(action==='open-cart'){openCart();return;}
@@ -2865,10 +2876,25 @@ function renderCartDrawer(){
     var it=cart[keys[i]];
     h+='<div class="cart-item"><div class="ci-thumb">'+npIcon(it.secId||String(it.id||'').split('-')[0])+'</div>';
     h+='<div class="ci-info"><div class="ci-name">'+it.name+'</div><div class="ci-code">'+it.code+'</div></div>';
-    h+='<div class="ci-qty">'+it.qty+' \u0448\u0442</div>';
+    /* v5.5: количество в заявке можно менять: − [число] + */
+    h+='<div class="ci-step"><button class="ci-sb" data-action="ci-minus" data-val="'+it.id+'" aria-label="\u041c\u0435\u043d\u044c\u0448\u0435">\u2212</button>';
+    h+='<input class="ci-qv" type="number" inputmode="numeric" min="1" max="999" value="'+it.qty+'" data-id="'+it.id+'" aria-label="\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e">';
+    h+='<button class="ci-sb" data-action="ci-plus" data-val="'+it.id+'" aria-label="\u0411\u043e\u043b\u044c\u0448\u0435">+</button></div>';
     h+='<button class="ci-rm" data-action="rm-cart" data-val="'+it.id+'">&#10005;</button></div>';
   }
   sc.innerHTML=h;
+  sc.onchange=function(e){var t=e.target;if(t&&t.classList&&t.classList.contains('ci-qv'))ciSetQty(t.getAttribute('data-id'),parseInt(t.value)||1);};
+}
+/* v5.5: изменение количества прямо в заявке; синхронно с полями на карточке и экране позиции */
+function ciSetQty(id,v){
+  if(!cart[id])return;
+  v=Math.max(1,Math.min(999,v|0||1));
+  cart[id].qty=v;
+  var sc=getEl('drawerScroll');
+  if(sc){var inp=sc.querySelector('.ci-qv[data-id="'+id+'"]');if(inp)inp.value=v;}
+  var q=getEl('qv-'+id);if(q)q.value=v;
+  if(currentItem&&currentItem.id===id){var s4=getEl('s4qv');if(s4)s4.value=v;}
+  updateCartBadge();
 }
 function rmCart(id){delete cart[id];updateCartBadge();renderCartDrawer();var ab=getEl('ab-'+id);if(ab){ab.textContent='+';ab.classList.remove('added');}var ic=getEl('ic-'+id);if(ic)ic.classList.remove('in-cart');}
 function clearCart(){var keys=Object.keys(cart);for(var i=0;i<keys.length;i++){var ab=getEl('ab-'+keys[i]);if(ab){ab.textContent='+';ab.classList.remove('added');}var ic=getEl('ic-'+keys[i]);if(ic)ic.classList.remove('in-cart');}cart={};updateCartBadge();renderCartDrawer();}
@@ -4263,7 +4289,7 @@ function installPWA() {
       <img id="verLogoImg" src="" alt="Kari">
     </div>
     <div class="ver-app-name">Портал заказов<br>Kari</div>
-    <div class="ver-num" id="verNum">v5.4</div>
+    <div class="ver-num" id="verNum">v5.5</div>
     <div class="ver-build" id="verBuild">Сборка от 14.05.2025</div>
     <div class="ver-divider"></div>
     <div class="ver-info">Мобильный дашборд оборудования<br>для внутреннего использования</div>
