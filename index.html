@@ -12,7 +12,7 @@
 <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/skbmaksim82-byte/Portal-zakazov/main/Logo%20Kari%20Mobile.png">
 <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/skbmaksim82-byte/Portal-zakazov/main/Logo%20Kari%20Mobile.png">
 <title>Каталог оборудования Kari</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
 <style>
@@ -30,7 +30,7 @@
   --shadow-lg:0 8px 32px rgba(0,0,0,.16);--shadow-xl:0 16px 48px rgba(0,0,0,.20);
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;height:100vh;overflow-x:hidden;display:flex;flex-direction:column;}
+body{background:var(--bg);color:var(--text);font-family:Inter,sans-serif;height:100vh;overflow-x:hidden;display:flex;flex-direction:column;}
 
 /* ── HEADER ── */
 .header{background:linear-gradient(135deg,#4E446B 0%,#655D7F 40%,#584E73 100%);border-bottom:none;
@@ -113,11 +113,11 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;heig
 
 /* buttons */
 .update-btn{background:rgba(58,172,190,.2);backdrop-filter:blur(8px);color:#7ddfee;border:1px solid rgba(58,172,190,.3);
-  border-radius:9px;padding:6px 12px;font-family:'Nunito',sans-serif;font-size:11.5px;font-weight:700;
+  border-radius:9px;padding:6px 12px;font-family:Inter,sans-serif;font-size:11.5px;font-weight:700;
   cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 0 12px rgba(42,138,154,.15);transition:all .25s;white-space:nowrap;}
 .update-btn:hover{transform:translateY(-2px);background:rgba(58,172,190,.35);box-shadow:0 0 20px rgba(42,138,154,.35);border-color:rgba(58,172,190,.6);}
 .cart-btn{background:rgba(123,109,176,.2);backdrop-filter:blur(8px);color:#C5BFDC;border:1px solid rgba(123,109,176,.3);
-  border-radius:9px;padding:6px 13px;font-family:'Nunito',sans-serif;font-size:12.5px;font-weight:700;
+  border-radius:9px;padding:6px 13px;font-family:Inter,sans-serif;font-size:12.5px;font-weight:700;
   cursor:pointer;display:flex;align-items:center;gap:5px;box-shadow:0 0 12px rgba(123,109,176,.15);transition:all .25s;white-space:nowrap;}
 .cart-btn:hover{transform:translateY(-2px);background:rgba(123,109,176,.35);box-shadow:0 0 20px rgba(123,109,176,.35);border-color:rgba(123,109,176,.6);}
 .cart-count{background:rgba(255,255,255,.12);border-radius:20px;padding:1px 6px;font-size:10.5px;font-weight:800;}
@@ -148,7 +148,7 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;heig
 
 /* ── КНОПКИ ПОДРАЗДЕЛОВ В САЙДБАРЕ ── */
 .subcat-side-btn{display:flex;align-items:center;gap:9px;padding:9px 16px;cursor:pointer;border:none;
-  background:transparent;color:var(--text2);font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;
+  background:transparent;color:var(--text2);font-family:Inter,sans-serif;font-size:13px;font-weight:600;
   text-align:left;width:100%;transition:all .15s;position:relative;}
 .subcat-side-btn:hover{background:var(--surface3);color:var(--text);}
 .subcat-side-btn.active{background:var(--surface3);color:var(--text);font-weight:700;}
@@ -158,7 +158,7 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;heig
 .sidebar-title{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
   color:var(--text3);padding:0 18px 12px;}
 .cat-btn{display:flex;align-items:center;gap:9px;padding:9px 16px;cursor:pointer;border:none;
-  background:transparent;color:var(--text2);font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;
+  background:transparent;color:var(--text2);font-family:Inter,sans-serif;font-size:13px;font-weight:600;
   text-align:left;width:100%;transition:all .15s;position:relative;}
 .cat-btn:hover{background:var(--surface3);color:var(--text);}
 .cat-btn.active{background:var(--surface3);color:var(--text);font-weight:700;}
@@ -166,7 +166,7 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;heig
   border-radius:0 3px 3px 0;background:var(--cat-color,#7960A2);box-shadow:2px 0 8px var(--cat-color,#7960A2);}
 .cat-icon{font-size:15px;flex-shrink:0;}.cat-label{flex:1;}
 .cat-count{margin-left:auto;font-size:11px;color:var(--text3);font-weight:700;
-  font-family:'JetBrains Mono',monospace;background:var(--bg2);padding:2px 7px;border-radius:20px;border:1px solid var(--border);}
+  font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;background:var(--bg2);padding:2px 7px;border-radius:20px;border:1px solid var(--border);}
 .sidebar-divider{height:1px;background:var(--border);margin:8px 16px;}
 
 /* ── MAIN PANEL ── */
@@ -178,10 +178,10 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;heig
 .search-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:20px;height:20px;border-radius:50%;background:var(--text2);border:none;cursor:pointer;display:none;align-items:center;justify-content:center;padding:0;transition:background .15s;flex-shrink:0;}
 .search-clear:hover{background:#e05555;}
 .search-clear svg{width:10px;height:10px;fill:#fff;pointer-events:none;}
-.search-input{width:100%;background:var(--surface3);border:1.5px solid var(--border);border-radius:9px;padding:8px 34px 8px 36px;color:var(--text);font-family:'Nunito',sans-serif;font-size:13px;font-weight:500;outline:none;transition:all .2s;}
+.search-input{width:100%;background:var(--surface3);border:1.5px solid var(--border);border-radius:9px;padding:8px 34px 8px 36px;color:var(--text);font-family:Inter,sans-serif;font-size:13px;font-weight:500;outline:none;transition:all .2s;}
 .search-input:focus{border-color:var(--btn-add);background:var(--surface2);box-shadow:0 0 0 3px rgba(121,96,162,.12);}
 .search-input::placeholder{color:var(--text3);}
-.results-info{font-size:12px;color:var(--text3);white-space:nowrap;font-family:'JetBrains Mono',monospace;
+.results-info{font-size:12px;color:var(--text3);white-space:nowrap;font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;
   background:var(--surface3);border:1px solid var(--border);border-radius:8px;padding:5px 9px;}
 
 /* ── CATALOG TABLE ── */
@@ -197,7 +197,7 @@ tbody tr:nth-child(even){background:#F9F8FB;}
 tbody tr:hover{background:#F1EEF5!important;}
 tbody tr.in-cart{background:#F4F2F7!important;border-left:3px solid var(--btn-add);}
 td{padding:9px 14px;font-size:13px;vertical-align:middle;}
-.td-code{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:var(--text3);}
+.td-code{font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;font-size:11px;font-weight:500;color:var(--text3);}
 .td-name{color:var(--text);font-weight:600;max-width:0;overflow:visible;}
 .td-short{color:var(--text2);font-size:12px;font-weight:500;text-align:center;}
 /* ── Product Tile Grid ──
@@ -210,21 +210,21 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 /* ── Постраничная навигация карточек ── */
 .pagination-bar{display:none;align-items:center;justify-content:center;gap:16px;padding:10px 16px;background:var(--surface2);border-top:1.5px solid var(--border);flex-shrink:0;}
 .pagination-bar.show{display:flex;}
-.page-nav-btn{width:34px;height:34px;border-radius:9px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text2);font-size:16px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;font-family:'Nunito',sans-serif;}
+.page-nav-btn{width:34px;height:34px;border-radius:9px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text2);font-size:16px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;font-family:Inter,sans-serif;}
 .page-nav-btn:hover:not(:disabled){border-color:var(--btn-add);color:var(--btn-add);background:#F4F2F7;transform:translateY(-1px);}
 .page-nav-btn:disabled{opacity:.32;cursor:not-allowed;}
-.page-indicator{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;color:var(--text2);white-space:nowrap;font-family:'Nunito',sans-serif;}
-.page-indicator input{width:46px;height:28px;text-align:center;border:1.5px solid var(--border);border-radius:7px;font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:800;color:var(--text);background:var(--surface3);outline:none;-moz-appearance:textfield;}
+.page-indicator{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;color:var(--text2);white-space:nowrap;font-family:Inter,sans-serif;}
+.page-indicator input{width:46px;height:28px;text-align:center;border:1.5px solid var(--border);border-radius:7px;font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:800;color:var(--text);background:var(--surface3);outline:none;-moz-appearance:textfield;}
 .page-indicator input::-webkit-outer-spin-button,.page-indicator input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
 .page-indicator input:focus{border-color:var(--btn-add);}
-.page-indicator .page-total{color:var(--text3);font-family:'JetBrains Mono',monospace;}
+.page-indicator .page-total{color:var(--text3);font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;}
 .product-tile{width:100%;height:100%;min-width:0;min-height:0;border-radius:12px;border:1.5px solid var(--border);background:var(--surface2);cursor:pointer;transition:all .18s;position:relative;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 2px 8px rgba(0,0,0,.07);}
 .product-tile:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.13);}
 .product-tile.in-cart{border-color:var(--btn-add);box-shadow:0 0 0 2px rgba(121,96,162,.18);}
 .product-tile-photo{width:100%;flex:1;min-height:0;object-fit:contain;object-position:center;background:#F9F8FB;display:block;border-radius:10px 10px 0 0;}
 .product-tile-photo-placeholder{width:100%;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;background:#F9F8FB;font-size:40px;color:var(--text3);opacity:.35;border-radius:10px 10px 0 0;}
 .product-tile-body{padding:7px 9px 9px;display:flex;flex-direction:column;gap:2px;background:var(--surface2);border-top:1px solid var(--border);}
-.product-tile-code{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.product-tile-code{font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;font-size:10px;font-weight:600;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .product-tile-name{font-size:11px;font-weight:700;color:var(--text);line-height:1.28;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
 .product-tile-bottom{display:flex;align-items:center;justify-content:space-between;gap:4px;margin-top:auto;}
 .product-tile .qty-wrap{transform:scale(.86);transform-origin:left center;}
@@ -247,18 +247,18 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 .analog-title{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#b07d00;margin-bottom:2px;}
 .analog-item{display:flex;align-items:center;gap:10px;padding:5px 10px;border-radius:8px;background:#fff;border:1px solid #f0e0a0;transition:background .12s;}
 .analog-item:hover{background:#fffae8;border-color:#e0c060;}
-.analog-code{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:#5a5d6e;flex-shrink:0;}
+.analog-code{font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;font-size:11px;font-weight:700;color:#5a5d6e;flex-shrink:0;}
 .analog-name{font-size:12px;font-weight:600;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.analog-goto{flex-shrink:0;padding:3px 10px;border-radius:6px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text2);font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .12s;}
+.analog-goto{flex-shrink:0;padding:3px 10px;border-radius:6px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text2);font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all .12s;}
 .analog-goto:hover{border-color:#1a6b3a;color:#1a6b3a;background:#f0faf5;}
 .qty-wrap{display:flex;align-items:center;justify-content:center;}
 .qty-btn{width:27px;height:27px;background:linear-gradient(135deg,#6a7080,var(--btn-qty));border:none;
   color:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;
-  transition:all .15s;font-family:monospace;line-height:1;box-shadow:var(--shadow-sm);}
+  transition:all .15s;font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;line-height:1;box-shadow:var(--shadow-sm);}
 .qty-btn:first-child{border-radius:6px 0 0 6px;}.qty-btn:last-child{border-radius:0 6px 6px 0;}
 .qty-btn:hover{background:linear-gradient(135deg,#7960A2,#8973AD);transform:scale(1.05);}
 .qty-input{width:44px;height:27px;background:var(--surface3);border:1px solid var(--border2);
-  border-left:none;border-right:none;color:var(--text);font-family:'JetBrains Mono',monospace;
+  border-left:none;border-right:none;color:var(--text);font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;
   font-size:13px;font-weight:700;text-align:center;outline:none;}
 .add-btn{width:30px;height:30px;background:linear-gradient(135deg,#8973AD,var(--btn-add));border:none;
   border-radius:8px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;
@@ -309,7 +309,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 .lightbox.has-gallery .lightbox-nav{display:flex;}
 .lightbox-counter{position:absolute;top:24px;left:50%;transform:translateX(-50%);
   background:rgba(0,0,0,.6);color:#fff;padding:4px 14px;border-radius:16px;font-size:13px;
-  font-weight:700;font-family:'JetBrains Mono',monospace;backdrop-filter:blur(4px);display:none;}
+  font-weight:700;font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;backdrop-filter:blur(4px);display:none;}
 .lightbox.has-gallery .lightbox-counter{display:block;}
 
 /* ── CART PANEL ── */
@@ -334,19 +334,19 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
   border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
 .cart-item-info{flex:1;min-width:0;}
 .cart-item-name{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.cart-item-code{font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-top:2px;}
+.cart-item-code{font-size:10px;color:var(--text3);font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;margin-top:2px;}
 .cart-item-cat{font-size:10px;padding:2px 6px;border-radius:20px;font-weight:700;white-space:nowrap;
   flex-shrink:0;border:1px solid currentColor;}
-.cart-item-qty{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:800;color:var(--btn-add);width:30px;text-align:right;flex-shrink:0;}
+.cart-item-qty{font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;font-size:14px;font-weight:800;color:var(--btn-add);width:30px;text-align:right;flex-shrink:0;}
 .cart-qty-wrap{display:flex;align-items:center;gap:0;flex-shrink:0;}
 .cart-qty-btn{width:24px;height:24px;background:linear-gradient(135deg,#6a7080,var(--btn-qty));border:none;color:#fff;
   font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;
-  transition:background .15s;line-height:1;font-family:monospace;}
+  transition:background .15s;line-height:1;font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;}
 .cart-qty-btn:first-child{border-radius:6px 0 0 6px;}
 .cart-qty-btn:last-child{border-radius:0 6px 6px 0;}
 .cart-qty-btn:hover{background:linear-gradient(135deg,#7960A2,#8973AD);}
 .cart-qty-input{width:38px;height:24px;background:var(--surface3);border:1px solid var(--border2);
-  border-left:none;border-right:none;color:var(--text);font-family:'JetBrains Mono',monospace;
+  border-left:none;border-right:none;color:var(--text);font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;
   font-size:12px;font-weight:700;text-align:center;outline:none;}
 .cart-remove{background:transparent;border:none;color:var(--text3);cursor:pointer;font-size:15px;
   padding:0;transition:color .15s;flex-shrink:0;width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:5px;}
@@ -358,11 +358,11 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 .form-row{display:flex;gap:9px;}.form-field{flex:1;display:flex;flex-direction:column;gap:4px;}
 .form-label{font-size:11px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;}
 .form-input{background:var(--surface3);border:1.5px solid var(--border);border-radius:8px;
-  padding:7px 11px;color:var(--text);font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;outline:none;transition:all .2s;}
+  padding:7px 11px;color:var(--text);font-family:Inter,sans-serif;font-size:13px;font-weight:600;outline:none;transition:all .2s;}
 .form-input:focus{border-color:var(--btn-add);background:var(--surface2);box-shadow:0 0 0 3px rgba(121,96,162,.12);}
 .form-input::placeholder{color:var(--text3);font-weight:500;}
 .shop-select{width:100%;background:var(--surface3);border:1.5px solid var(--border);border-radius:8px;
-  padding:7px 11px;color:var(--text);font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;
+  padding:7px 11px;color:var(--text);font-family:Inter,sans-serif;font-size:13px;font-weight:700;
   outline:none;cursor:pointer;transition:all .2s;appearance:none;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%239699aa' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
   background-repeat:no-repeat;background-position:right 11px center;}
@@ -371,12 +371,12 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
   background:var(--surface3);border-radius:8px;font-size:13px;color:var(--text2);font-weight:600;border:1px solid var(--border);}
 .cart-summary strong{color:var(--btn-add);font-size:17px;font-weight:800;}
 .send-btn{background:linear-gradient(135deg,#4aaa7a,var(--btn-send));color:#fff;border:none;
-  border-radius:10px;padding:12px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;
+  border-radius:10px;padding:12px;font-family:Inter,sans-serif;font-size:14px;font-weight:800;
   cursor:pointer;box-shadow:0 4px 14px rgba(58,144,104,.4);transition:all .2s;
   display:flex;align-items:center;justify-content:center;gap:7px;}
 .send-btn:hover{transform:translateY(-2px);}
 .clear-cart-btn{background:linear-gradient(135deg,#e06070,var(--btn-close));color:#fff;border:none;
-  border-radius:8px;padding:6px 13px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;
+  border-radius:8px;padding:6px 13px;font-family:Inter,sans-serif;font-size:12px;font-weight:700;
   cursor:pointer;box-shadow:0 3px 10px rgba(192,80,96,.3);transition:all .18s;display:flex;align-items:center;gap:5px;}
 .clear-cart-btn:hover{transform:translateY(-2px);box-shadow:0 5px 14px rgba(192,80,96,.45);}
 
@@ -390,7 +390,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 .modal-icon{font-size:50px;margin-bottom:16px;}.modal h2{font-size:20px;font-weight:800;margin-bottom:8px;}
 .modal p{color:var(--text2);font-size:14px;margin-bottom:24px;font-weight:500;}
 .modal-btn{background:linear-gradient(135deg,#4aaa7a,var(--btn-send));color:#fff;border:none;
-  border-radius:10px;padding:11px 32px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;}
+  border-radius:10px;padding:11px 32px;font-family:Inter,sans-serif;font-size:14px;font-weight:800;cursor:pointer;}
 .upload-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.9);background:var(--surface2);
   border:1px solid var(--border);border-radius:16px;padding:32px 36px;z-index:300;text-align:center;
   max-width:420px;width:90%;opacity:0;pointer-events:none;transition:all .3s;box-shadow:var(--shadow-xl);}
@@ -403,7 +403,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 .drop-zone-icon{font-size:38px;}.drop-zone-title{font-size:14px;font-weight:700;color:var(--text2);}
 .drop-zone-sub{font-size:12px;color:var(--text3);}
 .modal-cancel{background:var(--surface3);border:1.5px solid var(--border2);border-radius:8px;
-  padding:9px 26px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:var(--text2);cursor:pointer;}
+  padding:9px 26px;font-family:Inter,sans-serif;font-size:14px;font-weight:700;color:var(--text2);cursor:pointer;}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--text);
   color:#fff;border-radius:12px;padding:12px 22px;font-size:14px;font-weight:700;z-index:400;
   box-shadow:var(--shadow-lg);transition:transform .3s cubic-bezier(.4,0,.2,1);white-space:nowrap;}
@@ -422,7 +422,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 .subcat-card-photo{width:100%;height:100%;object-fit:contain;object-position:center;transition:transform .22s;display:block;}
 .subcat-card:hover .subcat-card-photo{transform:scale(1.04);}
 .subcat-card-body{padding:8px 12px 10px;background:var(--surface2);border-top:1px solid var(--border);flex-shrink:0;}
-.subcat-card-cnt{font-size:16px;font-weight:900;color:var(--text);font-family:'JetBrains Mono',monospace;line-height:1.2;}
+.subcat-card-cnt{font-size:16px;font-weight:900;color:var(--text);font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;line-height:1.2;}
 .subcat-card-name{font-size:11px;font-weight:700;color:var(--text2);line-height:1.3;margin-top:1px;}
 .subcat-card-arrow{display:none;}
 .subcat-bc-link{font-size:12px;font-weight:700;color:var(--accent);cursor:pointer;text-decoration:underline;text-underline-offset:2px;}
@@ -435,7 +435,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 
 .kits-upload-btn-small{
   background:linear-gradient(135deg,#887BB8,#7265A3);color:#fff;border:none;
-  border-radius:8px;padding:6px 13px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;
+  border-radius:8px;padding:6px 13px;font-family:Inter,sans-serif;font-size:12px;font-weight:700;
   cursor:pointer;white-space:nowrap;box-shadow:0 2px 8px rgba(114,101,163,.3);transition:all .2s;margin-left:8px;}
 .kits-upload-btn-small:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(114,101,163,.45);}
 
@@ -507,7 +507,7 @@ td{padding:9px 14px;font-size:13px;vertical-align:middle;}
 .catalog-context-sub{font-size:14px;font-weight:700;color:var(--primary);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .filter-strip{display:flex;align-items:center;gap:8px;padding:9px 18px;background:#F9F8FB;border-bottom:1px solid var(--border);overflow-x:auto;}
 .filter-label{font-size:11px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:var(--text3);margin-right:2px;white-space:nowrap;}
-.filter-chip,.view-btn{height:32px;padding:0 11px;border:1px solid var(--border);border-radius:16px;background:#fff;color:var(--text2);font:700 12px 'Nunito',sans-serif;cursor:pointer;white-space:nowrap;transition:.15s;}
+.filter-chip,.view-btn{height:32px;padding:0 11px;border:1px solid var(--border);border-radius:16px;background:#fff;color:var(--text2);font:700 12px Inter,sans-serif;cursor:pointer;white-space:nowrap;transition:.15s;}
 .filter-chip:hover,.view-btn:hover{border-color:#B8ABCE;color:var(--primary);}
 .filter-chip.active{background:var(--primary-soft);border-color:#B8ABCE;color:var(--primary);}
 .filter-chip[data-filter="cart"].active{background:#e9f7f0;border-color:#9fd4ba;color:var(--success);}
@@ -553,14 +553,14 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:none;box-s
 /* ПАЛИТРА: Фиолетовая лаванда (v1.75) */
 :root{--bg:#E4E3EC;--bg2:#DAD9E3;--surface:#EEEEF4;--surface3:#E3E2EB;--border:#CCCBD8;--border2:#BFBFCD;}
 </style>
-<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 <style id="glass-dashboard">
 /* v1.75: «Стеклянный дашборд» — Фиолетовая лаванда. Размытый фон, стеклянные панели и карточки, тёмная пилюля навигации */
 :root{--bg:transparent;--bg2:rgba(255,255,255,.28);--surface:rgba(255,255,255,.30);--surface2:rgba(249,248,253,.46);--surface3:rgba(255,255,255,.52);
   --border:rgba(255,255,255,.62);--border2:rgba(255,255,255,.72);--text:#19171C;--text2:#403D49;--text3:#7A7489;
   --gl:rgba(249,248,253,.40);--gl-hi:rgba(252,251,255,.74);--edge:rgba(255,255,255,.62);--dk:#1A181D;--lav:#7F69D4}
 html,body{background:#BBAFD7!important}
-body{font-family:"Onest","Nunito",system-ui,sans-serif!important;color:var(--text)}
+body{font-family:"Inter",system-ui,sans-serif!important;color:var(--text)}
 body::before{content:"";position:fixed;inset:-80px;z-index:-1;filter:blur(38px) saturate(1.05);pointer-events:none;background:
   radial-gradient(28% 40% at 80% 22%,#F5F3FC 0,#E8E5F7 30%,transparent 70%),
   radial-gradient(20% 34% at 8% 46%,#4C4069 0,#655884 30%,transparent 72%),
@@ -705,6 +705,8 @@ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',ini
 .product-tile-code{font-family:inherit;font-size:14px;font-weight:600;letter-spacing:.02em;font-variant-numeric:tabular-nums;color:var(--primary,#5A3B8C);}
 .td-code{font-family:inherit;font-size:13px;font-weight:600;letter-spacing:.02em;font-variant-numeric:tabular-nums;color:var(--primary,#5A3B8C);}
 .analog-code,.cart-item-code{font-family:inherit;font-size:12px;letter-spacing:.01em;font-variant-numeric:tabular-nums;}
+/* v1.79: одно семейство шрифтов с мобильным — Inter; кнопки и поля наследуют шрифт */
+button,input,select,textarea{font-family:inherit;}
 </style>
 </head>
 <body>
@@ -719,7 +721,7 @@ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',ini
     <div>
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="logo-text">Каталог оборудования Kari</div>
-        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:'JetBrains Mono',monospace;">v1.76</div>
+        <div id="appVersionBadge" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1px 9px;font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.3px;font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;">v1.76</div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="logo-sub" id="catalogInfo">Загрузка…</div>
@@ -728,11 +730,11 @@ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',ini
     </div>
   </div>
   <div class="header-right">
-    <button onclick="selectCat('nlist')" id="btn-nlist" style="background:rgba(190,81,3,.2);backdrop-filter:blur(8px);color:#ffb877;border:1px solid rgba(190,81,3,.35);border-radius:9px;padding:6px 10px;font-family:'Nunito',sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 0 12px rgba(190,81,3,.12);transition:all .25s;white-space:nowrap;" onmouseover="this.style.background='rgba(190,81,3,.35)';this.style.borderColor='rgba(190,81,3,.6)'" onmouseout="this.style.background='rgba(190,81,3,.2)';this.style.borderColor='rgba(190,81,3,.35)'"><span class="lottie-icon" id="lottie-cat-nlist" style="width:16px;height:16px;font-size:0;"></span> Номенклатуры <span class="cart-count" id="cnt-nlist">0</span></button>
-    <button onclick="selectCat('consum')" id="btn-consum" style="background:rgba(31,157,85,.2);backdrop-filter:blur(8px);color:#7de0a8;border:1px solid rgba(31,157,85,.35);border-radius:9px;padding:6px 10px;font-family:'Nunito',sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 0 12px rgba(31,157,85,.12);transition:all .25s;white-space:nowrap;" title="Заказ расходных материалов ПКС" onmouseover="this.style.background='rgba(31,157,85,.35)';this.style.borderColor='rgba(31,157,85,.6)'" onmouseout="this.style.background='rgba(31,157,85,.2)';this.style.borderColor='rgba(31,157,85,.35)'"><span class="lottie-icon" id="lottie-cat-consum" style="width:16px;height:16px;font-size:0;">🧰</span> Расходные ПКС <span class="cart-count" id="cnt-consum">0</span></button>
-    <button onclick="openFeedback()" style="background:rgba(220,170,50,.2);backdrop-filter:blur(8px);color:#ffe080;border:1px solid rgba(220,170,50,.3);border-radius:9px;padding:6px 10px;font-family:'Nunito',sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 0 12px rgba(220,170,50,.12);transition:all .25s;white-space:nowrap;" onmouseover="this.style.background='rgba(220,170,50,.35)';this.style.borderColor='rgba(220,170,50,.6)'" onmouseout="this.style.background='rgba(220,170,50,.2)';this.style.borderColor='rgba(220,170,50,.3)'"><span class="lottie-icon" id="lottie-feedback" style="width:16px;height:16px;"></span> Обратная связь</button>
-    <button onclick="openPhotoUpload()" style="background:rgba(180,80,180,.2);backdrop-filter:blur(8px);color:#e8a0ff;border:1px solid rgba(180,80,180,.3);border-radius:9px;padding:6px 10px;font-family:'Nunito',sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 0 12px rgba(180,80,180,.12);transition:all .25s;white-space:nowrap;" onmouseover="this.style.background='rgba(180,80,180,.35)';this.style.borderColor='rgba(180,80,180,.6)'" onmouseout="this.style.background='rgba(180,80,180,.2)';this.style.borderColor='rgba(180,80,180,.3)'"><span class="lottie-icon" id="lottie-photo" style="width:16px;height:16px;"></span> Фото</button>
-    <button onclick="openPhotoSearch()" style="background:rgba(26,144,192,.2);backdrop-filter:blur(8px);color:#7dd0ff;border:1px solid rgba(26,144,192,.3);border-radius:9px;padding:6px 10px;font-family:'Nunito',sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 0 12px rgba(26,144,192,.12);transition:all .25s;white-space:nowrap;" title="Поиск по фото — визуальное сходство" onmouseover="this.style.background='rgba(26,144,192,.35)';this.style.borderColor='rgba(26,144,192,.6)'" onmouseout="this.style.background='rgba(26,144,192,.2)';this.style.borderColor='rgba(26,144,192,.3)'">🔍 Найти по фото</button>
+    <button onclick="selectCat('nlist')" id="btn-nlist" style="background:rgba(190,81,3,.2);backdrop-filter:blur(8px);color:#ffb877;border:1px solid rgba(190,81,3,.35);border-radius:9px;padding:6px 10px;font-family:Inter,sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 0 12px rgba(190,81,3,.12);transition:all .25s;white-space:nowrap;" onmouseover="this.style.background='rgba(190,81,3,.35)';this.style.borderColor='rgba(190,81,3,.6)'" onmouseout="this.style.background='rgba(190,81,3,.2)';this.style.borderColor='rgba(190,81,3,.35)'"><span class="lottie-icon" id="lottie-cat-nlist" style="width:16px;height:16px;font-size:0;"></span> Номенклатуры <span class="cart-count" id="cnt-nlist">0</span></button>
+    <button onclick="selectCat('consum')" id="btn-consum" style="background:rgba(31,157,85,.2);backdrop-filter:blur(8px);color:#7de0a8;border:1px solid rgba(31,157,85,.35);border-radius:9px;padding:6px 10px;font-family:Inter,sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 0 12px rgba(31,157,85,.12);transition:all .25s;white-space:nowrap;" title="Заказ расходных материалов ПКС" onmouseover="this.style.background='rgba(31,157,85,.35)';this.style.borderColor='rgba(31,157,85,.6)'" onmouseout="this.style.background='rgba(31,157,85,.2)';this.style.borderColor='rgba(31,157,85,.35)'"><span class="lottie-icon" id="lottie-cat-consum" style="width:16px;height:16px;font-size:0;">🧰</span> Расходные ПКС <span class="cart-count" id="cnt-consum">0</span></button>
+    <button onclick="openFeedback()" style="background:rgba(220,170,50,.2);backdrop-filter:blur(8px);color:#ffe080;border:1px solid rgba(220,170,50,.3);border-radius:9px;padding:6px 10px;font-family:Inter,sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 0 12px rgba(220,170,50,.12);transition:all .25s;white-space:nowrap;" onmouseover="this.style.background='rgba(220,170,50,.35)';this.style.borderColor='rgba(220,170,50,.6)'" onmouseout="this.style.background='rgba(220,170,50,.2)';this.style.borderColor='rgba(220,170,50,.3)'"><span class="lottie-icon" id="lottie-feedback" style="width:16px;height:16px;"></span> Обратная связь</button>
+    <button onclick="openPhotoUpload()" style="background:rgba(180,80,180,.2);backdrop-filter:blur(8px);color:#e8a0ff;border:1px solid rgba(180,80,180,.3);border-radius:9px;padding:6px 10px;font-family:Inter,sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 0 12px rgba(180,80,180,.12);transition:all .25s;white-space:nowrap;" onmouseover="this.style.background='rgba(180,80,180,.35)';this.style.borderColor='rgba(180,80,180,.6)'" onmouseout="this.style.background='rgba(180,80,180,.2)';this.style.borderColor='rgba(180,80,180,.3)'"><span class="lottie-icon" id="lottie-photo" style="width:16px;height:16px;"></span> Фото</button>
+    <button onclick="openPhotoSearch()" style="background:rgba(26,144,192,.2);backdrop-filter:blur(8px);color:#7dd0ff;border:1px solid rgba(26,144,192,.3);border-radius:9px;padding:6px 10px;font-family:Inter,sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 0 12px rgba(26,144,192,.12);transition:all .25s;white-space:nowrap;" title="Поиск по фото — визуальное сходство" onmouseover="this.style.background='rgba(26,144,192,.35)';this.style.borderColor='rgba(26,144,192,.6)'" onmouseout="this.style.background='rgba(26,144,192,.2)';this.style.borderColor='rgba(26,144,192,.3)'">🔍 Найти по фото</button>
     <button class="update-btn" onclick="updateFromGitHub()"><span class="lottie-icon" id="lottie-update" style="width:16px;height:16px;"></span><span id="updateIcon" style="display:none;">☁️</span> Обновить</button>
     <button class="cart-btn" onclick="toggleCart()"><span class="lottie-icon" id="lottie-cart" style="width:18px;height:18px;"></span> Корзина <span class="cart-count" id="cartCountBadge">0</span></button>
   </div>
@@ -757,7 +759,7 @@ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',ini
         <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;">Позиция (необязательно)</div>
         <div style="position:relative;">
           <input id="fb-search" type="text" placeholder="Поиск по номенклатуре или наименованию…" oninput="fbSearch()" autocomplete="off"
-            style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:'Nunito',sans-serif;outline:none;box-sizing:border-box;">
+            style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:Inter,sans-serif;outline:none;box-sizing:border-box;">
           <div id="fb-results" style="display:none;position:absolute;top:100%;left:0;right:0;max-height:180px;overflow-y:auto;background:#fff;border:1px solid var(--border);border-top:none;border-radius:0 0 9px 9px;box-shadow:0 8px 20px rgba(0,0,0,.12);z-index:10;"></div>
         </div>
         <div id="fb-selected" style="display:none;margin-top:6px;padding:6px 10px;background:#F4F2F7;border-radius:8px;font-size:12px;color:var(--text);display:none;">
@@ -769,10 +771,10 @@ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',ini
       <div>
         <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;">Сообщение</div>
         <textarea id="fb-message" rows="4" placeholder="Опишите проблему, предложение или вопрос…"
-          style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:'Nunito',sans-serif;outline:none;resize:vertical;min-height:80px;box-sizing:border-box;"></textarea>
+          style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:Inter,sans-serif;outline:none;resize:vertical;min-height:80px;box-sizing:border-box;"></textarea>
       </div>
       <!-- Кнопка отправить -->
-      <button onclick="fbSend()" style="width:100%;height:40px;background:linear-gradient(135deg,#b8860b,#daa520);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s;box-shadow:0 3px 12px rgba(184,134,11,.3);"
+      <button onclick="fbSend()" style="width:100%;height:40px;background:linear-gradient(135deg,#b8860b,#daa520);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all .2s;box-shadow:0 3px 12px rgba(184,134,11,.3);"
         onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
         📨 Отправить через Outlook
       </button>
@@ -791,7 +793,7 @@ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',ini
     <div style="font-size:11px;color:var(--text3);margin-bottom:16px;">Версия <span id="modalAppVersion">1.76</span> · 2026</div>
     <button onclick="document.getElementById('authorsOverlay').classList.remove('show')"
       style="background:linear-gradient(135deg,#7960A2,#7B6DB0);color:#fff;border:none;border-radius:10px;
-      padding:10px 28px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;
+      padding:10px 28px;font-family:Inter,sans-serif;font-size:14px;font-weight:700;cursor:pointer;
       box-shadow:0 4px 14px rgba(121,96,162,.3);transition:all .2s;">Закрыть</button>
   </div>
 </div>
@@ -839,7 +841,7 @@ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',ini
     <div style="position:relative;padding:0 10px 8px;">
       <span style="position:absolute;left:19px;top:50%;transform:translateY(calc(-50% - 4px));font-size:11px;pointer-events:none;opacity:.7;">🔍</span>
       <input type="text" id="subcatSideSearch" placeholder="Поиск подраздела…" oninput="filterSubcatSidebar()"
-        style="width:100%;background:var(--surface3);border:1.5px solid var(--border);border-radius:8px;padding:6px 10px 6px 28px;color:var(--text);font-family:'Nunito',sans-serif;font-size:12px;font-weight:500;outline:none;transition:border-color .2s;"
+        style="width:100%;background:var(--surface3);border:1.5px solid var(--border);border-radius:8px;padding:6px 10px 6px 28px;color:var(--text);font-family:Inter,sans-serif;font-size:12px;font-weight:500;outline:none;transition:border-color .2s;"
         onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
     </div>
     <div id="subcatSidebarList" style="display:flex;flex-direction:column;gap:2px;"></div>
@@ -855,11 +857,11 @@ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',ini
           <svg viewBox="0 0 10 10"><path d="M1 1l8 8M9 1l-8 8" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>
         </button>
       </div>
-      <button id="searchAllBtn" onclick="searchEverywhere('main')" title="Искать по всем категориям" style="display:none;height:36px;padding:0 12px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface2);color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;white-space:nowrap;transition:all .15s;flex-shrink:0;display:flex;align-items:center;gap:5px;" onmouseover="this.style.background='var(--surface3)';this.style.color='var(--text)'" onmouseout="this.style.background='var(--surface2)';this.style.color='var(--text2)'">🔍 Везде</button>
+      <button id="searchAllBtn" onclick="searchEverywhere('main')" title="Искать по всем категориям" style="display:none;height:36px;padding:0 12px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface2);color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;white-space:nowrap;transition:all .15s;flex-shrink:0;display:flex;align-items:center;gap:5px;" onmouseover="this.style.background='var(--surface3)';this.style.color='var(--text)'" onmouseout="this.style.background='var(--surface2)';this.style.color='var(--text2)'">🔍 Везде</button>
       <div style="display:flex;gap:2px;flex-shrink:0;">
-        <button id="photoFilterAll" onclick="setPhotoFilter('all')" style="padding:5px 10px;border:1.5px solid var(--border);border-radius:7px 0 0 7px;background:var(--surface3);color:var(--text);font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;">Все</button>
-        <button id="photoFilterYes" onclick="setPhotoFilter('yes')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;">📷 С фото</button>
-        <button id="photoFilterNo" onclick="setPhotoFilter('no')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;border-radius:0 7px 7px 0;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;">Без фото</button>
+        <button id="photoFilterAll" onclick="setPhotoFilter('all')" style="padding:5px 10px;border:1.5px solid var(--border);border-radius:7px 0 0 7px;background:var(--surface3);color:var(--text);font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s;">Все</button>
+        <button id="photoFilterYes" onclick="setPhotoFilter('yes')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s;">📷 С фото</button>
+        <button id="photoFilterNo" onclick="setPhotoFilter('no')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;border-radius:0 7px 7px 0;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s;">Без фото</button>
       </div>
       <div class="view-switch" aria-label="Вид каталога">
         <button class="view-btn active" id="viewCards" onclick="setCatalogView('cards')" title="Крупные карточки">▦ Карточки</button>
@@ -867,7 +869,7 @@ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',ini
         <button class="view-btn" id="viewList" onclick="setCatalogView('list')" title="Список">☷ Список</button>
       </div>
       <div class="results-info" id="resultsInfo">—</div>
-      <button onclick="exportToExcel('catalog')" title="Выгрузить в Excel" style="background:linear-gradient(135deg,#1a7a3a,#2aaa5a);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;white-space:nowrap;transition:all .2s;">📥 Excel</button>
+      <button onclick="exportToExcel('catalog')" title="Выгрузить в Excel" style="background:linear-gradient(135deg,#1a7a3a,#2aaa5a);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:Inter,sans-serif;white-space:nowrap;transition:all .2s;">📥 Excel</button>
     </div>
     <div class="catalog-context" id="catalogContext">
       <span class="catalog-context-main" onclick="selectCat('all')" style="cursor:pointer;">Каталог</span>
@@ -918,17 +920,17 @@ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',ini
           <svg viewBox="0 0 10 10"><path d="M1 1l8 8M9 1l-8 8" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>
         </button>
         </div>
-        <button id="searchAllBtnLight" onclick="searchEverywhere('light')" title="Искать по всем категориям" style="height:36px;padding:0 12px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface2);color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;white-space:nowrap;transition:all .15s;flex-shrink:0;display:flex;align-items:center;gap:5px;" onmouseover="this.style.background='var(--surface3)';this.style.color='var(--text)'" onmouseout="this.style.background='var(--surface2)';this.style.color='var(--text2)'">🔍 Везде</button>
+        <button id="searchAllBtnLight" onclick="searchEverywhere('light')" title="Искать по всем категориям" style="height:36px;padding:0 12px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface2);color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;white-space:nowrap;transition:all .15s;flex-shrink:0;display:flex;align-items:center;gap:5px;" onmouseover="this.style.background='var(--surface3)';this.style.color='var(--text)'" onmouseout="this.style.background='var(--surface2)';this.style.color='var(--text2)'">🔍 Везде</button>
         <select id="light-cat-filter" onchange="onLightCatFilter()" style="height:36px;padding:0 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;cursor:pointer;display:none;">
           <option value="">Все разделы</option>
         </select>
         <div style="display:flex;gap:2px;flex-shrink:0;">
-          <button id="lightPhotoFilterAll" onclick="setLightPhotoFilter('all')" style="padding:5px 10px;border:1.5px solid var(--border);border-radius:7px 0 0 7px;background:var(--surface3);color:var(--text);font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;">Все</button>
-          <button id="lightPhotoFilterYes" onclick="setLightPhotoFilter('yes')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;">📷 С фото</button>
-          <button id="lightPhotoFilterNo" onclick="setLightPhotoFilter('no')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;border-radius:0 7px 7px 0;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;">Без фото</button>
+          <button id="lightPhotoFilterAll" onclick="setLightPhotoFilter('all')" style="padding:5px 10px;border:1.5px solid var(--border);border-radius:7px 0 0 7px;background:var(--surface3);color:var(--text);font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s;">Все</button>
+          <button id="lightPhotoFilterYes" onclick="setLightPhotoFilter('yes')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s;">📷 С фото</button>
+          <button id="lightPhotoFilterNo" onclick="setLightPhotoFilter('no')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;border-radius:0 7px 7px 0;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s;">Без фото</button>
         </div>
         <div class="results-info" id="lightResultsInfo">—</div>
-        <button onclick="exportToExcel('light')" title="Выгрузить в Excel" style="background:linear-gradient(135deg,#1a7a3a,#2aaa5a);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;white-space:nowrap;transition:all .2s;">📥 Excel</button>
+        <button onclick="exportToExcel('light')" title="Выгрузить в Excel" style="background:linear-gradient(135deg,#1a7a3a,#2aaa5a);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:Inter,sans-serif;white-space:nowrap;transition:all .2s;">📥 Excel</button>
       </div>
       <div class="light-body">
         <div class="light-table-wrap" id="lightTableWrap">
@@ -954,9 +956,9 @@ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',ini
         <option value="">Все разделы</option>
       </select>
       <div style="display:flex;gap:2px;flex-shrink:0;">
-        <button id="kitsPhotoFilterAll" onclick="setKitsPhotoFilter('all')" style="padding:5px 10px;border:1.5px solid var(--border);border-radius:7px 0 0 7px;background:var(--surface3);color:var(--text);font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;">Все</button>
-        <button id="kitsPhotoFilterYes" onclick="setKitsPhotoFilter('yes')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;">📷 С фото</button>
-        <button id="kitsPhotoFilterNo" onclick="setKitsPhotoFilter('no')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;border-radius:0 7px 7px 0;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;">Без фото</button>
+        <button id="kitsPhotoFilterAll" onclick="setKitsPhotoFilter('all')" style="padding:5px 10px;border:1.5px solid var(--border);border-radius:7px 0 0 7px;background:var(--surface3);color:var(--text);font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s;">Все</button>
+        <button id="kitsPhotoFilterYes" onclick="setKitsPhotoFilter('yes')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s;">📷 С фото</button>
+        <button id="kitsPhotoFilterNo" onclick="setKitsPhotoFilter('no')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;border-radius:0 7px 7px 0;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s;">Без фото</button>
       </div>
       <div class="results-info" id="kitsResultsInfo">—</div>
     </div>
@@ -986,17 +988,17 @@ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',ini
           <svg viewBox="0 0 10 10"><path d="M1 1l8 8M9 1l-8 8" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>
         </button>
         </div>
-        <button id="searchAllBtnTv" onclick="searchEverywhere('tv')" title="Искать по всем категориям" style="height:36px;padding:0 12px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface2);color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;white-space:nowrap;transition:all .15s;flex-shrink:0;display:flex;align-items:center;gap:5px;" onmouseover="this.style.background='var(--surface3)';this.style.color='var(--text)'" onmouseout="this.style.background='var(--surface2)';this.style.color='var(--text2)'">🔍 Везде</button>
+        <button id="searchAllBtnTv" onclick="searchEverywhere('tv')" title="Искать по всем категориям" style="height:36px;padding:0 12px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface2);color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;white-space:nowrap;transition:all .15s;flex-shrink:0;display:flex;align-items:center;gap:5px;" onmouseover="this.style.background='var(--surface3)';this.style.color='var(--text)'" onmouseout="this.style.background='var(--surface2)';this.style.color='var(--text2)'">🔍 Везде</button>
         <select id="slabot-cat-filter" onchange="onSlabotCatFilter()" style="height:36px;padding:0 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;cursor:pointer;display:none;">
           <option value="">Все категории</option>
         </select>
         <div style="display:flex;gap:2px;flex-shrink:0;">
-          <button id="tvPhotoFilterAll" onclick="setTvPhotoFilter('all')" style="padding:5px 10px;border:1.5px solid var(--border);border-radius:7px 0 0 7px;background:var(--surface3);color:var(--text);font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;">Все</button>
-          <button id="tvPhotoFilterYes" onclick="setTvPhotoFilter('yes')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;">📷 С фото</button>
-          <button id="tvPhotoFilterNo" onclick="setTvPhotoFilter('no')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;border-radius:0 7px 7px 0;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;">Без фото</button>
+          <button id="tvPhotoFilterAll" onclick="setTvPhotoFilter('all')" style="padding:5px 10px;border:1.5px solid var(--border);border-radius:7px 0 0 7px;background:var(--surface3);color:var(--text);font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s;">Все</button>
+          <button id="tvPhotoFilterYes" onclick="setTvPhotoFilter('yes')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s;">📷 С фото</button>
+          <button id="tvPhotoFilterNo" onclick="setTvPhotoFilter('no')" style="padding:5px 10px;border:1.5px solid var(--border);border-left:none;border-radius:0 7px 7px 0;background:var(--surface2);color:var(--text3);font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s;">Без фото</button>
         </div>
         <div class="results-info" id="tvResultsInfo">—</div>
-        <button onclick="exportToExcel('tv')" title="Выгрузить в Excel" style="background:linear-gradient(135deg,#1a7a3a,#2aaa5a);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;white-space:nowrap;transition:all .2s;">📥 Excel</button>
+        <button onclick="exportToExcel('tv')" title="Выгрузить в Excel" style="background:linear-gradient(135deg,#1a7a3a,#2aaa5a);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:Inter,sans-serif;white-space:nowrap;transition:all .2s;">📥 Excel</button>
       </div>
       <div class="light-body">
         <div class="light-table-wrap" id="tvTableWrap">
@@ -1026,22 +1028,22 @@ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',ini
       </div>
       <input type="file" id="nlistFileInput" accept=".xlsx,.xls" style="display:none">
       <button onclick="document.getElementById('nlistFileInput').click()"
-        style="background:linear-gradient(135deg,#583A88,#7960A2);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;white-space:nowrap;transition:all .2s;"
+        style="background:linear-gradient(135deg,#583A88,#7960A2);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:Inter,sans-serif;white-space:nowrap;transition:all .2s;"
         onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
         📂 Загрузить xlsx
       </button>
       <button onclick="exportToExcel('nlist')" title="Выгрузить текущий список (с учётом сортировки) в Excel"
-        style="background:linear-gradient(135deg,#1a7a3a,#2aaa5a);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;white-space:nowrap;transition:all .2s;"
+        style="background:linear-gradient(135deg,#1a7a3a,#2aaa5a);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:Inter,sans-serif;white-space:nowrap;transition:all .2s;"
         onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
         📥 Excel
       </button>
       <button onclick="openNlistHistory()" title="История загруженных файлов по магазинам"
-        style="background:linear-gradient(135deg,#5a5a6a,#7a7a8a);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;white-space:nowrap;transition:all .2s;"
+        style="background:linear-gradient(135deg,#5a5a6a,#7a7a8a);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:Inter,sans-serif;white-space:nowrap;transition:all .2s;"
         onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
         📜 История
       </button>
       <button onclick="clearNlist()"
-        style="background:linear-gradient(135deg,#7a1a1a,#c03030);color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;white-space:nowrap;transition:all .2s;"
+        style="background:linear-gradient(135deg,#7a1a1a,#c03030);color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:Inter,sans-serif;white-space:nowrap;transition:all .2s;"
         onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
         🗑 Очистить
       </button>
@@ -1094,13 +1096,13 @@ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',ini
       <div>
         <div style="font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;">№ магазина *</div>
         <input id="nlistShopInput" type="text" placeholder="Например: 1234" autocomplete="off"
-          style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:15px;font-family:'JetBrains Mono',monospace;font-weight:700;outline:none;box-sizing:border-box;color:var(--text);background:var(--surface3);"
+          style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:15px;font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;font-weight:700;outline:none;box-sizing:border-box;color:var(--text);background:var(--surface3);"
           onfocus="this.style.borderColor='#7960A2'" onblur="this.style.borderColor=''"
           onkeydown="if(event.key==='Enter')confirmNlistShopModal()">
       </div>
       <div id="nlistShopError" style="font-size:12px;font-weight:700;color:#c03030;min-height:16px;"></div>
       <button onclick="confirmNlistShopModal()"
-        style="width:100%;height:44px;background:linear-gradient(135deg,#583A88,#7960A2);color:#fff;border:none;border-radius:11px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s;box-shadow:0 4px 16px rgba(121,96,162,.35);"
+        style="width:100%;height:44px;background:linear-gradient(135deg,#583A88,#7960A2);color:#fff;border:none;border-radius:11px;font-size:15px;font-weight:800;cursor:pointer;font-family:Inter,sans-serif;transition:all .2s;box-shadow:0 4px 16px rgba(121,96,162,.35);"
         onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
         📂 Загрузить список
       </button>
@@ -1172,10 +1174,10 @@ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',ini
     <span style="font-size:12px;font-weight:700;color:#8073B3;">Количество комплектов:</span>
     <div style="display:flex;align-items:center;">
       <button onclick="document.getElementById('kdm-qty-input').value=Math.max(1,(parseInt(document.getElementById('kdm-qty-input').value)||1)-1)" style="width:30px;height:30px;background:linear-gradient(135deg,#887BB8,#7265A3);border:none;color:#fff;border-radius:7px 0 0 7px;font-size:16px;cursor:pointer;">−</button>
-      <input id="kdm-qty-input" type="number" value="1" min="1" max="99" style="width:46px;height:30px;border:1px solid #C5BFDC;border-left:none;border-right:none;text-align:center;font-family:monospace;font-size:13px;font-weight:700;outline:none;">
+      <input id="kdm-qty-input" type="number" value="1" min="1" max="99" style="width:46px;height:30px;border:1px solid #C5BFDC;border-left:none;border-right:none;text-align:center;font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;font-size:13px;font-weight:700;outline:none;">
       <button onclick="document.getElementById('kdm-qty-input').value=Math.min(99,(parseInt(document.getElementById('kdm-qty-input').value)||1)+1)" style="width:30px;height:30px;background:linear-gradient(135deg,#887BB8,#7265A3);border:none;color:#fff;border-radius:0 7px 7px 0;font-size:16px;cursor:pointer;">+</button>
     </div>
-    <button onclick="addKitDetailToCart()" style="margin-left:auto;background:linear-gradient(135deg,#887BB8,#7265A3);color:#fff;border:none;border-radius:10px;padding:10px 22px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(114,101,163,.35);">🛒 Добавить в корзину</button>
+    <button onclick="addKitDetailToCart()" style="margin-left:auto;background:linear-gradient(135deg,#887BB8,#7265A3);color:#fff;border:none;border-radius:10px;padding:10px 22px;font-family:Inter,sans-serif;font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(114,101,163,.35);">🛒 Добавить в корзину</button>
   </div>
 </div>
 
@@ -1185,7 +1187,7 @@ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',ini
     <span style="font-size:22px">📡</span>
     <div style="flex:1">
       <div id="tdm-title" style="font-size:17px;font-weight:900;color:#fff;"></div>
-      <div id="tdm-code" style="font-size:12px;color:#a5d8e8;margin-top:2px;font-family:monospace;"></div>
+      <div id="tdm-code" style="font-size:12px;color:#a5d8e8;margin-top:2px;font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;"></div>
     </div>
     <button onclick="closeTvDetail()" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:30px;height:30px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:900;">✕</button>
   </div>
@@ -1213,7 +1215,7 @@ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',ini
     <div style="flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:14px;">
       <div>
         <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#7ab;margin-bottom:6px;">КОД НОМЕНКЛАТУРЫ</div>
-        <div id="tdm-code-big" style="font-family:monospace;font-size:15px;font-weight:700;color:var(--text);background:var(--bg);padding:8px 12px;border-radius:8px;border:1px solid var(--border);"></div>
+        <div id="tdm-code-big" style="font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;font-size:15px;font-weight:700;color:var(--text);background:var(--bg);padding:8px 12px;border-radius:8px;border:1px solid var(--border);"></div>
       </div>
       <div>
         <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#7ab;margin-bottom:6px;">НАИМЕНОВАНИЕ</div>
@@ -1224,7 +1226,7 @@ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',ini
         <div id="tdm-short" style="font-size:13px;color:var(--text2);line-height:1.5;"></div>
       </div>
       <!-- Кнопка Аналоги -->
-      <button id="tdm-analog-btn" onclick="tdmToggleAnalogs()" style="display:none;width:100%;height:40px;align-items:center;justify-content:center;gap:6px;border-radius:10px;border:none;background:linear-gradient(135deg,#c49000,#e0a800);color:#fff;font-size:14px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;letter-spacing:.3px;transition:all .2s;box-shadow:0 3px 10px rgba(176,125,0,.25);">
+      <button id="tdm-analog-btn" onclick="tdmToggleAnalogs()" style="display:none;width:100%;height:40px;align-items:center;justify-content:center;gap:6px;border-radius:10px;border:none;background:linear-gradient(135deg,#c49000,#e0a800);color:#fff;font-size:14px;font-weight:800;cursor:pointer;font-family:Inter,sans-serif;letter-spacing:.3px;transition:all .2s;box-shadow:0 3px 10px rgba(176,125,0,.25);">
         ≈ Аналоги <span id="tdm-analog-cnt" style="background:rgba(255,255,255,.2);border-radius:10px;padding:1px 8px;font-size:12px;margin-left:4px;"></span>
       </button>
       <!-- Панель аналогов -->
@@ -1233,7 +1235,7 @@ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',ini
         <div id="tdm-analogs-list" style="padding:4px 10px 10px;display:flex;flex-direction:column;gap:5px;"></div>
       </div>
       <!-- Кнопка совместимости -->
-      <button id="tdm-compat-btn" onclick="tdmToggleCompat()" style="display:none;width:100%;height:40px;background:linear-gradient(135deg,#1a6a3a,#2a9a5a);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer;transition:all .2s;font-family:'Nunito',sans-serif;box-shadow:0 3px 10px rgba(42,154,90,.25);">
+      <button id="tdm-compat-btn" onclick="tdmToggleCompat()" style="display:none;width:100%;height:40px;background:linear-gradient(135deg,#1a6a3a,#2a9a5a);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer;transition:all .2s;font-family:Inter,sans-serif;box-shadow:0 3px 10px rgba(42,154,90,.25);">
         🔗 Совместимость <span id="tdm-compat-cnt" style="background:rgba(255,255,255,.2);border-radius:10px;padding:1px 8px;font-size:12px;margin-left:4px;"></span>
       </button>
       <!-- Панель совместимости -->
@@ -1269,7 +1271,7 @@ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',ini
     <span id="idm-icon" style="font-size:22px">📦</span>
     <div style="flex:1;min-width:0;">
       <div id="idm-title" style="font-size:17px;font-weight:900;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
-      <div id="idm-code-sub" style="font-size:12px;color:#C4B9D6;margin-top:2px;font-family:monospace;"></div>
+      <div id="idm-code-sub" style="font-size:12px;color:#C4B9D6;margin-top:2px;font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;"></div>
     </div>
     <button onclick="closeItemDetail()" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:30px;height:30px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:900;flex-shrink:0;">✕</button>
   </div>
@@ -1302,7 +1304,7 @@ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',ini
     <div style="flex:1;min-width:280px;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:14px;">
       <div>
         <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9682B6;margin-bottom:6px;">КОД НОМЕНКЛАТУРЫ</div>
-        <div id="idm-code-big" style="font-family:monospace;font-size:15px;font-weight:700;color:var(--text);background:var(--bg);padding:8px 12px;border-radius:8px;border:1px solid var(--border);"></div>
+        <div id="idm-code-big" style="font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;font-size:15px;font-weight:700;color:var(--text);background:var(--bg);padding:8px 12px;border-radius:8px;border:1px solid var(--border);"></div>
       </div>
       <div>
         <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9682B6;margin-bottom:6px;">НАИМЕНОВАНИЕ</div>
@@ -1324,7 +1326,7 @@ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',ini
         <div id="idm-kits-tags" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
       </div>
       <!-- Кнопка Аналоги (на всю ширину) -->
-      <button id="idm-analog-btn" onclick="idmToggleAnalogs()" style="display:none;width:100%;height:40px;align-items:center;justify-content:center;gap:6px;border-radius:10px;border:none;background:linear-gradient(135deg,#c49000,#e0a800);color:#fff;font-size:14px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;letter-spacing:.3px;transition:all .2s;box-shadow:0 3px 10px rgba(176,125,0,.25);">
+      <button id="idm-analog-btn" onclick="idmToggleAnalogs()" style="display:none;width:100%;height:40px;align-items:center;justify-content:center;gap:6px;border-radius:10px;border:none;background:linear-gradient(135deg,#c49000,#e0a800);color:#fff;font-size:14px;font-weight:800;cursor:pointer;font-family:Inter,sans-serif;letter-spacing:.3px;transition:all .2s;box-shadow:0 3px 10px rgba(176,125,0,.25);">
         ≈ Аналоги <span id="idm-analog-cnt" style="background:rgba(255,255,255,.2);border-radius:10px;padding:1px 8px;font-size:12px;margin-left:4px;"></span>
       </button>
       <!-- Панель аналогов в карточке -->
@@ -1333,7 +1335,7 @@ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',ini
         <div id="idm-analogs-list" style="padding:4px 10px 10px;display:flex;flex-direction:column;gap:5px;"></div>
       </div>
       <!-- Кнопка совместимости (на всю ширину) -->
-      <button id="idm-compat-btn" onclick="idmToggleCompat()" style="display:none;width:100%;height:40px;background:linear-gradient(135deg,#1a6a3a,#2a9a5a);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer;transition:all .2s;font-family:'Nunito',sans-serif;box-shadow:0 3px 10px rgba(42,154,90,.25);">
+      <button id="idm-compat-btn" onclick="idmToggleCompat()" style="display:none;width:100%;height:40px;background:linear-gradient(135deg,#1a6a3a,#2a9a5a);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer;transition:all .2s;font-family:Inter,sans-serif;box-shadow:0 3px 10px rgba(42,154,90,.25);">
         🔗 Совместимость <span id="idm-compat-cnt" style="background:rgba(255,255,255,.2);border-radius:10px;padding:1px 8px;font-size:12px;margin-left:4px;"></span>
       </button>
       <!-- Кнопки добавления в корзину (на всю ширину) -->
@@ -1384,10 +1386,10 @@ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',ini
       <span style="font-size:12px;font-weight:700;color:#8073B3;">Комплектов:</span>
       <div style="display:flex;align-items:center;">
         <button onclick="document.getElementById('idm-kp-qty').value=Math.max(1,(parseInt(document.getElementById('idm-kp-qty').value)||1)-1)" style="width:28px;height:28px;background:linear-gradient(135deg,#887BB8,#7265A3);border:none;color:#fff;border-radius:7px 0 0 7px;font-size:15px;cursor:pointer;">−</button>
-        <input id="idm-kp-qty" type="number" value="1" min="1" max="99" style="width:42px;height:28px;border:1px solid #C5BFDC;border-left:none;border-right:none;text-align:center;font-family:monospace;font-size:13px;font-weight:700;outline:none;">
+        <input id="idm-kp-qty" type="number" value="1" min="1" max="99" style="width:42px;height:28px;border:1px solid #C5BFDC;border-left:none;border-right:none;text-align:center;font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;font-size:13px;font-weight:700;outline:none;">
         <button onclick="document.getElementById('idm-kp-qty').value=Math.min(99,(parseInt(document.getElementById('idm-kp-qty').value)||1)+1)" style="width:28px;height:28px;background:linear-gradient(135deg,#887BB8,#7265A3);border:none;color:#fff;border-radius:0 7px 7px 0;font-size:15px;cursor:pointer;">+</button>
       </div>
-      <button onclick="idmKpAddToCart()" style="margin-left:auto;background:linear-gradient(135deg,#887BB8,#7265A3);color:#fff;border:none;border-radius:9px;padding:8px 16px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 3px 10px rgba(114,101,163,.3);">🛒 В корзину</button>
+      <button onclick="idmKpAddToCart()" style="margin-left:auto;background:linear-gradient(135deg,#887BB8,#7265A3);color:#fff;border:none;border-radius:9px;padding:8px 16px;font-family:Inter,sans-serif;font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 3px 10px rgba(114,101,163,.3);">🛒 В корзину</button>
     </div>
   </div>
 
@@ -1435,7 +1437,7 @@ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',ini
     <h2>🛒 Корзина заказа</h2>
     <div style="display:flex;align-items:center;gap:8px;">
       <button class="clear-cart-btn" id="clearCartBtn" onclick="clearCart()" title="Очистить корзину" style="display:none;">🗑 Очистить</button>
-      <button onclick="exportCartToExcel()" title="Выгрузить корзину в Excel" style="background:linear-gradient(135deg,#1a7a3a,#2aaa5a);color:#fff;border:none;border-radius:8px;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;transition:all .2s;white-space:nowrap;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''"><span class="lottie-icon" id="lottie-cart-excel" style="width:16px;height:16px;"></span> Excel</button>
+      <button onclick="exportCartToExcel()" title="Выгрузить корзину в Excel" style="background:linear-gradient(135deg,#1a7a3a,#2aaa5a);color:#fff;border:none;border-radius:8px;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:Inter,sans-serif;transition:all .2s;white-space:nowrap;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''"><span class="lottie-icon" id="lottie-cart-excel" style="width:16px;height:16px;"></span> Excel</button>
       <button class="close-btn" onclick="closeCart()">✕</button>
     </div>
   </div>
@@ -1508,7 +1510,7 @@ function npIcon(cat){
   else if(/(^|\s)\u0438\u0442(\s|$)/.test(c)) k='desktop';
   return '<svg class="np-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="'+NP_ICONS[k]+'"/></svg>';
 }
-var APP_VERSION = '1.78';
+var APP_VERSION = '1.79';
 // При каждом обновлении index.html — менять только эту строку (1.17, 1.18 и т.д.)
 (function(){
   var el = document.getElementById('appVersionBadge');
@@ -2267,7 +2269,7 @@ function tdmToggleAnalogs(){
     row.style.cssText='display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;background:#fff;border:1px solid #f0e0a0;cursor:pointer;transition:all .15s;';
     row.onmouseenter=function(){this.style.borderColor='#e0c060';this.style.background='#fffae8';};
     row.onmouseleave=function(){this.style.borderColor='#f0e0a0';this.style.background='#fff';};
-    var codeEl=document.createElement('span');codeEl.style.cssText='font-family:monospace;font-size:11px;font-weight:700;color:#5a5d6e;flex-shrink:0;';codeEl.textContent=ac;
+    var codeEl=document.createElement('span');codeEl.style.cssText='font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;font-size:11px;font-weight:700;color:#5a5d6e;flex-shrink:0;';codeEl.textContent=ac;
     var nameEl=document.createElement('span');nameEl.style.cssText='font-size:12px;font-weight:600;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;';nameEl.textContent=found?found.name:'';
     row.appendChild(codeEl);row.appendChild(nameEl);
     if(found){
@@ -2310,7 +2312,7 @@ function tdmToggleCompat(){
     row.onmouseenter=function(){this.style.borderColor='#80c080';this.style.boxShadow='0 2px 8px rgba(0,100,0,.08)';};
     row.onmouseleave=function(){this.style.borderColor='#d0e8d0';this.style.boxShadow='none';};
     if(link.comment) row.title=link.comment;
-    var codeEl=document.createElement('span');codeEl.style.cssText='font-family:monospace;font-size:11px;font-weight:700;color:#5a5d6e;flex-shrink:0;';codeEl.textContent=link.code;
+    var codeEl=document.createElement('span');codeEl.style.cssText='font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;font-size:11px;font-weight:700;color:#5a5d6e;flex-shrink:0;';codeEl.textContent=link.code;
     var nameEl=document.createElement('span');nameEl.style.cssText='font-size:12px;font-weight:600;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;';nameEl.textContent=link.name;
     if(link.type&&link.type!=='подходит'){
       var typeEl=document.createElement('span');typeEl.style.cssText='font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;background:#e8f5e9;color:#2e7d32;';typeEl.textContent=link.type;
@@ -2467,7 +2469,7 @@ function idmToggleAnalogs(){
     row.style.cssText = 'display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:8px;background:#fff;border:1px solid #f0e0a0;';
 
     var codeEl = document.createElement('span');
-    codeEl.style.cssText = "font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:#5a5d6e;flex-shrink:0;";
+    codeEl.style.cssText = "font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;font-size:11px;font-weight:700;color:#5a5d6e;flex-shrink:0;";
     codeEl.textContent = aCode;
 
     var nameEl = document.createElement('span');
@@ -2476,7 +2478,7 @@ function idmToggleAnalogs(){
     nameEl.title = info ? info.name : aCode;
 
     var gotoBtn = document.createElement('button');
-    gotoBtn.style.cssText = "flex-shrink:0;padding:3px 10px;border-radius:6px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text2);font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .12s;";
+    gotoBtn.style.cssText = "flex-shrink:0;padding:3px 10px;border-radius:6px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text2);font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;transition:all .12s;";
     gotoBtn.textContent = '→ Открыть';
     if(info){
       (function(aCodeVal){
@@ -2709,7 +2711,7 @@ function idmFillKitsTags(code){
     tag.dataset.kitId = kit.id;
     tag.style.cssText = 'background:linear-gradient(135deg,#EEECF5,#E5E3F0);color:#7265A3;border:1.5px solid #C5BFDC;'
       + 'border-radius:20px;padding:4px 13px;font-size:12px;font-weight:800;cursor:pointer;'
-      + 'font-family:"Nunito",sans-serif;transition:all .15s;white-space:nowrap;';
+      + 'font-family:"Inter",sans-serif;transition:all .15s;white-space:nowrap;';
     tag.onmouseover = function(){ this.style.background='linear-gradient(135deg,#7265A3,#887BB8)'; this.style.color='#fff'; this.style.borderColor='#7265A3'; };
     tag.onmouseout  = function(){
       var isActive = idmCurrentKitId === this.dataset.kitId;
@@ -2776,7 +2778,7 @@ function idmFillCompat(code){
     // Кол-во
     var qtyInp = document.createElement('input');
     qtyInp.type='number'; qtyInp.min='1'; qtyInp.value='1';
-    qtyInp.style.cssText='width:38px;height:26px;border:1px solid #c0d8c0;border-radius:6px;text-align:center;font-family:monospace;font-size:12px;font-weight:700;outline:none;flex-shrink:0;';
+    qtyInp.style.cssText='width:38px;height:26px;border:1px solid #c0d8c0;border-radius:6px;text-align:center;font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;font-size:12px;font-weight:700;outline:none;flex-shrink:0;';
     qtyInp.onclick=function(e){e.stopPropagation();};
 
     // Кнопка в корзину
@@ -2869,7 +2871,7 @@ function idmOpenKitPanel(kitId){
     var numTd  = document.createElement('td'); numTd.textContent = i+1;
     numTd.style.cssText = 'text-align:center;color:#9B90C3;font-weight:700;font-size:11px;padding:7px 6px;width:28px;';
     var codeTd = document.createElement('td'); codeTd.textContent = it.code;
-    codeTd.style.cssText = 'font-family:monospace;font-size:11px;color:' + (isCurrent ? '#4B426B' : '#8073B3') + ';white-space:nowrap;padding:7px 8px;font-weight:' + (isCurrent ? '800' : '500') + ';';
+    codeTd.style.cssText = 'font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;font-size:11px;color:' + (isCurrent ? '#4B426B' : '#8073B3') + ';white-space:nowrap;padding:7px 8px;font-weight:' + (isCurrent ? '800' : '500') + ';';
     var nameTd = document.createElement('td'); nameTd.textContent = it.name;
     nameTd.style.cssText = 'font-size:12px;font-weight:500;padding:7px 8px;color:var(--text);';
     var qtyTd  = document.createElement('td'); qtyTd.textContent = it.qty + ' шт';
@@ -5113,7 +5115,7 @@ function openKitDetail(kitId){
       openItemDetail(found, '', true);
     };})(it);
     var numTd = document.createElement('td'); numTd.textContent = i+1; numTd.style.cssText='text-align:center;color:#8073B3;font-weight:700;width:32px';
-    var codeTd = document.createElement('td'); codeTd.textContent = it.code; codeTd.style.cssText='font-family:monospace;font-size:12px;color:#8073B3;white-space:nowrap';
+    var codeTd = document.createElement('td'); codeTd.textContent = it.code; codeTd.style.cssText='font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;font-size:12px;color:#8073B3;white-space:nowrap';
     var nameTd = document.createElement('td'); nameTd.textContent = it.name; nameTd.style.fontWeight='500';
     var qtyTd = document.createElement('td'); qtyTd.textContent = it.qty+' шт'; qtyTd.style.cssText='text-align:center;font-weight:800;color:#7265A3;white-space:nowrap';
     // Иконка-стрелка для визуальной подсказки кликабельности
@@ -6729,7 +6731,7 @@ document.addEventListener('DOMContentLoaded', function(){
       <div>
         <div style="font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;">Код номенклатуры *</div>
         <input id="pu-code" type="text" placeholder="Например: RUM0520385" autocomplete="off"
-          style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:14px;font-family:'JetBrains Mono',monospace;font-weight:600;outline:none;box-sizing:border-box;color:var(--text);background:var(--surface3);"
+          style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:14px;font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;font-weight:600;outline:none;box-sizing:border-box;color:var(--text);background:var(--surface3);"
           onfocus="this.style.borderColor='#7366A5'" onblur="this.style.borderColor=''">
       </div>
 
@@ -6737,7 +6739,7 @@ document.addEventListener('DOMContentLoaded', function(){
       <div>
         <div style="font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;">Раздел (папка) *</div>
         <select id="pu-folder"
-          style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:'Nunito',sans-serif;font-weight:600;outline:none;box-sizing:border-box;color:var(--text);background:var(--surface3);cursor:pointer;"
+          style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:Inter,sans-serif;font-weight:600;outline:none;box-sizing:border-box;color:var(--text);background:var(--surface3);cursor:pointer;"
           onfocus="this.style.borderColor='#7366A5'" onblur="this.style.borderColor=''">
           <option value="">— Выберите раздел —</option>
         </select>
@@ -6769,7 +6771,7 @@ document.addEventListener('DOMContentLoaded', function(){
       <div>
         <div style="font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;">GitHub токен (PAT) *</div>
         <input id="pu-pat" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off"
-          style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:'JetBrains Mono',monospace;font-weight:500;outline:none;box-sizing:border-box;color:var(--text);background:var(--surface3);"
+          style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;font-weight:500;outline:none;box-sizing:border-box;color:var(--text);background:var(--surface3);"
           onfocus="this.style.borderColor='#7366A5'" onblur="this.style.borderColor=''">
         <label style="display:flex;align-items:center;gap:6px;margin-top:8px;font-size:11.5px;font-weight:600;color:var(--text2);cursor:pointer;">
           <input id="pu-pat-remember" type="checkbox" style="cursor:pointer;">
@@ -6783,7 +6785,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
       <!-- Кнопка загрузки -->
       <button id="pu-btn" onclick="puUpload()"
-        style="width:100%;height:44px;background:linear-gradient(135deg,#4C446D,#7366A5);color:#fff;border:none;border-radius:11px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s;box-shadow:0 4px 16px rgba(115,102,165,.35);"
+        style="width:100%;height:44px;background:linear-gradient(135deg,#4C446D,#7366A5);color:#fff;border:none;border-radius:11px;font-size:15px;font-weight:800;cursor:pointer;font-family:Inter,sans-serif;transition:all .2s;box-shadow:0 4px 16px rgba(115,102,165,.35);"
         onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
         📤 Загрузить на GitHub
       </button>
@@ -6832,7 +6834,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
       <!-- Кнопка поиска -->
       <button id="ps-btn" onclick="psStartSearch()" disabled
-        style="width:100%;height:44px;background:linear-gradient(135deg,#0a5a7a,#1a90c0);color:#fff;border:none;border-radius:11px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s;box-shadow:0 4px 16px rgba(26,144,192,.35);opacity:.5;"
+        style="width:100%;height:44px;background:linear-gradient(135deg,#0a5a7a,#1a90c0);color:#fff;border:none;border-radius:11px;font-size:15px;font-weight:800;cursor:pointer;font-family:Inter,sans-serif;transition:all .2s;box-shadow:0 4px 16px rgba(26,144,192,.35);opacity:.5;"
         onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
         🔎 Найти похожие
       </button>
@@ -6870,7 +6872,7 @@ function showInstallBanner(){
   if(document.getElementById('pwa-install-banner')) return;
   var banner = document.createElement('div');
   banner.id = 'pwa-install-banner';
-  banner.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:9999;background:linear-gradient(135deg,#452D6B,#7960A2);color:#fff;padding:16px 20px;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.25);display:flex;align-items:center;gap:14px;font-family:Nunito,sans-serif;max-width:420px;animation:pwaSlideIn .4s ease;';
+  banner.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:9999;background:linear-gradient(135deg,#452D6B,#7960A2);color:#fff;padding:16px 20px;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.25);display:flex;align-items:center;gap:14px;font-family:Inter,sans-serif;max-width:420px;animation:pwaSlideIn .4s ease;';
   banner.innerHTML =
     '<div style="font-size:36px;flex-shrink:0;">📦</div>' +
     '<div style="flex:1;min-width:0;">' +
@@ -6878,8 +6880,8 @@ function showInstallBanner(){
       '<div style="font-size:12px;opacity:.85;line-height:1.4;">Каталог оборудования Kari будет работать как обычное приложение на вашем компьютере</div>' +
     '</div>' +
     '<div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;">' +
-      '<button id="pwa-install-btn" style="background:#fff;color:#452D6B;border:none;border-radius:8px;padding:8px 18px;font-size:13px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;transition:all .15s;white-space:nowrap;">Установить</button>' +
-      '<button id="pwa-dismiss-btn" style="background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:8px;padding:6px 18px;font-size:11px;font-weight:600;cursor:pointer;font-family:Nunito,sans-serif;transition:all .15s;">Не сейчас</button>' +
+      '<button id="pwa-install-btn" style="background:#fff;color:#452D6B;border:none;border-radius:8px;padding:8px 18px;font-size:13px;font-weight:800;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s;white-space:nowrap;">Установить</button>' +
+      '<button id="pwa-dismiss-btn" style="background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:8px;padding:6px 18px;font-size:11px;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;transition:all .15s;">Не сейчас</button>' +
     '</div>';
   document.body.appendChild(banner);
 
