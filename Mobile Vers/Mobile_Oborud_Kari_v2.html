@@ -902,6 +902,25 @@ html[data-theme="dark"]{--wb-purple:#8D78AF;--wb-purple-light:#A493BF;--wb-purpl
 .item-code{font-family:inherit;font-size:14px;font-weight:600;letter-spacing:.02em;font-variant-numeric:tabular-nums;color:var(--wb-purple);}
 .s4-code{font-family:inherit;font-size:14px;font-weight:600;letter-spacing:.02em;font-variant-numeric:tabular-nums;}
 .search-drop-code,.ci-code,.s4-ai-code,.s4-kit-item-code,.kit-item-code,.photo-viewer-code{font-family:inherit;font-size:12px;letter-spacing:.01em;font-variant-numeric:tabular-nums;}
+/* v5.0: иконки разделов — контурные, в фиолетовом */
+.sec-ic{stroke:var(--wb-purple);}
+.sec-card-emoji .np-ic{width:28px;height:28px;}
+.hdr-cart-btn .np-ic{width:24px;height:24px;}
+/* v5.0: капс-подпись над сеткой подразделов дублировала шапку и крошки */
+.subcat-section-title{display:none;}
+/* v5.0: «Отправить» — плоский зелёный без градиента и свечения */
+.send-btn{background:#1E7B34;box-shadow:none;}
+/* v5.0: ничего мельче 11px; подписи 12px, бейджи и метки 11px */
+.hdr-title-sub,.search-drop-code,.search-drop-cat,.global-section-label,.subcat-card-count,.item-link-btn,.ci-code,.dl,.s4-photo-lbl,.s4-bc-sec,.s4-bc-sub,.s4-acc-cnt,.s4-ai-code,.s4-kit-item-code,.s4-compat-type,.modal-form-label,.kit-card-cnt,.kit-card-desc,.kit-item-code,.kit-item-name,.kit-item-qty,.photo-viewer-code{font-size:12px;}
+.hdr-cart-badge,.nav-badge,.tag,.s4-ai-tag,.kit-card-badge,.kit-item-compat,#pwa-install-btn,.hdr-search-clear{font-size:11px;}
+/* v5.0: серые подписи — контраст не ниже 4.5:1 */
+:root{--wb-text3:#6E6B76;}
+html[data-theme="dark"]{--wb-text3:#A19EAC;}
+.hdr-search-local input::placeholder{color:rgba(90,59,140,.75);}
+/* v5.0: заголовок главной — h1; кнопка «Закрыть» — контраст 4.5:1 */
+h1.home-title{margin:0;}
+.ver-close-btn{background:var(--wb-purple);}
+#s4addIco:empty{display:none;}
 </style>
 </head>
 <body>
@@ -942,7 +961,7 @@ html[data-theme="dark"]{--wb-purple:#8D78AF;--wb-purple-light:#A493BF;--wb-purpl
       </div>
       <div class="hdr-spacer"></div>
       <button class="hdr-cart-btn" onclick="openCart()">
-        🛒<div class="hdr-cart-badge" id="cartBadge">0</div>
+        <svg class="np-ic sec-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.331 8h11.339a2 2 0 0 1 1.977 2.304l-1.255 8.152A3 3 0 0 1 15.426 21H8.574a3 3 0 0 1-2.965-2.544l-1.255-8.152A2 2 0 0 1 6.331 8zM9 11V6a3 3 0 0 1 6 0v5"/></svg><div class="hdr-cart-badge" id="cartBadge">0</div>
       </button>
     </div>
     <!-- Глобальный поиск — всегда виден -->
@@ -980,7 +999,7 @@ html[data-theme="dark"]{--wb-purple:#8D78AF;--wb-purple-light:#A493BF;--wb-purpl
   <!-- SCREEN 1: Sections -->
   <div class="screen active" id="s1">
     <div class="home-intro">
-      <div class="home-title">Оборудование</div>
+      <h1 class="home-title">Оборудование</h1>
       <div class="home-sub">Найдите нужную позицию и добавьте её в заявку</div>
     </div>
     <div class="quick-actions">
@@ -1066,7 +1085,7 @@ html[data-theme="dark"]{--wb-purple:#8D78AF;--wb-purple-light:#A493BF;--wb-purpl
           <button class="s4-qb plus" onclick="s4chQ(1)">+</button>
         </div>
         <button class="s4-add" id="s4addBtn" onclick="s4toggleCart()">
-          <span id="s4addIco">🛒</span><span id="s4addTxt">Добавить в заявку</span>
+          <span id="s4addIco"></span><span id="s4addTxt">Добавить в заявку</span>
         </button>
         <button class="s4-fav-btn" id="s4favBtn" onclick="s4ToggleFav()">☆</button>
       </div>
@@ -1146,7 +1165,7 @@ html[data-theme="dark"]{--wb-purple:#8D78AF;--wb-purple-light:#A493BF;--wb-purpl
       </div>
       <div class="s4-qty-cart" style="justify-content:center;">
         <button class="s4-add" id="s5addAll" data-action="s5-add-kit">
-          <span>🛒</span><span id="s5addTxt">Добавить весь комплект</span>
+          <span id="s5addTxt">Добавить весь комплект</span>
         </button>
       </div>
       <div class="s4-acc">
@@ -1202,7 +1221,7 @@ html[data-theme="dark"]{--wb-purple:#8D78AF;--wb-purple-light:#A493BF;--wb-purpl
   <div class="drawer" id="drawer">
     <div class="drawer-handle"></div>
     <div class="drawer-hdr">
-      <div class="drawer-hdr-title" id="drawerTitle">🛒 Заявка</div>
+      <div class="drawer-hdr-title" id="drawerTitle">Заявка</div>
       <div style="display:flex;align-items:center;gap:8px;">
         <button class="clear-cart-btn" id="clearCartBtn" style="width:auto;padding:0 12px;height:28px;font-size:11px;display:none;" onclick="clearCartWithUndo()">🗑 Очистить</button>
         <button class="drawer-close" onclick="closeCart()">✕</button>
@@ -1478,11 +1497,16 @@ function inSec(it,secId){
 }
 /* v4.8: заглушка «нет фото» — контурная иконка раздела вместо эмодзи */
 var NP_ICONS={"trade": "M14 6a2 2 0 1 0-4 0c0 1.667.67 3 2 4h-.008l7.971 4.428a2 2 0 0 1 1.029 1.749V17a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-.823a2 2 0 0 1 1.029-1.749L12 10", "jewel": "M6 5h12l3 5-8.5 9.5a.7.7 0 0 1-1 0L3 10l3-5M10 12 8 9.8l.6-1", "kids": "M14 8a2 2 0 0 0-2-2M6 8a6 6 0 1 1 12 0c0 4.97-2.686 9-6 9s-6-4.03-6-9M12 17v1a2 2 0 0 1-2 2H7a2 2 0 0 0-2 2", "ads": "M18 8a3 3 0 0 1 0 6M10 8v11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1v-5M12 8l4.524-3.77A.9.9 0 0 1 18 4.922v12.156a.9.9 0 0 1-1.476.692L12 14H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h8", "office": "M15 7l-6.5 6.5a1.5 1.5 0 0 0 3 3L18 10a3 3 0 0 0-6-6l-6.5 6.5a4.5 4.5 0 0 0 9 9L21 13", "light": "M3 12h1m8-9v1m8 8h1M5.6 5.6l.7.7m12.1-.7-.7.7M9 16a5 5 0 1 1 6 0 3.5 3.5 0 0 0-1 3 2 2 0 0 1-4 0 3.5 3.5 0 0 0-1-3M9.7 17h4.6", "tv": "M3 15a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM17 17v.01M13 17v.01M15 13v-2M11.75 8.75a4 4 0 0 1 6.5 0M8.5 6.5a8 8 0 0 1 13 0", "consum": "M3 15a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM17 17v.01M13 17v.01M15 13v-2M11.75 8.75a4 4 0 0 1 6.5 0M8.5 6.5a8 8 0 0 1 13 0", "it": "M3 5a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1zM7 20h10M9 16v4M15 16v4", "kits": "M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3M12 12l8-4.5M12 12v9M12 12 4 7.5"};
+/* v5.0: иконки разделов на главной и в шапке — тот же контурный набор */
+(function(){var x={"favs": "M12 17.75l-6.172 3.245 1.179-6.873-5-4.867 6.9-1L12 2l3.086 6.253 6.9 1-5 4.867 1.179 6.873z", "nlist": "M14 3v4a1 1 0 0 0 1 1h4M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2zM12 11v6M9.5 13.5 12 11l2.5 2.5", "photosearch": "M5 7h1a2 2 0 0 0 2-2 1 1 0 0 1 1-1h6a1 1 0 0 1 1 1 2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2M9 13a3 3 0 1 0 6 0 3 3 0 0 0-6 0", "consum": "M7 10h3V7L6.5 3.5a6 6 0 0 1 8 8l6 6a2 2 0 0 1-3 3l-6-6a6 6 0 0 1-8-8L7 10", "_bag": "M6.331 8h11.339a2 2 0 0 1 1.977 2.304l-1.255 8.152A3 3 0 0 1 15.426 21H8.574a3 3 0 0 1-2.965-2.544l-1.255-8.152A2 2 0 0 1 6.331 8zM9 11V6a3 3 0 0 1 6 0v5"};for(var k in x)NP_ICONS[k]=x[k];})();
+function secIcon(secId){return npIcon(secId).replace('class="np-ic"','class="np-ic sec-ic"');}
 function npIcon(secId){
   var d=NP_ICONS[secId]||NP_ICONS.kits;
   return '<svg class="np-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="'+d+'"/></svg>';
 }
 
+/* v5.0: на экранах раздела виден только поиск по разделу — общий прячем, чтобы не было двух полей подряд */
+function _syncSearchFields(){var g=getEl('hdrSearchGlobal'),l=getEl('hdrSearchLocal');if(g&&l)g.style.display=(l.style.display==='none')?'':'none';}
 function getSubcatData(secId){
   var subcats=[], counts={}, total=0;
   for(var i=0;i<allItems.length;i++){
@@ -1657,7 +1681,7 @@ function renderSections(){
     if(sec.hidden) continue;
     var cnt=getSectionCount(sec.id);
     h+='<div class="sec-card'+(sec.wide?' wide':'')+'" style="--accent:'+sec.color+'" data-action="go-section" data-val="'+sec.id+'">';
-    h+='<div class="sec-card-top"><span class="sec-card-emoji">'+sec.emoji+'</span><div class="sec-card-name">'+sec.name+'</div></div>';
+    h+='<div class="sec-card-top"><span class="sec-card-emoji">'+secIcon(sec.id)+'</span><div class="sec-card-name">'+sec.name+'</div></div>';
     h+='<div class="sec-card-bottom"><span class="sec-card-count">'+cnt.toLocaleString('ru')+' \u043f\u043e\u0437.</span><span class="sec-card-arrow">\u203a</span></div></div>';
   }
   grid.innerHTML=h;
@@ -1684,7 +1708,6 @@ function renderSubcats(secId){
 
   /* Карточка "Все позиции" — как в десктопе */
   h+='<div class="subcat-card subcat-card--all" data-action="go-subcat" data-val="'+secId+'" data-subcat="">';
-  h+='<div class="subcat-card-icon">\uD83D\uDCCB</div>';
   h+='<div class="subcat-card-name">\u0412\u0441\u0435 \u043f\u043e\u0437\u0438\u0446\u0438\u0438</div>';
   h+='<div class="subcat-card-count">'+data.total.toLocaleString('ru')+' \u043f\u043e\u0437\u0438\u0446\u0438\u0439</div>';
   h+='<div class="subcat-card-arrow">\u203a</div></div>';
@@ -1694,7 +1717,6 @@ function renderSubcats(secId){
     var s=data.subcats[j];
     var cnt=data.counts[s]||0;
     h+='<div class="subcat-card" data-action="go-subcat" data-val="'+secId+'" data-subcat="'+s+'">';
-    h+='<div class="subcat-card-icon">'+sec.emoji+'</div>';
     h+='<div class="subcat-card-name">'+s+'</div>';
     h+='<div class="subcat-card-count">'+cnt.toLocaleString('ru')+' \u043f\u043e\u0437\u0438\u0446\u0438\u0439</div>';
     h+='<div class="subcat-card-arrow">\u203a</div></div>';
@@ -1730,7 +1752,6 @@ function renderSubcatsFiltered(q){
     for(var k=0;k<filtered.length;k++){
       var s=filtered[k];
       h+='<div class="subcat-card" data-action="go-subcat" data-val="'+currentSecId+'" data-subcat="'+s+'">';
-      h+='<div class="subcat-card-icon">'+sec.emoji+'</div>';
       h+='<div class="subcat-card-name">'+s+'</div>';
       h+='<div class="subcat-card-count">'+(data.counts[s]||0).toLocaleString('ru')+' \u043f\u043e\u0437\u0438\u0446\u0438\u0439</div>';
       h+='<div class="subcat-card-arrow">\u203a</div></div>';
@@ -1947,7 +1968,7 @@ function updateHeader(){
     if(breadcrumb){breadcrumb.classList.remove('show');breadcrumb.innerHTML='';}
     if(titleMain)titleMain.textContent='\u041f\u043e\u0440\u0442\u0430\u043b \u0437\u0430\u043a\u0430\u0437\u043e\u0432';
     if(titleSub)titleSub.textContent='\u0421\u043a\u043b\u0430\u0434 \u2014 Kari';
-    if(localSrch)localSrch.style.display='none';
+    if(localSrch)localSrch.style.display='none';_syncSearchFields();
     if(localInput)localInput.value='';
     var slc=getEl('searchLocalClear');if(slc)slc.classList.remove('show');
   } else if(cur==='s2'){
@@ -1957,7 +1978,7 @@ function updateHeader(){
     var sub2txt = (currentSecId==='kits') ? (kitsData.length+' \u043f\u043e\u0437\u0438\u0446\u0438\u0439') : (data2.subcats.length+' \u043f\u043e\u0434\u0440\u0430\u0437\u0434\u0435\u043b\u0430');
     if(titleSub)titleSub.textContent=sub2txt;
     if(breadcrumb){breadcrumb.classList.add('show');breadcrumb.innerHTML='<span class="bc-item" data-action="reset-home">\u0413\u043b\u0430\u0432\u043d\u0430\u044f</span><span class="bc-sep">\u203a</span><span class="bc-cur">'+(sec?sec.name:'')+'</span>';}
-    if(localSrch)localSrch.style.display='flex';
+    if(localSrch)localSrch.style.display='flex';_syncSearchFields();
     if(localInput){localInput.placeholder='\u041f\u043e\u0438\u0441\u043a: '+(sec?sec.name:'');if(!sameScreen)localInput.value='';}
     var slc2=getEl('searchLocalClear');if(slc2&&!sameScreen)slc2.classList.remove('show');
   } else if(cur==='s3'){
@@ -1977,8 +1998,8 @@ function updateHeader(){
         breadcrumb.innerHTML='<span class="bc-item" data-action="reset-home">\u0413\u043b\u0430\u0432\u043d\u0430\u044f</span><span class="bc-sep">\u203a</span><span class="bc-item" data-action="go-back">'+(sec?sec.name:'')+'</span><span class="bc-sep">\u203a</span><span class="bc-cur">'+subLabel+'</span>';
       }
     }
-    if(localSrch)localSrch.style.display=isFavScreen?'none':'flex';
-    if(localInput){localInput.placeholder='\u041f\u043e\u0438\u0441\u043a \u0432 '+subLabel;if(!sameScreen)localInput.value='';}
+    if(localSrch)localSrch.style.display=isFavScreen?'none':'flex';_syncSearchFields();
+    if(localInput){localInput.placeholder='\u041f\u043e\u0438\u0441\u043a: '+(currentSubcat?currentSubcat:(sec?sec.name:''));if(!sameScreen)localInput.value='';}
     var slc3=getEl('searchLocalClear');if(slc3&&!sameScreen)slc3.classList.remove('show');
   } else if(cur==='s5'){
     if(backBtn)backBtn.classList.add('show');
@@ -1987,7 +2008,7 @@ function updateHeader(){
     if(titleMain)titleMain.textContent=kname.length>28?kname.slice(0,28)+'...':kname;
     if(titleSub)titleSub.textContent=(kit5?kit5.items.length:0)+' \u043f\u043e\u0437\u0438\u0446\u0438\u0439';
     if(breadcrumb){breadcrumb.classList.add('show');breadcrumb.innerHTML='<span class="bc-item" data-action="reset-home">\u0413\u043b\u0430\u0432\u043d\u0430\u044f</span><span class="bc-sep">\u203a</span><span class="bc-item" data-action="go-back">\u041a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u044b</span><span class="bc-sep">\u203a</span><span class="bc-cur">'+kname+'</span>';}
-    if(localSrch)localSrch.style.display='none';
+    if(localSrch)localSrch.style.display='none';_syncSearchFields();
     if(localInput)localInput.value='';
   } else if((cur==='s6'||cur==='s7')&&typeof updateHeaderForUtility==='function'){
     /* v4.1: корневые вкладки «Заявки»/«Ещё» — без «Назад»; раньше попадали в ветку «Товар» */
@@ -1998,7 +2019,7 @@ function updateHeader(){
     if(titleMain)titleMain.textContent=iname.length>28?iname.slice(0,28)+'...':iname;
     if(titleSub)titleSub.textContent=currentSubcat||(sec?sec.name:'');
     if(breadcrumb){breadcrumb.classList.remove('show');breadcrumb.innerHTML='';}
-    if(localSrch)localSrch.style.display='none';
+    if(localSrch)localSrch.style.display='none';_syncSearchFields();
     if(localInput)localInput.value='';
   }
   renderNlistToolbar();
@@ -2807,7 +2828,7 @@ function updateCartBadge(){
   saveCartToStorage();
   var cnt=Object.keys(cart).length;
   var b=getEl('cartBadge');if(b){b.style.display=cnt?'flex':'none';b.textContent=cnt;}
-  var dt=getEl('drawerTitle');if(dt)dt.textContent='\uD83D\uDED2 \u0417\u0430\u044f\u0432\u043a\u0430'+(cnt?' ('+cnt+')':'');
+  var dt=getEl('drawerTitle');if(dt)dt.textContent='\u0417\u0430\u044f\u0432\u043a\u0430'+(cnt?' ('+cnt+')':'');
   var info=getEl('cartOrderInfo');if(info)info.textContent='\u041f\u043e\u0437\u0438\u0446\u0438\u0439 \u0432 \u0437\u0430\u044f\u0432\u043a\u0435: '+cnt;
 }
 function openCart(){getEl('overlay').classList.add('show');getEl('drawer').classList.add('show');renderCartDrawer();}
@@ -2953,7 +2974,7 @@ function goItem(itemId){
   var desc=getEl('s4desc');if(desc)desc.innerHTML=(it.desc||('\u041e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u0435 <b>'+it.code+'</b>. '+it.name));
   var inC=!!cart[it.id];
   var addBtn=getEl('s4addBtn');if(addBtn)addBtn.classList.toggle('added',inC);
-  var addIco=getEl('s4addIco');if(addIco)addIco.textContent=inC?'\u2713':'\uD83D\uDED2';
+  var addIco=getEl('s4addIco');if(addIco)addIco.textContent=inC?'\u2713':'';
   var addTxt=getEl('s4addTxt');if(addTxt)addTxt.textContent=inC?'\u0412 \u0437\u0430\u044f\u0432\u043a\u0435':'\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u0432 \u0437\u0430\u044f\u0432\u043a\u0443';
   var qv=getEl('s4qv');if(qv)qv.value=(cart[it.id]&&cart[it.id].qty)||1;
   var favBtn=getEl('s4favBtn');
@@ -3119,7 +3140,7 @@ function s4toggleCart(){
   var id=currentItem.id,btn=getEl('s4addBtn');
   if(cart[id]){
     delete cart[id];if(btn)btn.classList.remove('added');
-    var ico=getEl('s4addIco');if(ico)ico.textContent='\uD83D\uDED2';
+    var ico=getEl('s4addIco');if(ico)ico.textContent='';
     var txt=getEl('s4addTxt');if(txt)txt.textContent='\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u0432 \u0437\u0430\u044f\u0432\u043a\u0443';
     var ab=getEl('ab-'+id);if(ab){ab.textContent='+';ab.classList.remove('added');}
     showToast('\u0423\u0431\u0440\u0430\u043d\u043e \u0438\u0437 \u0437\u0430\u044f\u0432\u043a\u0438','');
@@ -4206,7 +4227,7 @@ function installPWA() {
       <img id="verLogoImg" src="" alt="Kari">
     </div>
     <div class="ver-app-name">Портал заказов<br>Kari</div>
-    <div class="ver-num" id="verNum">v4.9</div>
+    <div class="ver-num" id="verNum">v5.0</div>
     <div class="ver-build" id="verBuild">Сборка от 14.05.2025</div>
     <div class="ver-divider"></div>
     <div class="ver-info">Мобильный дашборд оборудования<br>для внутреннего использования</div>
