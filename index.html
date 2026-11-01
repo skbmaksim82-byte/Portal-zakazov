@@ -696,6 +696,11 @@ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',ini
 #ghToast span[style*="#fecaca"],#ghToast span[style*="rgb(254, 202, 202)"]{color:#B4232F!important}
 #ghToast span[style*="#22c55e"],#ghToast span[style*="rgb(34, 197, 94)"]{background:#2f9e6b!important;box-shadow:none!important}
 #ghToast span[style*="#ef4444"],#ghToast span[style*="rgb(239, 68, 68)"]{background:#D64545!important;box-shadow:none!important}
+/* v1.77: заглушка «нет фото» — контурная иконка раздела */
+.np-ic{width:1em;height:1em;fill:none;stroke:#8B7CC7;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
+.product-tile-photo-placeholder{opacity:1;}
+.product-tile-photo-placeholder>.np-ic{width:52px;height:52px;}
+.cart-item-thumb-placeholder>.np-ic{width:22px;height:22px;}
 </style>
 </head>
 <body>
@@ -1482,7 +1487,24 @@ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',ini
 
 <script>
 // ═══ ВЕРСИЯ ПРИЛОЖЕНИЯ ═══
-var APP_VERSION = '1.76';
+/* v1.77: Кари Кидс — метка «КК» в наименовании или коде, только целым словом
+   (раньше считалось по подстроке и цепляло «Листовкка» и т.п.; теперь совпадает с мобильным) */
+var KK_RX=/(^|[^\u0430-\u044f\u0451a-z0-9])\u043a\u043a([^\u0430-\u044f\u0451a-z0-9]|$)/i;
+function isKK(it){ return KK_RX.test(it.name||'') || KK_RX.test(it.code||''); }
+/* v1.77: заглушка «нет фото» — контурная иконка раздела вместо 📦 */
+var NP_ICONS={"hanger": "M14 6a2 2 0 1 0-4 0c0 1.667.67 3 2 4h-.008l7.971 4.428a2 2 0 0 1 1.029 1.749V17a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-.823a2 2 0 0 1 1.029-1.749L12 10", "diamond": "M6 5h12l3 5-8.5 9.5a.7.7 0 0 1-1 0L3 10l3-5M10 12 8 9.8l.6-1", "speaker": "M18 8a3 3 0 0 1 0 6M10 8v11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1v-5M12 8l4.524-3.77A.9.9 0 0 1 18 4.922v12.156a.9.9 0 0 1-1.476.692L12 14H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h8", "clip": "M15 7l-6.5 6.5a1.5 1.5 0 0 0 3 3L18 10a3 3 0 0 0-6-6l-6.5 6.5a4.5 4.5 0 0 0 9 9L21 13", "desktop": "M3 5a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1zM7 20h10M9 16v4M15 16v4", "bulb": "M3 12h1m8-9v1m8 8h1M5.6 5.6l.7.7m12.1-.7-.7.7M9 16a5 5 0 1 1 6 0 3.5 3.5 0 0 0-1 3 2 2 0 0 1-4 0 3.5 3.5 0 0 0-1-3M9.7 17h4.6", "router": "M3 15a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM17 17v.01M13 17v.01M15 13v-2M11.75 8.75a4 4 0 0 1 6.5 0M8.5 6.5a8 8 0 0 1 13 0", "box": "M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3M12 12l8-4.5M12 12v9M12 12 4 7.5"};
+function npIcon(cat){
+  var c=String(cat||'').toLowerCase(), k='box';
+  if(c.indexOf('\u0442\u043e\u0440\u0433\u043e\u0432')>=0) k='hanger';
+  else if(c.indexOf('\u044e\u0432\u0435\u043b\u0438\u0440')>=0) k='diamond';
+  else if(c.indexOf('\u0440\u0435\u043a\u043b\u0430\u043c')>=0) k='speaker';
+  else if(c.indexOf('\u043a\u0430\u043d\u0446\u0435\u043b')>=0) k='clip';
+  else if(c.indexOf('\u0441\u0432\u0435\u0442')>=0||c==='light') k='bulb';
+  else if(c.indexOf('\u0441\u043b\u0430\u0431\u043e\u0442')>=0||c==='tv') k='router';
+  else if(/(^|\s)\u0438\u0442(\s|$)/.test(c)) k='desktop';
+  return '<svg class="np-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="'+NP_ICONS[k]+'"/></svg>';
+}
+var APP_VERSION = '1.77';
 // При каждом обновлении index.html — менять только эту строку (1.17, 1.18 и т.д.)
 (function(){
   var el = document.getElementById('appVersionBadge');
@@ -1978,10 +2000,7 @@ function rebuildSidebar(obj){
   if(lcnt && lightAll.length) lcnt.textContent = lightAll.length.toLocaleString("ru");
 
   // Кари Кидс
-  var kkItems = allItems.filter(function(it){
-    return (it.name && it.name.toUpperCase().indexOf("КК") >= 0) ||
-           (it.code && it.code.toUpperCase().indexOf("КК") >= 0);
-  });
+  var kkItems = allItems.filter(isKK);
   document.getElementById("cnt-karikids").textContent = kkItems.length.toLocaleString("ru");
 }
 
@@ -3339,8 +3358,7 @@ function applyFilters(){
 
   filteredItems=pool.filter(function(it){
     if(currentCat==="karikids"){
-      var isKK=(it.name&&it.name.toUpperCase().indexOf("\u041a\u041a")>=0)||(it.code&&it.code.toUpperCase().indexOf("\u041a\u041a")>=0);
-      if(!isKK)return false;
+      if(!isKK(it))return false;
       if(q&&!(it.name.toLowerCase().indexOf(q)>=0||it.code.toLowerCase().indexOf(q)>=0||(it.short&&it.short.toLowerCase().indexOf(q)>=0)))return false;
     } else {
       if(currentCat!=="all"&&it.cat!==currentCat)return false;
@@ -3568,10 +3586,10 @@ function renderNextPage(page){
       var kImgUrl=it.photo||'';
       if(kImgUrl){
         var kimg=document.createElement("img");kimg.className="product-tile-photo";kimg.src=kImgUrl;kimg.loading="lazy";
-        kimg.onerror=function(){this.outerHTML='<div class="product-tile-photo-placeholder">📦</div>';};
+        kimg.onerror=function(){this.outerHTML='<div class="product-tile-photo-placeholder">'+npIcon('')+'</div>';};
         kTile.appendChild(kimg);
       }else{
-        var kph=document.createElement("div");kph.className="product-tile-photo-placeholder";kph.textContent="📦";
+        var kph=document.createElement("div");kph.className="product-tile-photo-placeholder";kph.innerHTML=npIcon('');
         kTile.appendChild(kph);
       }
 
@@ -3624,10 +3642,11 @@ function renderNextPage(page){
     var imgUrl=getImgUrl(it);
     if(imgUrl){
       var timg=document.createElement("img");timg.className="product-tile-photo";timg.src=imgUrl;timg.loading="lazy";
-      timg.onerror=function(){this.outerHTML='<div class="product-tile-photo-placeholder">📦</div>';};
+      timg.setAttribute("data-cat",it.cat||"");
+      timg.onerror=function(){this.outerHTML='<div class="product-tile-photo-placeholder">'+npIcon(this.getAttribute("data-cat"))+'</div>';};
       tile.appendChild(timg);
     }else{
-      var ph=document.createElement("div");ph.className="product-tile-photo-placeholder";ph.textContent="📦";
+      var ph=document.createElement("div");ph.className="product-tile-photo-placeholder";ph.innerHTML=npIcon(it.cat);
       tile.appendChild(ph);
     }
 
@@ -4582,7 +4601,7 @@ function updCart(){
       var entry=cart[key];
       var d=document.createElement('div');d.className='cart-item';
       d.style.cssText='align-items:flex-start;flex-wrap:wrap;gap:4px;';
-      var ph=document.createElement('div');ph.className='cart-item-thumb-placeholder';ph.textContent='📦';
+      var ph=document.createElement('div');ph.className='cart-item-thumb-placeholder';ph.innerHTML=npIcon('');
       d.appendChild(ph);
       var ni=document.createElement('div');ni.className='cart-item-name';ni.textContent=entry.name;
       var ci=document.createElement('div');ci.className='cart-item-code';ci.textContent=entry.code;
@@ -4661,7 +4680,7 @@ function updCart(){
       (function(src,name){timg.onclick=function(){openLightbox(src,name);};})(cartImgUrl,item.name);
       d.appendChild(timg);
     }else{
-      var ph=document.createElement("div");ph.className="cart-item-thumb-placeholder";ph.textContent="📦";
+      var ph=document.createElement("div");ph.className="cart-item-thumb-placeholder";ph.innerHTML=npIcon(item.cat);
       d.appendChild(ph);
     }
     var ni=document.createElement("div");ni.className="cart-item-name";ni.title=item.name;ni.textContent=item.name;
@@ -5152,10 +5171,10 @@ function renderKitsTable(page){
 
     if(kit.image){
       var timg = document.createElement('img'); timg.className = 'product-tile-photo'; timg.src = kit.image; timg.loading = 'lazy';
-      timg.onerror = function(){ this.outerHTML = '<div class="product-tile-photo-placeholder">📦</div>'; };
+      timg.onerror = function(){ this.outerHTML = '<div class="product-tile-photo-placeholder">'+npIcon('')+'</div>'; };
       tile.appendChild(timg);
     } else {
-      var ph = document.createElement('div'); ph.className = 'product-tile-photo-placeholder'; ph.textContent = '📦';
+      var ph = document.createElement('div'); ph.className = 'product-tile-photo-placeholder'; ph.innerHTML = npIcon('');
       tile.appendChild(ph);
     }
 

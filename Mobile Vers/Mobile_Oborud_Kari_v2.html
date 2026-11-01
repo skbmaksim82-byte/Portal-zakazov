@@ -666,6 +666,9 @@ html.splash-on,html.splash-on body{background:var(--splash-bg)!important;}
 .upload-drop-title{font-size:13px;font-weight:700;color:var(--wb-text2);margin-bottom:4px;}
 .upload-drop-sub{font-size:11px;color:var(--wb-text3);}
 
+/* v4.8: заглушка «нет фото» — контурная иконка раздела */
+.np-ic{width:1em;height:1em;fill:none;stroke:var(--wb-purple-light,#8B7CC7);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
+.item-thumb>.np-ic{width:48px;height:48px;}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
@@ -1462,11 +1465,25 @@ function loadDemoData(){
 /* ════════════════════════════════════════════════════
    ДИНАМИЧЕСКИЕ ПОДРАЗДЕЛЫ (как в десктопе)
 ════════════════════════════════════════════════════ */
+/* v4.8: Кари Кидс — отдельного листа в xlsx нет, позиции помечены «КК» в наименовании.
+   Считаем по целому слову (как на PC, но «Листовкка» не попадает). Позиция остаётся и в своём разделе. */
+var KK_RX=/(^|[^\u0430-\u044f\u0451a-z0-9])\u043a\u043a([^\u0430-\u044f\u0451a-z0-9]|$)/i;
+function inSec(it,secId){
+  if(it.secId===secId) return true;
+  return secId==='kids' && KK_RX.test(it.name||'');
+}
+/* v4.8: заглушка «нет фото» — контурная иконка раздела вместо эмодзи */
+var NP_ICONS={"trade": "M14 6a2 2 0 1 0-4 0c0 1.667.67 3 2 4h-.008l7.971 4.428a2 2 0 0 1 1.029 1.749V17a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-.823a2 2 0 0 1 1.029-1.749L12 10", "jewel": "M6 5h12l3 5-8.5 9.5a.7.7 0 0 1-1 0L3 10l3-5M10 12 8 9.8l.6-1", "kids": "M14 8a2 2 0 0 0-2-2M6 8a6 6 0 1 1 12 0c0 4.97-2.686 9-6 9s-6-4.03-6-9M12 17v1a2 2 0 0 1-2 2H7a2 2 0 0 0-2 2", "ads": "M18 8a3 3 0 0 1 0 6M10 8v11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1v-5M12 8l4.524-3.77A.9.9 0 0 1 18 4.922v12.156a.9.9 0 0 1-1.476.692L12 14H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h8", "office": "M15 7l-6.5 6.5a1.5 1.5 0 0 0 3 3L18 10a3 3 0 0 0-6-6l-6.5 6.5a4.5 4.5 0 0 0 9 9L21 13", "light": "M3 12h1m8-9v1m8 8h1M5.6 5.6l.7.7m12.1-.7-.7.7M9 16a5 5 0 1 1 6 0 3.5 3.5 0 0 0-1 3 2 2 0 0 1-4 0 3.5 3.5 0 0 0-1-3M9.7 17h4.6", "tv": "M3 15a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM17 17v.01M13 17v.01M15 13v-2M11.75 8.75a4 4 0 0 1 6.5 0M8.5 6.5a8 8 0 0 1 13 0", "consum": "M3 15a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM17 17v.01M13 17v.01M15 13v-2M11.75 8.75a4 4 0 0 1 6.5 0M8.5 6.5a8 8 0 0 1 13 0", "it": "M3 5a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1zM7 20h10M9 16v4M15 16v4", "kits": "M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3M12 12l8-4.5M12 12v9M12 12 4 7.5"};
+function npIcon(secId){
+  var d=NP_ICONS[secId]||NP_ICONS.kits;
+  return '<svg class="np-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="'+d+'"/></svg>';
+}
+
 function getSubcatData(secId){
   var subcats=[], counts={}, total=0;
   for(var i=0;i<allItems.length;i++){
     var it=allItems[i];
-    if(it.secId!==secId) continue;
+    if(!inSec(it,secId)) continue;
     total++;
     var s=it.subcat||'';
     if(!s) continue;
@@ -1481,7 +1498,7 @@ function getSectionCount(secId){
   if(secId==='favs') return getFavoritesCount();
   if(secId==='kits') return kitsData.length;
   var n=0;
-  for(var i=0;i<allItems.length;i++) if(allItems[i].secId===secId) n++;
+  for(var i=0;i<allItems.length;i++) if(inSec(allItems[i],secId)) n++;
   return n;
 }
 
@@ -1605,7 +1622,7 @@ function getFilteredItems(){
     else if(isFavs){ if(!favorites[it.id]) continue; }
     else if(isConsum){ if(it.secId!=='tv' || !it.consumable) continue; }
     else{
-      if(currentSecId && it.secId!==currentSecId) continue;
+      if(currentSecId && !inSec(it,currentSecId)) continue;
       if(currentSubcat && it.subcat!==currentSubcat) continue;
     }
     if(!isPhotoSearch && q && it.name.toLowerCase().indexOf(q)<0 && it.code.toLowerCase().indexOf(q)<0) continue;
@@ -1693,7 +1710,7 @@ function renderSubcatsFiltered(q){
   var found=[], total=0, LIM=100;
   for(var m=0;m<allItems.length;m++){
     var it=allItems[m];
-    if(it.secId!==currentSecId) continue;
+    if(!inSec(it,currentSecId)) continue;
     if(it.name.toLowerCase().indexOf(ql)<0 && it.code.toLowerCase().indexOf(ql)<0) continue;
     total++;
     if(found.length<LIM) found.push(it);
@@ -1722,7 +1739,7 @@ function renderSubcatsFiltered(q){
     for(var n=0;n<found.length;n++){
       var fi=found[n];
       h+='<div class="search-drop-item" data-action="go-item" data-val="'+fi.id+'">';
-      h+='<div class="search-drop-emoji">'+(fi.photo?'<img src="'+thumbUrl(fi.photo)+'" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">':fi.emoji)+'</div>';
+      h+='<div class="search-drop-emoji">'+(fi.photo?'<img src="'+thumbUrl(fi.photo)+'" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">':npIcon(fi.secId))+'</div>';
       h+='<div class="search-drop-info">';
       h+='<div class="search-drop-code">'+fi.code+'</div>';
       h+='<div class="search-drop-name">'+fi.name+'</div>';
@@ -1773,7 +1790,7 @@ function renderItems(){
       }
       h+='</div>';
     } else {
-      h+='<div class="item-thumb" data-action="go-item" data-val="'+it.id+'">'+it.emoji;
+      h+='<div class="item-thumb" data-action="go-item" data-val="'+it.id+'">'+npIcon(it.secId);
       h+='<button class="item-fav-btn'+(isFav?' act':'')+'" data-fav-id="'+it.id+'" data-action="toggle-fav" data-val="'+it.id+'">'+(isFav?'★':'☆')+'</button>';
       h+='</div>';
     }
@@ -2642,7 +2659,7 @@ function _grRowHtml(it){
   var sec=getSec(it.secId);
   var catName=sec?sec.name:'';
   var h='<div class="search-drop-item" data-action="go-item" data-val="'+it.id+'">';
-  h+='<div class="search-drop-emoji">'+(it.photo?'<img src="'+thumbUrl(it.photo)+'" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">':it.emoji)+'</div>';
+  h+='<div class="search-drop-emoji">'+(it.photo?'<img src="'+thumbUrl(it.photo)+'" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">':npIcon(it.secId))+'</div>';
   h+='<div class="search-drop-info">';
   h+='<div class="search-drop-code">'+it.code+'</div>';
   h+='<div class="search-drop-name">'+it.name+'</div>';
@@ -2799,7 +2816,7 @@ function renderCartDrawer(){
   var h='';
   for(var i=0;i<keys.length;i++){
     var it=cart[keys[i]];
-    h+='<div class="cart-item"><div class="ci-thumb">'+it.emoji+'</div>';
+    h+='<div class="cart-item"><div class="ci-thumb">'+npIcon(it.secId||String(it.id||'').split('-')[0])+'</div>';
     h+='<div class="ci-info"><div class="ci-name">'+it.name+'</div><div class="ci-code">'+it.code+'</div></div>';
     h+='<div class="ci-qty">'+it.qty+' \u0448\u0442</div>';
     h+='<button class="ci-rm" data-action="rm-cart" data-val="'+it.id+'">&#10005;</button></div>';
@@ -2869,7 +2886,7 @@ function buildS4Carousel(it){
 
   if(!photos.length){
     /* заглушка */
-    car.innerHTML = '<div class="s4-carousel-slide"><div class="s4-photo-placeholder"><div class="s4-photo-emoji">'+it.emoji+'</div><div class="s4-photo-lbl">Фото товара</div></div></div>';
+    car.innerHTML = '<div class="s4-carousel-slide"><div class="s4-photo-placeholder"><div class="s4-photo-emoji">'+npIcon(it.secId)+'</div><div class="s4-photo-lbl">Нет фото</div></div></div>';
     dots.innerHTML = '';
     if(loader) loader.style.display='none';
     return;
@@ -4185,7 +4202,7 @@ function installPWA() {
       <img id="verLogoImg" src="" alt="Kari">
     </div>
     <div class="ver-app-name">Портал заказов<br>Kari</div>
-    <div class="ver-num" id="verNum">v4.7</div>
+    <div class="ver-num" id="verNum">v4.8</div>
     <div class="ver-build" id="verBuild">Сборка от 14.05.2025</div>
     <div class="ver-divider"></div>
     <div class="ver-info">Мобильный дашборд оборудования<br>для внутреннего использования</div>
