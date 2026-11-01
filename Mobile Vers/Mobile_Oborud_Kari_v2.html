@@ -951,6 +951,11 @@ html[data-theme="dark"] .s4-code,html[data-theme="dark"] .s4-bc-sec{color:var(--
 .ci-qv::-webkit-outer-spin-button,.ci-qv::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
 .ci-qv:focus{outline:2px solid var(--wb-purple);outline-offset:-2px;border-radius:8px;}
 .cart-item{gap:8px;}
+/* v5.6: контурные иконки вместо эмодзи — размер по шрифту, цвет по тексту */
+.ic{display:inline-block;width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;vertical-align:-0.14em;flex-shrink:0;}
+.empty-icon .ic,.upload-drop-icon .ic,.s4-photo-emoji .ic,.s4-acc-icon .ic,.s4-ai-thumb .ic{stroke:var(--wb-purple);stroke-width:1.5;}
+.kit-card-photo>.np-ic{width:48px;height:48px;}
+.subcat-results-title{font-size:13px;font-weight:700;color:var(--wb-text2);margin:16px 2px 8px;}
 </style>
 </head>
 <body>
@@ -1003,7 +1008,7 @@ html[data-theme="dark"] .s4-code,html[data-theme="dark"] .s4-bc-sec{color:var(--
     </div>
     <div class="global-results-wrap" id="globalResultsWrap">
       <div class="global-results-hdr">
-        <div class="global-results-title">🔍 Результаты</div>
+        <div class="global-results-title"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0 7 7 0 1 0-14 0M21 21l-6-6"/></svg> Результаты</div>
         <div class="global-results-count" id="globalResultsCount"></div>
       </div>
       <div class="global-results-list" id="globalResultsList"></div>
@@ -1058,7 +1063,7 @@ html[data-theme="dark"] .s4-code,html[data-theme="dark"] .s4-bc-sec{color:var(--
         <div class="items-count">Найдено: <strong id="itemCount">0</strong></div>
         <div class="view-toggle" aria-label="Вид каталога">
           <button id="gridViewBtn" class="active" onclick="setCatalogView('grid')" aria-label="Плитка">▦</button>
-          <button id="listViewBtn" onclick="setCatalogView('list')" aria-label="Список">☷</button>
+          <button id="listViewBtn" onclick="setCatalogView('list')" aria-label="Список"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11M5 6v.01M5 12v.01M5 18v.01"/></svg></button>
         </div>
         <div class="sort-pill" id="sortPill" onclick="cycleSort()">⇅ По названию</div>
       </div>
@@ -1066,7 +1071,7 @@ html[data-theme="dark"] .s4-code,html[data-theme="dark"] .s4-bc-sec{color:var(--
         <select class="shop-sel" id="nlist-shop-select">
           <option value="">— Выберите номер магазина —</option>
         </select>
-        <button class="act-btn photo" style="width:100%;justify-content:center;" onclick="nlistTriggerFileSelect()">📤 Добавить файл</button>
+        <button class="act-btn photo" style="width:100%;justify-content:center;" onclick="nlistTriggerFileSelect()"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 9l5-5 5 5M12 4v12"/></svg> Добавить файл</button>
         <input type="file" id="nlist-file-input" accept=".xlsx,.xls,.csv" style="display:none" onchange="nlistParseFile(this.files[0]); this.value='';">
         <div id="nlistFilesList" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
         <div id="nlist-error" style="font-size:11px;font-weight:700;color:#E24B4A;"></div>
@@ -1084,7 +1089,7 @@ html[data-theme="dark"] .s4-code,html[data-theme="dark"] .s4-bc-sec{color:var(--
         <div class="s4-carousel" id="s4carousel">
           <div class="s4-carousel-slide">
             <div class="s4-photo-placeholder">
-              <div class="s4-photo-emoji" id="s4emoji">📦</div>
+              <div class="s4-photo-emoji" id="s4emoji"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3M12 12l8-4.5M12 12v9M12 12 4 7.5"/></svg></div>
               <div class="s4-photo-lbl">Фото товара</div>
             </div>
           </div>
@@ -1123,7 +1128,7 @@ html[data-theme="dark"] .s4-code,html[data-theme="dark"] .s4-bc-sec{color:var(--
       <div class="s4-acc">
         <div class="s4-acc-hdr" onclick="s4toggle('desc')">
           <div class="s4-acc-left">
-            <div class="s4-acc-icon" style="background:#EEF4FF;">📝</div>
+            <div class="s4-acc-icon" style="background:#EEF4FF;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3v4a1 1 0 0 0 1 1h4M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2zM9 9h1M9 13h6M9 17h6"/></svg></div>
             <div><div class="s4-acc-title">Описание</div></div>
           </div>
           <div class="s4-acc-chev open" id="s4chev-desc">›</div>
@@ -1136,7 +1141,7 @@ html[data-theme="dark"] .s4-code,html[data-theme="dark"] .s4-bc-sec{color:var(--
       <div class="s4-acc" id="s4acc-analogs" style="display:none;">
         <div class="s4-acc-hdr" data-action="s4-toggle" data-val="analogs">
           <div class="s4-acc-left">
-            <div class="s4-acc-icon" style="background:#F2EFF6;">🔄</div>
+            <div class="s4-acc-icon" style="background:#F2EFF6;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11A8.1 8.1 0 0 0 4.5 9M4 5v4h4M4 13a8.1 8.1 0 0 0 15.5 2M20 19v-4h-4"/></svg></div>
             <div><div class="s4-acc-title">Аналоги</div><div class="s4-acc-cnt" id="s4cnt-analogs">0 позиций</div></div>
           </div>
           <div class="s4-acc-chev" id="s4chev-analogs">›</div>
@@ -1147,7 +1152,7 @@ html[data-theme="dark"] .s4-code,html[data-theme="dark"] .s4-bc-sec{color:var(--
       <div class="s4-acc" id="s4acc-compat" style="display:none;">
         <div class="s4-acc-hdr" data-action="s4-toggle" data-val="compat">
           <div class="s4-acc-left">
-            <div class="s4-acc-icon" style="background:#E6F9F0;">🔗</div>
+            <div class="s4-acc-icon" style="background:#E6F9F0;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 15l6-6M11 6l.463-.536a5 5 0 0 1 7.071 7.072L18 13M13 18l-.397.534a5.068 5.068 0 0 1-7.127 0 4.972 4.972 0 0 1 0-7.071L6 11"/></svg></div>
             <div><div class="s4-acc-title">Совместимость</div><div class="s4-acc-cnt" id="s4cnt-compat">0 позиций</div></div>
           </div>
           <div class="s4-acc-chev" id="s4chev-compat">›</div>
@@ -1158,7 +1163,7 @@ html[data-theme="dark"] .s4-code,html[data-theme="dark"] .s4-bc-sec{color:var(--
       <div class="s4-acc s4-last" id="s4acc-kits" style="display:none;">
         <div class="s4-acc-hdr" data-action="s4-toggle" data-val="kits">
           <div class="s4-acc-left">
-            <div class="s4-acc-icon" style="background:#FFF4E6;">📦</div>
+            <div class="s4-acc-icon" style="background:#FFF4E6;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3M12 12l8-4.5M12 12v9M12 12 4 7.5"/></svg></div>
             <div><div class="s4-acc-title">Входит в комплекты</div><div class="s4-acc-cnt" id="s4cnt-kits">0 комплектов</div></div>
           </div>
           <div class="s4-acc-chev" id="s4chev-kits">›</div>
@@ -1176,8 +1181,8 @@ html[data-theme="dark"] .s4-code,html[data-theme="dark"] .s4-bc-sec{color:var(--
         <div class="s4-carousel" id="s5carousel">
           <div class="s4-carousel-slide">
             <div class="s4-photo-placeholder">
-              <div class="s4-photo-emoji">📋</div>
-              <div class="s4-photo-lbl">Фото комплекта</div>
+              <div class="s4-photo-emoji"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3M12 12l8-4.5M12 12v9M12 12 4 7.5"/></svg></div>
+              <div class="s4-photo-lbl">Нет фото</div>
             </div>
           </div>
         </div>
@@ -1201,7 +1206,7 @@ html[data-theme="dark"] .s4-code,html[data-theme="dark"] .s4-bc-sec{color:var(--
       <div class="s4-acc">
         <div class="s4-acc-hdr" data-action="s5-toggle" data-val="items">
           <div class="s4-acc-left">
-            <div class="s4-acc-icon" style="background:#FFF4E6;">📦</div>
+            <div class="s4-acc-icon" style="background:#FFF4E6;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3M12 12l8-4.5M12 12v9M12 12 4 7.5"/></svg></div>
             <div><div class="s4-acc-title">Состав комплекта</div><div class="s4-acc-cnt" id="s5cnt-items">0 позиций</div></div>
           </div>
           <div class="s4-acc-chev open" id="s5chev-items">›</div>
@@ -1253,7 +1258,7 @@ html[data-theme="dark"] .s4-code,html[data-theme="dark"] .s4-bc-sec{color:var(--
     <div class="drawer-hdr">
       <div class="drawer-hdr-title" id="drawerTitle">Заявка</div>
       <div style="display:flex;align-items:center;gap:8px;">
-        <button class="clear-cart-btn" id="clearCartBtn" style="width:auto;padding:0 12px;height:28px;font-size:11px;display:none;" onclick="clearCartWithUndo()">🗑 Очистить</button>
+        <button class="clear-cart-btn" id="clearCartBtn" style="width:auto;padding:0 12px;height:28px;font-size:11px;display:none;" onclick="clearCartWithUndo()"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg> Очистить</button>
         <button class="drawer-close" onclick="closeCart()">✕</button>
       </div>
     </div>
@@ -1279,7 +1284,7 @@ html[data-theme="dark"] .s4-code,html[data-theme="dark"] .s4-bc-sec{color:var(--
     <div class="modal-sheet">
       <div class="modal-handle"></div>
       <div class="modal-hdr">
-        <div class="modal-hdr-title">📸 Загрузить фото</div>
+        <div class="modal-hdr-title"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h1a2 2 0 0 0 2-2 1 1 0 0 1 1-1h6a1 1 0 0 1 1 1 2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2M9 13a3 3 0 1 0 6 0 3 3 0 0 0-6 0"/></svg> Загрузить фото</div>
         <button class="modal-close" onclick="closeModal('Photo')">✕</button>
       </div>
       <div class="modal-body">
@@ -1289,18 +1294,18 @@ html[data-theme="dark"] .s4-code,html[data-theme="dark"] .s4-bc-sec{color:var(--
         <div class="modal-form-label">Раздел (папка) *</div>
         <select class="modal-input" id="pu-mob-folder" style="appearance:none;background-image:url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%228%22%3E%3Cpath fill=%22%23AAA%22 d=%22M0 0l6 8 6-8z%22/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right 12px center;">
           <option value="">— Выберите раздел —</option>
-          <option value="Foto Oborud">🏪 Торговое оборудование</option>
-          <option value="Foto reklama">🎨 Рекламные материалы</option>
-          <option value="Foto Svet">💡 Световое оборудование</option>
-          <option value="Foto slabotoch">📺 Слаботочное оборудование</option>
-          <option value="Foto Uvelir">💎 Ювелирное оборудование</option>
-          <option value="IT oborud">💻 ИТ оборудование</option>
-          <option value="Foto Complect">📦 Комплекты</option>
+          <option value="Foto Oborud">Торговое оборудование</option>
+          <option value="Foto reklama">Рекламные материалы</option>
+          <option value="Foto Svet">Световое оборудование</option>
+          <option value="Foto slabotoch">Слаботочное оборудование</option>
+          <option value="Foto Uvelir">Ювелирное оборудование</option>
+          <option value="IT oborud">ИТ оборудование</option>
+          <option value="Foto Complect">Комплекты</option>
         </select>
 
         <div class="modal-form-label">Фото товара *</div>
         <div class="upload-drop" id="pu-mob-drop" onclick="document.getElementById('pu-mob-file').click()">
-          <div class="upload-drop-icon">🖼️</div>
+          <div class="upload-drop-icon"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 8h.01M3 6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3zM3 16l5-5c.928-.893 2.072-.893 3 0l5 5M14 14l1-1c.928-.893 2.072-.893 3 0l3 3"/></svg></div>
           <div class="upload-drop-title" id="pu-mob-drop-title">Нажмите для выбора файла</div>
           <div class="upload-drop-sub">PNG / JPEG · до 500 КБ</div>
         </div>
@@ -1321,7 +1326,7 @@ html[data-theme="dark"] .s4-code,html[data-theme="dark"] .s4-bc-sec{color:var(--
         <div id="pu-mob-status" style="font-size:12px;font-weight:700;min-height:16px;margin-bottom:8px;"></div>
 
         <button class="modal-submit green" id="pu-mob-btn" onclick="puMobUpload()">
-          📤 Загрузить на GitHub
+          <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 9l5-5 5 5M12 4v12"/></svg> Загрузить на GitHub
         </button>
       </div>
     </div>
@@ -1332,14 +1337,14 @@ html[data-theme="dark"] .s4-code,html[data-theme="dark"] .s4-bc-sec{color:var(--
     <div class="modal-sheet">
       <div class="modal-handle"></div>
       <div class="modal-hdr">
-        <div class="modal-hdr-title">🔍 Поиск по фото</div>
+        <div class="modal-hdr-title"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0 7 7 0 1 0-14 0M21 21l-6-6"/></svg> Поиск по фото</div>
         <button class="modal-close" onclick="closeModal('PhotoSearch')">✕</button>
       </div>
       <div class="modal-body">
         <div style="font-size:11px;color:#AAAAAA;margin-bottom:14px;">Сфотографируйте оборудование или выберите фото из галереи — покажем до 10 похожих позиций каталога.</div>
 
         <div class="upload-drop" id="ps-mob-drop" onclick="document.getElementById('ps-mob-file').click()">
-          <div class="upload-drop-icon">📷</div>
+          <div class="upload-drop-icon"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h1a2 2 0 0 0 2-2 1 1 0 0 1 1-1h6a1 1 0 0 1 1 1 2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2M9 13a3 3 0 1 0 6 0 3 3 0 0 0-6 0"/></svg></div>
           <div class="upload-drop-title" id="ps-mob-drop-title">Нажмите, чтобы сфотографировать или выбрать фото</div>
           <div class="upload-drop-sub">PNG / JPEG</div>
         </div>
@@ -1355,10 +1360,10 @@ html[data-theme="dark"] .s4-code,html[data-theme="dark"] .s4-bc-sec{color:var(--
         <div id="ps-mob-status" style="font-size:12px;font-weight:700;min-height:16px;margin-bottom:8px;"></div>
 
         <button class="modal-submit blue" id="ps-mob-btn" onclick="psMobStartSearch()" disabled>
-          🔎 Найти похожие
+          <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0 7 7 0 1 0-14 0M21 21l-6-6"/></svg> Найти похожие
         </button>
 
-        <div style="font-size:10px;color:#AAAAAA;margin-top:10px;line-height:1.5;">⚠️ Поиск сравнивает фото с уже загруженными фотографиями каталога — находит вероятных кандидатов, а не гарантирует точное совпадение. Модель распознавания (≈5–16 МБ) и база фото для сравнения загружаются при первом использовании и затем кэшируются офлайн.</div>
+        <div style="font-size:10px;color:#AAAAAA;margin-top:10px;line-height:1.5;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9v4M10.363 3.591 2.257 17.125a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636-2.87L13.637 3.59a1.914 1.914 0 0 0-3.274 0zM12 16h.01"/></svg> Поиск сравнивает фото с уже загруженными фотографиями каталога — находит вероятных кандидатов, а не гарантирует точное совпадение. Модель распознавания (≈5–16 МБ) и база фото для сравнения загружаются при первом использовании и затем кэшируются офлайн.</div>
       </div>
     </div>
   </div>
@@ -1368,7 +1373,7 @@ html[data-theme="dark"] .s4-code,html[data-theme="dark"] .s4-bc-sec{color:var(--
     <div class="modal-sheet">
       <div class="modal-handle"></div>
       <div class="modal-hdr">
-        <div class="modal-hdr-title">✉ Обратная связь</div>
+        <div class="modal-hdr-title"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 7l9 6 9-6"/></svg> Обратная связь</div>
         <button class="modal-close" onclick="closeModal('Feedback')">✕</button>
       </div>
       <div class="modal-body">
@@ -1387,7 +1392,7 @@ html[data-theme="dark"] .s4-code,html[data-theme="dark"] .s4-bc-sec{color:var(--
         <textarea class="modal-textarea" id="fb-mob-msg" placeholder="Опишите проблему, предложение или вопрос…"></textarea>
 
         <button class="modal-submit orange" onclick="fbMobSend()">
-          📨 Отправить через Outlook
+          <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 7l9 6 9-6"/></svg> Отправить через Outlook
         </button>
       </div>
     </div>
@@ -1530,6 +1535,9 @@ var NP_ICONS={"trade": "M14 6a2 2 0 1 0-4 0c0 1.667.67 3 2 4h-.008l7.971 4.428a2
 /* v5.0: иконки разделов на главной и в шапке — тот же контурный набор */
 (function(){var x={"favs": "M12 17.75l-6.172 3.245 1.179-6.873-5-4.867 6.9-1L12 2l3.086 6.253 6.9 1-5 4.867 1.179 6.873z", "nlist": "M14 3v4a1 1 0 0 0 1 1h4M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2zM12 11v6M9.5 13.5 12 11l2.5 2.5", "photosearch": "M5 7h1a2 2 0 0 0 2-2 1 1 0 0 1 1-1h6a1 1 0 0 1 1 1 2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2M9 13a3 3 0 1 0 6 0 3 3 0 0 0-6 0", "consum": "M7 10h3V7L6.5 3.5a6 6 0 0 1 8 8l6 6a2 2 0 0 1-3 3l-6-6a6 6 0 0 1-8-8L7 10", "_bag": "M6.331 8h11.339a2 2 0 0 1 1.977 2.304l-1.255 8.152A3 3 0 0 1 15.426 21H8.574a3 3 0 0 1-2.965-2.544l-1.255-8.152A2 2 0 0 1 6.331 8zM9 11V6a3 3 0 0 1 6 0v5"};for(var k in x)NP_ICONS[k]=x[k];})();
 function secIcon(secId){return npIcon(secId).replace('class="np-ic"','class="np-ic sec-ic"');}
+/* v5.6: общий контурный набор для подписей и состояний (вместо эмодзи) */
+var IC={"search": "M3 10a7 7 0 1 0 14 0 7 7 0 1 0-14 0M21 21l-6-6", "list": "M9 6h11M9 12h11M9 18h11M5 6v.01M5 12v.01M5 18v.01", "upload": "M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 9l5-5 5 5M12 4v12", "box": "M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3M12 12l8-4.5M12 12v9M12 12 4 7.5", "note": "M14 3v4a1 1 0 0 0 1 1h4M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2zM9 9h1M9 13h6M9 17h6", "refresh": "M20 11A8.1 8.1 0 0 0 4.5 9M4 5v4h4M4 13a8.1 8.1 0 0 0 15.5 2M20 19v-4h-4", "link": "M9 15l6-6M11 6l.463-.536a5 5 0 0 1 7.071 7.072L18 13M13 18l-.397.534a5.068 5.068 0 0 1-7.127 0 4.972 4.972 0 0 1 0-7.071L6 11", "trash": "M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3", "camera": "M5 7h1a2 2 0 0 0 2-2 1 1 0 0 1 1-1h6a1 1 0 0 1 1 1 2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2M9 13a3 3 0 1 0 6 0 3 3 0 0 0-6 0", "photo": "M15 8h.01M3 6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3zM3 16l5-5c.928-.893 2.072-.893 3 0l5 5M14 14l1-1c.928-.893 2.072-.893 3 0l3 3", "alert": "M12 9v4M10.363 3.591 2.257 17.125a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636-2.87L13.637 3.59a1.914 1.914 0 0 0-3.274 0zM12 16h.01", "mail": "M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 7l9 6 9-6", "store": "M3 21h18M3 7v1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7H3l2-4h14l2 4M5 21V10.85M19 21V10.85M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4", "moon": "M12 3h.393a7.5 7.5 0 0 0 7.92 12.446A9 9 0 1 1 12 2.992z", "sun": "M8 12a4 4 0 1 0 8 0 4 4 0 1 0-8 0M3 12h1m8-9v1m8 8h1m-9 8v1M5.6 5.6l.7.7m12.1-.7-.7.7m0 11.4.7.7m-12.1-.7-.7.7", "bag": "M6.331 8h11.339a2 2 0 0 1 1.977 2.304l-1.255 8.152A3 3 0 0 1 15.426 21H8.574a3 3 0 0 1-2.965-2.544l-1.255-8.152A2 2 0 0 1 6.331 8zM9 11V6a3 3 0 0 1 6 0v5"};
+function ico(n){return '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="'+(IC[n]||IC.box)+'"/></svg>';}
 function npIcon(secId){
   var d=NP_ICONS[secId]||NP_ICONS.kits;
   return '<svg class="np-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="'+d+'"/></svg>';
@@ -1619,7 +1627,7 @@ function applyTheme(theme){
   /* v4.1: цвет полосы браузера = цвет шапки выбранной темы (в т.ч. при ручной смене) */
   try{var tcs=document.querySelectorAll('meta[name="theme-color"]');for(var ti=0;ti<tcs.length;ti++)tcs[ti].setAttribute('content',theme==='dark'?'#1A1433':'#FFFFFF');}catch(e){}
   var btn=getEl('themeToggleBtn');
-  if(btn) btn.innerHTML = theme==='dark' ? '☀️ Тема' : '🌙 Тема';
+  if(btn) btn.innerHTML = (theme==='dark' ? ico('sun') : ico('moon'))+'Тема';
 }
 function toggleTheme(){
   var cur = document.documentElement.getAttribute('data-theme')==='dark' ? 'dark' : 'light';
@@ -1774,7 +1782,7 @@ function renderSubcatsFiltered(q){
   var el=getEl('subcatScreen'); if(!el)return;
   var h='<div class="subcat-section-title">'+sec.emoji+' '+sec.name+'</div>';
   if(!filtered.length && !total){
-    h+='<div class="empty-state"><div class="empty-icon">\uD83D\uDD0D</div><div class="empty-txt">\u041d\u0438\u0447\u0435\u0433\u043e \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e</div></div>';
+    h+='<div class="empty-state"><div class="empty-icon">'+ico('search')+'</div><div class="empty-txt">\u041d\u0438\u0447\u0435\u0433\u043e \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e</div></div>';
     el.innerHTML=h; return;
   }
   if(filtered.length){
@@ -1789,7 +1797,7 @@ function renderSubcatsFiltered(q){
     h+='</div>';
   }
   if(total){
-    h+='<div class="subcat-section-title">\uD83D\uDD0D \u041f\u043e\u0437\u0438\u0446\u0438\u0438: '+total.toLocaleString('ru')+'</div>';
+    h+='<div class="subcat-results-title">\u041f\u043e\u0437\u0438\u0446\u0438\u0438: '+total.toLocaleString('ru')+'</div>';
     h+='<div class="global-results-list" style="background:var(--wb-surface);border:1px solid var(--wb-border);border-radius:14px;overflow:hidden;">';
     for(var n=0;n<found.length;n++){
       var fi=found[n];
@@ -1816,9 +1824,9 @@ function renderItems(){
   var list=getEl('itemsList'); if(!list)return;
   if(!items.length){
     if(currentSecId==='nlist' && !nlistItems.length){
-      list.innerHTML='<div class="empty-state"><div class="empty-icon">\uD83D\udce4</div><div class="empty-txt">\u0424\u0430\u0439\u043b \u043f\u043e\u043a\u0430 \u043d\u0435 \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043d</div></div>';
+      list.innerHTML='<div class="empty-state"><div class="empty-icon">'+ico('upload')+'</div><div class="empty-txt">\u0424\u0430\u0439\u043b \u043f\u043e\u043a\u0430 \u043d\u0435 \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043d</div></div>';
     } else {
-      list.innerHTML='<div class="empty-state"><div class="empty-icon">\uD83D\uDD0D</div><div class="empty-txt">\u041d\u0438\u0447\u0435\u0433\u043e \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e</div></div>';
+      list.innerHTML='<div class="empty-state"><div class="empty-icon">'+ico('search')+'</div><div class="empty-txt">\u041d\u0438\u0447\u0435\u0433\u043e \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e</div></div>';
     }
     return;
   }
@@ -1855,10 +1863,10 @@ function renderItems(){
     var anCnt=getAnalogsForCode(it.code).length;
     var cmCnt=getCompatForCode(it.code).length;
     h+='<div class="item-tags">';
-    if(anCnt)h+='<button class="item-link-btn analogs-btn" data-action="go-item-tab" data-val="'+it.id+'" data-tab="analogs">🔄 Аналоги '+anCnt+' шт</button>';
-    if(cmCnt)h+='<button class="item-link-btn compat-btn" data-action="go-item-tab" data-val="'+it.id+'" data-tab="compat">🔗 Совместимость '+cmCnt+' шт</button>';
+    if(anCnt)h+='<button class="item-link-btn analogs-btn" data-action="go-item-tab" data-val="'+it.id+'" data-tab="analogs">'+ico('refresh')+' Аналоги '+anCnt+' шт</button>';
+    if(cmCnt)h+='<button class="item-link-btn compat-btn" data-action="go-item-tab" data-val="'+it.id+'" data-tab="compat">'+ico('link')+' Совместимость '+cmCnt+' шт</button>';
     var kitsList=getKitsForCode(it.code);
-    for(var ki=0;ki<kitsList.length;ki++){var kidx=kitsData.indexOf(kitsList[ki]);if(kidx>=0)h+='<button class="item-link-btn kit-btn" data-action="toggle-kit" data-val="'+kidx+'">📦 '+kitsList[ki].name+'</button>';}
+    for(var ki=0;ki<kitsList.length;ki++){var kidx=kitsData.indexOf(kitsList[ki]);if(kidx>=0)h+='<button class="item-link-btn kit-btn" data-action="toggle-kit" data-val="'+kidx+'">'+ico('box')+' '+kitsList[ki].name+'</button>';}
     h+='</div></div>';
     h+='<div class="item-right"><div class="qty-row">';
     h+='<button class="q-btn q-minus" data-action="q-minus" data-val="'+it.id+'">-</button>';
@@ -2016,7 +2024,7 @@ function updateHeader(){
     var isFavScreen = currentSecId==='favs' || currentSecId==='nlist' || currentSecId==='consum' || currentSecId==='photosearch';
     var spEl=getEl('sortPill'); if(spEl) spEl.style.display = (currentSecId==='photosearch') ? 'none' : '';
     var subLabel=isFavScreen?'':(currentSubcat||'\u0412\u0441\u0435 \u043f\u043e\u0437\u0438\u0446\u0438\u0438');
-    if(titleMain)titleMain.textContent=isFavScreen?(sec?sec.name:'\u2B50 \u0418\u0437\u0431\u0440\u0430\u043d\u043d\u043e\u0435'):subLabel;
+    if(titleMain)titleMain.textContent=isFavScreen?(sec?sec.name:'\u0418\u0437\u0431\u0440\u0430\u043d\u043d\u043e\u0435'):subLabel;
     var cnt3=getFilteredItems().length;
     if(titleSub)titleSub.textContent=cnt3.toLocaleString('ru')+' \u043f\u043e\u0437\u0438\u0446\u0438\u0439';
     if(breadcrumb){
@@ -2103,10 +2111,10 @@ function findKitPhoto(kitName){
 function renderKitsScreen(){
   var el=getEl('subcatScreen'); if(!el)return;
   if(!kitsData.length){
-    el.innerHTML='<div class="subcat-section-title">\uD83D\uDCCB \u041a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u044b</div><div class="empty-state"><div class="empty-icon">\uD83D\uDCCB</div><div class="empty-txt">\u041a\u0430\u0442\u0430\u043b\u043e\u0433 \u043d\u0435 \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043d</div></div>';
+    el.innerHTML='<div class="subcat-section-title">\u041a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u044b</div><div class="empty-state"><div class="empty-icon">'+npIcon('kits')+'</div><div class="empty-txt">\u041a\u0430\u0442\u0430\u043b\u043e\u0433 \u043d\u0435 \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043d</div></div>';
     return;
   }
-  var h='<div class="subcat-section-title">\uD83D\uDCCB \u041a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u044b \u00b7 '+kitsData.length+'</div><div class="kit-grid">';
+  var h='<div class="subcat-section-title">\u041a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u044b \u00b7 '+kitsData.length+'</div><div class="kit-grid">';
   for(var i=0;i<kitsData.length;i++){
     var kit=kitsData[i];
     var kitPhotos=kit.photos&&kit.photos.length?kit.photos:(kit.photo?[kit.photo]:[]);
@@ -2116,14 +2124,14 @@ function renderKitsScreen(){
     h+='<div class="kit-card-photo">';
     if(kitPhotos.length>1){
       h+='<div class="card-carousel" data-card-car="kit-'+i+'">';
-      for(var kpi=0;kpi<kitPhotos.length;kpi++) h+='<div class="card-carousel-slide"><img src="'+thumbUrl(kitPhotos[kpi])+'" loading="lazy" decoding="async" onerror="this.parentNode.textContent=\'\u{1F4CB}\'"></div>';
+      for(var kpi=0;kpi<kitPhotos.length;kpi++) h+='<div class="card-carousel-slide"><img src="'+thumbUrl(kitPhotos[kpi])+'" loading="lazy" decoding="async" onerror="this.parentNode.innerHTML=npIcon(\'kits\')"></div>';
       h+='</div><div class="card-dots">';
       for(var kdi=0;kdi<kitPhotos.length;kdi++) h+='<div class="card-dot'+(kdi===0?' act':'')+'"></div>';
       h+='</div>';
     } else if(kitPhotos.length===1){
-      h+='<img src="'+thumbUrl(kitPhotos[0])+'" loading="lazy" decoding="async" onerror="this.parentNode.textContent=\'\u{1F4CB}\'">';
+      h+='<img src="'+thumbUrl(kitPhotos[0])+'" loading="lazy" decoding="async" onerror="this.parentNode.innerHTML=npIcon(\'kits\')">';
     } else {
-      h+='\uD83D\uDCCB';
+      h+=npIcon('kits');
     }
     h+='<div class="kit-card-badge">'+kit.items.length+' \u0448\u0442</div></div>';
     h+='<div class="kit-card-info">';
@@ -2163,7 +2171,7 @@ function goKit(idx){
   var car=getEl('s5carousel');
   if(car){
     if(!_s5Photos.length){
-      car.innerHTML='<div class="s4-carousel-slide"><div class="s4-photo-placeholder"><div class="s4-photo-emoji">📋</div><div class="s4-photo-lbl">Фото комплекта</div></div></div>';
+      car.innerHTML='<div class="s4-carousel-slide"><div class="s4-photo-placeholder"><div class="s4-photo-emoji">'+npIcon('kits')+'</div><div class="s4-photo-lbl">Нет фото</div></div></div>';
     } else {
       var ch='';
       for(var i=0;i<_s5Photos.length;i++){
@@ -2210,10 +2218,10 @@ function goKit(idx){
       var it=kit.items[j];
       var itData=findItemByCode(it.code);
       var itPh=findPhotoByCode(it.code);
-      var thumb=itPh?('<img src="'+thumbUrl(itPh)+'" loading="lazy" decoding="async" onerror="this.parentNode.textContent=\'📦\'">'):'📦';
+      var thumb=itPh?('<img src="'+thumbUrl(itPh)+'" loading="lazy" decoding="async" onerror="this.parentNode.innerHTML=npIcon(\'kits\')">'):npIcon('kits');
       var goAttr=itData?(' data-action="go-item" data-val="'+itData.id+'"'):'';
       var compatCount=getCompatForCode(it.code).length;
-      var compatHtml=compatCount?'<div class="kit-item-compat has">🔗 '+compatCount+' совм.</div>':'';
+      var compatHtml=compatCount?'<div class="kit-item-compat has">'+ico('link')+' '+compatCount+' совм.</div>':'';
       h+='<div class="kit-item"'+goAttr+'>';
       h+='<div class="kit-item-thumb">'+thumb+'</div>';
       h+='<div class="kit-item-info"><div class="kit-item-code">'+it.code+'</div><div class="kit-item-name">'+it.name+'</div>'+compatHtml+'</div>';
@@ -2256,7 +2264,7 @@ function addKitToCart(idx){
   for(var j=0;j<kit.items.length;j++){
     var it=kit.items[j];
     var id='kit-'+idx+'-'+j;
-    if(!cart[id]){cart[id]={id:id,code:it.code,name:it.name,emoji:'\uD83D\uDCCB',qty:parseInt(it.qty)||1};added++;}
+    if(!cart[id]){cart[id]={id:id,code:it.code,name:it.name,emoji:'',qty:parseInt(it.qty)||1};added++;}
   }
   updateCartBadge();
   showToast('\u0414\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u043e '+added+' \u043f\u043e\u0437. \u0438\u0437 \u043a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u0430','ok');
@@ -2870,7 +2878,7 @@ function renderCartDrawer(){
   var sc=getEl('drawerScroll');if(!sc)return;
   var keys=Object.keys(cart);
   var clrBtn=getEl('clearCartBtn');if(clrBtn)clrBtn.style.display=keys.length?'block':'none';
-  if(!keys.length){sc.innerHTML='<div class="empty-state"><div class="empty-icon">\uD83D\uDED2</div><div class="empty-txt">\u0417\u0430\u044f\u0432\u043a\u0430 \u043f\u0443\u0441\u0442\u0430</div></div>';return;}
+  if(!keys.length){sc.innerHTML='<div class="empty-state"><div class="empty-icon">'+ico('bag')+'</div><div class="empty-txt">\u0417\u0430\u044f\u0432\u043a\u0430 \u043f\u0443\u0441\u0442\u0430</div></div>';return;}
   var h='';
   for(var i=0;i<keys.length;i++){
     var it=cart[keys[i]];
@@ -2946,7 +2954,7 @@ function s4PhotoFailed(img,idx){
   img.style.display='none';
   if(idx===_s4PhotoIdx){
     var loader=getEl('s4PhotoLoader');
-    if(loader){ loader.style.display='flex'; loader.innerHTML='<div class="photo-load-fail">⚠️ Не удалось загрузить фото</div>'; }
+    if(loader){ loader.style.display='flex'; loader.innerHTML='<div class="photo-load-fail">'+ico('alert')+' Не удалось загрузить фото</div>'; }
     clearTimeout(_s4LoaderTimer);
   }
 }
@@ -2955,7 +2963,7 @@ function s4PhotoTimedOut(){
   if(im && !(im.complete && im.naturalWidth>0) && s4RetryImg(im)){ clearTimeout(_s4LoaderTimer); _s4LoaderTimer=setTimeout(s4PhotoTimedOut,8000); return; }
   var loader=getEl('s4PhotoLoader');
   if(loader && loader.style.display==='flex' && loader.querySelector('.s4-photo-spinner')){
-    loader.innerHTML='<div class="photo-load-fail">⚠️ Не удалось загрузить фото</div>';
+    loader.innerHTML='<div class="photo-load-fail">'+ico('alert')+' Не удалось загрузить фото</div>';
   }
 }
 
@@ -3093,7 +3101,7 @@ function renderS4Compat(code){
     var itData=findItemByCode(it.code);
     var goAttr=itData?(' data-action="go-item" data-val="'+itData.id+'" style="cursor:pointer"'):'';
     h+='<div class="s4-ai"'+goAttr+'>';
-    h+='<div class="s4-ai-thumb" style="background:#E6F9F0;">🔗</div>';
+    h+='<div class="s4-ai-thumb" style="background:#E6F9F0;">'+ico('link')+'</div>';
     h+='<div class="s4-ai-info">';
     h+='<div class="s4-ai-code">'+it.code+'</div>';
     h+='<div class="s4-ai-name">'+it.name+'</div>';
@@ -3137,7 +3145,7 @@ function renderS4Analogs(code){
     var itData=findItemByCode(it.code);
     var goAttr=itData?(' data-action="go-item" data-val="'+itData.id+'" style="cursor:pointer"'):'';
     h+='<div class="s4-ai"'+goAttr+'>';
-    h+='<div class="s4-ai-thumb" style="background:#F2EFF6;">🔄</div>';
+    h+='<div class="s4-ai-thumb" style="background:#F2EFF6;">'+ico('refresh')+'</div>';
     h+='<div class="s4-ai-info">';
     h+='<div class="s4-ai-code">'+it.code+'</div>';
     h+='<div class="s4-ai-name">'+it.name+'</div>';
@@ -3182,7 +3190,7 @@ function renderS4Kits(code){
     var kit=kits[k];
     var kidx=kitsData.indexOf(kit);
     h+='<div class="s4-kit-card">';
-    h+='<div class="s4-kit-name"'+(kidx>=0?' data-action="toggle-kit" data-val="'+kidx+'" style="cursor:pointer"':'')+'>📦 '+kit.name+'</div>';
+    h+='<div class="s4-kit-name"'+(kidx>=0?' data-action="toggle-kit" data-val="'+kidx+'" style="cursor:pointer"':'')+'>'+ico('box')+' '+kit.name+'</div>';
     for(var j=0;j<kit.items.length;j++){
       var it=kit.items[j];
       var isCur=it.code===code;
@@ -3276,7 +3284,7 @@ function renderNlistToolbar(){
     for(var i=0;i<nlistFiles.length;i++){
       var f=nlistFiles[i];
       h+='<span style="display:inline-flex;align-items:center;gap:6px;background:#F7F7F7;border:1px solid var(--wb-border);border-radius:20px;padding:5px 6px 5px 12px;font-size:11px;font-weight:600;color:#6B6B6B;">';
-      h+='🏪 '+nlistEsc(f.shop||'—')+' · '+nlistEsc(f.name)+' · '+(f.count||0).toLocaleString('ru')+' поз.';
+      h+=ico('store')+' '+nlistEsc(f.shop||'—')+' · '+nlistEsc(f.name)+' · '+(f.count||0).toLocaleString('ru')+' поз.';
       h+='<button onclick="nlistRemoveFile('+i+')" style="background:#E24B4A;border:none;color:#fff;width:18px;height:18px;border-radius:50%;font-size:9px;cursor:pointer;line-height:1;">✕</button>';
       h+='</span>';
     }
@@ -3351,7 +3359,7 @@ function nlistParseFile(file){
             id:'nlist-'+fileId+'-'+ri,
             code:code, name:name, desc:desc,
             secId:'nlist', subcat:subcat,
-            emoji:'📤', photo:null, fileId:fileId, shop:shopVal
+            emoji:'', photo:null, fileId:fileId, shop:shopVal
           });
         }
       }
@@ -3881,7 +3889,7 @@ function mobUpdateFromGitHub() {
 
       applyPhotos();
       var summary = results[0].value + ' \u00b7 ' + totalPhotos.toLocaleString('ru') + ' \u0444\u043e\u0442\u043e';
-      if (errors) summary += ' \u00b7 \u26A0 ' + errors + ' \u043e\u0448\u0438\u0431\u043a\u0438';
+      if (errors) summary += ' \u00b7 ' + errors + ' \u043e\u0448\u0438\u0431\u043a\u0438';
       _finishUpdate(true, summary);
     });
 }
@@ -4050,7 +4058,7 @@ function psMobSetStatus(msg, color){
 
 function psMobHandleFile(file){
   if(!file || file.type.indexOf('image/') !== 0){
-    psMobSetStatus('\u274c \u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0444\u0430\u0439\u043b \u0438\u0437\u043e\u0431\u0440\u0430\u0436\u0435\u043d\u0438\u044f', '#E24B4A');
+    psMobSetStatus('\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0444\u0430\u0439\u043b \u0438\u0437\u043e\u0431\u0440\u0430\u0436\u0435\u043d\u0438\u044f', '#E24B4A');
     return;
   }
   _psMobFile = file;
@@ -4170,13 +4178,13 @@ function psMobStartSearch(){
       });
     }).catch(function(err){
       URL.revokeObjectURL(objUrl);
-      psMobSetStatus('\u274c '+(err && err.message ? err.message : '\u041e\u0448\u0438\u0431\u043a\u0430 \u043f\u043e\u0438\u0441\u043a\u0430 \u043f\u043e \u0444\u043e\u0442\u043e'), '#E24B4A');
+      psMobSetStatus((err && err.message ? err.message : '\u041e\u0448\u0438\u0431\u043a\u0430 \u043f\u043e\u0438\u0441\u043a\u0430 \u043f\u043e \u0444\u043e\u0442\u043e'), '#E24B4A');
       if(b) b.disabled=false;
     });
   };
   img.onerror=function(){
     URL.revokeObjectURL(objUrl);
-    psMobSetStatus('\u274c \u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u043f\u0440\u043e\u0447\u0438\u0442\u0430\u0442\u044c \u0444\u0430\u0439\u043b \u0438\u0437\u043e\u0431\u0440\u0430\u0436\u0435\u043d\u0438\u044f', '#E24B4A');
+    psMobSetStatus('\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u043f\u0440\u043e\u0447\u0438\u0442\u0430\u0442\u044c \u0444\u0430\u0439\u043b \u0438\u0437\u043e\u0431\u0440\u0430\u0436\u0435\u043d\u0438\u044f', '#E24B4A');
     if(b) b.disabled=false;
   };
   img.src=objUrl;
@@ -4213,7 +4221,7 @@ function initPhotoSearchIcon(){
       autoplay: true,
       animationData: PHOTOSEARCH_ICON_DATA
     });
-  }catch(e){ el.textContent = '🔍'; }
+  }catch(e){ el.innerHTML = ico('search'); }
 }
 /* v4.0: lottie-web (~250 КБ) грузим не при старте, а после сплэша и обновления каталога,
    когда браузер простаивает. При reduced-motion — остаётся эмодзи. В фоне анимация на паузе. */
@@ -4277,7 +4285,7 @@ function installPWA() {
     });
   } else {
     /* iOS — показываем инструкцию */
-    showToast('На iOS: нажмите \uD83D\uDCE4 \u2192 \u00ABНа экран Домой\u00BB', '');
+    showToast('На iOS: нажмите «Поделиться» \u2192 \u00ABНа экран Домой\u00BB', '');
   }
 }
 </script>
@@ -4289,7 +4297,7 @@ function installPWA() {
       <img id="verLogoImg" src="" alt="Kari">
     </div>
     <div class="ver-app-name">Портал заказов<br>Kari</div>
-    <div class="ver-num" id="verNum">v5.5</div>
+    <div class="ver-num" id="verNum">v5.6</div>
     <div class="ver-build" id="verBuild">Сборка от 14.05.2025</div>
     <div class="ver-divider"></div>
     <div class="ver-info">Мобильный дашборд оборудования<br>для внутреннего использования</div>
