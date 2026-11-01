@@ -732,6 +732,18 @@ button,input,select,textarea{font-family:inherit;}
 .cat-topbar .cat-label{white-space:normal!important;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;text-wrap:balance;line-height:1.15!important;font-size:12.5px;text-align:center;}
 /* v1.85: вкладки разделов как на 1280 — без иконок на любой ширине, только полное название по центру */
 .cat-topbar .cat-icon{display:none!important;}
+/* v1.86: шапка на узком окне — кнопки, которые не помещаются, уходят в «Ещё ▾»; «Корзина» всегда видна */
+.header-right{overflow:hidden!important;}
+.header-right .cart-btn{flex:none;}
+.hdr-more[hidden]{display:none!important;}
+.hdr-more{flex:none;}
+.hdr-more-btn{display:flex;align-items:center;gap:4px;height:32px;padding:6px 12px;border-radius:9px;border:1px solid rgba(255,255,255,.35);background:rgba(246,244,252,.62);color:var(--text);font-size:11.5px;font-weight:700;cursor:pointer;white-space:nowrap;}
+.hdr-more-btn .ic{font-size:14px;}
+.hdr-more-menu{position:fixed;z-index:10050;min-width:220px;padding:6px;border-radius:12px;background:#fff;border:1px solid var(--border);box-shadow:0 8px 24px rgba(30,19,46,.14);display:flex;flex-direction:column;gap:2px;}
+.hdr-more-menu[hidden]{display:none!important;}
+.hdr-more-menu button{display:flex!important;align-items:center!important;gap:8px!important;width:100%!important;justify-content:flex-start!important;background:transparent!important;color:var(--text)!important;border:0!important;border-radius:8px!important;padding:9px 10px!important;font-size:13px!important;font-weight:600!important;text-align:left!important;box-shadow:none!important;}
+.hdr-more-menu button:hover,.hdr-more-menu button:focus-visible{background:var(--surface3,#F1EEF5)!important;}
+.hdr-more-menu .lottie-icon{display:none!important;}
 </style>
 </head>
 <body>
@@ -755,15 +767,18 @@ button,input,select,textarea{font-family:inherit;}
     </div>
   </div>
   <div class="header-right">
-    <button onclick="selectCat('nlist')" id="btn-nlist" style="background:rgba(190,81,3,.2);backdrop-filter:blur(8px);color:#ffb877;border:1px solid rgba(190,81,3,.35);border-radius:9px;padding:6px 10px;font-family:Inter,sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 0 12px rgba(190,81,3,.12);transition:all .25s;white-space:nowrap;" onmouseover="this.style.background='rgba(190,81,3,.35)';this.style.borderColor='rgba(190,81,3,.6)'" onmouseout="this.style.background='rgba(190,81,3,.2)';this.style.borderColor='rgba(190,81,3,.35)'"><span class="lottie-icon" id="lottie-cat-nlist" style="width:16px;height:16px;font-size:0;"></span> Номенклатуры <span class="cart-count" id="cnt-nlist">0</span></button>
-    <button onclick="selectCat('consum')" id="btn-consum" style="background:rgba(31,157,85,.2);backdrop-filter:blur(8px);color:#7de0a8;border:1px solid rgba(31,157,85,.35);border-radius:9px;padding:6px 10px;font-family:Inter,sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 0 12px rgba(31,157,85,.12);transition:all .25s;white-space:nowrap;" title="Заказ расходных материалов ПКС" onmouseover="this.style.background='rgba(31,157,85,.35)';this.style.borderColor='rgba(31,157,85,.6)'" onmouseout="this.style.background='rgba(31,157,85,.2)';this.style.borderColor='rgba(31,157,85,.35)'"><span class="lottie-icon" id="lottie-cat-consum" style="width:16px;height:16px;font-size:0;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10h3V7L6.5 3.5a6 6 0 0 1 8 8l6 6a2 2 0 0 1-3 3l-6-6a6 6 0 0 1-8-8L7 10"/></svg></span> Расходные ПКС <span class="cart-count" id="cnt-consum">0</span></button>
-    <button onclick="openFeedback()" style="background:rgba(220,170,50,.2);backdrop-filter:blur(8px);color:#ffe080;border:1px solid rgba(220,170,50,.3);border-radius:9px;padding:6px 10px;font-family:Inter,sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 0 12px rgba(220,170,50,.12);transition:all .25s;white-space:nowrap;" onmouseover="this.style.background='rgba(220,170,50,.35)';this.style.borderColor='rgba(220,170,50,.6)'" onmouseout="this.style.background='rgba(220,170,50,.2)';this.style.borderColor='rgba(220,170,50,.3)'"><span class="lottie-icon" id="lottie-feedback" style="width:16px;height:16px;"></span> Обратная связь</button>
-    <button onclick="openPhotoUpload()" style="background:rgba(180,80,180,.2);backdrop-filter:blur(8px);color:#e8a0ff;border:1px solid rgba(180,80,180,.3);border-radius:9px;padding:6px 10px;font-family:Inter,sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 0 12px rgba(180,80,180,.12);transition:all .25s;white-space:nowrap;" onmouseover="this.style.background='rgba(180,80,180,.35)';this.style.borderColor='rgba(180,80,180,.6)'" onmouseout="this.style.background='rgba(180,80,180,.2)';this.style.borderColor='rgba(180,80,180,.3)'"><span class="lottie-icon" id="lottie-photo" style="width:16px;height:16px;"></span> Фото</button>
-    <button onclick="openPhotoSearch()" style="background:rgba(26,144,192,.2);backdrop-filter:blur(8px);color:#7dd0ff;border:1px solid rgba(26,144,192,.3);border-radius:9px;padding:6px 10px;font-family:Inter,sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 0 12px rgba(26,144,192,.12);transition:all .25s;white-space:nowrap;" title="Поиск по фото — визуальное сходство" onmouseover="this.style.background='rgba(26,144,192,.35)';this.style.borderColor='rgba(26,144,192,.6)'" onmouseout="this.style.background='rgba(26,144,192,.2)';this.style.borderColor='rgba(26,144,192,.3)'"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0 7 7 0 1 0-14 0M21 21l-6-6"/></svg> Найти по фото</button>
-    <button class="update-btn" onclick="updateFromGitHub()"><span class="lottie-icon" id="lottie-update" style="width:16px;height:16px;"></span><span id="updateIcon" style="display:none;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11A8.1 8.1 0 0 0 4.5 9M4 5v4h4M4 13a8.1 8.1 0 0 0 15.5 2M20 19v-4h-4"/></svg></span> Обновить</button>
+    <button data-hprio="6" data-hord="1" onclick="selectCat('nlist')" id="btn-nlist" style="background:rgba(190,81,3,.2);backdrop-filter:blur(8px);color:#ffb877;border:1px solid rgba(190,81,3,.35);border-radius:9px;padding:6px 10px;font-family:Inter,sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 0 12px rgba(190,81,3,.12);transition:all .25s;white-space:nowrap;" onmouseover="this.style.background='rgba(190,81,3,.35)';this.style.borderColor='rgba(190,81,3,.6)'" onmouseout="this.style.background='rgba(190,81,3,.2)';this.style.borderColor='rgba(190,81,3,.35)'"><span class="lottie-icon" id="lottie-cat-nlist" style="width:16px;height:16px;font-size:0;"></span> Номенклатуры <span class="cart-count" id="cnt-nlist">0</span></button>
+    <button data-hprio="5" data-hord="2" onclick="selectCat('consum')" id="btn-consum" style="background:rgba(31,157,85,.2);backdrop-filter:blur(8px);color:#7de0a8;border:1px solid rgba(31,157,85,.35);border-radius:9px;padding:6px 10px;font-family:Inter,sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 0 12px rgba(31,157,85,.12);transition:all .25s;white-space:nowrap;" title="Заказ расходных материалов ПКС" onmouseover="this.style.background='rgba(31,157,85,.35)';this.style.borderColor='rgba(31,157,85,.6)'" onmouseout="this.style.background='rgba(31,157,85,.2)';this.style.borderColor='rgba(31,157,85,.35)'"><span class="lottie-icon" id="lottie-cat-consum" style="width:16px;height:16px;font-size:0;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10h3V7L6.5 3.5a6 6 0 0 1 8 8l6 6a2 2 0 0 1-3 3l-6-6a6 6 0 0 1-8-8L7 10"/></svg></span> Расходные ПКС <span class="cart-count" id="cnt-consum">0</span></button>
+    <button data-hprio="2" data-hord="3" onclick="openFeedback()" style="background:rgba(220,170,50,.2);backdrop-filter:blur(8px);color:#ffe080;border:1px solid rgba(220,170,50,.3);border-radius:9px;padding:6px 10px;font-family:Inter,sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 0 12px rgba(220,170,50,.12);transition:all .25s;white-space:nowrap;" onmouseover="this.style.background='rgba(220,170,50,.35)';this.style.borderColor='rgba(220,170,50,.6)'" onmouseout="this.style.background='rgba(220,170,50,.2)';this.style.borderColor='rgba(220,170,50,.3)'"><span class="lottie-icon" id="lottie-feedback" style="width:16px;height:16px;"></span> Обратная связь</button>
+    <button data-hprio="3" data-hord="4" onclick="openPhotoUpload()" style="background:rgba(180,80,180,.2);backdrop-filter:blur(8px);color:#e8a0ff;border:1px solid rgba(180,80,180,.3);border-radius:9px;padding:6px 10px;font-family:Inter,sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 0 12px rgba(180,80,180,.12);transition:all .25s;white-space:nowrap;" onmouseover="this.style.background='rgba(180,80,180,.35)';this.style.borderColor='rgba(180,80,180,.6)'" onmouseout="this.style.background='rgba(180,80,180,.2)';this.style.borderColor='rgba(180,80,180,.3)'"><span class="lottie-icon" id="lottie-photo" style="width:16px;height:16px;"></span> Фото</button>
+    <button data-hprio="4" data-hord="5" onclick="openPhotoSearch()" style="background:rgba(26,144,192,.2);backdrop-filter:blur(8px);color:#7dd0ff;border:1px solid rgba(26,144,192,.3);border-radius:9px;padding:6px 10px;font-family:Inter,sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 0 12px rgba(26,144,192,.12);transition:all .25s;white-space:nowrap;" title="Поиск по фото — визуальное сходство" onmouseover="this.style.background='rgba(26,144,192,.35)';this.style.borderColor='rgba(26,144,192,.6)'" onmouseout="this.style.background='rgba(26,144,192,.2)';this.style.borderColor='rgba(26,144,192,.3)'"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0 7 7 0 1 0-14 0M21 21l-6-6"/></svg> Найти по фото</button>
+    <button data-hprio="1" data-hord="6" class="update-btn" onclick="updateFromGitHub()"><span class="lottie-icon" id="lottie-update" style="width:16px;height:16px;"></span><span id="updateIcon" style="display:none;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11A8.1 8.1 0 0 0 4.5 9M4 5v4h4M4 13a8.1 8.1 0 0 0 15.5 2M20 19v-4h-4"/></svg></span> Обновить</button>
+        <div class="hdr-more" id="hdrMore" hidden><button type="button" class="hdr-more-btn" id="hdrMoreBtn" aria-haspopup="menu" aria-expanded="false" onclick="toggleHdrMore(event)">Ещё <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></div>
     <button class="cart-btn" onclick="toggleCart()"><span class="lottie-icon" id="lottie-cart" style="width:18px;height:18px;"></span> Корзина <span class="cart-count" id="cartCountBadge">0</span></button>
   </div>
 </div>
+
+<div class="hdr-more-menu" id="hdrMoreMenu" role="menu" hidden></div>
 
 <!-- Feedback modal -->
 <div id="feedbackOverlay" style="position:fixed;inset:0;background:rgba(30,32,40,.5);backdrop-filter:blur(4px);z-index:600;display:none;align-items:center;justify-content:center;" onclick="if(event.target===this)closeFeedback()">
@@ -1540,7 +1555,7 @@ function npIcon(cat){
 /* v1.80: общий набор контурных иконок (тот же, что в мобильном) вместо эмодзи */
 var IC={"hanger": "M14 6a2 2 0 1 0-4 0c0 1.667.67 3 2 4h-.008l7.971 4.428a2 2 0 0 1 1.029 1.749V17a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-.823a2 2 0 0 1 1.029-1.749L12 10", "diamond": "M6 5h12l3 5-8.5 9.5a.7.7 0 0 1-1 0L3 10l3-5M10 12 8 9.8l.6-1", "balloon": "M14 8a2 2 0 0 0-2-2M6 8a6 6 0 1 1 12 0c0 4.97-2.686 9-6 9s-6-4.03-6-9M12 17v1a2 2 0 0 1-2 2H7a2 2 0 0 0-2 2", "speaker": "M18 8a3 3 0 0 1 0 6M10 8v11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1v-5M12 8l4.524-3.77A.9.9 0 0 1 18 4.922v12.156a.9.9 0 0 1-1.476.692L12 14H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h8", "clip": "M15 7l-6.5 6.5a1.5 1.5 0 0 0 3 3L18 10a3 3 0 0 0-6-6l-6.5 6.5a4.5 4.5 0 0 0 9 9L21 13", "bulb": "M3 12h1m8-9v1m8 8h1M5.6 5.6l.7.7m12.1-.7-.7.7M9 16a5 5 0 1 1 6 0 3.5 3.5 0 0 0-1 3 2 2 0 0 1-4 0 3.5 3.5 0 0 0-1-3M9.7 17h4.6", "router": "M3 15a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM17 17v.01M13 17v.01M15 13v-2M11.75 8.75a4 4 0 0 1 6.5 0M8.5 6.5a8 8 0 0 1 13 0", "desktop": "M3 5a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1zM7 20h10M9 16v4M15 16v4", "box": "M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3M12 12l8-4.5M12 12v9M12 12 4 7.5", "search": "M3 10a7 7 0 1 0 14 0 7 7 0 1 0-14 0M21 21l-6-6", "camera": "M5 7h1a2 2 0 0 0 2-2 1 1 0 0 1 1-1h6a1 1 0 0 1 1 1 2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2M9 13a3 3 0 1 0 6 0 3 3 0 0 0-6 0", "download": "M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 11l5 5 5-5M12 4v12", "upload": "M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 9l5-5 5 5M12 4v12", "link": "M9 15l6-6M11 6l.463-.536a5 5 0 0 1 7.071 7.072L18 13M13 18l-.397.534a5.068 5.068 0 0 1-7.127 0 4.972 4.972 0 0 1 0-7.071L6 11", "bag": "M6.331 8h11.339a2 2 0 0 1 1.977 2.304l-1.255 8.152A3 3 0 0 1 15.426 21H8.574a3 3 0 0 1-2.965-2.544l-1.255-8.152A2 2 0 0 1 6.331 8zM9 11V6a3 3 0 0 1 6 0v5", "tool": "M7 10h3V7L6.5 3.5a6 6 0 0 1 8 8l6 6a2 2 0 0 1-3 3l-6-6a6 6 0 0 1-8-8L7 10", "store": "M3 21h18M3 7v1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7H3l2-4h14l2 4M5 21V10.85M19 21V10.85M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4", "clipboard": "M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2zM9 12h6M9 16h6", "folder": "M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2", "history": "M12 8v4l2 2M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5", "trash": "M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3", "mail": "M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 7l9 6 9-6", "user": "M8 7a4 4 0 1 0 8 0 4 4 0 0 0-8 0M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2", "alert": "M12 9v4M10.363 3.591 2.257 17.125a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636-2.87L13.637 3.59a1.914 1.914 0 0 0-3.274 0zM12 16h.01", "refresh": "M20 11A8.1 8.1 0 0 0 4.5 9M4 5v4h4M4 13a8.1 8.1 0 0 0 15.5 2M20 19v-4h-4", "check": "M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0M9 12l2 2 4-4", "list": "M9 6h11M9 12h11M9 18h11M5 6v.01M5 12v.01M5 18v.01", "photo": "M15 8h.01M3 6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3zM3 16l5-5c.928-.893 2.072-.893 3 0l5 5M14 14l1-1c.928-.893 2.072-.893 3 0l3 3", "question": "M8 8a3.5 3 0 0 1 3.5-3h1A3.5 3 0 0 1 16 8a3 3 0 0 1-2 3 3 4 0 0 0-2 4M12 19v.01"};
 function ic(n){return '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="'+(IC[n]||IC.box)+'"/></svg>';}
-var APP_VERSION = '1.85';
+var APP_VERSION = '1.86';
 // При каждом обновлении index.html — менять только эту строку (1.17, 1.18 и т.д.)
 (function(){
   var el = document.getElementById('appVersionBadge');
@@ -6951,6 +6966,51 @@ document.addEventListener('DOMContentLoaded',function(){
   renderVisualFilters();
   updateCatalogContext();
 });
+
+// ═══ v1.86: ШАПКА — кнопки, которые не помещаются, уходят в «Ещё ▾» (по приоритету) ═══
+(function(){
+  var bar=document.querySelector('.header-right'), more=document.getElementById('hdrMore'),
+      menu=document.getElementById('hdrMoreMenu'), mbtn=document.getElementById('hdrMoreBtn');
+  if(!bar||!more||!menu) return;
+  function all(){ return Array.prototype.slice.call(document.querySelectorAll('[data-hprio]')); }
+  // шапка прижата вправо, поэтому лишнее уходит влево и scrollWidth его не видит — считаем ширину кнопок сами
+  function fits(){
+    var kids=Array.prototype.filter.call(bar.children,function(c){return c.offsetParent!==null;});
+    var gap=parseFloat(getComputedStyle(bar).columnGap)||0, w=0;
+    kids.forEach(function(c){ w+=c.getBoundingClientRect().width; });
+    w+=gap*Math.max(0,kids.length-1);
+    return w <= bar.clientWidth + 1;
+  }
+  function fit(){
+    closeMenu();
+    // вернуть всё в шапку в исходном порядке
+    all().sort(function(a,b){return a.dataset.hord-b.dataset.hord;}).forEach(function(b){ bar.insertBefore(b, more); });
+    more.hidden=true;
+    if(fits()) return;
+    more.hidden=false;
+    var order=all().sort(function(a,b){return a.dataset.hprio-b.dataset.hprio;}); // сначала наименее важные
+    for(var i=0;i<order.length && !fits();i++){ menu.appendChild(order[i]); }
+    // в меню — в исходном порядке
+    Array.prototype.slice.call(menu.children).sort(function(a,b){return a.dataset.hord-b.dataset.hord;}).forEach(function(b){ menu.appendChild(b); });
+  }
+  function closeMenu(){ menu.hidden=true; if(mbtn) mbtn.setAttribute('aria-expanded','false'); }
+  window.toggleHdrMore=function(e){
+    if(e) e.stopPropagation();
+    if(!menu.hidden){ closeMenu(); return; }
+    var r=mbtn.getBoundingClientRect();
+    menu.hidden=false;
+    menu.style.top=(r.bottom+6)+'px';
+    menu.style.left=Math.max(8, Math.min(r.right-menu.offsetWidth, window.innerWidth-menu.offsetWidth-8))+'px';
+    mbtn.setAttribute('aria-expanded','true');
+  };
+  menu.addEventListener('click',function(e){ if(e.target.closest('button')) closeMenu(); });
+  document.addEventListener('click',function(e){ if(!menu.hidden && !menu.contains(e.target) && e.target!==mbtn) closeMenu(); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeMenu(); });
+  var t; window.addEventListener('resize',function(){ clearTimeout(t); t=setTimeout(fit,80); });
+  fit();
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(fit);
+  setTimeout(fit,1500); setTimeout(fit,5000); // после загрузки каталога и анимированных иконок
+})();
 </script>
 
 <style>
