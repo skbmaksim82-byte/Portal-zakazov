@@ -727,6 +727,9 @@ button,input,select,textarea{font-family:inherit;}
 .cat-topbar .cat-btn{display:flex!important;align-items:center;justify-content:center;gap:6px;min-height:40px!important;}
 .cat-topbar .cat-count{display:none!important;}
 .cat-topbar .cat-label{flex:0 1 auto;text-align:center;}
+/* v1.84: полные названия разделов — перенос на две строки внутри кнопки равной ширины, по центру */
+.cat-topbar .cat-btn{min-height:46px!important;padding:5px 8px!important;}
+.cat-topbar .cat-label{white-space:normal!important;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;text-wrap:balance;line-height:1.15!important;font-size:12.5px;text-align:center;}
 </style>
 </head>
 <body>
@@ -828,28 +831,28 @@ button,input,select,textarea{font-family:inherit;}
   </button>
   <div class="topbar-divider"></div>
   <button title="Торговое оборудование" class="cat-btn" onclick="selectCat('Торговое оборудование')" id="btn-Торговое оборудование" style="--cat-color:#7960A2">
-    <span class="cat-icon lottie-icon" id="lottie-cat-torg" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Торговое</span><span class="cat-count" id="cnt-Торговое оборудование">0</span>
+    <span class="cat-icon lottie-icon" id="lottie-cat-torg" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Торговое оборудование</span><span class="cat-count" id="cnt-Торговое оборудование">0</span>
   </button>
   <button title="Ювелирное оборудование" class="cat-btn" onclick="selectCat('Ювелирное оборудование')" id="btn-Ювелирное оборудование" style="--cat-color:#b84580">
-    <span class="cat-icon lottie-icon" id="lottie-cat-uvelir" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Ювелирное</span><span class="cat-count" id="cnt-Ювелирное оборудование">0</span>
+    <span class="cat-icon lottie-icon" id="lottie-cat-uvelir" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Ювелирное оборудование</span><span class="cat-count" id="cnt-Ювелирное оборудование">0</span>
   </button>
   <button title="Кари Кидс" class="cat-btn" onclick="selectCat('karikids')" id="btn-karikids" style="--cat-color:#c0392b">
     <span class="cat-icon lottie-icon" id="lottie-cat-kids" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Кари Кидс</span><span class="cat-count" id="cnt-karikids">0</span>
   </button>
   <button title="Рекламные материалы" class="cat-btn" onclick="selectCat('Рекламные материалы')" id="btn-Рекламные материалы" style="--cat-color:#c07a2a">
-    <span class="cat-icon lottie-icon" id="lottie-cat-reklam" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Рекламные</span><span class="cat-count" id="cnt-Рекламные материалы">0</span>
+    <span class="cat-icon lottie-icon" id="lottie-cat-reklam" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Рекламные материалы</span><span class="cat-count" id="cnt-Рекламные материалы">0</span>
   </button>
   <button title="Канцелярия" class="cat-btn" onclick="selectCat('Канцелярия')" id="btn-Канцелярия" style="--cat-color:#7B6DB0">
     <span class="cat-icon lottie-icon" id="lottie-cat-kanc" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Канцелярия</span><span class="cat-count" id="cnt-Канцелярия">0</span>
   </button>
   <button title="Световое оборудование" class="cat-btn" onclick="selectCat('light')" id="btn-light" style="--cat-color:#e07a20">
-    <span class="cat-icon lottie-icon" id="lottie-cat-light" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Световое</span><span class="cat-count" id="cnt-light">0</span>
+    <span class="cat-icon lottie-icon" id="lottie-cat-light" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Световое оборудование</span><span class="cat-count" id="cnt-light">0</span>
   </button>
   <button title="Слаботочное оборудование" class="cat-btn" onclick="selectCat('tv')" id="btn-tv" style="--cat-color:#0e7490">
-    <span class="cat-icon lottie-icon" id="lottie-cat-tv" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Слаботочное</span><span class="cat-count" id="cnt-tv">0</span>
+    <span class="cat-icon lottie-icon" id="lottie-cat-tv" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">Слаботочное оборудование</span><span class="cat-count" id="cnt-tv">0</span>
   </button>
   <button title="ИТ оборудование" class="cat-btn" onclick="selectCat('ИТ оборудование')" id="btn-ИТ оборудование" style="--cat-color:#604290">
-    <span class="cat-icon lottie-icon" id="lottie-cat-it" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">ИТ</span><span class="cat-count" id="cnt-ИТ оборудование">0</span>
+    <span class="cat-icon lottie-icon" id="lottie-cat-it" style="width:20px;height:20px;font-size:0;"></span><span class="cat-label">ИТ оборудование</span><span class="cat-count" id="cnt-ИТ оборудование">0</span>
   </button>
 </div>
 
@@ -1535,7 +1538,7 @@ function npIcon(cat){
 /* v1.80: общий набор контурных иконок (тот же, что в мобильном) вместо эмодзи */
 var IC={"hanger": "M14 6a2 2 0 1 0-4 0c0 1.667.67 3 2 4h-.008l7.971 4.428a2 2 0 0 1 1.029 1.749V17a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-.823a2 2 0 0 1 1.029-1.749L12 10", "diamond": "M6 5h12l3 5-8.5 9.5a.7.7 0 0 1-1 0L3 10l3-5M10 12 8 9.8l.6-1", "balloon": "M14 8a2 2 0 0 0-2-2M6 8a6 6 0 1 1 12 0c0 4.97-2.686 9-6 9s-6-4.03-6-9M12 17v1a2 2 0 0 1-2 2H7a2 2 0 0 0-2 2", "speaker": "M18 8a3 3 0 0 1 0 6M10 8v11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1v-5M12 8l4.524-3.77A.9.9 0 0 1 18 4.922v12.156a.9.9 0 0 1-1.476.692L12 14H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h8", "clip": "M15 7l-6.5 6.5a1.5 1.5 0 0 0 3 3L18 10a3 3 0 0 0-6-6l-6.5 6.5a4.5 4.5 0 0 0 9 9L21 13", "bulb": "M3 12h1m8-9v1m8 8h1M5.6 5.6l.7.7m12.1-.7-.7.7M9 16a5 5 0 1 1 6 0 3.5 3.5 0 0 0-1 3 2 2 0 0 1-4 0 3.5 3.5 0 0 0-1-3M9.7 17h4.6", "router": "M3 15a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM17 17v.01M13 17v.01M15 13v-2M11.75 8.75a4 4 0 0 1 6.5 0M8.5 6.5a8 8 0 0 1 13 0", "desktop": "M3 5a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1zM7 20h10M9 16v4M15 16v4", "box": "M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3M12 12l8-4.5M12 12v9M12 12 4 7.5", "search": "M3 10a7 7 0 1 0 14 0 7 7 0 1 0-14 0M21 21l-6-6", "camera": "M5 7h1a2 2 0 0 0 2-2 1 1 0 0 1 1-1h6a1 1 0 0 1 1 1 2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2M9 13a3 3 0 1 0 6 0 3 3 0 0 0-6 0", "download": "M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 11l5 5 5-5M12 4v12", "upload": "M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 9l5-5 5 5M12 4v12", "link": "M9 15l6-6M11 6l.463-.536a5 5 0 0 1 7.071 7.072L18 13M13 18l-.397.534a5.068 5.068 0 0 1-7.127 0 4.972 4.972 0 0 1 0-7.071L6 11", "bag": "M6.331 8h11.339a2 2 0 0 1 1.977 2.304l-1.255 8.152A3 3 0 0 1 15.426 21H8.574a3 3 0 0 1-2.965-2.544l-1.255-8.152A2 2 0 0 1 6.331 8zM9 11V6a3 3 0 0 1 6 0v5", "tool": "M7 10h3V7L6.5 3.5a6 6 0 0 1 8 8l6 6a2 2 0 0 1-3 3l-6-6a6 6 0 0 1-8-8L7 10", "store": "M3 21h18M3 7v1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7H3l2-4h14l2 4M5 21V10.85M19 21V10.85M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4", "clipboard": "M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2zM9 12h6M9 16h6", "folder": "M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2", "history": "M12 8v4l2 2M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5", "trash": "M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3", "mail": "M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 7l9 6 9-6", "user": "M8 7a4 4 0 1 0 8 0 4 4 0 0 0-8 0M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2", "alert": "M12 9v4M10.363 3.591 2.257 17.125a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636-2.87L13.637 3.59a1.914 1.914 0 0 0-3.274 0zM12 16h.01", "refresh": "M20 11A8.1 8.1 0 0 0 4.5 9M4 5v4h4M4 13a8.1 8.1 0 0 0 15.5 2M20 19v-4h-4", "check": "M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0M9 12l2 2 4-4", "list": "M9 6h11M9 12h11M9 18h11M5 6v.01M5 12v.01M5 18v.01", "photo": "M15 8h.01M3 6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3zM3 16l5-5c.928-.893 2.072-.893 3 0l5 5M14 14l1-1c.928-.893 2.072-.893 3 0l3 3", "question": "M8 8a3.5 3 0 0 1 3.5-3h1A3.5 3 0 0 1 16 8a3 3 0 0 1-2 3 3 4 0 0 0-2 4M12 19v.01"};
 function ic(n){return '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="'+(IC[n]||IC.box)+'"/></svg>';}
-var APP_VERSION = '1.83';
+var APP_VERSION = '1.84';
 // При каждом обновлении index.html — менять только эту строку (1.17, 1.18 и т.д.)
 (function(){
   var el = document.getElementById('appVersionBadge');
