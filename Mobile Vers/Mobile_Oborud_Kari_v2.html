@@ -940,6 +940,8 @@ html[data-theme="dark"] .hdr-search-local input::placeholder{color:var(--wb-purp
 button,input,select,textarea{font-family:inherit;}
 /* v5.3: тёмная тема — раздел и код на экране позиции были тёмно-фиолетовыми на тёмном фоне */
 html[data-theme="dark"] .s4-code,html[data-theme="dark"] .s4-bc-sec{color:var(--wb-purple-light)!important;}
+/* v5.4: рамка фото не отдаёт горизонтальный жест браузеру */
+.s4-photo{overscroll-behavior-x:none;}
 </style>
 </head>
 <body>
@@ -2454,7 +2456,7 @@ function _kVel(hist){
   return dt>0?(last.v-f.v)/dt:0;
 }
 /* Горизонтальная лента слайдов: track двигается через transform, go(dir) листает (-1/0/1). */
-function kSwipeTrack(track,getIdx,getN,go){
+function kSwipeTrack(track,getIdx,getN,go,loop){
   var st=null;
   return {
     start:function(x,y){
@@ -2474,7 +2476,8 @@ function kSwipeTrack(track,getIdx,getN,go){
       }
       if(st.axis!=='x')return false;
       var n=Math.max(1,getN()),min=-(n-1)*st.w,pos=st.base+dx;
-      if(pos>0)pos=_kRubber(pos,st.w);
+      if(loop&&n>1){ if(pos>st.w*0.6)pos=st.w*0.6; else if(pos<min-st.w*0.6)pos=min-st.w*0.6; }
+      else if(pos>0)pos=_kRubber(pos,st.w);
       else if(pos<min)pos=min-_kRubber(min-pos,st.w);
       st.pos=pos;
       track.style.transform='translateX('+pos+'px)';
@@ -2965,11 +2968,13 @@ function buildS4Carousel(it){
 
   /* touch events */
   /* v4.5: лента едет за пальцем, листание по скорости */
-  var s4sw = kSwipeTrack(car,function(){return _s4PhotoIdx;},function(){return _s4Photos.length;},s4CarouselGo);
-  car.ontouchstart = function(e){ _s4TouchX = e.touches[0].clientX; s4sw.start(e.touches[0].clientX,e.touches[0].clientY); };
-  car.ontouchmove  = function(e){ if(s4sw.move(e.touches[0].clientX,e.touches[0].clientY)) e.preventDefault(); };
-  car.ontouchend   = function(e){ if(s4sw.end()) e.preventDefault(); };
-  car.ontouchcancel= function(){ s4sw.cancel(); };
+  /* v5.4: касания ловит неподвижная рамка (не сама лента) — так же, как в полноэкранном просмотре, где листание работает на iPhone; листание по кругу */
+  var s4sw = kSwipeTrack(car,function(){return _s4PhotoIdx;},function(){return _s4Photos.length;},s4CarouselGo,true);
+  car.ontouchstart = car.ontouchmove = car.ontouchend = car.ontouchcancel = null;
+  ph.ontouchstart = function(e){ if(e.touches.length!==1){ s4sw.cancel(); return; } _s4TouchX = e.touches[0].clientX; s4sw.start(e.touches[0].clientX,e.touches[0].clientY); };
+  ph.ontouchmove  = function(e){ if(e.touches.length===1 && s4sw.move(e.touches[0].clientX,e.touches[0].clientY)) e.preventDefault(); };
+  ph.ontouchend   = function(e){ if(s4sw.end()) e.preventDefault(); };
+  ph.ontouchcancel= function(){ s4sw.cancel(); };
   /* mouse events for desktop */
   car.onmousedown = function(e){ _s4TouchX = e.clientX; e.preventDefault(); };
   car.onmouseup   = function(e){
@@ -2980,7 +2985,7 @@ function buildS4Carousel(it){
 
 function s4CarouselGo(dir){
   var n = _s4Photos.length; if(!n) return;
-  _s4PhotoIdx = Math.max(0, Math.min(n-1, _s4PhotoIdx + dir));
+  _s4PhotoIdx = ((_s4PhotoIdx + dir) % n + n) % n;   /* v5.4: после последнего фото — снова первое */
   var car = getEl('s4carousel'); if(car) car.style.transform='translateX(-'+(_s4PhotoIdx*100)+'%)';
   var dts = (getEl('s4dots')||{}).querySelectorAll ? getEl('s4dots').querySelectorAll('.s4-dot') : [];
   for(var i=0;i<dts.length;i++) dts[i].classList.toggle('act', i===_s4PhotoIdx);
@@ -4258,7 +4263,7 @@ function installPWA() {
       <img id="verLogoImg" src="" alt="Kari">
     </div>
     <div class="ver-app-name">Портал заказов<br>Kari</div>
-    <div class="ver-num" id="verNum">v5.3</div>
+    <div class="ver-num" id="verNum">v5.4</div>
     <div class="ver-build" id="verBuild">Сборка от 14.05.2025</div>
     <div class="ver-divider"></div>
     <div class="ver-info">Мобильный дашборд оборудования<br>для внутреннего использования</div>
