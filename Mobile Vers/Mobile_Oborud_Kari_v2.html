@@ -898,6 +898,10 @@ button,[role=button],.nav-btn,.sec-card,.subcat-card,.quick-action,.sort-pill,.h
 html[data-theme="dark"]{--wb-purple:#8D78AF;--wb-purple-light:#A493BF;--wb-purple-bg:rgba(141,120,175,.16);--wb-purple-bg2:rgba(141,120,175,.26);
  --wb-bg:#0E0B1D;--wb-surface:#1A1433;--wb-surface2:#0E0B1D;--wb-gray:#28223F;--wb-gray2:#312C47;--wb-border:#3A3550;
  --wb-skeleton:#2A2441;--wb-skeleton2:#35304B;}
+/* v4.9: номенклатурный номер — основной шрифт (Inter), моноширинные цифры, 14px (impeccable typeset, вариант А) */
+.item-code{font-family:inherit;font-size:14px;font-weight:600;letter-spacing:.02em;font-variant-numeric:tabular-nums;color:var(--wb-purple);}
+.s4-code{font-family:inherit;font-size:14px;font-weight:600;letter-spacing:.02em;font-variant-numeric:tabular-nums;}
+.search-drop-code,.ci-code,.s4-ai-code,.s4-kit-item-code,.kit-item-code,.photo-viewer-code{font-family:inherit;font-size:12px;letter-spacing:.01em;font-variant-numeric:tabular-nums;}
 </style>
 </head>
 <body>
@@ -4202,7 +4206,7 @@ function installPWA() {
       <img id="verLogoImg" src="" alt="Kari">
     </div>
     <div class="ver-app-name">Портал заказов<br>Kari</div>
-    <div class="ver-num" id="verNum">v4.8</div>
+    <div class="ver-num" id="verNum">v4.9</div>
     <div class="ver-build" id="verBuild">Сборка от 14.05.2025</div>
     <div class="ver-divider"></div>
     <div class="ver-info">Мобильный дашборд оборудования<br>для внутреннего использования</div>

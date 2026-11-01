@@ -701,6 +701,10 @@ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',ini
 .product-tile-photo-placeholder{opacity:1;}
 .product-tile-photo-placeholder>.np-ic{width:52px;height:52px;}
 .cart-item-thumb-placeholder>.np-ic{width:22px;height:22px;}
+/* v1.78: номенклатурный номер — основной шрифт, моноширинные цифры, 14px (impeccable typeset, вариант А) */
+.product-tile-code{font-family:inherit;font-size:14px;font-weight:600;letter-spacing:.02em;font-variant-numeric:tabular-nums;color:var(--primary,#5A3B8C);}
+.td-code{font-family:inherit;font-size:13px;font-weight:600;letter-spacing:.02em;font-variant-numeric:tabular-nums;color:var(--primary,#5A3B8C);}
+.analog-code,.cart-item-code{font-family:inherit;font-size:12px;letter-spacing:.01em;font-variant-numeric:tabular-nums;}
 </style>
 </head>
 <body>
@@ -1504,7 +1508,7 @@ function npIcon(cat){
   else if(/(^|\s)\u0438\u0442(\s|$)/.test(c)) k='desktop';
   return '<svg class="np-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="'+NP_ICONS[k]+'"/></svg>';
 }
-var APP_VERSION = '1.77';
+var APP_VERSION = '1.78';
 // При каждом обновлении index.html — менять только эту строку (1.17, 1.18 и т.д.)
 (function(){
   var el = document.getElementById('appVersionBadge');
