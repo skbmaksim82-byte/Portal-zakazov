@@ -938,6 +938,8 @@ h1.home-title{margin:0;}
 html[data-theme="dark"] .hdr-search-local input::placeholder{color:var(--wb-purple-light);}
 /* v5.2: одно семейство шрифтов с PC — Inter; кнопки и поля наследуют шрифт */
 button,input,select,textarea{font-family:inherit;}
+/* v5.3: тёмная тема — раздел и код на экране позиции были тёмно-фиолетовыми на тёмном фоне */
+html[data-theme="dark"] .s4-code,html[data-theme="dark"] .s4-bc-sec{color:var(--wb-purple-light)!important;}
 </style>
 </head>
 <body>
@@ -2902,7 +2904,16 @@ function s4HideLoader(){
   var loader=getEl('s4PhotoLoader'); if(loader) loader.style.display='none';
 }
 function s4PhotoLoaded(img,idx){ if(idx===_s4PhotoIdx) s4HideLoader(); }
+/* v5.3: одна повторная попытка загрузки фото (сбой сети / iOS не начал загрузку) */
+function s4RetryImg(img){
+  if(!img || img.dataset.retried) return false;
+  img.dataset.retried='1';
+  var src=img.getAttribute('src')||''; img.style.display='';
+  img.src=src+(src.indexOf('?')>=0?'&':'?')+'r='+Date.now();
+  return true;
+}
 function s4PhotoFailed(img,idx){
+  if(s4RetryImg(img)) return;
   img.style.display='none';
   if(idx===_s4PhotoIdx){
     var loader=getEl('s4PhotoLoader');
@@ -2911,6 +2922,8 @@ function s4PhotoFailed(img,idx){
   }
 }
 function s4PhotoTimedOut(){
+  var car=getEl('s4carousel'), im=car?car.querySelectorAll('.s4-carousel-slide img')[_s4PhotoIdx]:null;
+  if(im && !(im.complete && im.naturalWidth>0) && s4RetryImg(im)){ clearTimeout(_s4LoaderTimer); _s4LoaderTimer=setTimeout(s4PhotoTimedOut,8000); return; }
   var loader=getEl('s4PhotoLoader');
   if(loader && loader.style.display==='flex' && loader.querySelector('.s4-photo-spinner')){
     loader.innerHTML='<div class="photo-load-fail">⚠️ Не удалось загрузить фото</div>';
@@ -2938,7 +2951,7 @@ function buildS4Carousel(it){
   var h='';
   for(var i=0;i<photos.length;i++){
     h+='<div class="s4-carousel-slide" style="cursor:zoom-in;" data-action="open-s4-photo" data-val="'+i+'">';
-    h+='<img src="'+photos[i]+'" onload="s4PhotoLoaded(this,'+i+')" onerror="s4PhotoFailed(this,'+i+')" loading="lazy">';
+    h+='<img src="'+photos[i]+'" onload="s4PhotoLoaded(this,'+i+')" onerror="s4PhotoFailed(this,'+i+')" decoding="async"'+(i===0?' fetchpriority="high"':'')+'>';
     h+='</div>';
   }
   car.innerHTML = h;
@@ -2973,6 +2986,7 @@ function s4CarouselGo(dir){
   for(var i=0;i<dts.length;i++) dts[i].classList.toggle('act', i===_s4PhotoIdx);
   var slides=car?car.querySelectorAll('.s4-carousel-slide img'):[];
   var img=slides[_s4PhotoIdx];
+  if(img && img.style.display==='none'){ delete img.dataset.retried; s4RetryImg(img); }
   if(img && img.complete && img.naturalWidth>0) s4HideLoader();
   else if(img){ var loader=getEl('s4PhotoLoader'); if(loader){loader.style.display='flex';loader.innerHTML='<div class="s4-photo-spinner"></div>';} clearTimeout(_s4LoaderTimer); _s4LoaderTimer=setTimeout(s4PhotoTimedOut,8000); }
 }
@@ -4244,7 +4258,7 @@ function installPWA() {
       <img id="verLogoImg" src="" alt="Kari">
     </div>
     <div class="ver-app-name">Портал заказов<br>Kari</div>
-    <div class="ver-num" id="verNum">v5.2</div>
+    <div class="ver-num" id="verNum">v5.3</div>
     <div class="ver-build" id="verBuild">Сборка от 14.05.2025</div>
     <div class="ver-divider"></div>
     <div class="ver-info">Мобильный дашборд оборудования<br>для внутреннего использования</div>
